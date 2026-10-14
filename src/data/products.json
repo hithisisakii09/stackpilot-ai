@@ -1,0 +1,38 @@
+[
+  {
+    "id": "hubspot",
+    "name": "HubSpot",
+    "category": "CRM",
+    "description": "CRM, sales and marketing software.",
+    "website": "https://www.hubspot.com/",
+    "affiliateUrl": null,
+    "bestFor": [
+      "sales"
+    ],
+    "verified": false
+  },
+  {
+    "id": "semrush",
+    "name": "Semrush",
+    "category": "SEO",
+    "description": "Search marketing and competitive research tools.",
+    "website": "https://www.semrush.com/",
+    "affiliateUrl": null,
+    "bestFor": [
+      "seo"
+    ],
+    "verified": false
+  },
+  {
+    "id": "kinsta",
+    "name": "Kinsta",
+    "category": "Hosting",
+    "description": "Managed hosting for websites and applications.",
+    "website": "https://kinsta.com/",
+    "affiliateUrl": null,
+    "bestFor": [
+      "hosting"
+    ],
+    "verified": false
+  }
+]
