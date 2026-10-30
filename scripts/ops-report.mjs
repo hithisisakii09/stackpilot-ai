@@ -3,6 +3,20 @@ import { decideAutonomousActions } from '../src/lib/autonomy-policy.mjs';
 import { validateCatalog } from '../src/lib/catalog-validation.mjs';
 import { buildEvidenceReviewQueue } from '../src/lib/evidence-ledger.mjs';
 
+const policy = JSON.parse(readFileSync(new URL('../config/operating-policy.json', import.meta.url), 'utf8'));
+if (
+  policy.policyVersion !== 1 ||
+  policy.monthlyBudgetINR !== 0 ||
+  policy.delegatedSpendINR !== 0 ||
+  policy.hostingCandidate !== 'netlify-free' ||
+  policy.commercialHostingApproved !== false ||
+  policy.productionLaunchApproved !== false ||
+  policy.affiliateActivationApproved !== false ||
+  policy.paidServicesApproved !== false
+) {
+  throw new Error('Zero-budget operating policy mismatch: owner authorization required');
+}
+
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const evidence = JSON.parse(readFileSync(new URL('../src/data/evidence-leads.json', import.meta.url), 'utf8'));
 validateCatalog(products);
@@ -27,6 +41,13 @@ const report = {
   generatedAt: new Date().toISOString(),
   source: 'repository-static-state',
   operationalStatus: 'preview-only',
+  budget: {
+    monthlyBudgetINR: policy.monthlyBudgetINR,
+    delegatedSpendINR: policy.delegatedSpendINR,
+    hostingCandidate: policy.hostingCandidate,
+    commercialHostingApproved: policy.commercialHostingApproved,
+    productionLaunchApproved: policy.productionLaunchApproved
+  },
   automation: 'decision-support-not-unrestricted-agent-execution',
   reviewedProducts: 0,
   candidateProducts: products.length,
