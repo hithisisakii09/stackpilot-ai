@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdir } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { chromium } from 'playwright';
+import AxeBuilder from '@axe-core/playwright';
 
 const base = 'http://127.0.0.1:4321';
 const output = 'artifacts/browser-qa';
@@ -24,6 +25,16 @@ const server = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--p
 });
 let browser;
 const errors = [];
+async function checkAccessibility(page, label) {
+  const scan = await new AxeBuilder({ page })
+    .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
+    .analyze();
+  const violations = scan.violations.map(v => ({
+    id: v.id, impact: v.impact,
+    nodes: v.nodes.slice(0, 5).map(n => ({ target: n.target, summary: n.failureSummary }))
+  }));
+  assert.deepEqual(violations, [], 'Accessibility failures in ' + label + ': ' + JSON.stringify(violations));
+}
 try {
   await ready();
   await mkdir(output, { recursive: true });
@@ -40,6 +51,7 @@ try {
   assert.ok((await page.locator('h1').innerText()).includes('Find the right tools'));
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
   await page.screenshot({ path: output + '/home-desktop.png', fullPage: true });
+  await checkAccessibility(page, 'homepage desktop');
 
   const scenarios = [
     { goal: 'sales', expected: ['HubSpot', 'Pipedrive'] },
@@ -72,11 +84,13 @@ try {
     assert.ok((await page.locator('main').innerText()).includes(name), 'Comparison missing ' + name);
   }
   await page.screenshot({ path: output + '/compare-desktop.png', fullPage: true });
+  await checkAccessibility(page, 'category comparison desktop');
 
   for (const slug of ['hubspot', 'pipedrive', 'semrush', 'ahrefs', 'kinsta', 'cloudways']) {
     const resp = await page.goto(base + '/software/' + slug + '/', { waitUntil: 'domcontentloaded' });
     assert.equal(resp?.status(), 200, 'Missing profile ' + slug);
     assert.match(await page.locator('main').innerText(), /pricing.*not verified|pricing.*current plans/i);
+    if (slug === 'hubspot') await checkAccessibility(page, 'software profile');
     assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
   }
   for (const route of ['/methodology/', '/disclosure/', '/privacy/']) {
@@ -92,6 +106,7 @@ try {
   await page.locator('#recommend').click();
   assert.equal(await page.locator('#result h4').count(), 2);
   await page.screenshot({ path: output + '/home-mobile.png', fullPage: true });
+  await checkAccessibility(page, 'homepage mobile results');
   const bodyWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   if (bodyWidth > 395) {
     const offenders = await page.evaluate(() =>
