@@ -29,3 +29,10 @@ assert.ok(vercelConfig.headers?.some(rule => rule.headers?.some(h => h.key === '
 const research = readFileSync('dist/research/index.html', 'utf8');
 for (const product of products) assert.ok(research.includes(product.name), `Research workbench omits ${product.name}`);
 assert.match(research, /No product claims or pricing have been editorially approved/);
+
+assert.ok(existsSync('dist/_headers'), 'Hosting-platform noindex header file missing from published assets');
+const staticHeaders = readFileSync('dist/_headers','utf8');
+assert.match(staticHeaders, /X-Robots-Tag:\s*noindex,\s*nofollow,\s*noarchive/i,
+  'Netlify/Cloudflare prelaunch non-indexing header missing');
+assert.match(staticHeaders, /X-Content-Type-Options:\s*nosniff/i,
+  'Static hosting content-type safeguard missing');
