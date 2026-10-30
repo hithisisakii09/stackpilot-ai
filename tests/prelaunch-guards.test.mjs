@@ -31,3 +31,12 @@ test('site deliberately remains static', () => {
 test('methodology does not describe agent-based ranking as active', () => {
   assert.match(read('src/pages/methodology/index.astro'), /No AI model makes real-time purchasing decisions/);
 });
+
+test('dependency graph is locked and CI installs it reproducibly', () => {
+  const lock = JSON.parse(read('package-lock.json'));
+  assert.equal(lock.lockfileVersion, 3);
+  assert.ok(lock.packages['node_modules/astro']);
+  const workflow = read('.github/workflows/ci.yml');
+  assert.match(workflow, /npm ci/);
+  assert.match(workflow, /contents: read/);
+});
