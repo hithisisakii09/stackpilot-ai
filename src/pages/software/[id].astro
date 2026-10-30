@@ -10,7 +10,7 @@ const { product } = Astro.props;
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content={`Introductory profile for ${product.name}. Research and pricing verification pending.`} />
+<meta name="description" content={`Introductory profile for ${product.name}. Research and pricing verification pending.`} /><meta name="robots" content="noindex, nofollow" />
 <title>{product.name} | StackPilot AI software profile</title>
 <style>
 :root{font-family:system-ui,sans-serif;color:#e9f1ff;background:#0b1220}*{box-sizing:border-box}
@@ -21,7 +21,7 @@ h1{font-size:clamp(32px,6vw,56px)}.links{display:flex;gap:20px;flex-wrap:wrap}
 </style>
 </head>
 <body>
-<header class="links"><a href="/">← StackPilot AI</a><a href="/compare/">Compare categories</a></header>
+<header class="links"><a href="/">← StackPilot AI</a><a href="/compare/">Compare categories</a><a href="/methodology/">Methodology</a></header>
 <main>
 <p>Independent introductory software profile</p>
 <h1>{product.name}</h1>
@@ -46,5 +46,5 @@ h1{font-size:clamp(32px,6vw,56px)}.links{display:flex;gap:20px;flex-wrap:wrap}
 <a href={product.website} target="_blank" rel="noopener noreferrer">Visit official website ↗</a>
 </section>
 </main>
-<footer>© {new Date().getFullYear()} StackPilot AI. Recommendations are independent editorial starting points, not paid placements.</footer>
+<footer>© {new Date().getFullYear()} StackPilot AI. Recommendations are independent editorial starting points, not paid placements. <a href="/disclosure/">Disclosure</a> · <a href="/privacy/">Privacy</a></footer>
 </body></html>
