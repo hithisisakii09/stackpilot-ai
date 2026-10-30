@@ -7,7 +7,7 @@ const catalog = () => structuredClone(products);
 
 test('current catalog passes validation without claiming verification', () => {
   assert.equal(validateCatalog(catalog()), 6);
-  assert.ok(products.every(p => !p.verified && p.affiliateUrl === null && p.sources.length === 0));
+  assert.ok(products.every(p => !p.verified && p.affiliateUrl === null && p.researchStatus === 'needs-review' && p.sources.length > 0));
 });
 test('duplicate product id is rejected', () => {
   const records = catalog();
