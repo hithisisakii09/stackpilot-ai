@@ -55,3 +55,15 @@ The development branch is **not ready for public launch**. The site intentionall
 Read [AGENTS.md](AGENTS.md) before every sprint. This project uses the engineering-review and browser QA methods documented in [gstack](https://github.com/garrytan/gstack), and the test-first, systematic-debugging and verification methods from [Superpowers](https://github.com/obra/superpowers). These are referenced methodologies; a host without their CLI skills installed should follow the corresponding public SKILL.md instructions rather than falsely claiming to invoke installed slash commands.
 
 See [roadmap](docs/roadmap-to-launch.md) for the product's final launch gates and [Phase 2.0 plan](docs/superpowers/plans/2026-10-31-research-evidence-ledger.md).
+
+
+## Autonomous operations
+
+This project is designed to become an **agent-operated SaaS affiliate company**. Its current private prelaunch mode intentionally blocks external commercial operations.
+
+```bash
+npm run ops:report
+npm run ops:report -- --json
+```
+
+The decision policy is in `src/lib/autonomy-policy.mjs`. A read-only GitHub Actions workflow generates downloadable `stackpilot-operations-report` artifacts from the draft PR. Two ChatGPT recurring tasks are enabled: daily safe-development operator and hourly incident watch. Their existence does not activate external affiliate programs or guarantee agent-run development success. For the full operating model and one-time approvals, read `docs/autonomous-business.md` and private GitHub issue #2.
