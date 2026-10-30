@@ -60,3 +60,9 @@ test('future-dated source evidence is rejected', () => {
   records[0].sources[0].checkedAt = '2099-01-01';
   assert.throws(() => validateCatalog(records), /source/);
 });
+
+test('official vendor URLs cannot hide referral query parameters', () => {
+  const records = catalog();
+  records[0].website = 'https://www.hubspot.com/?ref=unapproved';
+  assert.throws(() => validateCatalog(records), /website/);
+});
