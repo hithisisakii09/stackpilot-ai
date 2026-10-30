@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
-const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', ...products.map(p => `software/${p.id}/index.html`)];
+const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', ...products.map(p => `software/${p.id}/index.html`)];
 for (const page of pages) {
   const path = join('dist', page);
   assert.ok(existsSync(path), `Missing built route: ${path}`);
@@ -25,3 +25,7 @@ assert.match(readFileSync('dist/robots.txt', 'utf8'), /Disallow:\s*\//, 'Prelaun
 const vercelConfig = JSON.parse(readFileSync('vercel.json', 'utf8'));
 assert.ok(vercelConfig.headers?.some(rule => rule.headers?.some(h => h.key === 'X-Robots-Tag' && /noindex/.test(h.value))),
   'Vercel noindex response header missing');
+
+const research = readFileSync('dist/research/index.html', 'utf8');
+for (const product of products) assert.ok(research.includes(product.name), `Research workbench omits ${product.name}`);
+assert.match(research, /No product claims or pricing have been editorially approved/);
