@@ -30,6 +30,8 @@ const categories = [...new Set(products.map(p => p.category))].sort();
     button { background: #7ce8c6; color: #06231d; border: 0; border-radius: 8px; padding: 12px 20px; font-weight: 700; cursor: pointer; }
     :focus-visible { outline: 3px solid #7ce8c6; outline-offset: 3px; }
     #comparison-result { margin: 22px 0; }
+    :global(#comparison-result a) { color: #7ce8c6; }
+    :global(#comparison-result a:focus-visible) { outline: 3px solid #7ce8c6; outline-offset: 3px; }
     .helper { font-size: .95rem; }
     #comparison-error { color: #ffe2ae; }
     @media (max-width: 700px) { .compare-controls { grid-template-columns: 1fr; } }
