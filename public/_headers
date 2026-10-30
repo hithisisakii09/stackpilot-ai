@@ -1,0 +1,8 @@
+# Prelaunch crawl prevention for Netlify Free and Cloudflare Pages static output.
+# Noindex is NOT an access-control mechanism. Do not publish without approval.
+/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
