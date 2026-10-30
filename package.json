@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check:data": "node scripts/validate.mjs",
-    "test": "npm run check:data && npm run build"
+    "test": "node --test tests/*.test.mjs && npm run check:data && npm run build"
   },
   "dependencies": {
     "astro": "^5.0.0"
