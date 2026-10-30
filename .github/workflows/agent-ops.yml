@@ -21,7 +21,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '22.23.4'
           package-manager-cache: false
       - run: npm ci
       - name: Validate and build before reporting
