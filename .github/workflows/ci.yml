@@ -18,6 +18,12 @@ jobs:
         with:
           node-version: '22'
           package-manager-cache: false
-      - run: npm ci
+      - run: npm install
+      - name: Record lockfile after security migration
+        run: |
+          echo STACKPILOT_LOCK_V7_START
+          base64 -w0 package-lock.json
+          echo
+          echo STACKPILOT_LOCK_V7_END
       - run: npm test
       - run: npm audit --omit=dev --audit-level=high
