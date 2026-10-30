@@ -16,7 +16,7 @@
 
 ## Local setup
 
-Requires Node.js 22.22.0 or newer (Astro 7.4).
+Requires Node.js 22.23.4 or newer for the currently resolved Astro release.
 
 ```bash
 npm ci
@@ -67,3 +67,7 @@ npm run ops:report -- --json
 ```
 
 The decision policy is in `src/lib/autonomy-policy.mjs`. A read-only GitHub Actions workflow generates downloadable `stackpilot-operations-report` artifacts from the draft PR. Two ChatGPT recurring tasks are enabled: daily safe-development operator and hourly incident watch. Their existence does not activate external affiliate programs or guarantee agent-run development success. For the full operating model and one-time approvals, read `docs/autonomous-business.md` and private GitHub issue #2.
+
+
+## ₹0 hosting preparation (not deployed)
+Owner operating budget: **₹0/month**, delegated spend: **₹0**. Netlify Free is the current commercial-friendly static hosting candidate; Cloudflare Pages Free is the alternative. Files `netlify.toml`, `public/_headers`, and `config/operating-policy.json` prepare an eventual deployment while maintaining noindex and budget safeguards. The site has **not** been published to Netlify, and the existing protected Vercel preview is unchanged. Service signup, contracts, paid upgrades and public deployment each require separate explicit permission. See `docs/zero-budget-hosting.md`.
