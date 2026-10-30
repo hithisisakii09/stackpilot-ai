@@ -43,3 +43,15 @@ test('operations report exposes owner zero-budget policy without converting it t
   assert.equal(report.canPublish, false);
   assert.equal(report.canMonetize, false);
 });
+
+test('CI avoids duplicate feature-branch push builds and cancels superseded runs', () => {
+  const ci = read('.github/workflows/ci.yml');
+  const qa = read('.github/workflows/browser-qa.yml');
+  for (const workflow of [ci, qa]) {
+    assert.match(workflow, /concurrency:/);
+    assert.match(workflow, /cancel-in-progress:\s*true/);
+    assert.match(workflow, /branches:\s*\[main\]/);
+  }
+  assert.match(ci, /push:\s*\n\s+branches:\s*\[main\]/);
+  assert.match(ci, /pull_request:/);
+});
