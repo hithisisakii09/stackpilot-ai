@@ -27,3 +27,26 @@ These are upstream reference methodologies, **not an assertion their slash comma
 
 ## Reminder for next session
 Continue from the active development branch `feature/phase-1-1-recommendation-engine` and draft PR #1. Read this file and the linked skill docs, then verify CI and current scope before edits.
+
+
+## Continuous autonomous business operation (enabled at ChatGPT scheduling layer)
+
+StackPilot has a **daily autonomous operator** scheduled task and an **hourly incident watch**. These run outside GitHub and do not imply any model can work between scheduled invocations. They inspect the development branch and protected Masher Vercel project and report or implement permitted safe actions, subject to connected tool access.
+
+On every operator run:
+1. Check latest GitHub Actions results and protected Vercel preview state. Do not equate READY with an authenticated remote browser pass.
+2. Run or inspect `npm run ops:report -- --json`; follow fail-closed restrictions.
+3. Choose the highest-priority **automatic** task from `src/lib/autonomy-policy.mjs`, but only if required tools and explicitly scoped permissions exist.
+4. Use gstack review/QA and Superpowers plan/TDD RED→GREEN/verification for every code change.
+5. Create only development-branch changes, draft PRs, research candidates and issue updates. Never self-approve evidence or claim earnings without external affiliate statements.
+6. Escalate only owner-only actions identified in private GitHub issue #2. Do not collect secrets in issue bodies.
+7. Provide verifiable commit/CI/deployment references in the report and keep a record of failures.
+
+The report/decision module has no runtime LLM, network or publishing side effects. Its `canPublish` and `canMonetize` fields are readiness indicators, not authorization to execute those actions. Spending remains disabled.
+
+**GitHub schedule constraint:** scheduled workflows run from the default branch only; an unmerged feature-branch workflow with `schedule` would not be active. We therefore use actual ChatGPT recurring tasks now; GitHub's optional Copilot Automations require separate paid enablement and permissions.
+
+## Business controls
+- Commercial hosting eligibility must be verified before opening a financially motivated affiliate website to public traffic. Vercel Hobby is for non-commercial personal use.
+- Owner must choose a domain, business identity, reviewed policies, affiliate accounts and a real spend budget before revenue go-live.
+- Do not infer or fabricate traffic, clicks, commission, sales or conversion data.
