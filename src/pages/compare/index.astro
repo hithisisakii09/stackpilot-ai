@@ -24,6 +24,16 @@ const categories = [...new Set(products.map(p => p.category))].sort();
     thead th { background: #253652; }
     .notice { background: #152138; border-left: 4px solid #edc777; padding: 16px; }
     .links { display: flex; flex-wrap: wrap; gap: 18px; }
+    .compare-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0; }
+    .compare-controls label { display: block; font-weight: 650; }
+    .compare-controls select { width: 100%; display: block; margin-top: 7px; padding: 12px; background: #0b1220; color: #e9f1ff; border: 1px solid #6a819e; border-radius: 8px; }
+    button { background: #7ce8c6; color: #06231d; border: 0; border-radius: 8px; padding: 12px 20px; font-weight: 700; cursor: pointer; }
+    :focus-visible { outline: 3px solid #7ce8c6; outline-offset: 3px; }
+    #comparison-result { margin: 22px 0; }
+    .helper { font-size: .95rem; }
+    #comparison-error { color: #ffe2ae; }
+    @media (max-width: 700px) { .compare-controls { grid-template-columns: 1fr; } }
+
   </style>
 </head>
 <body>
@@ -32,6 +42,30 @@ const categories = [...new Set(products.map(p => p.category))].sort();
     <h1>Compare software candidates</h1>
     <p>Compare preliminary entries <strong>within the same category</strong>. These tables show catalog descriptions, not tested feature parity or verified buyer suitability.</p>
     <p class="notice">All product claims, team fit, and current pricing remain unverified. These products are not ranked or endorsed, and there are no affiliate links.</p>
+    <section aria-labelledby="compare-title">
+      <h2 id="compare-title">Choose two tools to compare</h2>
+      <p>This browser-only comparison displays the same information for both tools. It does not calculate a winner, compare live prices, or send your selections to a server.</p>
+      <form id="compare-form">
+        <div class="compare-controls">
+          <label for="compare-category">Category
+            <select id="compare-category" name="category">
+              {categories.map(category => <option value={category}>{category}</option>)}
+            </select>
+          </label>
+          <label for="compare-first">First tool
+            <select id="compare-first" name="first" required></select>
+          </label>
+          <label for="compare-second">Second tool
+            <select id="compare-second" name="second" required></select>
+          </label>
+        </div>
+        <button type="submit">Compare selected tools</button>
+        <p id="comparison-error" role="alert"></p>
+      </form>
+      <noscript><p>Enable JavaScript to use the interactive comparison, or review the category tables below.</p></noscript>
+      <div id="comparison-result" aria-live="polite" aria-atomic="true"></div>
+      <p class="helper">“Vendor sources identified” measures links collected for research, not verified claims or product quality.</p>
+    </section>
     {categories.map((category) => (
       <section aria-label={`${category} candidates`}>
         <h2>{category}</h2>
@@ -57,5 +91,93 @@ const categories = [...new Set(products.map(p => p.category))].sort();
     <p>Product pages include links to official documentation for independent follow-up. A deeper feature-by-feature comparison will require approved claim-level evidence.</p>
   </main>
   <footer>StackPilot AI · <a href="/privacy/">Privacy notes</a> · <a href="/methodology/">Methodology</a></footer>
+<script>
+import products from '../../data/products.json';
+import { categoryCandidates, compareCandidates } from '../../lib/comparison.mjs';
+
+const form = document.querySelector('#compare-form');
+const category = document.querySelector('#compare-category');
+const first = document.querySelector('#compare-first');
+const second = document.querySelector('#compare-second');
+const result = document.querySelector('#comparison-result');
+const error = document.querySelector('#comparison-error');
+
+function updateSelections() {
+  const candidates = categoryCandidates(products, category.value);
+  for (const [select, index] of [[first, 0], [second, 1]]) {
+    select.replaceChildren();
+    candidates.forEach(product => {
+      const option = document.createElement('option');
+      option.value = product.id;
+      option.textContent = product.name;
+      select.append(option);
+    });
+    select.selectedIndex = Math.min(index, candidates.length - 1);
+  }
+  result.replaceChildren();
+  error.textContent = '';
+}
+function cell(tag, value) {
+  const node = document.createElement(tag);
+  node.textContent = String(value);
+  return node;
+}
+category.addEventListener('change', updateSelections);
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  result.replaceChildren();
+  error.textContent = '';
+  let model;
+  try {
+    model = compareCandidates(products, category.value, first.value, second.value);
+  } catch (e) {
+    error.textContent = e instanceof Error ? e.message : 'Unable to compare selections';
+    return;
+  }
+  const title = cell('h3', model.products.map(p => p.name).join(' vs '));
+  const note = cell('p', 'Research candidates only. Unknown or unapproved information is labeled unverified; no recommendation winner is determined.');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'table-scroll';
+  const table = document.createElement('table');
+  table.id = 'comparison-table';
+  table.append(cell('caption', model.category + ': same-category evidence comparison'));
+  const head = document.createElement('thead');
+  const headings = document.createElement('tr');
+  headings.append(cell('th', 'Criterion'));
+  for (const product of model.products) {
+    const th = cell('th', product.name);
+    th.scope = 'col';
+    headings.append(th);
+  }
+  head.append(headings);
+  table.append(head);
+  const body = document.createElement('tbody');
+  for (const row of model.rows) {
+    const tr = document.createElement('tr');
+    const heading = cell('th', row.label);
+    heading.scope = 'row';
+    tr.append(heading);
+    for (const product of model.products) tr.append(cell('td', product[row.key]));
+    body.append(tr);
+  }
+  const links = document.createElement('tr');
+  const linkHeader = cell('th', 'Further reading');
+  linkHeader.scope = 'row';
+  links.append(linkHeader);
+  for (const product of model.products) {
+    const td = document.createElement('td');
+    const anchor = document.createElement('a');
+    anchor.href = product.profileUrl;
+    anchor.textContent = 'View ' + product.name + ' research profile';
+    td.append(anchor);
+    links.append(td);
+  }
+  body.append(links);
+  table.append(body);
+  wrapper.append(table);
+  result.append(title, note, wrapper);
+});
+updateSelections();
+</script>
 </body>
 </html>
