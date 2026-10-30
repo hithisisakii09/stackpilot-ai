@@ -15,7 +15,7 @@
 
 ## Local setup
 
-Requires Node.js 22.
+Requires Node.js 22.22.0 or newer (Astro 7.4).
 
 ```bash
 npm ci
