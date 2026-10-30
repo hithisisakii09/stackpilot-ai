@@ -19,3 +19,9 @@ assert.match(home, /Affiliate disclosure/);
 const compare = readFileSync('dist/compare/index.html', 'utf8');
 for (const product of products) assert.ok(compare.includes(product.name), `Compare page omits ${product.name}`);
 console.log(`Static route smoke passed for ${pages.length} pages`);
+
+assert.ok(existsSync('dist/robots.txt'), 'Prelaunch robots.txt missing');
+assert.match(readFileSync('dist/robots.txt', 'utf8'), /Disallow:\s*\//, 'Prelaunch crawl blocking disabled');
+const vercelConfig = JSON.parse(readFileSync('vercel.json', 'utf8'));
+assert.ok(vercelConfig.headers?.some(rule => rule.headers?.some(h => h.key === 'X-Robots-Tag' && /noindex/.test(h.value))),
+  'Vercel noindex response header missing');
