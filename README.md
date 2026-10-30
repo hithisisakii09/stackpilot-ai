@@ -18,7 +18,7 @@
 Requires Node.js 22.
 
 ```bash
-npm install
+npm ci
 npm test
 npm run dev
 ```
