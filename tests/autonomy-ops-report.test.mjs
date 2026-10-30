@@ -33,6 +33,8 @@ test('workflow report has read-only token and a verification gate', () => {
   assert.match(code, /contents: read/);
   assert.doesNotMatch(code, /issues: write|pull-requests: write|permissions:\s*write-all/);
   assert.match(code, /npm test/);
+  assert.match(code, /node scripts\\/ops-report\\.mjs --json --ci-passed > artifacts\\/ops\\/report\\.json/);
+  assert.doesNotMatch(code, /npm run ops:report -- --json --ci-passed > artifacts/);
   assert.match(code, /canPublish \|\| r.canMonetize \|\| r.canSpend/);
 });
 test('operations report never asserts successful CI unless caller attests', () => {
