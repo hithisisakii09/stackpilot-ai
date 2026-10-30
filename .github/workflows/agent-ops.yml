@@ -19,6 +19,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@v6
         with:
           node-version: '22.23.4'
@@ -38,3 +39,16 @@ jobs:
           path: artifacts/ops/report.json
           retention-days: 7
           if-no-files-found: error
+      - name: Validate preview bundle, without publishing anywhere
+        env:
+          PREVIEW_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node scripts/create-private-preview-package.mjs
+          tar -czf artifacts/private-preview/stackpilot-static-dist.tar.gz -C dist .
+      - name: Save temporary private preview package for manual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: stackpilot-private-preview-package
+          path: artifacts/private-preview/
+          if-no-files-found: error
+          retention-days: 3
