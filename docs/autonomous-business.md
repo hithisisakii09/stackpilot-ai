@@ -41,3 +41,7 @@ The current production/main state is not automatically overwritten. The protecte
 
 ## Release gate
 No commercial launch, indexing, main merge, paid spending or affiliate activation without the required owner approvals. Agents may continue coding and preparing drafts, but not fabricate an approval to circumvent a blocker.
+
+
+## Owner budget amendment — 2026-10-31
+The owner selected an initial monthly budget of **₹0 INR** and delegated spending of **₹0 INR**. No paid hosting, AI APIs, ads, domain purchases, subscriptions, purchases, contracts or public launch is authorized. **Netlify Free** is the commercially permitted static hosting candidate; **Cloudflare Pages Free** is an alternative. Netlify's hard free credit cap can suspend service when exhausted. The project is configured for static hosting but **has not been deployed to Netlify**. See `docs/zero-budget-hosting.md` and `config/operating-policy.json`. All account and public deployment decisions remain with the owner.
