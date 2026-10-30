@@ -1,0 +1,68 @@
+[
+  {
+    "id": "hubspot-official-source",
+    "productId": "hubspot",
+    "sourceUrl": "https://www.hubspot.com/pricing/sales",
+    "summary": "Vendor source link collected for independent editorial verification; no claims approved",
+    "recordedOn": "2026-10-30",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedOn": null
+  },
+  {
+    "id": "semrush-official-source",
+    "productId": "semrush",
+    "sourceUrl": "https://www.semrush.com/pricing/seo-ai-search/",
+    "summary": "Vendor source link collected for independent editorial verification; no claims approved",
+    "recordedOn": "2026-10-30",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedOn": null
+  },
+  {
+    "id": "kinsta-official-source",
+    "productId": "kinsta",
+    "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/",
+    "summary": "Vendor source link collected for independent editorial verification; no claims approved",
+    "recordedOn": "2026-10-30",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedOn": null
+  },
+  {
+    "id": "pipedrive-official-source",
+    "productId": "pipedrive",
+    "sourceUrl": "https://www.pipedrive.com/en/products",
+    "summary": "Vendor source link collected for independent editorial verification; no claims approved",
+    "recordedOn": "2026-10-30",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedOn": null
+  },
+  {
+    "id": "ahrefs-official-source",
+    "productId": "ahrefs",
+    "sourceUrl": "https://ahrefs.com/all",
+    "summary": "Vendor source link collected for independent editorial verification; no claims approved",
+    "recordedOn": "2026-10-30",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedOn": null
+  },
+  {
+    "id": "cloudways-official-source",
+    "productId": "cloudways",
+    "sourceUrl": "https://www.digitalocean.com/products/cloudways",
+    "summary": "Vendor source link collected for independent editorial verification; no claims approved",
+    "recordedOn": "2026-10-30",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedOn": null
+  }
+]
