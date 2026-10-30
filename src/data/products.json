@@ -10,8 +10,14 @@
       "sales"
     ],
     "verified": false,
-    "researchStatus": "unresearched",
-    "sources": [],
+    "researchStatus": "needs-review",
+    "sources": [
+      {
+        "url": "https://www.hubspot.com/pricing/sales",
+        "claim": "Official Sales Hub plan and pricing reference; pricing, regional availability and billing require editorial review.",
+        "checkedAt": "2026-10-30"
+      }
+    ],
     "lastVerifiedAt": null,
     "supportedTeams": [],
     "budgetTiers": [],
@@ -32,8 +38,14 @@
       "seo"
     ],
     "verified": false,
-    "researchStatus": "unresearched",
-    "sources": [],
+    "researchStatus": "needs-review",
+    "sources": [
+      {
+        "url": "https://www.semrush.com/pricing/seo-ai-search/",
+        "claim": "Official SEO and AI search plan reference; pricing and plan limits require editorial review.",
+        "checkedAt": "2026-10-30"
+      }
+    ],
     "lastVerifiedAt": null,
     "supportedTeams": [],
     "budgetTiers": [],
@@ -54,8 +66,98 @@
       "hosting"
     ],
     "verified": false,
-    "researchStatus": "unresearched",
-    "sources": [],
+    "researchStatus": "needs-review",
+    "sources": [
+      {
+        "url": "https://kinsta.com/docs/billing/wordpress-hosting-plans/",
+        "claim": "Official WordPress hosting plan documentation; capacity and price need editorial review.",
+        "checkedAt": "2026-10-30"
+      }
+    ],
+    "lastVerifiedAt": null,
+    "supportedTeams": [],
+    "budgetTiers": [],
+    "pricing": {
+      "status": "unverified",
+      "amount": null,
+      "currency": null
+    }
+  },
+  {
+    "id": "pipedrive",
+    "name": "Pipedrive",
+    "category": "CRM",
+    "description": "Sales CRM and pipeline management software.",
+    "website": "https://www.pipedrive.com/",
+    "affiliateUrl": null,
+    "bestFor": [
+      "sales"
+    ],
+    "verified": false,
+    "researchStatus": "needs-review",
+    "sources": [
+      {
+        "url": "https://www.pipedrive.com/en/products",
+        "claim": "Official product overview describes sales CRM, pipelines and sales workflows; suitability needs review.",
+        "checkedAt": "2026-10-30"
+      }
+    ],
+    "lastVerifiedAt": null,
+    "supportedTeams": [],
+    "budgetTiers": [],
+    "pricing": {
+      "status": "unverified",
+      "amount": null,
+      "currency": null
+    }
+  },
+  {
+    "id": "ahrefs",
+    "name": "Ahrefs",
+    "category": "SEO",
+    "description": "SEO research, search visibility and competitive analysis software.",
+    "website": "https://ahrefs.com/",
+    "affiliateUrl": null,
+    "bestFor": [
+      "seo"
+    ],
+    "verified": false,
+    "researchStatus": "needs-review",
+    "sources": [
+      {
+        "url": "https://ahrefs.com/all",
+        "claim": "Official overview lists SEO and search marketing tools; feature eligibility needs review.",
+        "checkedAt": "2026-10-30"
+      }
+    ],
+    "lastVerifiedAt": null,
+    "supportedTeams": [],
+    "budgetTiers": [],
+    "pricing": {
+      "status": "unverified",
+      "amount": null,
+      "currency": null
+    }
+  },
+  {
+    "id": "cloudways",
+    "name": "Cloudways",
+    "category": "Hosting",
+    "description": "Managed cloud hosting platform for web applications and sites.",
+    "website": "https://www.cloudways.com/",
+    "affiliateUrl": null,
+    "bestFor": [
+      "hosting"
+    ],
+    "verified": false,
+    "researchStatus": "needs-review",
+    "sources": [
+      {
+        "url": "https://www.digitalocean.com/products/cloudways",
+        "claim": "Official DigitalOcean product page describes managed cloud hosting; workload compatibility needs review.",
+        "checkedAt": "2026-10-30"
+      }
+    ],
     "lastVerifiedAt": null,
     "supportedTeams": [],
     "budgetTiers": [],
