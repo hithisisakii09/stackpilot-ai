@@ -18,11 +18,5 @@ jobs:
         with:
           node-version: '22'
           package-manager-cache: false
-      - run: npm install
+      - run: npm ci
       - run: npm test
-      - name: Capture reproducible npm resolution for lockfile creation
-        run: |
-          echo STACKPILOT_LOCK_BASE64_START
-          base64 -w0 package-lock.json
-          echo
-          echo STACKPILOT_LOCK_BASE64_END
