@@ -29,7 +29,7 @@ export function validateCatalog(products) {
     for (const key of ['name', 'category', 'description']) {
       if (!nonempty(p[key])) throw new Error('Missing product ' + key + ': ' + p.id);
     }
-    if (!httpsUrl(p.website)) throw new Error('Invalid product website: ' + p.id);
+    if (!httpsUrl(p.website) || new URL(p.website).search || new URL(p.website).hash) throw new Error('Invalid product website: ' + p.id);
     if (p.affiliateUrl !== null) throw new Error('Affiliate URLs require approval: ' + p.id);
     if (!Array.isArray(p.bestFor) || !p.bestFor.length || new Set(p.bestFor).size !== p.bestFor.length || p.bestFor.some(x => !GOALS.includes(x))) {
       throw new Error('Invalid bestFor: ' + p.id);
