@@ -11,7 +11,13 @@ const httpsUrl = (value) => {
     return false;
   }
 };
-const isDay = (value) => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
+const isDay = (value) => {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(value + 'T00:00:00.000Z');
+  return !Number.isNaN(parsed.valueOf()) &&
+    parsed.toISOString().slice(0, 10) === value &&
+    value <= new Date().toISOString().slice(0, 10);
+};
 
 export function validateCatalog(products) {
   if (!Array.isArray(products) || products.length === 0) throw new Error('Catalog must be a nonempty array');
