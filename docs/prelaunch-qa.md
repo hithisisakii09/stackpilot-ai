@@ -10,12 +10,23 @@ Development branch only. No merge to main, no public deployment, no affiliate ac
 - `npm run check:build`: confirm generated profiles, comparison, trust pages, noindex, navigation, and product presence
 - `npm test`: run all checks above; CI automatically runs this
 
+## Verified automated coverage (prelaunch branch)
+- Chromium runs local Astro preview on desktop (1440px) and mobile (390px).
+- Tests all three recommendation priorities and the six software profile pages.
+- Exercises same-category comparison selection, duplicate blocking, stale comparison clearing, and transparent unknown values.
+- Checks accessibility with axe for WCAG 2 A/AA and 2.1 A/AA on key states.
+- Collects screenshots as short-retention private CI artifacts.
+- Tests static robots.txt, noindex meta and Vercel X-Robots-Tag configuration.
+- Verifies zero active affiliate URLs through catalog validation.
+
+**Automated success does not substitute for an authenticated, production-like browser review or a final editorial/legal sign-off.**
+
 ## Manual acceptance checklist
 - [ ] On desktop and mobile, homepage advisor collects priority, team size, and budget without console errors
 - [ ] Three priorities return the correct category, each with uncertainty warnings
 - [ ] Labels, keyboard focus, and status announcements remain accessible
-- [ ] All three profile routes resolve and show truthful unverified status
-- [ ] Comparison makes clear that different categories are not direct rivals
+- [ ] All six profile routes resolve and show truthful unverified status
+- [ ] Compare page enforces same-category selection and never suggests a winner based on unverified data
 - [ ] All official vendor outbound links are HTTPS and open without access to opener
 - [ ] All local routes work when directly loaded (not only from homepage)
 - [ ] No third-party tracking, affiliate IDs, PII collection, or analytics unexpectedly present
