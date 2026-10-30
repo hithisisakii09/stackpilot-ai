@@ -86,6 +86,30 @@ try {
   }
   await page.screenshot({ path: output + '/compare-desktop.png', fullPage: true });
   await checkAccessibility(page, 'category comparison desktop');
+  // Interactive comparisons cannot cross categories or imply verified pricing.
+  assert.equal(await page.locator('#compare-category').inputValue(), 'CRM');
+  await page.locator('#compare-form button').click();
+  const panel = page.locator('#comparison-result');
+  assert.equal(await page.locator('#comparison-table').count(), 1);
+  assert.equal(await page.locator('#comparison-table thead th').count(), 3);
+  assert.match(await panel.innerText(), /HubSpot vs Pipedrive/);
+  assert.match(await panel.innerText(), /Unverified/);
+  assert.match(await panel.innerText(), /No affiliate links active/);
+  await checkAccessibility(page, 'interactive CRM comparison');
+  await page.locator('#compare-second').selectOption('hubspot');
+  await page.locator('#compare-form button').click();
+  assert.match(await page.locator('#comparison-error').innerText(), /Select two different products/);
+  assert.equal(await page.locator('#comparison-table').count(), 0);
+  await page.locator('#compare-category').selectOption('SEO');
+  assert.deepEqual((await page.locator('#compare-first option').allTextContents()), ['Ahrefs', 'Semrush']);
+  await page.locator('#compare-form button').click();
+  assert.match(await panel.innerText(), /Ahrefs vs Semrush/);
+  await page.locator('#compare-category').selectOption('Hosting');
+  await page.locator('#compare-form button').click();
+  assert.match(await panel.innerText(), /Cloudways vs Kinsta/);
+  assert.ok(!(await panel.innerText()).includes('HubSpot'), 'Category change must not leak stale product comparisons');
+  await checkAccessibility(page, 'interactive Hosting comparison');
+
 
   for (const slug of ['hubspot', 'pipedrive', 'semrush', 'ahrefs', 'kinsta', 'cloudways']) {
     const resp = await page.goto(base + '/software/' + slug + '/', { waitUntil: 'domcontentloaded' });
@@ -121,11 +145,16 @@ try {
 
   await page.goto(base + '/compare/', { waitUntil: 'networkidle' });
   await page.screenshot({ path: output + '/compare-mobile.png', fullPage: true });
+  await page.locator('#compare-category').selectOption('CRM');
+  await page.locator('#compare-form button').click();
+  assert.equal(await page.locator('#comparison-table').count(), 1);
+  assert.match(await page.locator('#comparison-result').innerText(), /HubSpot vs Pipedrive/);
+  await checkAccessibility(page, 'interactive comparison mobile');
   const compareWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   assert.ok(compareWidth <= 395, 'Comparison mobile overflow: ' + compareWidth);
 
   assert.deepEqual(errors, [], 'Browser JavaScript or local resource failures');
-  console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, comparison, 3 trust pages.');
+  console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, interactive category comparisons, 3 trust pages.');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
