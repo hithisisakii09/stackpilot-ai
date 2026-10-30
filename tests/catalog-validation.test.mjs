@@ -49,3 +49,14 @@ test('malformed sources are rejected', () => {
   records[0].sources = [{ url: 'javascript:alert(1)', claim: 'Great tool', checkedAt: '2026-10-30' }];
   assert.throws(() => validateCatalog(records), /source/);
 });
+
+test('invalid calendar dates are rejected', () => {
+  const records = catalog();
+  records[0].sources[0].checkedAt = '2026-02-30';
+  assert.throws(() => validateCatalog(records), /source/);
+});
+test('future-dated source evidence is rejected', () => {
+  const records = catalog();
+  records[0].sources[0].checkedAt = '2099-01-01';
+  assert.throws(() => validateCatalog(records), /source/);
+});
