@@ -7,6 +7,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: stackpilot-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   browser-acceptance:
     runs-on: ubuntu-latest
