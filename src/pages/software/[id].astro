@@ -41,7 +41,8 @@ h1{font-size:clamp(32px,6vw,56px)}.links{display:flex;gap:20px;flex-wrap:wrap}
 </section>
 <section aria-labelledby="sources">
 <h2 id="sources">Research transparency</h2>
-{product.sources.length ? <ul>{product.sources.map(source => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.claim}</a> — checked {source.checkedAt}</li>)}</ul> : <p>No approved research sources have been recorded yet.</p>}
+<p class="alert">The links below are <strong>unreviewed research leads</strong>. Their presence is not independent evidence of a verified feature, price, or product claim. The displayed date is when each source was logged for review, not a completed editorial approval.</p>
+{product.sources.length ? <ul>{product.sources.map(source => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.claim}</a> — candidate source logged {source.checkedAt} (not reviewed)</li>)}</ul> : <p>No approved research sources have been recorded yet.</p>}
 <p>No affiliate tracking links are active. The link below opens the vendor's official site.</p>
 <a href={product.website} target="_blank" rel="noopener noreferrer">Visit official website ↗</a>
 </section>
