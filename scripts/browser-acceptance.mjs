@@ -93,10 +93,20 @@ try {
   assert.equal(await page.locator('#result h4').count(), 2);
   await page.screenshot({ path: output + '/home-mobile.png', fullPage: true });
   const bodyWidth = await page.evaluate(() => document.documentElement.scrollWidth);
-  assert.ok(bodyWidth <= 395, 'Homepage mobile overflow: ' + bodyWidth);
+  if (bodyWidth > 395) {
+    const offenders = await page.evaluate(() =>
+      [...document.querySelectorAll('body *')]
+        .filter(el => el.getBoundingClientRect().right > window.innerWidth + 4)
+        .slice(0, 8)
+        .map(el => ({ tag: el.tagName.toLowerCase(), class: el.className, right: Math.round(el.getBoundingClientRect().right) }))
+    );
+    throw new Error('Homepage mobile overflow: ' + bodyWidth + '; offending elements: ' + JSON.stringify(offenders));
+  }
 
   await page.goto(base + '/compare/', { waitUntil: 'networkidle' });
   await page.screenshot({ path: output + '/compare-mobile.png', fullPage: true });
+  const compareWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  assert.ok(compareWidth <= 395, 'Comparison mobile overflow: ' + compareWidth);
 
   assert.deepEqual(errors, [], 'Browser JavaScript or local resource failures');
   console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, comparison, 3 trust pages.');
