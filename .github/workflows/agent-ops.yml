@@ -1,0 +1,40 @@
+name: StackPilot safety and operations report
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stackpilot-ops-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  operations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          package-manager-cache: false
+      - run: npm ci
+      - name: Validate and build before reporting
+        run: npm test
+      - name: Produce fail-closed operations report
+        run: |
+          mkdir -p artifacts/ops
+          npm run ops:report -- --json --ci-passed > artifacts/ops/report.json
+          node -e "const r=require('./artifacts/ops/report.json'); if(r.canPublish || r.canMonetize || r.canSpend) process.exit(1);"
+      - name: Archive short-lived, non-sensitive report
+        uses: actions/upload-artifact@v4
+        with:
+          name: stackpilot-operations-report
+          path: artifacts/ops/report.json
+          retention-days: 7
+          if-no-files-found: error
