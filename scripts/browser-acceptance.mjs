@@ -118,11 +118,22 @@ try {
     if (slug === 'hubspot') await checkAccessibility(page, 'software profile');
     assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
   }
-  for (const route of ['/methodology/', '/disclosure/', '/privacy/']) {
+  for (const route of ['/methodology/', '/disclosure/', '/privacy/', '/research/']) {
     const resp = await page.goto(base + route, { waitUntil: 'domcontentloaded' });
     assert.equal(resp?.status(), 200);
     assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
   }
+
+  await page.goto(base + '/research/', { waitUntil: 'domcontentloaded' });
+  const workbench = await page.locator('main').innerText();
+  for (const vendor of ['HubSpot','Pipedrive','Semrush','Ahrefs','Kinsta','Cloudways']) {
+    assert.ok(workbench.includes(vendor), 'Research workbench missing ' + vendor);
+  }
+  assert.match(workbench, /No product claims or pricing have been editorially approved/);
+  assert.match(workbench, /Source intake dates are not editorial verification dates/);
+  assert.equal(await page.locator('main section').count(), 7);
+  await checkAccessibility(page, 'editorial research workbench desktop');
+  await page.screenshot({ path: output + '/research-desktop.png', fullPage: true });
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
@@ -142,6 +153,12 @@ try {
     );
     throw new Error('Homepage mobile overflow: ' + bodyWidth + '; offending elements: ' + JSON.stringify(offenders));
   }
+
+  await page.goto(base + '/research/', { waitUntil: 'networkidle' });
+  await checkAccessibility(page, 'editorial research workbench mobile');
+  await page.screenshot({ path: output + '/research-mobile.png', fullPage: true });
+  const researchWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  assert.ok(researchWidth <= 395, 'Research mobile overflow: ' + researchWidth);
 
   await page.goto(base + '/compare/', { waitUntil: 'networkidle' });
   await page.screenshot({ path: output + '/compare-mobile.png', fullPage: true });
