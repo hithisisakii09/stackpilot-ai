@@ -6,7 +6,7 @@ import products from '../src/data/products.json' with { type: 'json' };
 const catalog = () => structuredClone(products);
 
 test('current catalog passes validation without claiming verification', () => {
-  assert.equal(validateCatalog(catalog()), 3);
+  assert.equal(validateCatalog(catalog()), 6);
   assert.ok(products.every(p => !p.verified && p.affiliateUrl === null && p.sources.length === 0));
 });
 test('duplicate product id is rejected', () => {
