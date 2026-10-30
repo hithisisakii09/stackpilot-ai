@@ -11,7 +11,7 @@ const httpsUrl = (value) => {
     return false;
   }
 };
-const isDay = (value) => typeof value === 'string' && /^\\d{4}-\\d{2}-\\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
+const isDay = (value) => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(value));
 
 export function validateCatalog(products) {
   if (!Array.isArray(products) || products.length === 0) throw new Error('Catalog must be a nonempty array');
