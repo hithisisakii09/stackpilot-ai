@@ -9,6 +9,7 @@
 - Prelaunch methodology, disclosure, and privacy-notes pages
 - Candidate primary-source links and strict catalog validation
 - Offline, read-only editorial research queue
+- A candidate-only evidence ledger and research workbench at `/research/` (sources logged for inspection, not verified claims)
 - `noindex, nofollow` protections on every page pending release approval
 
 **No prices or product suitability are verified; there are no affiliate links or production deployment.**
@@ -28,6 +29,7 @@ Useful commands:
 ```bash
 npm run check:data
 npm run research:queue
+npm run research:evidence
 npm run research:queue -- --json
 npm run build
 npm run check:build
@@ -47,3 +49,9 @@ npm run check:build
 ## Publication status
 
 The development branch is **not ready for public launch**. The site intentionally carries no-index directives and provisional legal/privacy notes. A domain, hosting operator, reviewed legal policy, verified product/price data, manual browser QA, and separate user authorization are required before any production publication, merge, or affiliate activation.
+
+## Development method
+
+Read [AGENTS.md](AGENTS.md) before every sprint. This project uses the engineering-review and browser QA methods documented in [gstack](https://github.com/garrytan/gstack), and the test-first, systematic-debugging and verification methods from [Superpowers](https://github.com/obra/superpowers). These are referenced methodologies; a host without their CLI skills installed should follow the corresponding public SKILL.md instructions rather than falsely claiming to invoke installed slash commands.
+
+See [roadmap](docs/roadmap-to-launch.md) for the product's final launch gates and [Phase 2.0 plan](docs/superpowers/plans/2026-10-31-research-evidence-ledger.md).
