@@ -9,7 +9,17 @@
     "bestFor": [
       "sales"
     ],
-    "verified": false
+    "verified": false,
+    "researchStatus": "unresearched",
+    "sources": [],
+    "lastVerifiedAt": null,
+    "supportedTeams": [],
+    "budgetTiers": [],
+    "pricing": {
+      "status": "unverified",
+      "amount": null,
+      "currency": null
+    }
   },
   {
     "id": "semrush",
@@ -21,7 +31,17 @@
     "bestFor": [
       "seo"
     ],
-    "verified": false
+    "verified": false,
+    "researchStatus": "unresearched",
+    "sources": [],
+    "lastVerifiedAt": null,
+    "supportedTeams": [],
+    "budgetTiers": [],
+    "pricing": {
+      "status": "unverified",
+      "amount": null,
+      "currency": null
+    }
   },
   {
     "id": "kinsta",
@@ -33,6 +53,16 @@
     "bestFor": [
       "hosting"
     ],
-    "verified": false
+    "verified": false,
+    "researchStatus": "unresearched",
+    "sources": [],
+    "lastVerifiedAt": null,
+    "supportedTeams": [],
+    "budgetTiers": [],
+    "pricing": {
+      "status": "unverified",
+      "amount": null,
+      "currency": null
+    }
   }
 ]
