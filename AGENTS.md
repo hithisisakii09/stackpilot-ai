@@ -50,3 +50,12 @@ The report/decision module has no runtime LLM, network or publishing side effect
 - Commercial hosting eligibility must be verified before opening a financially motivated affiliate website to public traffic. Vercel Hobby is for non-commercial personal use.
 - Owner must choose a domain, business identity, reviewed policies, affiliate accounts and a real spend budget before revenue go-live.
 - Do not infer or fabricate traffic, clicks, commission, sales or conversion data.
+
+
+## Binding owner instruction: ₹0 commercial hosting preparation (2026-10-31)
+- Owner chose **₹0 INR/month**, delegated spend **₹0**, most cost-effective commercially allowed hosting; no purchases, contracts, account signup, public production launch, monetization activation or legal attestation are approved.
+- Hosting candidate is **Netlify Free** (explicitly permits commercial projects). Cloudflare Pages Free is a fallback, not a connected account.
+- Read `config/operating-policy.json` and `docs/zero-budget-hosting.md` before acting. Reject any operation that could incur a charge, activate an affiliate link, publish publicly, remove noindex, change `main`, or sign up for a service without separate owner approval.
+- `netlify.toml` and `public/_headers` are **prepared configuration files only**, not authorization to deploy. Do not confuse noindex with authentication.
+- Keep existing protected Masher Vercel preview intact, and do not promote an affiliate business on Vercel Hobby.
+- Prefer no-cost static hosting and watch free-tier usage. When quota or account setup blocks work, inform the owner rather than silently upgrade.
