@@ -1,0 +1,81 @@
+---
+import products from '../../data/products.json';
+import leads from '../../data/evidence-leads.json';
+import { buildEvidenceReviewQueue } from '../../lib/evidence-ledger.mjs';
+
+const queue = buildEvidenceReviewQueue(leads, products);
+const totalLeads = queue.reduce((sum, item) => sum + item.sourceLeadCount, 0);
+const needsRefresh = queue.filter(item => item.needsRefresh).length;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Prelaunch research workbench for StackPilot AI: source leads and editorial review gaps." />
+  <title>Research workbench | StackPilot AI</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color: #e9f1ff; background: #0b1220; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    header, main, footer { max-width: 960px; margin: 0 auto; padding: 24px; }
+    nav { display: flex; gap: 18px; flex-wrap: wrap; }
+    a { color: #7ce8c6; overflow-wrap: anywhere; }
+    :focus-visible { outline: 3px solid #7ce8c6; outline-offset: 3px; }
+    p, li { color: #c6d5e8; line-height: 1.65; }
+    h1 { font-size: clamp(32px, 6vw, 52px); }
+    section { margin: 22px 0; padding: 22px; background: #152138; border: 1px solid #34455f; border-radius: 14px; }
+    .notice { border-left: 4px solid #f3c774; padding: 14px 18px; background: #152138; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .stat { padding: 15px; background: #152138; border-radius: 12px; }
+    .stat strong { display: block; font-size: 26px; }
+    .status { font-weight: 650; color: #f3c774; }
+    ul { padding-left: 24px; }
+    @media(max-width:700px) { .grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <nav aria-label="Site navigation">
+      <a href="/">← StackPilot AI</a>
+      <a href="/compare/">Compare categories</a>
+      <a href="/methodology/">Methodology</a>
+    </nav>
+  </header>
+  <main>
+    <p>Editorial research · pre-launch</p>
+    <h1>Research workbench</h1>
+    <p class="notice"><strong>No product claims or pricing have been editorially approved.</strong>
+      These records are candidate links awaiting independent review, not verified vendor claims, purchase recommendations or proof of product suitability. Source intake dates are not editorial verification dates.</p>
+    <div class="grid">
+      <div class="stat"><strong>{queue.length}</strong>Software candidates</div>
+      <div class="stat"><strong>{totalLeads}</strong>Source leads (unreviewed)</div>
+      <div class="stat"><strong>{needsRefresh}</strong>Source queues needing refresh</div>
+    </div>
+    {queue.map(item => (
+      <section aria-labelledby={`research-${item.productId}`}>
+        <h2 id={`research-${item.productId}`}>{item.productName}</h2>
+        <p><strong>Category:</strong> {item.category}</p>
+        <p class="status">Editorial status: {item.editorialStatus} · Approved claims: {item.approvedClaims}</p>
+        <p><strong>Source leads:</strong> {item.sourceLeadCount} · Refresh required: {item.needsRefresh ? 'Yes' : 'Not currently flagged'}</p>
+        {item.leads.length ? (
+          <ul>{item.leads.map(lead => (
+            <li>
+              {lead.summary} — logged {lead.recordedOn} · {lead.status}<br />
+              <a href={lead.sourceUrl} target="_blank" rel="noopener noreferrer">Open source candidate (external website)</a>
+            </li>
+          ))}</ul>
+        ) : <p>No source leads recorded. Primary-source research is needed.</p>}
+        <p><a href={`/software/${item.productId}/`}>View introductory software profile</a></p>
+      </section>
+    ))}
+    <section>
+      <h2>Next editorial steps</h2>
+      <p>Open each official source, validate its ownership and date, record precise product/plan/region/billing limitations, reconcile conflicts, and obtain authenticated human editorial approval before a claim is shown as verified.</p>
+      <p>The current static prototype <strong>cannot grant approval</strong>. There is no staff account system or automatic approval workflow.</p>
+    </section>
+  </main>
+  <footer>StackPilot AI · <a href="/disclosure/">Affiliate disclosure</a> · <a href="/privacy/">Privacy notes</a></footer>
+</body>
+</html>
