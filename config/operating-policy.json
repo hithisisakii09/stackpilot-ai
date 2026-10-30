@@ -1,0 +1,10 @@
+{
+  "policyVersion": 1,
+  "monthlyBudgetINR": 0,
+  "delegatedSpendINR": 0,
+  "hostingCandidate": "netlify-free",
+  "commercialHostingApproved": false,
+  "productionLaunchApproved": false,
+  "affiliateActivationApproved": false,
+  "paidServicesApproved": false
+}
