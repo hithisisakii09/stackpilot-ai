@@ -3,7 +3,7 @@ import products from '../../data/products.json';
 const groups = [...new Set(products.map(p => p.category))].sort();
 ---
 <!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="description" content="Compare introductory software categories, research status, and current verification gaps with StackPilot AI."/>
+<meta name="description" content="Compare introductory software categories, research status, and current verification gaps with StackPilot AI."/><meta name="robots" content="noindex, nofollow"/>
 <title>Compare software | StackPilot AI</title>
 <style>
 :root{font-family:system-ui,sans-serif;color:#e9f1ff;background:#0b1220}*{box-sizing:border-box}
@@ -12,11 +12,11 @@ p{color:#c4d2e7;line-height:1.6}table{width:100%;border-collapse:collapse;backgr
 th,td{border:1px solid #34455f;text-align:left;padding:14px;vertical-align:top}
 th{background:#243651}main{overflow-x:auto}aside{border-left:4px solid #f5c36b;padding:12px 18px;margin:20px 0;background:#152138}
 </style></head><body>
-<header><a href="/">← StackPilot AI</a></header>
+<header><a href="/">← StackPilot AI</a> · <a href="/methodology/">Methodology</a></header>
 <main><h1>Explore and compare software</h1><p>This catalog currently includes software across different categories. These are not interchangeable direct competitors. No verified pricing or suitability verdict is available.</p>
 <aside role="note">All listings are in the research stage. No affiliate links are active. Do not interpret a catalog listing as a recommendation or endorsement.</aside>
 <table><caption>Introductory category overview</caption><thead><tr><th scope="col">Software</th><th scope="col">Category</th><th scope="col">Potential use case</th><th scope="col">Pricing</th><th scope="col">Editorial status</th></tr></thead>
 <tbody>{products.map(product => <tr><th scope="row"><a href={`/software/${product.id}/`}>{product.name}</a></th><td>{product.category}</td><td>{product.description}</td><td>Unverified</td><td>{product.verified ? 'Reviewed' : 'Research pending'}</td></tr>)}</tbody></table>
 <h2>Categories currently represented</h2><p>{groups.join(' · ')}</p>
 <p>For product-specific limitations and official vendor links, open an individual profile. Feature-by-feature and price comparisons will be introduced only when supported by source-backed research.</p>
-</main><footer>© {new Date().getFullYear()} StackPilot AI</footer></body></html>
+</main><footer>© {new Date().getFullYear()} StackPilot AI · <a href="/disclosure/">Disclosure</a> · <a href="/privacy/">Privacy</a></footer></body></html>
