@@ -1,0 +1,9 @@
+# Prepared configuration only — do not deploy or publish without owner approval.
+# Netlify Free allows commercial projects; 300 credits/month hard capped.
+# Existing Vercel protected preview remains the current development site.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.23.4"
