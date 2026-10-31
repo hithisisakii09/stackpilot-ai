@@ -2,7 +2,16 @@
  * Read-only candidate comparison. No scraped data, fit inference, ranking,
  * commissions, advertising status or anonymous buyer tracking are involved.
  */
+function assertUniqueProducts(products) {
+  if (!Array.isArray(products) || products.some(p => !p || typeof p.id !== 'string')) {
+    throw new Error('Invalid product catalog');
+  }
+  const ids = new Set(products.map(p => p.id));
+  if (ids.size !== products.length) throw new Error('Duplicate product id');
+}
+
 export function comparisonCategories(products) {
+  assertUniqueProducts(products);
   return [...new Set(products.map((product) => product.category))].sort((a, b) => a.localeCompare(b));
 }
 
