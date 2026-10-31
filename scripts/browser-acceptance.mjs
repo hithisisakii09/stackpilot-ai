@@ -49,7 +49,7 @@ try {
 
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.match(await page.title(), /StackPilot AI/);
-  assert.ok((await page.locator('h1').innerText()).includes('Find the right tools'));
+  assert.ok((await page.locator('h1').innerText()).includes('Explore software categories'));
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
   await page.screenshot({ path: output + '/home-desktop.png', fullPage: true });
   await checkAccessibility(page, 'homepage desktop');
