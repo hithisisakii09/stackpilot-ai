@@ -162,7 +162,7 @@ try {
   assert.match(exportedCsv,/category,requirement_id,requirement,question,verification_status,vendor_answer,evidence_plan_region_date/);
   assert.match(exportedCsv,/"CRM","pipeline-stages"/);
   assert.match(exportedCsv,/"Unverified","",""/);
-  assert.ok(exportedCsv.split('\\r\\n').length>=3,'CSV includes selected requirements');
+  assert.ok(exportedCsv.split(/\r\n/).length>=3,'CSV includes selected requirements');
   assert.match(await page.locator('#status').innerText(),/saved on your device/i);
   await checkAccessibility(page, 'private requirements worksheet desktop');
   await page.screenshot({ path: output + '/worksheet-desktop.png', fullPage: true });
