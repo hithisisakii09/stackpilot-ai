@@ -105,3 +105,14 @@ test('third-party and tracking sources never inflate evidence counts', () => {
   assert.equal(model.products[0].identifiedSources,1);
   assert.equal(model.products[0].editorialStatus,'Editorial review pending');
 });
+
+test('root pages and nonstandard ports do not inflate identified documentation sources', () => {
+  const fake=[{...products[0],sources:[
+    {url:'https://knowledge.hubspot.com/'},
+    {url:'https://knowledge.hubspot.com:8443/import-and-export/export-records'},
+    {url:'https://knowledge.hubspot.com/import-and-export/export-records'}
+  ]},products[3]];
+  const model=compareCandidates(fake,'CRM','hubspot','pipedrive');
+  assert.equal(model.products[0].identifiedSources,1);
+  assert.equal(model.products[0].editorialStatus,'Editorial review pending');
+});
