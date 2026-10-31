@@ -32,11 +32,15 @@ jobs:
           mkdir -p artifacts/ops
           npm run --silent ops:report -- --json --ci-passed > artifacts/ops/report.json
           node -e "const r=require('./artifacts/ops/report.json'); if(r.canPublish || r.canMonetize || r.canSpend) process.exit(1);"
+      - name: Build bounded research backlog without publishing
+        run: |
+          node scripts/operating-backlog.mjs --json > artifacts/ops/backlog.json
+          node -e "const q=require('./artifacts/ops/backlog.json'); if(q.canPublish || q.canMonetize || q.canSpend || q.execution !== 'advisory-only') process.exit(1);"
       - name: Archive short-lived, non-sensitive report
         uses: actions/upload-artifact@v4
         with:
           name: stackpilot-operations-report
-          path: artifacts/ops/report.json
+          path: artifacts/ops/
           retention-days: 7
           if-no-files-found: error
       - name: Validate preview bundle, without publishing anywhere
