@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
-const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', 'tools/requirements-checklist/index.html', ...products.map(p => `software/${p.id}/index.html`)];
+const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', 'tools/requirements-checklist/index.html', 'tools/software-cost-calculator/index.html', ...products.map(p => `software/${p.id}/index.html`)];
 for (const page of pages) {
   const path = join('dist', page);
   assert.ok(existsSync(path), `Missing built route: ${path}`);
@@ -17,6 +17,7 @@ assert.match(home, /\/software\/hubspot\//);
 assert.match(home, /\/methodology\//);
 assert.match(home, /Affiliate disclosure/);
 assert.match(home, /\/tools\/requirements-checklist\//);
+assert.match(home, /\/tools\/software-cost-calculator\//);
 const worksheet = readFileSync('dist/tools/requirements-checklist/index.html','utf8');
 assert.match(worksheet,/No vendor scoring, referral links, accounts, analytics, or server submission/);
 const compare = readFileSync('dist/compare/index.html', 'utf8');
@@ -39,3 +40,8 @@ assert.match(staticHeaders, /X-Robots-Tag:\s*noindex,\s*nofollow,\s*noarchive/i,
   'Netlify/Cloudflare prelaunch non-indexing header missing');
 assert.match(staticHeaders, /X-Content-Type-Options:\s*nosniff/i,
   'Static hosting content-type safeguard missing');
+
+const costCalculator = readFileSync('dist/tools/software-cost-calculator/index.html','utf8');
+assert.match(costCalculator,/We do not supply or verify the prices/);
+assert.match(costCalculator,/All calculations happen locally in your browser/);
+assert.match(costCalculator,/currency exchange/);
