@@ -208,6 +208,17 @@ try {
   await checkAccessibility(page,'SaaS TCO educational guide desktop');
   await page.screenshot({path:output+'/saas-tco-guide-desktop.png',fullPage:true});
 
+  // CRM migration decision guide: new static content must receive browser and axe coverage.
+  await page.goto(base + '/guides/crm-migration-checklist/', {waitUntil:'networkidle'});
+  assert.match(await page.locator('h1').innerText(), /CRM migration checklist/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  const migrationText = await page.locator('main').innerText();
+  for (const topic of ['permissions','deduplication','rollback','staff hours','sample import']) {
+    assert.match(migrationText, new RegExp(topic,'i'));
+  }
+  await checkAccessibility(page,'CRM migration checklist desktop');
+  await page.screenshot({path:output+'/crm-migration-desktop.png',fullPage:true});
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.ok(await page.locator('#recommend').isVisible(), 'Advisor button hidden on mobile');
@@ -260,6 +271,12 @@ try {
   await page.screenshot({path:output+'/saas-tco-guide-mobile.png',fullPage:true});
   const tcoWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
   assert.ok(tcoWidth<=395,'SaaS cost guide mobile overflow: '+tcoWidth);
+
+  await page.goto(base + '/guides/crm-migration-checklist/', {waitUntil:'networkidle'});
+  assert.match(await page.locator('h1').innerText(), /CRM migration checklist/);
+  await checkAccessibility(page,'CRM migration checklist mobile');
+  await page.screenshot({path:output+'/crm-migration-mobile.png',fullPage:true});
+  assert.ok((await page.evaluate(() => document.documentElement.scrollWidth)) <= 395,'CRM migration mobile overflow');
 
   await page.goto(base + '/compare/', { waitUntil: 'networkidle' });
   await page.screenshot({ path: output + '/compare-mobile.png', fullPage: true });
