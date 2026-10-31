@@ -64,3 +64,11 @@ test('rejects unsafe product IDs before constructing research profile links', ()
     assert.throws(() => categoryCandidates(unsafe,'CRM'), /Invalid product id/);
   }
 });
+
+test('unverified catalog summaries are explicitly labeled in comparisons', () => {
+  const result = compareCandidates(products, 'CRM', 'hubspot', 'pipedrive');
+  for (const entry of result.products) {
+    assert.match(entry.description, /^Unverified catalog overview: /);
+    assert.match(entry.editorialStatus, /pending/);
+  }
+});
