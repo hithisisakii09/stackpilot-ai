@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
-const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', ...products.map(p => `software/${p.id}/index.html`)];
+const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', 'tools/requirements-checklist/index.html', ...products.map(p => `software/${p.id}/index.html`)];
 for (const page of pages) {
   const path = join('dist', page);
   assert.ok(existsSync(path), `Missing built route: ${path}`);
@@ -16,6 +16,9 @@ assert.match(home, /\/compare\//);
 assert.match(home, /\/software\/hubspot\//);
 assert.match(home, /\/methodology\//);
 assert.match(home, /Affiliate disclosure/);
+assert.match(home, /\/tools\/requirements-checklist\//);
+const worksheet = readFileSync('dist/tools/requirements-checklist/index.html','utf8');
+assert.match(worksheet,/No vendor scoring, referral links, accounts, analytics, or server submission/);
 const compare = readFileSync('dist/compare/index.html', 'utf8');
 for (const product of products) assert.ok(compare.includes(product.name), `Compare page omits ${product.name}`);
 console.log(`Static route smoke passed for ${pages.length} pages`);
