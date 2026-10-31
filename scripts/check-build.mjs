@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
-const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', 'tools/requirements-checklist/index.html', 'tools/software-cost-calculator/index.html', ...products.map(p => `software/${p.id}/index.html`)];
+const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', 'tools/requirements-checklist/index.html', 'tools/software-cost-calculator/index.html', 'guides/saas-total-cost-of-ownership/index.html', ...products.map(p => `software/${p.id}/index.html`)];
 for (const page of pages) {
   const path = join('dist', page);
   assert.ok(existsSync(path), `Missing built route: ${path}`);
@@ -18,6 +18,7 @@ assert.match(home, /\/methodology\//);
 assert.match(home, /Affiliate disclosure/);
 assert.match(home, /\/tools\/requirements-checklist\//);
 assert.match(home, /\/tools\/software-cost-calculator\//);
+assert.match(home, /\/guides\/saas-total-cost-of-ownership\//);
 const worksheet = readFileSync('dist/tools/requirements-checklist/index.html','utf8');
 assert.match(worksheet,/No vendor scoring, referral links, accounts, analytics, or server submission/);
 const compare = readFileSync('dist/compare/index.html', 'utf8');
@@ -45,3 +46,11 @@ const costCalculator = readFileSync('dist/tools/software-cost-calculator/index.h
 assert.match(costCalculator,/We do not supply or verify the prices/);
 assert.match(costCalculator,/All calculations happen locally in your browser/);
 assert.match(costCalculator,/currency exchange/);
+
+const tcoGuide=readFileSync('dist/guides/saas-total-cost-of-ownership/index.html','utf8');
+assert.match(tcoGuide,/SaaS total cost of ownership/);
+assert.match(tcoGuide,/hypothetical/i);
+assert.match(tcoGuide,/USD 1000\.00/);
+assert.match(tcoGuide,/USD 936\.00/);
+assert.match(tcoGuide,/USD 64\.00/);
+assert.match(tcoGuide,/\/tools\/software-cost-calculator\//);
