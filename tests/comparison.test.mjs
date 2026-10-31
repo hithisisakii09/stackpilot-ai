@@ -50,3 +50,9 @@ test('comparison does not alter original catalog', () => {
   compareCandidates(products, 'CRM', 'hubspot', 'pipedrive');
   assert.deepEqual(products, copy);
 });
+
+test('ambiguous duplicate catalog IDs are rejected before comparison', () => {
+  const ambiguous=[products[0],{...products[0],name:'Impersonated Vendor'},...products.slice(1)];
+  assert.throws(() => compareCandidates(ambiguous,'CRM','hubspot','pipedrive'),/Duplicate product id/);
+  assert.throws(() => categoryCandidates(ambiguous,'CRM'),/Duplicate product id/);
+});
