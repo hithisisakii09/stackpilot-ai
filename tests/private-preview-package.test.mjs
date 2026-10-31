@@ -69,3 +69,12 @@ test('deployment workflow cannot push production or spend money', () => {
  assert.match(w,/create-private-preview-package\.mjs/);
  assert.doesNotMatch(w,/NETLIFY_AUTH_TOKEN|netlify deploy|netlify-cli|--prod|NETLIFY_SITE_ID|pull-requests:\s*write/);
 });
+
+test('private preview packaging admits the CRM guide while retaining baseline and noindex guards', () => {
+ const script=readFileSync(new URL('../scripts/create-private-preview-package.mjs',import.meta.url),'utf8');
+ assert.match(script,/htmlCount >= 15/);
+ assert.match(script,/guides\/crm-migration-checklist\/index\.html/);
+ assert.match(script,/Missing page noindex/);
+ assert.match(script,/Unapproved affiliate URLs or editorial claims found/);
+ assert.doesNotMatch(script,/assert\.equal\(htmlCount,\s*15/);
+});
