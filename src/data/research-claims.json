@@ -50,7 +50,7 @@
   {
     "id": "kinsta-doc-claim-1",
     "productId": "kinsta",
-    "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/",
+    "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/",
     "statement": "Kinsta states that WordPress hosting plans include usage allowances and exceeding some limits can result in overage charges.",
     "caveat": "Confirm the current WordPress plan, measurement rules, notifications, taxes and overage rates.",
     "recordedOn": "2026-10-31",
