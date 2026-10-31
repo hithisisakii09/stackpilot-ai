@@ -36,3 +36,11 @@ test('invalid inputs are rejected', () => {
 test('no match produces an empty result list', () => {
   assert.deepEqual(recommend([hubspot], { ...input, goal: 'hosting' }), []);
 });
+
+test('unreviewed compatibility claims cannot boost or penalize recommendation score', () => {
+  const tentative = { ...verified, verified: false, supportedTeams: ['2–20'], budgetTiers: ['Moderate'] };
+  const mismatched = { ...tentative, supportedTeams: ['Solo'], budgetTiers: ['Premium'] };
+  assert.equal(recommend([tentative], input)[0].score, 60);
+  assert.equal(recommend([mismatched], input)[0].score, 60);
+  assert.match(recommend([tentative], input)[0].cautions.join(' '), /not been verified/);
+});
