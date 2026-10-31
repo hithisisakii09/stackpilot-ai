@@ -29,3 +29,12 @@ test('CRM migration guide contains a measurable synthetic-data acceptance matrix
  assert.match(html,/synthetic/i);
  assert.match(html,/no real customer data/i);
 });
+
+test('mobile acceptance table is keyboard navigable and semantically labeled',()=>{
+ const html=readFileSync(route,'utf8');
+ assert.match(html,/<div role="region" aria-label="Migration acceptance table[^"]+" tabindex="0" style="overflow-x:auto">/);
+ assert.match(html,/<table[^>]*>/);
+ assert.match(html,/<caption[^>]*>/);
+ assert.match(html,/<th scope="col">/);
+ assert.match(html,/<th scope="row">/);
+});
