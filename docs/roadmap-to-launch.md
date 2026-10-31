@@ -17,6 +17,8 @@
 | 5 — Affiliate monetization | Program enrollment, policy checks, affiliate disclosures, approved links, independence tests | Verified program participation, link destination and expiration checks, FTC/region disclosures | Separate approval per affiliate program and activation |
 | 6 — Operations and iteration | Source freshness audits, change monitoring, editorial queue, conversion testing | User consent, privacy-safe metrics, security/review evidence, incident playbook | Approve data retention/telemetry and commercial roadmap |
 
+**Owner approval remains mandatory** for public production, changing project visibility, any affiliate partnership, external contracts or paid services; this roadmap is preparation only.
+
 ## Hard boundaries
 
 - No automatic conversion from vendor-source lead to verified fact: **the current static system cannot authenticate editors or approve claims**.
