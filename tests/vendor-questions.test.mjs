@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { buildVendorQuestionsCsv } from '../src/lib/vendor-questions.mjs';
+import { buildVendorQuestionsCsv, listVendorQuestions } from '../src/lib/vendor-questions.mjs';
 
 const models = {
   CRM: { category: 'CRM', products: [{id:'hubspot',name:'HubSpot'},{id:'pipedrive',name:'Pipedrive'}] },
@@ -41,4 +41,31 @@ test('escapes CSV quotes and formula-like vendor names rather than executing spr
   const csv=buildVendorQuestionsCsv(model);
   assert.match(csv,/"'=HYPERLINK\(""https:\/\/bad\.example""\)"/);
   assert.doesNotMatch(csv,/,"=HYPERLINK/);
+});
+
+test('display questions match the six CSV questions for all three categories', () => {
+  for (const model of Object.values(models)) {
+    const list=listVendorQuestions(model);
+    assert.equal(list.length,6);
+    assert.equal(new Set(list.map(q=>q.criterion)).size,6);
+    const csv=buildVendorQuestionsCsv(model);
+    for (const q of list) {
+      assert.match(q.criterion, /\S/);
+      assert.match(q.question, /\?$/);
+      assert.ok(csv.includes('"'+q.criterion+'","'+q.question+'"'));
+    }
+  }
+});
+
+test('invalid comparison cannot create questions preview', () => {
+  for (const model of [null,{category:'CRM',products:[]},
+    {category:'CRM',products:[models.CRM.products[0],models.CRM.products[0]]}]) {
+    assert.throws(()=>listVendorQuestions(model),/comparison|category|candidate/i);
+  }
+});
+
+test('editing preview questions does not modify shared source', () => {
+  const questions=listVendorQuestions(models.CRM);
+  questions[0].question='Fabricated response';
+  assert.notEqual(listVendorQuestions(models.CRM)[0].question,'Fabricated response');
 });
