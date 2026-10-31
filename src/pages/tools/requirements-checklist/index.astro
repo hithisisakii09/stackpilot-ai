@@ -51,7 +51,7 @@ import { listCategories } from '../../../lib/buyer-worksheet.mjs';
     <p>Independent, privacy-first decision tool</p>
     <h1>Software requirements worksheet</h1>
     <p>Before choosing a CRM, SEO tool, or hosting provider, write down what your team actually needs. Select your questions, generate a checklist, and compare the answers you get from each vendor.</p>
-    <p><strong>No vendor scoring, referral links, accounts, analytics, or server submission.</strong> Your selections stay on this page; this tool does not store them.</p>
+    <p><strong>No vendor scoring, referral links, accounts, analytics, or server submission.</strong> Your selections remain in this browser tab unless you explicitly save a CSV on your device. StackPilot does not store or receive them.</p>
     <div class="panel">
       <label for="worksheet-category">Software category</label>
       <select id="worksheet-category" name="category">
@@ -71,23 +71,30 @@ import { listCategories } from '../../../lib/buyer-worksheet.mjs';
       <h2 id="worksheet-output-title">Your private checklist</h2>
       <label for="worksheet-output">Generated text — review before sharing</label>
       <textarea id="worksheet-output" readonly placeholder="Select requirements and click Generate my checklist"></textarea>
-      <p><button type="button" id="copy-worksheet" class="secondary" disabled>Copy checklist</button></p>
+      <p class="actions"><button type="button" id="copy-worksheet" class="secondary" disabled>Copy checklist</button><button type="button" id="download-worksheet-csv" class="secondary" disabled>Download CSV</button></p><p>CSV files contain your selected questions and blank vendor-answer fields. They are saved on your device, not uploaded to StackPilot. Treat the provider answers as unverified until you collect evidence.</p>
       <noscript>Enable JavaScript to generate a checklist. Your selections are not sent to any server.</noscript>
     </section>
     <p>Vendor feature lists and terms may change by plan, region and date. Verify your chosen requirements directly with each provider; this worksheet is not an endorsement or a verified product comparison.</p>
   </main>
   <footer><a href="/privacy/">Privacy notes</a> · <a href="/disclosure/">Affiliate disclosure</a> · © {new Date().getFullYear()} StackPilot AI (working name)</footer>
   <script>
-    import { criteriaFor, buildBuyerWorksheet } from '../../../lib/buyer-worksheet.mjs';
+    import { criteriaFor, buildBuyerWorksheet, buildBuyerWorksheetCsv } from '../../../lib/buyer-worksheet.mjs';
     const category=document.querySelector('#worksheet-category');
     const choices=document.querySelector('#worksheet-criteria');
     const output=document.querySelector('#worksheet-output');
     const status=document.querySelector('#status');
     const copyButton=document.querySelector('#copy-worksheet');
+    const downloadButton=document.querySelector('#download-worksheet-csv');
+    let generatedSelection=null;
+    function invalidateGenerated(){
+      output.value='';
+      generatedSelection=null;
+      copyButton.disabled=true;
+      downloadButton.disabled=true;
+    }
     function render() {
       choices.replaceChildren();
-      output.value='';
-      copyButton.disabled=true;
+      invalidateGenerated();
       status.textContent='';
       for (const item of criteriaFor(category.value)) {
         const label=document.createElement('label');
@@ -103,6 +110,10 @@ import { listCategories } from '../../../lib/buyer-worksheet.mjs';
       }
     }
     category.addEventListener('change',render);
+    choices.addEventListener('change',()=>{
+      invalidateGenerated();
+      status.textContent='Selections changed. Generate the checklist again to enable download.';
+    });
     document.querySelector('#reset-worksheet').addEventListener('click',()=>{
       render();
       status.textContent='Selections cleared.';
@@ -111,12 +122,31 @@ import { listCategories } from '../../../lib/buyer-worksheet.mjs';
       const selected=[...choices.querySelectorAll('input:checked')].map(x=>x.value);
       try{
         output.value=buildBuyerWorksheet(category.value,selected);
+        generatedSelection=[...selected];
         copyButton.disabled=false;
+        downloadButton.disabled=false;
         status.textContent='Checklist generated locally. No information was submitted.';
       }catch(error) {
-        output.value='';
-        copyButton.disabled=true;
+        invalidateGenerated();
         status.textContent=error instanceof Error ? error.message : 'Please choose requirements.';
+      }
+    });
+    downloadButton.addEventListener('click',()=>{
+      if(!generatedSelection||!output.value)return;
+      try{
+        const csv=buildBuyerWorksheetCsv(category.value,generatedSelection);
+        const file=new Blob([csv],{type:'text/csv;charset=utf-8'});
+        const url=URL.createObjectURL(file);
+        const anchor=document.createElement('a');
+        anchor.href=url;
+        anchor.download='stackpilot-requirements-'+category.value.toLowerCase()+'.csv';
+        document.body.append(anchor);
+        anchor.click();
+        anchor.remove();
+        setTimeout(()=>URL.revokeObjectURL(url),1000);
+        status.textContent='CSV saved on your device. StackPilot did not receive a copy.';
+      }catch{
+        status.textContent='CSV download could not start. Please try again.';
       }
     });
     copyButton.addEventListener('click',async()=>{
