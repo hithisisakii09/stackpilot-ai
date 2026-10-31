@@ -28,7 +28,7 @@ function info(product) {
     id: product.id,
     name: product.name,
     category: product.category,
-    description: product.description,
+    description: product.verified === true ? product.description : 'Unverified catalog overview: ' + product.description,
     editorialStatus: product.verified === true ? 'Editorial review completed' : 'Editorial review pending',
     identifiedSources: Array.isArray(product.sources) ? product.sources.length : 0,
     teamFit: product.verified === true && product.supportedTeams?.length
