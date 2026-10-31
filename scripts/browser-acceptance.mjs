@@ -162,6 +162,39 @@ try {
   await page.locator('#reset-worksheet').click();
   assert.equal(await page.locator('#worksheet-output').inputValue(), '');
 
+  // Pricing truth: calculate only buyer-supplied prices, never vendor claims.
+  await page.goto(base + '/tools/software-cost-calculator/', { waitUntil:'networkidle' });
+  assert.match(await page.title(), /StackPilot AI/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  assert.equal(await page.locator('fieldset[data-option]').count(), 2);
+  await page.locator('#cost-a-flatMonthly').fill('10.10');
+  await page.locator('#cost-a-seatMonthly').fill('2.50');
+  await page.locator('#cost-a-seats').fill('3');
+  await page.locator('#cost-a-extrasMonthly').fill('4.00');
+  await page.locator('#cost-a-oneTimeFee').fill('50.00');
+  await page.locator('#cost-b-flatMonthly').fill('15');
+  await page.locator('#cost-b-seatMonthly').fill('1');
+  await page.locator('#cost-b-seats').fill('3');
+  await page.locator('#cost-b-extrasMonthly').fill('5');
+  await page.locator('#cost-b-oneTimeFee').fill('0');
+  await page.locator('#cost-calculate').click();
+  const estimate=await page.locator('#cost-report').inputValue();
+  assert.match(estimate,/INR 309.20/);
+  assert.match(estimate,/INR 276.00/);
+  assert.match(estimate,/Option B has the lower entered-cost estimate/);
+  assert.match(estimate,/not vendor-verified pricing/);
+  assert.match(await page.locator('#cost-status').innerText(),/calculated locally/);
+  await checkAccessibility(page,'cost calculator desktop');
+  await page.screenshot({path:output+'/cost-calculator-desktop.png',fullPage:true});
+  await page.locator('#cost-a-flatMonthly').fill('-1');
+  await page.locator('#cost-calculate').click();
+  assert.match(await page.locator('#cost-status').innerText(),/Invalid .*amount/i);
+  assert.equal(await page.locator('#cost-report').inputValue(),'');
+  assert.ok(await page.locator('#cost-copy').isDisabled());
+  await page.locator('#cost-reset').click();
+  assert.equal(await page.locator('#cost-a-flatMonthly').inputValue(),'0');
+  assert.equal(await page.locator('#cost-report').inputValue(),'');
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.ok(await page.locator('#recommend').isVisible(), 'Advisor button hidden on mobile');
@@ -197,6 +230,17 @@ try {
   const worksheetWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   assert.ok(worksheetWidth <= 395, 'Worksheet mobile overflow: ' + worksheetWidth);
 
+  await page.goto(base+'/tools/software-cost-calculator/',{waitUntil:'networkidle'});
+  await page.locator('#cost-a-flatMonthly').fill('2');
+  await page.locator('#cost-b-flatMonthly').fill('3');
+  await page.locator('#cost-calculate').click();
+  assert.match(await page.locator('#cost-report').inputValue(),/INR 24.00/);
+  assert.match(await page.locator('#cost-report').inputValue(),/INR 36.00/);
+  await checkAccessibility(page,'cost calculator mobile');
+  await page.screenshot({path:output+'/cost-calculator-mobile.png',fullPage:true});
+  const calculatorWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
+  assert.ok(calculatorWidth<=395,'Cost calculator mobile overflow: '+calculatorWidth);
+
   await page.goto(base + '/compare/', { waitUntil: 'networkidle' });
   await page.screenshot({ path: output + '/compare-mobile.png', fullPage: true });
   await page.locator('#compare-category').selectOption('CRM');
@@ -208,7 +252,7 @@ try {
   assert.ok(compareWidth <= 395, 'Comparison mobile overflow: ' + compareWidth);
 
   assert.deepEqual(errors, [], 'Browser JavaScript or local resource failures');
-  console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, interactive category comparisons, private requirements worksheet, 3 trust pages.');
+  console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, interactive category comparisons, private requirements worksheet and cost calculator, 3 trust pages.');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
