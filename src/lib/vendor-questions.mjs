@@ -16,7 +16,7 @@ const safeCell = value => {
   const safe=/^\s*[=+\-@]/.test(text) ? "'"+text : text;
   return '"'+safe.replaceAll('"','""')+'"';
 };
-export function buildVendorQuestionsCsv(model) {
+export function listVendorQuestions(model) {
   if (!model || !Object.hasOwn(CATEGORY_QUESTION,model.category) ||
       !Array.isArray(model.products) || model.products.length !== 2 ||
       model.products.some(p=>!p || typeof p.id!=='string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(p.id) ||
@@ -24,11 +24,15 @@ export function buildVendorQuestionsCsv(model) {
       model.products[0].id === model.products[1].id) {
     throw new Error('Invalid comparison category or candidates');
   }
+  return [...COMMON_QUESTIONS,CATEGORY_QUESTION[model.category]]
+    .map(([criterion,question])=>({criterion,question}));
+}
+export function buildVendorQuestionsCsv(model) {
+  const questions=listVendorQuestions(model);
   const [first,second] = model.products;
   const header=['category','criterion','question','first_vendor','first_vendor_verification',
     'second_vendor','second_vendor_verification','evidence_url_plan_region_date'];
-  const questions=[...COMMON_QUESTIONS,CATEGORY_QUESTION[model.category]];
-  const rows=[header,...questions.map(([criterion,question])=>[
+  const rows=[header,...questions.map(({criterion,question})=>[
     model.category,criterion,question,first.name,'Unverified',second.name,'Unverified',''
   ])];
   return rows.map(row=>row.map(safeCell).join(',')).join('\r\n')+'\r\n';
