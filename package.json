@@ -15,7 +15,8 @@
     "ops:report": "node scripts/ops-report.mjs",
     "partners:queue": "node scripts/affiliate-readiness-report.mjs",
     "ops:backlog": "node scripts/operating-backlog.mjs",
-    "research:claims": "node scripts/research-claims-report.mjs"
+    "research:claims": "node scripts/research-claims-report.mjs",
+    "publisher:readiness": "node scripts/publisher-readiness-report.mjs"
   },
   "dependencies": {
     "astro": "^7.4.4"
