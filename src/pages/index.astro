@@ -15,7 +15,7 @@ button?.addEventListener('click', () => {
   const output = document.querySelector('#result');
   if (!output) return;
   output.replaceChildren();
-  const matches = recommend(products, { goal, team, budget });
+  const matches = recommend(products, { goal, team, budget }).sort((a, b) => a.product.name.localeCompare(b.product.name));
   const h = document.createElement('h3');
   h.textContent = matches.length ? 'Category matches (alphabetical, unranked)' : 'No category matches yet';
   output.append(h);
