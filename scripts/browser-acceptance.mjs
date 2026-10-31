@@ -135,6 +135,33 @@ try {
   await checkAccessibility(page, 'editorial research workbench desktop');
   await page.screenshot({ path: output + '/research-desktop.png', fullPage: true });
 
+  // Privacy-first requirements worksheet: user-entered state is browser-only.
+  await page.goto(base + '/tools/requirements-checklist/', { waitUntil: 'networkidle' });
+  assert.match(await page.title(), /StackPilot AI/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  assert.equal(await page.locator('#worksheet-criteria input[type="checkbox"]').count(), 7);
+  await page.locator('#generate-worksheet').click();
+  assert.match(await page.locator('#status').innerText(), /Select at least one requirement/);
+  await page.locator('#worksheet-criteria input').nth(0).check();
+  await page.locator('#worksheet-criteria input').nth(1).check();
+  await page.locator('#generate-worksheet').click();
+  const worksheetText=await page.locator('#worksheet-output').inputValue();
+  assert.match(worksheetText, /Category: CRM/);
+  assert.match(worksheetText, /Data import and export/);
+  assert.match(worksheetText, /No paid rankings or affiliate links/);
+  assert.match(await page.locator('#status').innerText(), /generated locally/);
+  await checkAccessibility(page, 'private requirements worksheet desktop');
+  await page.screenshot({ path: output + '/worksheet-desktop.png', fullPage: true });
+  await page.locator('#worksheet-category').selectOption('Hosting');
+  assert.equal(await page.locator('#worksheet-output').inputValue(), '');
+  assert.equal(await page.locator('#worksheet-criteria input').count(), 7);
+  await page.locator('#worksheet-criteria input').first().check();
+  await page.locator('#generate-worksheet').click();
+  assert.match(await page.locator('#worksheet-output').inputValue(), /Category: Hosting/);
+  assert.doesNotMatch(await page.locator('#worksheet-output').inputValue(), /Data import and export/);
+  await page.locator('#reset-worksheet').click();
+  assert.equal(await page.locator('#worksheet-output').inputValue(), '');
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.ok(await page.locator('#recommend').isVisible(), 'Advisor button hidden on mobile');
@@ -160,6 +187,16 @@ try {
   const researchWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   assert.ok(researchWidth <= 395, 'Research mobile overflow: ' + researchWidth);
 
+  await page.goto(base + '/tools/requirements-checklist/', { waitUntil: 'networkidle' });
+  await page.locator('#worksheet-category').selectOption('SEO');
+  await page.locator('#worksheet-criteria input').nth(1).check();
+  await page.locator('#generate-worksheet').click();
+  assert.match(await page.locator('#worksheet-output').inputValue(), /Category: SEO/);
+  await checkAccessibility(page, 'private requirements worksheet mobile');
+  await page.screenshot({ path: output + '/worksheet-mobile.png', fullPage: true });
+  const worksheetWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+  assert.ok(worksheetWidth <= 395, 'Worksheet mobile overflow: ' + worksheetWidth);
+
   await page.goto(base + '/compare/', { waitUntil: 'networkidle' });
   await page.screenshot({ path: output + '/compare-mobile.png', fullPage: true });
   await page.locator('#compare-category').selectOption('CRM');
@@ -171,7 +208,7 @@ try {
   assert.ok(compareWidth <= 395, 'Comparison mobile overflow: ' + compareWidth);
 
   assert.deepEqual(errors, [], 'Browser JavaScript or local resource failures');
-  console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, interactive category comparisons, 3 trust pages.');
+  console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, interactive category comparisons, private requirements worksheet, 3 trust pages.');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
