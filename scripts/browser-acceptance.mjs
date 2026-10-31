@@ -285,6 +285,10 @@ try {
   await page.waitForTimeout(150);
   assert.ok(await acceptanceScroller.evaluate(el => el.scrollLeft > 0),
     'ArrowRight must scroll the focused acceptance table on mobile');
+  await page.keyboard.press('Home');
+  await page.waitForTimeout(150);
+  assert.equal(await acceptanceScroller.evaluate(el => el.scrollLeft), 0,
+    'Home should return the focused acceptance table to its leftmost position');
   await checkAccessibility(page,'CRM migration checklist mobile');
   await page.screenshot({path:output+'/crm-migration-mobile.png',fullPage:true});
   assert.ok((await page.evaluate(() => document.documentElement.scrollWidth)) <= 395,'CRM migration mobile overflow');
