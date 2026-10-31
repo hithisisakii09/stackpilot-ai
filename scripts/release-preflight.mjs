@@ -4,10 +4,12 @@
  */
 import {readFileSync,readdirSync} from 'node:fs';
 import {join,relative} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {auditStaticRoutes,auditDeploymentConstraints} from '../src/lib/release-preflight.mjs';
 
 const root=new URL('../',import.meta.url);
 const dist=new URL('../dist/',import.meta.url);
+const distPath=fileURLToPath(dist);
 const read=url=>readFileSync(url,'utf8');
 function walk(directory) {
   return readdirSync(directory,{withFileTypes:true}).flatMap(entry=>{
@@ -19,8 +21,8 @@ function walk(directory) {
 }
 let routes,deploy;
 try {
-  const pages=walk(dist.pathname).map(file=>({
-    path:relative(dist.pathname,file).split('\\').join('/'),
+  const pages=walk(distPath).map(file=>({
+    path:relative(distPath,file).split('\\').join('/'),
     html:readFileSync(file,'utf8')
   }));
   routes=auditStaticRoutes(pages);
