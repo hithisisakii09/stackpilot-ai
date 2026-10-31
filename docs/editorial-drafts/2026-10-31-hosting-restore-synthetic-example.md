@@ -20,16 +20,16 @@ This is an illustrative set of requirements, not an assertion that any host meet
 | --- | --- | --- | --- |
 | DNS and email | MX recorded; DKIM entry omitted from migration inventory | All required records accounted for | **FAIL** |
 | Backups | Latest restorable snapshot is 35 minutes old | RPO ≤15 minutes | **FAIL** |
-| Restoration | Test restore completes in 42 minutes | RTO ≤60 minutes | **PASS** for this narrow metric only |
+| Restoration | Fictional backup restore step completes in 42 minutes; detection, validation and traffic recovery are not timed | End-to-end service RTO ≤60 minutes | **NOT TESTED** — 42-minute restore step alone cannot establish RTO |
 | TLS and application | Homepage TLS works, but scheduled order jobs untested | Critical dependencies verified | **NOT TESTED** |
 | Rollback | No named person authorized to initiate rollback | Named owner and executable return plan | **FAIL** |
 | Billing and retention | Old-host data deletion terms not reviewed | Approved written plan | **NOT TESTED** |
 
-**Decision: NO-GO.** One passing restore-time observation cannot override any failed or untested critical gate.
+**Decision: NO-GO.** A 42-minute restore-step observation is not a measured end-to-end recovery, and multiple critical gates failed or were not tested.
 
 ### RPO versus RTO
 - **RPO** asks how much recent data could be lost if restoring a chosen recovery point. A backup captured 35 minutes before the fictional failure exceeds the 15-minute RPO. Actual application consistency also matters.
-- **RTO** asks how long the service must take to resume usable operation after an interruption. A 42-minute sample may meet the fictional target, but it is not proof of repeatable recovery, correct transaction state, or a host's guaranteed SLA.
+- **RTO** asks how long the service must take to resume usable operation after the defined disruption point. It includes detection, decision-making, restoration, validation and restoration of user traffic. A fictional 42-minute backup-restore step alone **does not prove** that the end-to-end 60-minute RTO was met; the correct decision is **NOT TESTED** until the full outage timeline is measured. Neither a restoration step nor provider marketing is proof of a host's guaranteed SLA.
 - A plan promise or backup-frequency setting is not the same as a measured, permissioned successful restore.
 
 ## Safe buyer rehearsal procedure
