@@ -2,6 +2,8 @@
 
 Applies to future AI-assisted development sessions in this repository.
 
+**Current state first:** Read `docs/current-operational-state.md` and live PR/CI status before historical hosting notes. The current primary development host is **Netlify Deploy Preview (Private)**. Auto Publishing Locked was confirmed in owner screenshots. Do not merge, unlock production, change visibility, enable affiliates, or spend without explicit separate authorization.
+
 ## Required skill sources (read the current public docs before each development sprint)
 - [gstack — Garry Tan](https://github.com/garrytan/gstack): `plan-eng-review`, `review`, `qa`, `ship`, `investigate`. Use its **Think → Plan → Build → Review → Test → Ship → Reflect** sequence.
 - [Superpowers — obra](https://github.com/obra/superpowers): `writing-plans`, `test-driven-development`, `systematic-debugging`, `verification-before-completion`, `requesting-code-review`.
@@ -31,12 +33,12 @@ Continue from the active development branch `feature/phase-1-1-recommendation-en
 
 ## Continuous autonomous business operation (enabled at ChatGPT scheduling layer)
 
-StackPilot has a **daily autonomous operator** scheduled task and an **hourly incident watch**. These run outside GitHub and do not imply any model can work between scheduled invocations. They inspect the development branch and protected Masher Vercel project and report or implement permitted safe actions, subject to connected tool access.
+StackPilot has a **daily autonomous operator** scheduled task and an **hourly incident watch**. These run outside GitHub and do not imply any model can work between scheduled invocations. They inspect the GitHub development branch and Netlify private Deploy Preview; Vercel Hobby is a separate legacy preview now reporting a build-rate limit. Report or implement only permitted safe actions, subject to connected tool access.
 
 On every operator run:
-1. Check latest GitHub Actions results and protected Vercel preview state. Do not equate READY with an authenticated remote browser pass.
+1. Check latest GitHub Actions results, Netlify Deploy Preview commit status, and user-confirmed Private/Locked settings. Treat Vercel Hobby build-rate-limit status as a legacy quota issue, not proof Netlify is down. Do not equate READY with an authenticated remote browser pass.
 2. Run or inspect `npm run ops:report -- --json`; follow fail-closed restrictions.
-3. Choose the highest-priority **automatic** task from `src/lib/autonomy-policy.mjs`, but only if required tools and explicitly scoped permissions exist.
+3. Choose the highest-priority **automatic** task from `npm run ops:backlog -- --json`; separately inspect `src/lib/autonomy-policy.mjs` for release gates. Only act if the needed tools and explicitly scoped permissions exist.
 4. Use gstack review/QA and Superpowers plan/TDD RED→GREEN/verification for every code change.
 5. Create only development-branch changes, draft PRs, research candidates and issue updates. Never self-approve evidence or claim earnings without external affiliate statements.
 6. Escalate only owner-only actions identified in private GitHub issue #2. Do not collect secrets in issue bodies.
@@ -48,14 +50,14 @@ The report/decision module has no runtime LLM, network or publishing side effect
 
 ## Business controls
 - Commercial hosting eligibility must be verified before opening a financially motivated affiliate website to public traffic. Vercel Hobby is for non-commercial personal use.
-- Owner must choose a domain, business identity, reviewed policies, affiliate accounts and a real spend budget before revenue go-live.
+- Owner must confirm publisher identity/contact, public release strategy, final policies, applicable affiliate accounts and actual commercial eligibility. The current authorized cash and delegated budget is ₹0; do not require or invent spending.
 - Do not infer or fabricate traffic, clicks, commission, sales or conversion data.
 
 
 ## Binding owner instruction: ₹0 commercial hosting preparation (2026-10-31)
-- Owner chose **₹0 INR/month**, delegated spend **₹0**, most cost-effective commercially allowed hosting; no purchases, contracts, account signup, public production launch, monetization activation or legal attestation are approved.
+- Owner chose **₹0 INR/month**, delegated spend **₹0**, most cost-effective commercially allowed hosting; initial Netlify project setup was completed by the owner and observed in screenshots. No further signups, purchases, contracts, public production launch, monetization activation or legal attestation are approved.
 - Hosting candidate is **Netlify Free** (explicitly permits commercial projects). Cloudflare Pages Free is a fallback, not a connected account.
 - Read `config/operating-policy.json` and `docs/zero-budget-hosting.md` before acting. Reject any operation that could incur a charge, activate an affiliate link, publish publicly, remove noindex, change `main`, or sign up for a service without separate owner approval.
-- `netlify.toml` and `public/_headers` are **prepared configuration files only**, not authorization to deploy. Do not confuse noindex with authentication.
-- Keep existing protected Masher Vercel preview intact, and do not promote an affiliate business on Vercel Hobby.
+- `netlify.toml` and `public/_headers` are used by the current **private Netlify Deploy Preview**; their presence does **not** authorize public deployment or unlocked production. Do not confuse noindex with authentication.
+- Keep the old Masher Vercel Hobby project unmodified despite its build-rate-limit failure; no paid upgrade or public affiliate operation there. Prefer verified private Netlify preview checks.
 - Prefer no-cost static hosting and watch free-tier usage. When quota or account setup blocks work, inform the owner rather than silently upgrade.
