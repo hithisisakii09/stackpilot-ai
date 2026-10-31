@@ -1,11 +1,13 @@
 # StackPilot AI — Autonomous Business Operating Model
 
+**Current hosting and approval evidence:** `docs/current-operational-state.md` (read before historical descriptions).
+
 ## Mission
 Run an independent, AI-assisted SaaS discovery and affiliate business with minimal routine manual oversight, not a static list of products. Automation must remain truthful, auditable, rate-limited and compliant.
 
 ## Actual runtime components
-1. **GitHub + Vercel**: Astro site and private preview deployments; CI unit tests, build, accessibility and browser acceptance.
-2. **Daily autonomous operator task** (ChatGPT scheduled task): review StackPilot GitHub and Masher Vercel, prioritize fixes, make test-first development-branch changes when tools/permissions permit, and escalate genuine owner approvals.
+1. **GitHub + Netlify Private Deploy Preview**: Astro site, draft PR #1, private Netlify preview, unit/build/accessibility/browser CI. Old privately visible Netlify production remains on `main@c8fadcb` per owner screenshot with auto publishing locked. Legacy Vercel Hobby preview is rate-limited and not the production/commercial platform.
+2. **Daily autonomous operator task** (ChatGPT scheduled task): review StackPilot GitHub and the Netlify private preview, prioritize fixes, make test-first development-branch changes when tools/permissions permit, and escalate genuine owner approvals.
 3. **Hourly incident watch** (ChatGPT scheduled task): watch CI, deployment state, safety boundaries, and material failures; notify only for meaningful changes.
 4. **`npm run ops:report`**: purely local policy engine; shows actionable work and blockers. Machine output: `npm run ops:report -- --json`.
 5. **GitHub Actions operations report**: upon pull requests or a manual dispatch, validates the repo and publishes a short-retention non-sensitive report artifact. It cannot approve research or deploy production.
@@ -22,7 +24,7 @@ Run an independent, AI-assisted SaaS discovery and affiliate business with minim
 | Orchestrator | Choose prioritized safe tasks and update work queue | Spend money, bypass owner/legal approvals or grant itself new permissions |
 
 ## Automated decision loop
-Observe GitHub and Vercel state → generate a `ops:report` assessment → prioritize safe actions → create/modify development code → validate via CI and Chromium QA → retain artifacts and explain decisions → escalate only permission-only gates. On failure, open an issue, retry a bounded number of times, or pause that operation. Never self-certify external commercial approvals.
+Observe GitHub and private Netlify preview state, record legacy Vercel quota failures separately → generate a `ops:report` assessment → prioritize safe actions → create/modify development code → validate via CI and Chromium QA → retain artifacts and explain decisions → escalate only permission-only gates. On failure, open an issue, retry a bounded number of times, or pause that operation. Never self-certify external commercial approvals.
 
 ## What is required for lawful monetization
 1. A commercial hosting plan or other hosting provider whose license permits affiliate operations. Vercel Hobby is non-commercial.
@@ -44,4 +46,4 @@ No commercial launch, indexing, main merge, paid spending or affiliate activatio
 
 
 ## Owner budget amendment — 2026-10-31
-The owner selected an initial monthly budget of **₹0 INR** and delegated spending of **₹0 INR**. No paid hosting, AI APIs, ads, domain purchases, subscriptions, purchases, contracts or public launch is authorized. **Netlify Free** is the commercially permitted static hosting candidate; **Cloudflare Pages Free** is an alternative. Netlify's hard free credit cap can suspend service when exhausted. The project is configured for static hosting but **has not been deployed to Netlify**. See `docs/zero-budget-hosting.md` and `config/operating-policy.json`. All account and public deployment decisions remain with the owner.
+The owner selected an initial monthly budget of **₹0 INR** and delegated spending of **₹0 INR**. No paid hosting, AI APIs, ads, domain purchases, subscriptions, purchases, contracts or public launch is authorized. **Netlify Free** is the commercially permitted static hosting candidate; **Cloudflare Pages Free** is an alternative. Netlify's hard free credit cap can suspend service when exhausted. The **Netlify site exists** and the owner provided screenshots of production/preview visibility as Private with Auto Publishing Locked. GitHub has recorded successful Netlify Deploy Preview build statuses, but current authenticated remote browser QA and provider billing plan are not independently verified. See `docs/current-operational-state.md`, `docs/zero-budget-hosting.md` and `config/operating-policy.json`. No public launch or affiliate application is approved. All account/contract and public deployment decisions remain with the owner.
