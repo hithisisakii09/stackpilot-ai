@@ -7,8 +7,8 @@
 | --- | --- | --- |
 | **Owner screenshot** — Netlify dashboard | Netlify project `inspiring-chaja-cfb85f` with old published production `main@c8fadcb`; **Production visibility Private**, **Deploy Preview visibility Private**, **Auto Publishing Locked**. | These are UI settings at the time of screenshot. They do not constitute an independent anonymous-access penetration test, proof of a current Netlify plan, or ongoing quota availability. |
 | **User-reported browser** acceptance | Owner confirmed login-accessible homepage, comparison and research pages, and that an unauthenticated Incognito window could not access the private preview. | User-reported checks of an earlier preview, not automated remote authenticated UAT of each new SHA or a security audit. |
-| **GitHub commit status** | The development pull request has received successful **Netlify Deploy Preview** statuses, with URL `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app`; these are distinct from production. | `SUCCESS` means a provider-reported deployment, not user authentication or proof that current site content is accessible to the owner. Check the latest PR commit. |
-| **GitHub repository/CI** | Draft PR #1 on `feature/phase-1-1-recommendation-engine`, versus `main@c8fadcb`, remained unmerged at inspection. The latest baseline is 15 Astro pages, with Node tests and Chromium desktop/mobile workflows. | Never assume a prior green check remains green after changes. Check CI against the **exact head commit**. |
+| **GitHub commit status** | The development pull request, including `bf7fdb6`, has received successful **Netlify Deploy Preview** statuses, with URL `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app`; these are distinct from production. | `SUCCESS` means a provider-reported deployment, not user authentication or proof that current site content is accessible to the owner. Check the latest PR commit. |
+| **GitHub repository/CI** | Draft PR #1 on `feature/phase-1-1-recommendation-engine`, versus `main@c8fadcb`, remained unmerged at inspection. The verified development preview contains 16 Astro static pages following the CRM migration guide addition. At exact commit `bf7fdb6d5f1baa6cae7a0dbf9987f0014c75a920`, build, operations and Chromium desktop/mobile browser workflows passed. | Never assume a prior green check remains green after changes. Check CI against the **exact head commit**. |
 | **Vercel provider commit status** | The separate legacy **Vercel Hobby** preview (`masher2`) reported a build-rate limit and an upgrade prompt. | This is a **Vercel preview quota limitation**, not proof that Netlify production is down. **No paid upgrade** or additional Vercel spend is authorized. |
 | **Repository policy** | `config/operating-policy.json` records monthly budget **₹0**, delegated spending **₹0**, and all launch, paid-service, hosting-approval, and affiliate-activation flags false. | This is a software safeguard, **not** signed contractual, legal, banking, or provider-account evidence. |
 
@@ -18,6 +18,18 @@
 - **Legacy preview:** Vercel Hobby `masher2` is not the commercial/public launch platform; its build-rate limit is documented and should **not** trigger a paid plan upgrade.
 - **Code source:** private GitHub `hithisisakii09/stackpilot-ai`, draft [PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1). The feature branch and `main` are distinct. No autonomous merge is authorized.
 - **Build and defense:** Astro static, `netlify.toml`, `public/_headers`, `public/robots.txt`, and per-page meta noindex; GitHub Actions also validates the static build and test suite. **noindex is not access control**: private visibility must be enforced by the hosting service, not search-engine directives.
+
+
+## Verified 2026-10-31 development checkpoint
+- **Exact checked commit:** `bf7fdb6d5f1baa6cae7a0dbf9987f0014c75a920` on draft PR #1, not merged to `main`.
+- **Build and validation:** [success](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41181607821).
+- **Safety and operations report:** [success](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41181607850).
+- **Chromium desktop/mobile acceptance and keyboard scrolling:** [success](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41181607800).
+- **GitHub Netlify private deploy-preview status:** success at this SHA; this is not authenticated remote acceptance.
+- **Anonymous external fetch:** nine documented private preview routes returned HTTP 401 on 2026-10-31. Point-in-time sample only, not exhaustive security proof. Evidence and route list recorded in GitHub [issue #2](https://github.com/hithisisakii09/stackpilot-ai/issues/2).
+- **Open gates:** authenticated remote desktop/mobile owner testing, actual Netlify account credits/billing and visibility recheck, editorial signoff on six candidate vendor statements, publisher/legal/privacy verification, affiliate approvals if separately authorized, and explicit owner public release authorization.
+- **Latest baseline:** 16 static pages. Legacy Vercel Hobby build-rate-limit is not a blocker to private Netlify development.
+- **Authorization boundary:** ₹0, private/locked, no merge, public indexing, contracts or affiliate activation.
 
 ## Release gates — current state
 - **No public launch** or search-engine indexing authorized. Do not unlock Netlify's production auto-publishing, change visitor visibility, merge `main`, attach public DNS, remove robots/noindex, or promote code without separate explicit owner approval.
