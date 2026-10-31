@@ -6,6 +6,9 @@ function assertUniqueProducts(products) {
   if (!Array.isArray(products) || products.some(p => !p || typeof p.id !== 'string')) {
     throw new Error('Invalid product catalog');
   }
+  if (products.some(p => !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(p.id))) {
+    throw new Error('Invalid product id');
+  }
   const ids = new Set(products.map(p => p.id));
   if (ids.size !== products.length) throw new Error('Duplicate product id');
 }
