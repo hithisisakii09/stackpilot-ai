@@ -72,3 +72,15 @@ test('unverified catalog summaries are explicitly labeled in comparisons', () =>
     assert.match(entry.editorialStatus, /pending/);
   }
 });
+
+test('non-boolean claimed verification cannot be shown as reviewed', () => {
+  const fake=[{...products[0],verified:'true'},products[3]];
+  const model=compareCandidates(fake,'CRM','hubspot','pipedrive');
+  assert.equal(model.products[0].editorialStatus,'Editorial review pending');
+  assert.match(model.products[0].description,/^Unverified catalog overview:/);
+});
+test('unreviewed source counts cannot include malformed source objects', () => {
+  const fake=[{...products[0],sources:[{},null,{url:'https://example.com'}]},products[3]];
+  const model=compareCandidates(fake,'CRM','hubspot','pipedrive');
+  assert.equal(model.products[0].identifiedSources,0);
+});
