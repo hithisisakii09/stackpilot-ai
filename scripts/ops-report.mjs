@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { decideAutonomousActions } from '../src/lib/autonomy-policy.mjs';
 import { validateCatalog } from '../src/lib/catalog-validation.mjs';
 import { buildEvidenceReviewQueue } from '../src/lib/evidence-ledger.mjs';
+import { createAffiliateResearchQueue } from '../src/lib/affiliate-readiness.mjs';
 
 const policy = JSON.parse(readFileSync(new URL('../config/operating-policy.json', import.meta.url), 'utf8'));
 if (
@@ -20,6 +21,8 @@ if (
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const evidence = JSON.parse(readFileSync(new URL('../src/data/evidence-leads.json', import.meta.url), 'utf8'));
 validateCatalog(products);
+const affiliateCandidates = JSON.parse(readFileSync(new URL('../src/data/affiliate-programs.json', import.meta.url), 'utf8'));
+const partnerQueue = createAffiliateResearchQueue(affiliateCandidates, products);
 const queue = buildEvidenceReviewQueue(evidence, products);
 const output = decideAutonomousActions({
   // Only the CI runner may explicitly assert successful unit/build checks.
@@ -52,6 +55,15 @@ const report = {
   reviewedProducts: 0,
   candidateProducts: products.length,
   pendingResearch: queue.filter(p => p.editorialStatus !== 'Reviewed').length,
+  affiliatePreparation: {
+    candidatePrograms:partnerQueue.filter(p=>p.researchStatus==='candidate').length,
+    discoveryGaps:partnerQueue.filter(p=>p.researchStatus==='program-discovery-needed').length,
+    applicationsSubmitted:0,
+    programsAccepted:0,
+    trackingLinksEnabled:0,
+    verifiedEarnings:null,
+    nextResearchActions:partnerQueue.map(p=>({productId:p.productId,action:p.nextAction}))
+  },
   ...output
 };
 if (process.argv.includes('--json')) {
