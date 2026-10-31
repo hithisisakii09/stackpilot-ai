@@ -104,6 +104,19 @@ try {
   for (const name of ['HubSpot', 'Pipedrive', 'Semrush', 'Ahrefs', 'Kinsta', 'Cloudways']) {
     assert.ok((await page.locator('main').innerText()).includes(name), 'Comparison missing ' + name);
   }
+  // Static category tables must not disclose unapproved team fit or false editorial approval.
+  const staticCandidateRows=page.locator('main section[aria-label$=" candidates"] tbody tr');
+  assert.equal(await staticCandidateRows.count(),6);
+  for (const row of await staticCandidateRows.all()) {
+    const text=await row.innerText();
+    assert.match(text,/Unverified catalog overview:/);
+    assert.match(text,/Unverified/);
+    assert.match(text,/Editorial review pending/);
+    assert.doesNotMatch(text,/Editorial review completed/);
+  }
+  assert.deepEqual(await page.locator('section[aria-label="CRM candidates"] tbody th').allTextContents(),['HubSpot','Pipedrive']);
+  assert.deepEqual(await page.locator('section[aria-label="SEO candidates"] tbody th').allTextContents(),['Ahrefs','Semrush']);
+  assert.deepEqual(await page.locator('section[aria-label="Hosting candidates"] tbody th').allTextContents(),['Cloudways','Kinsta']);
   await page.screenshot({ path: output + '/compare-desktop.png', fullPage: true });
   await checkAccessibility(page, 'category comparison desktop');
   // Interactive comparisons cannot cross categories or imply verified pricing.
