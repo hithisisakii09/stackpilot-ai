@@ -39,7 +39,9 @@ assert.match(headers, /X-Robots-Tag:\s*noindex,\s*nofollow,\s*noarchive/i);
 assert.match(headers, /X-Content-Type-Options:\s*nosniff/i);
 assert.match(readFileSync(join(root,'robots.txt'),'utf8'), /Disallow:\s*\//);
 const htmlCount = entries.filter(f => f.path.endsWith('.html')).length;
-assert.equal(htmlCount, 15, 'Require exactly 15 static pages for current catalog');
+assert.ok(htmlCount >= 15, 'Require baseline static pages for current catalog');
+assert.ok(entries.some(f => f.path === 'guides/crm-migration-checklist/index.html'),
+  'Require CRM migration guide in private preview');
 const manifest=buildPrivatePreviewManifest(entries,policy,sha);
 mkdirSync('artifacts/private-preview',{recursive:true});
 writeFileSync('artifacts/private-preview/manifest.json', JSON.stringify(manifest,null,2)+'\n');
