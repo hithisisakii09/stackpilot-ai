@@ -1,6 +1,7 @@
 ---
 import products from '../../data/products.json';
-const categories = [...new Set(products.map(p => p.category))].sort();
+import { comparisonCategories, categoryComparisonRows } from '../../lib/comparison.mjs';
+const categories = comparisonCategories(products);
 ---
 <!doctype html>
 <html lang="en">
@@ -79,13 +80,13 @@ const categories = [...new Set(products.map(p => p.category))].sort();
             <caption>{category}: preliminary research candidates</caption>
             <thead><tr><th scope="col">Software</th><th scope="col">Product overview</th><th scope="col">Team fit</th><th scope="col">Pricing</th><th scope="col">Research status</th></tr></thead>
             <tbody>
-              {products.filter(p => p.category === category).map(p => (
+              {categoryComparisonRows(products, category).map(p => (
                 <tr>
                   <th scope="row"><a href={`/software/${p.id}/`}>{p.name}</a></th>
                   <td>{p.description}</td>
-                  <td>{p.supportedTeams.length ? p.supportedTeams.join(', ') : 'Not verified'}</td>
-                  <td>See vendor for current plans; not verified</td>
-                  <td>{p.verified ? 'Editorial review completed' : 'Research pending'}</td>
+                  <td>{p.teamFit}</td>
+                  <td>{p.pricing}</td>
+                  <td>{p.editorialStatus}</td>
                 </tr>
               ))}
             </tbody>
