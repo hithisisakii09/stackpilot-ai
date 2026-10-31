@@ -38,7 +38,7 @@ function info(product) {
         const hostname = url.hostname.toLowerCase();
         const root = canonical.hostname.toLowerCase().replace(/^www[.]/, '');
         return url.protocol === 'https:' && !url.username && !url.password &&
-          !url.search && !url.hash &&
+          !url.search && !url.hash && !url.port && url.pathname.length > 1 &&
           (hostname === root || hostname.endsWith('.' + root) ||
            (product.id === 'cloudways' && hostname === 'www.digitalocean.com'));
       } catch { return false; }
