@@ -94,3 +94,8 @@ test('rejects invalid freshness threshold and date reference',()=>{
  assert.throws(()=>buildResearchClaimReviewQueue(all(),products,{today:'2026-02-30'}),/date/i);
  assert.throws(()=>buildResearchClaimReviewQueue(all(),products,{...opts,staleAfterDays:0}),/stale/i);
 });
+
+test('rejects duplicate catalog IDs before attributing evidence',()=>{
+ const duplicated=[products[0],products[0],...products.slice(1)];
+ assert.throws(()=>validateResearchClaims(all(),duplicated,opts),/duplicate product/i);
+});
