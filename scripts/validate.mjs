@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { validateCatalog } from '../src/lib/catalog-validation.mjs';
 import { validateEvidenceLeads } from '../src/lib/evidence-ledger.mjs';
 import { validateAffiliateCandidates } from '../src/lib/affiliate-readiness.mjs';
+import { validateResearchClaims } from '../src/lib/research-claims.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const count = validateCatalog(products);
@@ -10,3 +11,5 @@ const leads = JSON.parse(readFileSync(new URL('../src/data/evidence-leads.json',
 console.log(`Validated ${validateEvidenceLeads(leads, products)} unreviewed source leads; approval remains disabled`);
 const programs = JSON.parse(readFileSync(new URL('../src/data/affiliate-programs.json', import.meta.url), 'utf8'));
 console.log(`Validated ${validateAffiliateCandidates(programs, products)} candidate partner records; no applications or tracking authorized`);
+const claimCandidates = JSON.parse(readFileSync(new URL('../src/data/research-claims.json', import.meta.url), 'utf8'));
+console.log(`Validated ${validateResearchClaims(claimCandidates, products)} vendor-source statements as unapproved research candidates`);
