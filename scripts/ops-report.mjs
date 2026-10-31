@@ -3,6 +3,7 @@ import { decideAutonomousActions } from '../src/lib/autonomy-policy.mjs';
 import { validateCatalog } from '../src/lib/catalog-validation.mjs';
 import { buildEvidenceReviewQueue } from '../src/lib/evidence-ledger.mjs';
 import { createAffiliateResearchQueue } from '../src/lib/affiliate-readiness.mjs';
+import { buildOperatingBacklog } from '../src/lib/operating-backlog.mjs';
 
 const policy = JSON.parse(readFileSync(new URL('../config/operating-policy.json', import.meta.url), 'utf8'));
 if (
@@ -24,6 +25,7 @@ validateCatalog(products);
 const affiliateCandidates = JSON.parse(readFileSync(new URL('../src/data/affiliate-programs.json', import.meta.url), 'utf8'));
 const partnerQueue = createAffiliateResearchQueue(affiliateCandidates, products);
 const queue = buildEvidenceReviewQueue(evidence, products);
+const agentQueue = buildOperatingBacklog({ products, evidenceLeads:evidence, affiliateCandidates, policy });
 const output = decideAutonomousActions({
   // Only the CI runner may explicitly assert successful unit/build checks.
   ciPassed: process.argv.includes('--ci-passed'),
@@ -52,6 +54,14 @@ const report = {
     productionLaunchApproved: policy.productionLaunchApproved
   },
   automation: 'decision-support-not-unrestricted-agent-execution',
+  researchBacklog: {
+    execution:agentQueue.execution,
+    asOf:agentQueue.asOf,
+    automaticTasks:agentQueue.automatic.length,
+    ownerApprovalGates:agentQueue.ownerGates.length,
+    sourcesNeedingRefresh:agentQueue.metrics.sourcesNeedingRefresh,
+    priorityTaskIds:agentQueue.automatic.slice(0,6).map(t=>t.id)
+  },
   reviewedProducts: 0,
   candidateProducts: products.length,
   pendingResearch: queue.filter(p => p.editorialStatus !== 'Reviewed').length,
