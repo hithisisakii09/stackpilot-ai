@@ -45,6 +45,16 @@
 4. Any current production change beyond the older dashboard screenshot, legal signoff, editorial approvals, traffic, commission conversion, or actual monetary revenue.
 5. Continued public reachability of every vendor-documentation URL; automated crawlers can disagree with the publisher website (e.g., Kinsta docs source index versus direct fetch).
 
+## Verified checkpoint — 2026-10-31 later development cycle
+- **Exact head:** `97c5b18c312c75d6fc91850fc3d36760b33c035b` (draft PR #1; development branch, not `main`).
+- **GitHub build/tests:** [SUCCESS](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41195030857).
+- **Safety/operations:** [SUCCESS](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41195030899).
+- **Chromium desktop/mobile acceptance:** [SUCCESS](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41195030943).
+- **Netlify PRIVATE Deploy Preview:** GitHub commit status SUCCESS. This does not independently establish authenticated remote UAT or present account settings.
+- **Current product:** 17 static pages; requirements worksheet locally exports CSV with vendor responses blank and status Unverified; CRM and hosting migration guides are private/noindex.
+- **Open owner-only gates:** authenticated exact-head remote acceptance, billing/credit-plan UI evidence, final privacy/legal/contact, six editorial claim approvals, and separate publication/monetization authorization.
+- **Budget/release constraints:** ₹0 per month and ₹0 delegated; no production merge, public access/indexing, affiliate activation, contracts or purchases.
+
 ## What the autonomous agents should do next
 1. Read `AGENTS.md`, this file, operating policy and latest [GitHub PR](https://github.com/hithisisakii09/stackpilot-ai/pull/1). Reconcile any stale snapshot against **current** GitHub checks and owner-provided provider UI evidence.
 2. Run/read `npm run ops:report -- --json`, `npm run ops:backlog -- --json`, `npm run research:claims -- --json` and `npm run partners:queue -- --json` as appropriate, without changing accounts.
