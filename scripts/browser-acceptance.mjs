@@ -219,6 +219,19 @@ try {
   await checkAccessibility(page,'CRM migration checklist desktop');
   await page.screenshot({path:output+'/crm-migration-desktop.png',fullPage:true});
 
+  // Hosting migration guide: category-balanced buyer education; no vendor endorsements.
+  await page.goto(base + '/guides/hosting-migration-checklist/', {waitUntil:'networkidle'});
+  assert.match(await page.locator('h1').innerText(), /Hosting migration checklist/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  const hostingGuideText=await page.locator('main').innerText();
+  for (const topic of ['DNS','backups','restore','TLS','rollback','data retention','GO/NO-GO']) {
+    assert.match(hostingGuideText,new RegExp(topic,'i'));
+  }
+  assert.equal(await page.locator('main section').count(),7);
+  assert.equal(await page.locator('tbody tr').count(),5);
+  await checkAccessibility(page,'hosting migration checklist desktop');
+  await page.screenshot({path:output+'/hosting-migration-desktop.png',fullPage:true});
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.ok(await page.locator('#recommend').isVisible(), 'Advisor button hidden on mobile');
@@ -271,6 +284,16 @@ try {
   await page.screenshot({path:output+'/saas-tco-guide-mobile.png',fullPage:true});
   const tcoWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
   assert.ok(tcoWidth<=395,'SaaS cost guide mobile overflow: '+tcoWidth);
+
+  await page.goto(base + '/guides/hosting-migration-checklist/', {waitUntil:'networkidle'});
+  assert.match(await page.locator('h1').innerText(), /Hosting migration checklist/);
+  const hostingScroller=page.locator('[role="region"][aria-label^="Hosting cutover checkpoints"]');
+  assert.equal(await hostingScroller.count(),1);
+  await hostingScroller.focus();
+  assert.ok(await hostingScroller.evaluate(el=>document.activeElement===el),'Hosting table must be keyboard focusable');
+  await checkAccessibility(page,'hosting migration checklist mobile');
+  assert.ok((await page.evaluate(()=>document.documentElement.scrollWidth))<=395,'Hosting migration mobile overflow');
+  await page.screenshot({path:output+'/hosting-migration-mobile.png',fullPage:true});
 
   await page.goto(base + '/guides/crm-migration-checklist/', {waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(), /CRM migration checklist/);
