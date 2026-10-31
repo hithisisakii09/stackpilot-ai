@@ -84,3 +84,24 @@ test('unreviewed source counts cannot include malformed source objects', () => {
   const model=compareCandidates(fake,'CRM','hubspot','pipedrive');
   assert.equal(model.products[0].identifiedSources,0);
 });
+
+test('six legitimate primary-source catalog records remain countable', () => {
+  for (const category of ['CRM','SEO','Hosting']) {
+    const entries=categoryCandidates(products,category);
+    const model=compareCandidates(products,category,entries[0].id,entries[1].id);
+    assert.deepEqual(model.products.map(item=>item.identifiedSources),[1,1],
+      'Expected one first-party candidate source per vendor in '+category);
+    assert.ok(model.products.every(item=>item.editorialStatus==='Editorial review pending'));
+  }
+});
+test('third-party and tracking sources never inflate evidence counts', () => {
+  const fake=[{...products[0],sources:[
+    {url:'https://knowledge.hubspot.com/import-and-export/export-records'},
+    {url:'https://knowledge.hubspot.com.evil.example/claim'},
+    {url:'https://www.hubspot.com/?utm_source=test'},
+    {url:'https://other.example/claim'}
+  ]},products[3]];
+  const model=compareCandidates(fake,'CRM','hubspot','pipedrive');
+  assert.equal(model.products[0].identifiedSources,1);
+  assert.equal(model.products[0].editorialStatus,'Editorial review pending');
+});
