@@ -33,10 +33,10 @@ Continue from the active development branch `feature/phase-1-1-recommendation-en
 
 ## Continuous autonomous business operation (enabled at ChatGPT scheduling layer)
 
-StackPilot has a **daily autonomous operator** scheduled task and an **hourly incident watch**. These run outside GitHub and do not imply any model can work between scheduled invocations. They inspect the GitHub development branch and Netlify private Deploy Preview; Vercel Hobby is a separate legacy preview now reporting a build-rate limit. Report or implement only permitted safe actions, subject to connected tool access.
+StackPilot has a **daily autonomous operator** scheduled task and an **hourly incident watch**. These run outside GitHub and do not imply any model can work between scheduled invocations. They inspect the GitHub development branch and Netlify private Deploy Preview; The legacy Vercel project `masher2/stackpilot-ai` was deleted by the owner on 2026-10-31; an authenticated project lookup returned 404. At exact PR commit `c42fa1d`, GitHub received no Vercel status; do not recreate or attempt deployments to Vercel. Report or implement only permitted safe actions, subject to connected tool access.
 
 On every operator run:
-1. Check latest GitHub Actions results, Netlify Deploy Preview commit status, and user-confirmed Private/Locked settings. Treat Vercel Hobby build-rate-limit status as a legacy quota issue, not proof Netlify is down. Do not equate READY with an authenticated remote browser pass.
+1. Check latest GitHub Actions results, Netlify Deploy Preview commit status, and user-confirmed Private/Locked settings. Do not monitor or retry the deleted Vercel project. Historical failed Vercel status contexts may persist on older commits; only new exact-SHA contexts indicate new activity. Do not equate READY with an authenticated remote browser pass.
 2. Run or inspect `npm run ops:report -- --json`; follow fail-closed restrictions.
 3. Choose the highest-priority **automatic** task from `npm run ops:backlog -- --json`; separately inspect `src/lib/autonomy-policy.mjs` for release gates. Only act if the needed tools and explicitly scoped permissions exist.
 4. Use gstack review/QA and Superpowers plan/TDD RED→GREEN/verification for every code change.
@@ -59,5 +59,5 @@ The report/decision module has no runtime LLM, network or publishing side effect
 - Hosting candidate is **Netlify Free** (explicitly permits commercial projects). Cloudflare Pages Free is a fallback, not a connected account.
 - Read `config/operating-policy.json` and `docs/zero-budget-hosting.md` before acting. Reject any operation that could incur a charge, activate an affiliate link, publish publicly, remove noindex, change `main`, or sign up for a service without separate owner approval.
 - `netlify.toml` and `public/_headers` are used by the current **private Netlify Deploy Preview**; their presence does **not** authorize public deployment or unlocked production. Do not confuse noindex with authentication.
-- Keep the old Masher Vercel Hobby project unmodified despite its build-rate-limit failure; no paid upgrade or public affiliate operation there. Prefer verified private Netlify preview checks.
+- The old Masher Vercel Hobby project was deleted by the owner. Do not recreate it, reconnect GitHub, spend on Vercel, or interpret old failed statuses as new deployment attempts. Prefer verified private Netlify preview checks.
 - Prefer no-cost static hosting and watch free-tier usage. When quota or account setup blocks work, inform the owner rather than silently upgrade.
