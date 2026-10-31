@@ -116,3 +116,36 @@ test('root pages and nonstandard ports do not inflate identified documentation s
   assert.equal(model.products[0].identifiedSources,1);
   assert.equal(model.products[0].editorialStatus,'Editorial review pending');
 });
+
+
+test('static category rows use the same evidence-safe model as interactive comparison', async () => {
+  const comparison=await import('../src/lib/comparison.mjs');
+  assert.equal(typeof comparison.categoryComparisonRows, 'function', 'Shared static-row projection must exist');
+  for (const category of ['CRM','Hosting','SEO']) {
+    const rows=comparison.categoryComparisonRows(products,category);
+    const selected=compareCandidates(products,category,rows[0].id,rows[1].id);
+    assert.deepEqual(rows,selected.products,'Static and interactive evidence projections must agree');
+    assert.ok(rows.every(r=>r.teamFit==='Unverified' && r.budgetFit==='Unverified'));
+    assert.ok(rows.every(r=>r.pricing.startsWith('Unverified')));
+    assert.ok(rows.every(r=>r.editorialStatus==='Editorial review pending'));
+    assert.ok(rows.every(r=>r.description.startsWith('Unverified catalog overview:')));
+  }
+});
+
+test('static category rows do not trust string verification or alleged team suitability', async () => {
+  const comparison=await import('../src/lib/comparison.mjs');
+  assert.equal(typeof comparison.categoryComparisonRows, 'function');
+  const changed=[{...products[0],verified:'true',supportedTeams:['Solo'],budgetTiers:['Premium']},products[3]];
+  const rows=comparison.categoryComparisonRows(changed,'CRM');
+  assert.equal(rows[0].editorialStatus,'Editorial review pending');
+  assert.equal(rows[0].teamFit,'Unverified');
+  assert.equal(rows[0].budgetFit,'Unverified');
+});
+
+test('static comparison is alphabetical and never mutates original catalog', async () => {
+  const comparison=await import('../src/lib/comparison.mjs');
+  assert.equal(typeof comparison.categoryComparisonRows, 'function');
+  const original=structuredClone(products);
+  assert.deepEqual(comparison.categoryComparisonRows(products,'SEO').map(x=>x.name),['Ahrefs','Semrush']);
+  assert.deepEqual(products,original);
+});
