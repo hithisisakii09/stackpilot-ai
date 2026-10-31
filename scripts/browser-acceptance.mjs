@@ -274,6 +274,17 @@ try {
 
   await page.goto(base + '/guides/crm-migration-checklist/', {waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(), /CRM migration checklist/);
+  const acceptanceScroller = page.locator('[role="region"][aria-label^="Migration acceptance table"]');
+  assert.equal(await acceptanceScroller.count(), 1, 'Acceptance table needs one labeled scroll region');
+  await acceptanceScroller.focus();
+  assert.ok(await acceptanceScroller.evaluate(el => document.activeElement === el),
+    'Keyboard focus should reach the acceptance table');
+  assert.ok(await acceptanceScroller.evaluate(el => el.scrollWidth > el.clientWidth),
+    'Mobile acceptance matrix should be horizontally scrollable');
+  await page.keyboard.press('ArrowRight');
+  await page.waitForTimeout(150);
+  assert.ok(await acceptanceScroller.evaluate(el => el.scrollLeft > 0),
+    'ArrowRight must scroll the focused acceptance table on mobile');
   await checkAccessibility(page,'CRM migration checklist mobile');
   await page.screenshot({path:output+'/crm-migration-mobile.png',fullPage:true});
   assert.ok((await page.evaluate(() => document.documentElement.scrollWidth)) <= 395,'CRM migration mobile overflow');
