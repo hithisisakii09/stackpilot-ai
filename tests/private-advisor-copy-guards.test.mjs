@@ -8,6 +8,7 @@ const privacy = readFileSync(new URL('../src/pages/privacy/index.astro', import.
 test('advisor labels unverified category-only choices as unranked', () => {
   assert.match(home, /Category matches \(alphabetical, unranked\)/);
   assert.doesNotMatch(home, /This ranking is a category-based starting point/);
+  assert.match(home, /recommend\(products, \{ goal, team, budget \}\)\.sort\(\(a, b\) => a\.product\.name\.localeCompare\(b\.product\.name\)\)/);
 });
 
 test('privacy notes identify enabled Netlify Web Analytics at hosting layer', () => {
