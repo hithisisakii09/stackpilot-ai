@@ -36,7 +36,7 @@ function info(product) {
         const url = new URL(source.url);
         const canonical = new URL(product.website);
         const hostname = url.hostname.toLowerCase();
-        const root = canonical.hostname.toLowerCase().replace(/^www\\./, '');
+        const root = canonical.hostname.toLowerCase().replace(/^www[.]/, '');
         return url.protocol === 'https:' && !url.username && !url.password &&
           !url.search && !url.hash &&
           (hostname === root || hostname.endsWith('.' + root) ||
