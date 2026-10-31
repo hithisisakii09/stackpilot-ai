@@ -56,3 +56,11 @@ test('ambiguous duplicate catalog IDs are rejected before comparison', () => {
   assert.throws(() => compareCandidates(ambiguous,'CRM','hubspot','pipedrive'),/Duplicate product id/);
   assert.throws(() => categoryCandidates(ambiguous,'CRM'),/Duplicate product id/);
 });
+
+test('rejects unsafe product IDs before constructing research profile links', () => {
+  for (const id of ['../admin', 'hubspot?ref=affiliate', 'hubspot/other', '', 'HUBSPOT']) {
+    const unsafe=[{...products[0],id},...products.slice(1)];
+    assert.throws(() => comparisonCategories(unsafe), /Invalid product id/);
+    assert.throws(() => categoryCandidates(unsafe,'CRM'), /Invalid product id/);
+  }
+});
