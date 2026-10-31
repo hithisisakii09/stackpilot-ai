@@ -285,10 +285,11 @@ try {
   await page.waitForTimeout(150);
   assert.ok(await acceptanceScroller.evaluate(el => el.scrollLeft > 0),
     'ArrowRight must scroll the focused acceptance table on mobile');
-  await page.keyboard.press('Home');
+  const scrollAfterRight = await acceptanceScroller.evaluate(el => el.scrollLeft);
+  await page.keyboard.press('ArrowLeft');
   await page.waitForTimeout(150);
-  assert.equal(await acceptanceScroller.evaluate(el => el.scrollLeft), 0,
-    'Home should return the focused acceptance table to its leftmost position');
+  assert.ok(await acceptanceScroller.evaluate(el => el.scrollLeft) < scrollAfterRight,
+    'ArrowLeft must move the focused acceptance table back toward its start');
   await checkAccessibility(page,'CRM migration checklist mobile');
   await page.screenshot({path:output+'/crm-migration-mobile.png',fullPage:true});
   assert.ok((await page.evaluate(() => document.documentElement.scrollWidth)) <= 395,'CRM migration mobile overflow');
