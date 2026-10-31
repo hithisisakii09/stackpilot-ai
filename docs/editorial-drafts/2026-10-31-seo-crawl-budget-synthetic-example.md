@@ -6,7 +6,7 @@
 An SEO team may compare two audit subscriptions based on a single headline "page limit" even when different products distinguish URLs discovered, HTML pages processed, crawl-credit consumption, plan quotas, export rows and additional JavaScript rendering. This exercise teaches how to ask useful questions without inventing a provider benchmark.
 
 ## Fictional owned-site inventory
-An operator owns an example site consisting of:
+An operator owns an example site consisting of the following **invented unique discovered URL/resource identifiers**, not necessarily HTTP requests actually sent by a crawler:
 | Area | Invented URL count | Notes |
 | --- | ---: | --- |
 | Canonical product pages | 360 | Indexable HTML |
@@ -16,10 +16,10 @@ An operator owns an example site consisting of:
 | Parameter-duplicate URLs | 70 | Deduplication/robots rules need review |
 | **Total discovered resources** | **815** | This is NOT automatically 815 billable crawl credits |
 
-500 hypothetical canonical HTML pages exist (360+140). A crawler may request some redirects/assets and skip or deduplicate other URLs. Which requests consume an actual provider's quota depends on its current definitions and settings; do not infer quotas or use 500 as a real billing figure.
+500 hypothetical canonical HTML pages exist (360+140). The 815 total describes **distinct resource identifiers in the fictional inventory, not completed network fetches or billable audit events**. A crawler may request some redirects/assets, skip restricted paths, revisit pages or deduplicate URLs. Requests, processed HTML, credit consumption and exports must be measured separately. Which requests consume a real provider's quota depends on its current definitions and settings; do not infer quotas or use 500 or 815 as a real billing figure.
 
 ## Fictional scheduling exercise
-A team wants a weekly audit of 500 canonical HTML pages for four weeks. Its **hypothetical** baseline is 2,000 HTML-page fetch events before rechecks. This is `500 × 4`, **not** a claim of Ahrefs crawl-credit spending or Semrush page entitlement. Extra discovered URLs, JavaScript render work, failures, redirects and provider-specific accounting can change actual usage.
+A team wants a weekly audit of 500 canonical HTML pages for four weeks. Its **hypothetical planning workload** is 2,000 canonical HTML-page review opportunities before rechecks, assuming each eligible page is analyzed once per week. This is `500 × 4`, **not** a claim of Ahrefs crawl-credit spending or Semrush page entitlement. Extra discovered URLs, JavaScript render work, failures, redirects and provider-specific accounting can change actual usage.
 
 | Control | Buyer question | State before authorized testing |
 | --- | --- | --- |
