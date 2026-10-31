@@ -62,3 +62,29 @@ export function buildBuyerWorksheet(category,selectedIds){
   'This text was generated locally in your browser; StackPilot does not collect your selections.'
  ].join('\n');
 }
+
+
+/**
+ * Safely escape one UTF-8 CSV cell for spreadsheets.
+ * Guard against formula evaluation even if a future catalog string is untrusted.
+ * Validation in buildBuyerWorksheetCsv means only known category and criterion
+ * values are currently exportable, never arbitrary buyer-entered answers.
+ */
+export function escapeSpreadsheetCsvCell(value) {
+ if(typeof value!=='string')throw new Error('CSV cell must be text');
+ const safe=/^[\s\uFEFF]*[=+\-@]/u.test(value) ? "'"+value : value;
+ return '"'+safe.replaceAll('"','""')+'"';
+}
+
+/** Export selected buyer questions, with every vendor response unverified and blank. */
+export function buildBuyerWorksheetCsv(category,selectedIds) {
+ // Reuse the same validation and stable category ordering as the text worksheet.
+ buildBuyerWorksheet(category,selectedIds);
+ const selected=new Set(selectedIds);
+ const fields=['category','requirement_id','requirement','question','verification_status','vendor_answer','evidence_plan_region_date'];
+ const rows=criteriaFor(category)
+   .filter(item=>selected.has(item.id))
+   .map(item=>[category,item.id,item.label,item.question,'Unverified','','']
+     .map(escapeSpreadsheetCsvCell).join(','));
+ return [fields.join(','),...rows].join('\r\n')+'\r\n';
+}
