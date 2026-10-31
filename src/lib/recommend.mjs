@@ -17,7 +17,7 @@ export function recommend(products, { goal, team, budget }) {
       let score = 60; // Category match, not a complete suitability judgment.
       const reasons = ['Matches your selected software priority.'];
       const cautions = [];
-      if (Array.isArray(product.supportedTeams) && product.supportedTeams.length) {
+      if (product.verified === true && Array.isArray(product.supportedTeams) && product.supportedTeams.length) {
         if (product.supportedTeams.includes(team)) {
           score += 20;
           reasons.push('Listed as suitable for your team size.');
@@ -28,7 +28,7 @@ export function recommend(products, { goal, team, budget }) {
       } else {
         cautions.push('Team-size suitability has not been verified.');
       }
-      if (Array.isArray(product.budgetTiers) && product.budgetTiers.length) {
+      if (product.verified === true && Array.isArray(product.budgetTiers) && product.budgetTiers.length) {
         if (product.budgetTiers.includes(budget)) {
           score += 20;
           reasons.push('Listed as compatible with your selected budget tier.');
