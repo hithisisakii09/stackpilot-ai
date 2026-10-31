@@ -99,7 +99,7 @@ const categories = [...new Set(products.map(p => p.category))].sort();
 <script>
 import products from '../../data/products.json';
 import { categoryCandidates, compareCandidates } from '../../lib/comparison.mjs';
-import { buildVendorQuestionsCsv } from '../../lib/vendor-questions.mjs';
+import { buildVendorQuestionsCsv, listVendorQuestions } from '../../lib/vendor-questions.mjs';
 
 const form = document.querySelector('#compare-form');
 const category = document.querySelector('#compare-category');
@@ -192,7 +192,18 @@ form.addEventListener('submit', (event) => {
   body.append(links);
   table.append(body);
   wrapper.append(table);
-  result.append(title, note, wrapper);
+  const questionsHeading=cell('h4','Questions to ask both vendors');
+  const questionList=document.createElement('ol');
+  questionList.id='vendor-questions-preview';
+  for (const {criterion,question} of listVendorQuestions(model)) {
+    const item=document.createElement('li');
+    const emphasis=document.createElement('strong');
+    emphasis.textContent=criterion+': ';
+    item.append(emphasis,document.createTextNode(question));
+    questionList.append(item);
+  }
+  const questionNotice=cell('p','These are questions for your own due diligence. Neither vendor has verified responses; the download starts with all answers unverified.');
+  result.append(title, note, wrapper, questionsHeading, questionList, questionNotice);
   latestCsv = buildVendorQuestionsCsv(model);
   download.disabled = false;
 });
