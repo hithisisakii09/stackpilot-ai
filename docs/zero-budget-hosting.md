@@ -1,11 +1,11 @@
 # StackPilot AI — ₹0 Commercial Hosting Preparation (2026-10-31)
 
-## Owner policy (confirmed)
-- Initial monthly cash budget: **₹0 INR**.
-- Delegated spending: **₹0 INR** — no domain purchases, paid AI APIs, paid hosting, ads, subscriptions, auto-recharge, account upgrades or contracts.
-- Owner chose the most cost-effective commercially permissible hosting provider; no live account activation or public publication consent has been given.
-- The code-level policy in `config/operating-policy.json` is fail-closed. It is not evidence of a signed provider agreement.
-- Protected Masher Vercel previews are unchanged. Do **not** run a commercial public affiliate business on Vercel Hobby.
+## Owner policy and deployed-private project (confirmed by screenshots)
+- Initial monthly cash budget: **₹0 INR**, delegated spending **₹0 INR**. No paid hosting, domains, AI APIs, ads, subscriptions, auto-recharge, account upgrades, purchases or new contracts authorized.
+- Owner created **Netlify** project `inspiring-chaja-cfb85f` and showed **Production visibility Private**, **Deploy Preview visibility Private**, **Auto Publishing Locked**. Production was published at older `main@c8fadcb` per dashboard. GitHub reports successful private Netlify Deploy Preview builds for draft PR #1; these are not owner authorization for public release.
+- Owner reported logged-in preview homepage/compare/research working and Incognito blocked. That is user-reported, **not** independent security assurance for every new SHA.
+- The code-level policy in `config/operating-policy.json` remains fail-closed and does not prove a signed account or verified pricing entitlement. Read `docs/current-operational-state.md` for evidence and unresolved verification.
+- The old Masher **Vercel Hobby** preview is not the launch host and GitHub reports an upgrade-linked **build-rate limit**. Do not pay, upgrade, or attempt a public commercial affiliate business on Vercel Hobby.
 
 ## Hosting recommendation
 **Primary candidate: Netlify Free** for the current all-static Astro website.
@@ -23,28 +23,27 @@ Official references:
 
 Commercial hosting eligibility and terms must be rechecked at actual signup/launch. Do not equate zero monetary cost with unlimited resource or support guarantees.
 
-## Repository changes prepared
-- `netlify.toml` — static Astro build, `dist`, Node.js 22.23.4; no paid/SSR services.
-- `public/_headers` — pre-launch `X-Robots-Tag` and security headers for static hosting.
-- `public/robots.txt` — disallows crawling while unverified and unreleased.
-- `config/operating-policy.json` — stores ₹0 and no-approval flags.
-- `npm run ops:report -- --json` — reports budget and holds commercial/launch actions.
-- Existing GitHub CI verifies all static routes, policy guards, and no unapproved affiliate URLs.
+## Current repository configuration and QA
+- `netlify.toml` — Astro static build to `dist`, Node.js 22.23.4.
+- `public/_headers` — prelaunch indexing and security header configuration.
+- `public/robots.txt` — crawl disallow while unreleased.
+- `config/operating-policy.json` — ₹0 spending and no-launch flags.
+- `npm run ops:report -- --json` — policy and gating report.
+- GitHub CI checks static routes, noindex and absence of unapproved affiliate URLs. Separate Chromium desktop/mobile checks run locally against built assets; a Netlify build status does not replace authenticated remote site QA.
 
-**Important:** A noindex meta tag, `robots.txt`, or `_headers` directive is not a privacy or access-control system. A deployed `*.netlify.app` website may be publicly accessible by default. Therefore **do not import or deploy this repo to Netlify** without the owner's additional explicit permission and suitable privacy protection for any preview.
+**Access restriction:** `noindex`, `robots.txt`, and `_headers` do **not** enforce authentication. Netlify project visibility was configured **Private** by the owner. Auto-publishing was **Locked**. Never weaken these settings without explicit authorization.
 
-## When authorized to configure Netlify (NOT NOW)
-1. Owner signs up at https://app.netlify.com/signup and accepts the service agreement using their own credentials. Do not sign contracts on their behalf.
-2. Owner authorizes repo access for `hithisisakii09/stackpilot-ai`; verify individual ownership and free plan.
-3. Confirm new team is private by default and project has deploy restrictions before any deployment. Disable automatic branch deploys until owner approves. The repo currently contains unverified research claims and should remain non-indexed.
-4. Use build command `npm run build`, publish folder `dist`, Node 22.23.4. `netlify.toml` encodes these.
-5. Run desktop/mobile authenticated preview QA, evaluate actual response headers and verify no payment method / upgrades enabled.
-6. Obtain explicit **separate public production approval** before publishing, relaxing `noindex`, attaching a public domain, or enabling affiliate tracking.
+## Remaining Netlify owner verification — not a new signup
+1. Check actual **Netlify Free plan**, current credits/usage and payment-method/upgrade state from the account dashboard; do not infer them from repository JSON.
+2. Keep production and preview visibility Private. The older privately visible production `main@c8fadcb` must not be silently replaced by the feature branch.
+3. Confirm remote authenticated browser behavior, anonymous denial, security response headers and a rollback/recovery plan before considering a later public release.
+4. Obtain **separate production/public-launch authorization** before unlocking Netlify, changing visibility, enabling indexing, connecting public DNS or turning on affiliate tracking.
+5. If future quota limits block builds, reduce unnecessary CI/preview builds or escalate to the owner. Do **not** spend or upgrade silently.
 
 ## Autonomous operation at ₹0
 ChatGPT's daily operator and hourly incident-watch tasks are enabled. They can inspect data and act within authorized development scope, subject to actual tool access and automation limits. GitHub Actions runs within its included allowance; monitor usage to avoid unexpectedly requiring paid compute. Do not promise uninterrupted 24/7 LLM coding or revenue. Keep agent-side costs at zero and notify the owner when the quota is exhausted.
 
 ## Outstanding one-time human gates
-Provider signup/terms, commercial host/account approval, operator identity/contact, final legal/privacy review, authentic affiliate program applications/tax/KYC/payment details, domain decision, and public launch authorization. None is completed merely by selecting Netlify Free.
+Netlify plan/terms verification for commercial launch, operator identity/contact, final legal/privacy review, authentic affiliate program applications/tax/KYC/payment details, domain decision, and public launch authorization. None is completed merely by selecting Netlify Free.
 
 Track prerequisites: https://github.com/hithisisakii09/stackpilot-ai/issues/2
