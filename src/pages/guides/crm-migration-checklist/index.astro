@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="description" content="Independent CRM migration planning checklist for teams evaluating data export, import, security, and switching costs." />
+<title>CRM migration checklist | StackPilot AI</title>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark;background:#0b1220;color:#e9f1ff}
+*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:950px;margin:auto;padding:24px}
+a{color:#7ce8c6}h1{font-size:clamp(32px,5vw,54px)}p,li{line-height:1.7;color:#c9d9ec}
+section{border:1px solid #405675;border-radius:14px;background:#152138;padding:20px;margin:22px 0}
+nav{display:flex;gap:16px;flex-wrap:wrap}:focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+footer{border-top:1px solid #405675}
+@media(max-width:600px){header,main,footer{padding:16px}section{padding:16px}}
+</style>
+</head>
+<body>
+<header><nav aria-label="Site navigation"><a href="/">StackPilot AI</a><a href="/tools/requirements-checklist/">Requirements checklist</a><a href="/tools/software-cost-calculator/">Cost calculator</a><a href="/methodology/">Methodology</a></nav></header>
+<main>
+<p>Independent buyer education · private draft</p>
+<h1>CRM migration checklist: plan a safer software switch</h1>
+<p>This checklist is a planning framework, not a verified feature comparison. It does not assert that any particular CRM supports the exports, permissions, or integrations described. Confirm current vendor documentation, your contract, and your security policies before moving real records.</p>
+<section><h2>1. Inventory what must move</h2><ul>
+<li>List contacts, organizations, deals, pipeline stages, owners, custom fields, notes, attachments, and activity history.</li>
+<li>Determine what must be archived for retention or legal requirements, and who is authorized to access each dataset.</li>
+<li>Make an inventory of integrations, automations, email links, and reports that might break during cutover.</li>
+</ul></section>
+<section><h2>2. Review export and security permissions</h2><ul>
+<li>Identify required export permissions and obtain authorized access; never share account passwords or export private customer data to testing tools.</li>
+<li>Check the exported file's encoding (including UTF-8), dates, time zones, delimiters, record identifiers, and attachments.</li>
+<li>Store extracts with restricted access, encryption where appropriate, an expiry date, and an approved deletion plan.</li>
+</ul></section>
+<section><h2>3. Map and test before bulk import</h2><ul>
+<li>Map each source field to a target field, especially custom fields, relationships, picklists, and record ownership.</li>
+<li>Document normalization and deduplication rules, including which duplicate record is retained.</li>
+<li>Run a sample import with synthetic or otherwise approved test records, then validate counts, permissions, associations, and activity history.</li>
+<li>Record discrepancies and do not move production data until a designated human has approved the results.</li>
+</ul></section>
+<section><h2>4. Prepare a reversible cutover</h2><ul>
+<li>Agree on a freeze window and communicate responsibilities, acceptance criteria, and escalation contacts.</li>
+<li>Keep an authorized backup and a rollback plan; test restoration in an approved environment rather than assuming exported records can be re-imported intact.</li>
+<li>Check that active integrations, automations, reports, and user permissions work before retiring the old system.</li>
+</ul></section>
+<section><h2>5. Estimate switching effort and cost</h2><ul>
+<li>Estimate staff hours for audit, field mapping, cleanup, testing, training, and post-cutover support.</li>
+<li>Include overlapping subscription periods, potential migration services, taxes, and contractual termination charges where applicable.</li>
+<li>Use the <a href="/tools/software-cost-calculator/">subscription cost calculator</a> with your own figures; it does not calculate staff-hours expenses automatically.</li>
+<li>Use the <a href="/tools/requirements-checklist/">requirements checklist</a> to collect written answers from potential providers.</li>
+</ul></section>
+<section><h2>6. Evidence and release decision</h2><p>For each disputed provider capability, preserve the official source URL, capture date, exact plan, geography, administrative role, restrictions, and open questions. Treat a vendor statement as unverified until independently reviewed. Assign a named approver for migration readiness, privacy, and data retention. Record a GO or NO-GO only after the actual checks have been completed.</p><p>See the <a href="/methodology/">research methodology</a>. No product recommendation, migration outcome, affiliate earning, or vendor feature guarantee is implied.</p></section>
+</main>
+<footer><a href="/privacy/">Privacy</a> · <a href="/disclosure/">Disclosures</a> · StackPilot AI private preview</footer>
+</body></html>
