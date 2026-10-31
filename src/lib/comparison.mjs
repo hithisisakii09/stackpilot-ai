@@ -55,6 +55,11 @@ function info(product) {
   };
 }
 
+/** Evidence-safe, alphabetical rows shared by no-JS and interactive comparisons. */
+export function categoryComparisonRows(products, category) {
+  return categoryCandidates(products, category).map(info);
+}
+
 export function compareCandidates(products, category, firstId, secondId) {
   const pool = categoryCandidates(products, category);
   if (firstId === secondId) throw new Error('Select two different products');
