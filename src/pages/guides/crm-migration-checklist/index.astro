@@ -50,6 +50,18 @@ footer{border-top:1px solid #405675}
 <li>Use the <a href="/tools/requirements-checklist/">requirements checklist</a> to collect written answers from potential providers.</li>
 </ul></section>
 <section><h2>6. Evidence and release decision</h2><p>For each disputed provider capability, preserve the official source URL, capture date, exact plan, geography, administrative role, restrictions, and open questions. Treat a vendor statement as unverified until independently reviewed. Assign a named approver for migration readiness, privacy, and data retention. Record a GO or NO-GO only after the actual checks have been completed.</p><p>See the <a href="/methodology/">research methodology</a>. No product recommendation, migration outcome, affiliate earning, or vendor feature guarantee is implied.</p></section>
+<section aria-labelledby="migration-acceptance"><h2 id="migration-acceptance">7. Synthetic-data acceptance matrix</h2>
+<p>Before authorizing a real cutover, record a Pass or fail decision for each check using synthetic sample records and no real customer data. Adapt the thresholds with your own approved team requirements; an example target is not evidence that a vendor meets it.</p>
+<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:620px">
+<caption style="text-align:left;padding:8px 0">Fill this matrix in your own controlled testing document; StackPilot does not receive submissions.</caption>
+<thead><tr><th scope="col">Check</th><th scope="col">Source count</th><th scope="col">Target count</th><th scope="col">Pass or fail and evidence</th></tr></thead>
+<tbody>
+<tr><th scope="row">Records and required fields</th><td>Record count before export</td><td>Count after import</td><td>Compare counts and sample values</td></tr>
+<tr><th scope="row">Owner or role mapping</th><td>Original assigned users</td><td>Mapped user accounts</td><td>Verify least-privilege access</td></tr>
+<tr><th scope="row">Association integrity</th><td>Related record links</td><td>Recreated links</td><td>Check parent-child references</td></tr>
+<tr><th scope="row">Attachments and activities</th><td>Expected accessible items</td><td>Accessible imported items</td><td>Document omitted formats</td></tr>
+</tbody></table></div>
+<p><strong>Cutover approval:</strong> Record a named authorized reviewer, review date, unresolved discrepancies, approved rollback procedure, and final GO/NO-GO in your own system. Do not upload private exports or client records to StackPilot.</p></section>
 </main>
 <footer><a href="/privacy/">Privacy</a> · <a href="/disclosure/">Disclosures</a> · StackPilot AI private preview</footer>
 </body></html>
