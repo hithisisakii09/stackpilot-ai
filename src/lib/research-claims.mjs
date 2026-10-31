@@ -38,7 +38,9 @@ export function validateResearchClaims(claims,products,{today=new Date().toISOSt
  if(!Array.isArray(claims))throw new Error('Research claims must be an array');
  if(!Array.isArray(products)||products.some(p=>!isRecord(p)||typeof p.id!=='string'))
   throw new Error('Invalid product catalog');
- const known=new Set(products.map(p=>p.id)),seen=new Set(),sources=new Set();
+ const known=new Set(products.map(p=>p.id));
+ if(known.size!==products.length)throw new Error('Duplicate product id in research catalog');
+ const seen=new Set(),sources=new Set();
  for(const c of claims){
   if(!isRecord(c)||Object.keys(c).length!==keys.length||
    keys.some(key=>!Object.hasOwn(c,key))||
