@@ -4,6 +4,7 @@ import { validateCatalog } from '../src/lib/catalog-validation.mjs';
 import { buildEvidenceReviewQueue } from '../src/lib/evidence-ledger.mjs';
 import { createAffiliateResearchQueue } from '../src/lib/affiliate-readiness.mjs';
 import { buildOperatingBacklog } from '../src/lib/operating-backlog.mjs';
+import { buildResearchClaimReviewQueue } from '../src/lib/research-claims.mjs';
 
 const policy = JSON.parse(readFileSync(new URL('../config/operating-policy.json', import.meta.url), 'utf8'));
 if (
@@ -26,6 +27,7 @@ const affiliateCandidates = JSON.parse(readFileSync(new URL('../src/data/affilia
 const partnerQueue = createAffiliateResearchQueue(affiliateCandidates, products);
 const queue = buildEvidenceReviewQueue(evidence, products);
 const agentQueue = buildOperatingBacklog({ products, evidenceLeads:evidence, affiliateCandidates, policy });
+const vendorClaims = buildResearchClaimReviewQueue(JSON.parse(readFileSync(new URL('../src/data/research-claims.json', import.meta.url),'utf8')), products);
 const output = decideAutonomousActions({
   // Only the CI runner may explicitly assert successful unit/build checks.
   ciPassed: process.argv.includes('--ci-passed'),
@@ -61,6 +63,13 @@ const report = {
     ownerApprovalGates:agentQueue.ownerGates.length,
     sourcesNeedingRefresh:agentQueue.metrics.sourcesNeedingRefresh,
     priorityTaskIds:agentQueue.automatic.slice(0,6).map(t=>t.id)
+  },
+  vendorClaimIntake: {
+    sourceBackedCandidates:vendorClaims.reduce((n,p)=>n+p.candidateCount,0),
+    productsAwaitingEditorialReview:vendorClaims.filter(p=>p.status==='Unreviewed').length,
+    approvedClaims:0,
+    independentTestingCompleted:false,
+    recordsNeedingRefresh:vendorClaims.filter(p=>p.needsRefresh).length
   },
   reviewedProducts: 0,
   candidateProducts: products.length,
