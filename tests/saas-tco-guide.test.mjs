@@ -22,20 +22,20 @@ test('worked cost example is explicitly hypothetical and uses existing exact cal
  assert.equal(c.lowerCost,'B');
  assert.equal(formatMinorUnits(c.optionA.totalMinor,'USD'),'USD 1000.00');
  const content=text();
- assert.match(content(),/import \{\s*compareSubscriptionCosts\s*,\s*formatMinorUnits\s*\}/);
- assert.match(content(),/hypothetical/i);
- assert.match(content(),/example\.optionA\.totalMinor/);
- assert.match(content(),/example\.optionB\.totalMinor/);
- assert.match(content(),/example\.differenceMinor/);
- assert.match(content(),/not a quote/i);
+ assert.match(content,/import \{\s*compareSubscriptionCosts\s*,\s*formatMinorUnits\s*\}/);
+ assert.match(content,/hypothetical/i);
+ assert.match(content,/example\.optionA\.totalMinor/);
+ assert.match(content,/example\.optionB\.totalMinor/);
+ assert.match(content,/example\.differenceMinor/);
+ assert.match(content,/not a quote/i);
 });
 test('guide covers buyer intent and cost pitfalls rather than unverified vendor claims',()=>{
  const content=text();
  for(const term of ['seats','add-ons','migration','overage','taxes','renewal','billing period','cancellation','storage','currency']){
-  assert.match(content(),new RegExp(term,'i'),'Missing practical buyer term '+term);
+  assert.match(content,new RegExp(term,'i'),'Missing practical buyer term '+term);
  }
- assert.match(content(),/lower cost does not mean better fit/i);
- assert.doesNotMatch(content(),/hubspot|pipedrive|semrush|ahrefs|kinsta|cloudways|affiliateUrl|commission|tracking pixel/i);
+ assert.match(content,/lower cost does not mean better fit/i);
+ assert.doesNotMatch(content,/hubspot|pipedrive|semrush|ahrefs|kinsta|cloudways|affiliateUrl|commission|tracking pixel/i);
 });
 test('guide is connected to user tools and contains no remote scripts or form submission',()=>{
  const content=text();
