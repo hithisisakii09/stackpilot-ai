@@ -108,6 +108,8 @@ try {
   await checkAccessibility(page, 'category comparison desktop');
   // Interactive comparisons cannot cross categories or imply verified pricing.
   assert.equal(await page.locator('#compare-category').inputValue(), 'CRM');
+  const downloadQuestions = page.locator('#download-comparison-csv');
+  assert.ok(await downloadQuestions.isDisabled(), 'Download disabled until a valid comparison');
   await page.locator('#compare-form button').click();
   const panel = page.locator('#comparison-result');
   assert.equal(await page.locator('#comparison-table').count(), 1);
@@ -115,18 +117,36 @@ try {
   assert.match(await panel.innerText(), /HubSpot vs Pipedrive/);
   assert.match(await panel.innerText(), /Unverified/);
   assert.match(await panel.innerText(), /No affiliate links active/);
+  assert.ok(await downloadQuestions.isEnabled());
+  const comparisonCsvPromise = page.waitForEvent('download');
+  await downloadQuestions.click();
+  const comparisonCsv = await comparisonCsvPromise;
+  assert.equal(comparisonCsv.suggestedFilename(), 'stackpilot-vendor-questions-crm.csv');
+  const comparisonCsvStream = await comparisonCsv.createReadStream();
+  const questionChunks = [];
+  for await (const chunk of comparisonCsvStream) questionChunks.push(Buffer.from(chunk));
+  const questionCsvText = Buffer.concat(questionChunks).toString('utf8');
+  assert.match(questionCsvText, /"HubSpot","Unverified","Pipedrive","Unverified"/);
+  assert.match(questionCsvText, /sample pipeline import/);
+  assert.doesNotMatch(questionCsvText, /affiliate|winner|recommended/i);
+  assert.match(await page.locator('#comparison-download-status').innerText(), /saved on your device/);
   await checkAccessibility(page, 'interactive CRM comparison');
   await page.locator('#compare-second').selectOption('hubspot');
   await page.locator('#compare-form button').click();
   assert.match(await page.locator('#comparison-error').innerText(), /Select two different products/);
   assert.equal(await page.locator('#comparison-table').count(), 0);
+  assert.ok(await downloadQuestions.isDisabled(), 'Invalid comparison must invalidate CSV');
   await page.locator('#compare-category').selectOption('SEO');
+  assert.ok(await downloadQuestions.isDisabled(), 'Category change invalidates previous CSV');
   assert.deepEqual((await page.locator('#compare-first option').allTextContents()), ['Ahrefs', 'Semrush']);
   await page.locator('#compare-form button').click();
   assert.match(await panel.innerText(), /Ahrefs vs Semrush/);
+  assert.ok(await downloadQuestions.isEnabled());
   await page.locator('#compare-category').selectOption('Hosting');
+  assert.ok(await downloadQuestions.isDisabled(), 'Hosting change clears stale SEO CSV');
   await page.locator('#compare-form button').click();
   assert.match(await panel.innerText(), /Cloudways vs Kinsta/);
+  assert.ok(await downloadQuestions.isEnabled());
   assert.ok(!(await panel.innerText()).includes('HubSpot'), 'Category change must not leak stale product comparisons');
   await checkAccessibility(page, 'interactive Hosting comparison');
 

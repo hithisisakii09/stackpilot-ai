@@ -66,6 +66,9 @@ const categories = [...new Set(products.map(p => p.category))].sort();
       </form>
       <noscript><p>Enable JavaScript to use the interactive comparison, or review the category tables below.</p></noscript>
       <div id="comparison-result" aria-live="polite" aria-atomic="true"></div>
+      <p class="helper">After comparing two candidates, download neutral questions to ask each vendor. Answers start unverified; evidence stays on your device.</p>
+      <button id="download-comparison-csv" type="button" disabled>Download vendor questions (CSV)</button>
+      <p id="comparison-download-status" role="status" aria-live="polite"></p>
       <p class="helper">“Vendor sources identified” measures links collected for research, not verified claims or product quality.</p>
     </section>
     {categories.map((category) => (
@@ -96,6 +99,7 @@ const categories = [...new Set(products.map(p => p.category))].sort();
 <script>
 import products from '../../data/products.json';
 import { categoryCandidates, compareCandidates } from '../../lib/comparison.mjs';
+import { buildVendorQuestionsCsv } from '../../lib/vendor-questions.mjs';
 
 const form = document.querySelector('#compare-form');
 const category = document.querySelector('#compare-category');
@@ -103,6 +107,17 @@ const first = document.querySelector('#compare-first');
 const second = document.querySelector('#compare-second');
 const result = document.querySelector('#comparison-result');
 const error = document.querySelector('#comparison-error');
+const download = document.querySelector('#download-comparison-csv');
+const downloadStatus = document.querySelector('#comparison-download-status');
+let latestCsv = null;
+
+function invalidateComparison() {
+  latestCsv = null;
+  download.disabled = true;
+  downloadStatus.textContent = '';
+  result.replaceChildren();
+  error.textContent = '';
+}
 
 function updateSelections() {
   const candidates = categoryCandidates(products, category.value);
@@ -116,8 +131,7 @@ function updateSelections() {
     });
     select.selectedIndex = Math.min(index, candidates.length - 1);
   }
-  result.replaceChildren();
-  error.textContent = '';
+  invalidateComparison();
 }
 function cell(tag, value) {
   const node = document.createElement(tag);
@@ -125,10 +139,11 @@ function cell(tag, value) {
   return node;
 }
 category.addEventListener('change', updateSelections);
+first.addEventListener('change', invalidateComparison);
+second.addEventListener('change', invalidateComparison);
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  result.replaceChildren();
-  error.textContent = '';
+  invalidateComparison();
   let model;
   try {
     model = compareCandidates(products, category.value, first.value, second.value);
@@ -178,6 +193,25 @@ form.addEventListener('submit', (event) => {
   table.append(body);
   wrapper.append(table);
   result.append(title, note, wrapper);
+  latestCsv = buildVendorQuestionsCsv(model);
+  download.disabled = false;
+});
+download.addEventListener('click', () => {
+  if (!latestCsv) return;
+  try {
+    const blob = new Blob([latestCsv], {type:'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'stackpilot-vendor-questions-' + category.value.toLowerCase() + '.csv';
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadStatus.textContent = 'CSV saved on your device. No answers were sent to StackPilot.';
+  } catch {
+    downloadStatus.textContent = 'Unable to start CSV download. Try again.';
+  }
 });
 updateSelections();
 </script>
