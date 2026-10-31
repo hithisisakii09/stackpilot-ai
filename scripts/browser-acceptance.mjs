@@ -79,6 +79,26 @@ try {
     }
   }
 
+  // All priority/team/budget combinations must behave honestly in the rendered browser.
+  for (const scenario of scenarios) {
+    for (const team of ['Solo', '2–20', '21+']) {
+      for (const budget of ['Minimal', 'Moderate', 'Premium']) {
+        await page.locator('#goal').selectOption(scenario.goal);
+        await page.locator('#team').selectOption(team);
+        await page.locator('#budget').selectOption(budget);
+        await page.locator('#recommend').click();
+        assert.equal(await page.locator('#result h3').innerText(),
+          'Category matches (alphabetical, unranked)');
+        assert.deepEqual(await page.locator('#result h4').allTextContents(), scenario.expected,
+          'Unranked alphabetical browser display for ' + scenario.goal + '/' + team + '/' + budget);
+        const outputText = await page.locator('#result').innerText();
+        assert.match(outputText, /not suitability rankings or endorsements/);
+        assert.match(outputText, /Team-size suitability has not been verified/);
+        assert.match(outputText, /Current pricing and budget suitability are not verified/);
+      }
+    }
+  }
+
   await page.goto(base + '/compare/', { waitUntil: 'networkidle' });
   assert.equal(await page.locator('table').count(), 3, 'Compare should show one table per category');
   for (const name of ['HubSpot', 'Pipedrive', 'Semrush', 'Ahrefs', 'Kinsta', 'Cloudways']) {
