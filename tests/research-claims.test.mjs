@@ -99,3 +99,12 @@ test('rejects duplicate catalog IDs before attributing evidence',()=>{
  const duplicated=[products[0],products[0],...products.slice(1)];
  assert.throws(()=>validateResearchClaims(all(),duplicated,opts),/duplicate product/i);
 });
+
+test('Kinsta candidate cites accessible first-party plan documentation without approval', async () => {
+ const {default:records}=await import('../src/data/research-claims.json',{with:{type:'json'}});
+ const entry=records.find(x=>x.productId==='kinsta');
+ assert.equal(entry.sourceUrl,'https://kinsta.com/docs/billing/wordpress-hosting-plans/');
+ assert.equal(entry.status,'candidate');
+ assert.equal(entry.approved,false);
+ assert.equal(entry.reviewer,null);
+});
