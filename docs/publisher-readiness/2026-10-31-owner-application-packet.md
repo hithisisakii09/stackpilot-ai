@@ -73,3 +73,10 @@ No checkbox is checked here: this file cannot authenticate an owner, sign contra
 
 ## Launch-trust QA
 Owner previously reported that a Netlify private preview worked when authenticated and was blocked in Incognito. That is useful user-reported evidence but does not prove each later commit has passed authenticated remote UAT. Netlify production and preview visibility remain Private per dashboard screenshots, auto publishing Locked, main unmerged. Vercel Hobby rate-limited; no upgrade or spend.
+
+## Owner planning preferences confirmed — 2026-10-31 (NOT an application or launch authorization)
+- **Publisher type:** individual. This is a planning choice, not verification of legal identity, contact information, tax status or affiliation.
+- **Domain:** continue with the existing free Netlify subdomain. No custom domain purchase, DNS changes or public exposure authorized.
+- **Editorial review model:** owner self-review. A choice of reviewer is **not** editorial approval of any specific claim; each sourced product claim still requires actual review, dated evidence and a decision.
+- **Binding scope:** continue private, zero-cost preparation only. Do not merge `main`, publish publicly, accept contracts, apply to/activate affiliate programs, change hosting visibility, purchase services or spend funds without separate authorization.
+- **Next evidence:** owner should privately verify account plan/billing, choose an accurate public contact mechanism before launch, and eventually review editorial/legal documents. No sensitive identifiers should be committed.
