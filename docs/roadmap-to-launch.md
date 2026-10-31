@@ -1,6 +1,7 @@
 # StackPilot AI — From Protected Preview to Commercial Launch
 
-**Status: engineering development in a protected Vercel preview. Not released.**
+**Status: Netlify PRIVATE Deploy Preview in use, older Netlify production privately visible and auto-publishing LOCKED per owner screenshots. GitHub main remains unchanged; no public commercial launch.**
+**Current evidence and limitations:** `docs/current-operational-state.md`. Vercel Hobby is a legacy, build-rate-limited preview, not the commercial host.
 **Required workflow:** read `AGENTS.md`; use gstack architecture/review/QA and Superpowers plans/TDD/debug/verification on every sprint.
 
 ## Phase gates
@@ -22,13 +23,15 @@
 - No production merge, public domain/indexing, traffic acquisition, affiliate link activation, payments or real-user tracking without separate authorization.
 - No fabricated approval history, fictitious reviews or guesswork about vendor pricing.
 - Free Vercel Hobby has commercial-use limitations; review plan eligibility before monetization.
-- A protected preview's READY status is not a public launch or a substitute for live authenticated browser testing.
+- A protected Netlify Deploy Preview's SUCCESS status is not a public launch or a substitute for live authenticated browser testing. The owner reported an earlier successful login/Incognito check; exact new SHAs still require separate remote QA.
 - Confirm older `main` production target and avoid disrupting it.
 
 ## Current handoff
 
 Branch: `feature/phase-1-1-recommendation-engine`
 Draft PR: https://github.com/hithisisakii09/stackpilot-ai/pull/1
-Private project: `masher2/stackpilot-ai` (Vercel)
+Primary private preview: `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app` (Netlify)
+Existing Netlify privately visible production: `main@c8fadcb` as of owner screenshot, **do not unlock or replace**
+Legacy noncommercial Vercel preview: `masher2/stackpilot-ai` (Hobby build-rate limit)
 
-To pick up any future work: inspect the latest PR SHA; run `npm test`, `npm run research:evidence` and Chromium browser QA; read `AGENTS.md`; don't call a phase complete until CI confirms.
+To pick up any future work: read `docs/current-operational-state.md`, inspect the latest PR SHA and Netlify private status; run `npm test`, `npm run research:evidence`, `npm run ops:backlog -- --json` and Chromium browser QA. Do not claim a phase complete until exact-commit CI confirms.
