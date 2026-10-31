@@ -50,5 +50,5 @@ test('private worksheet UI provides locally generated CSV and prevents stale exp
   assert.match(html,/choices\.addEventListener\('change'/);
   assert.match(html,/downloadButton\.disabled=true/);
   assert.match(html,/saved on your device/i);
-  assert.match(html,/no server submission/i);
+  assert.match(html,/or server submission/i);
 });
