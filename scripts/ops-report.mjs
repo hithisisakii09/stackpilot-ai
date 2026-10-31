@@ -5,6 +5,7 @@ import { buildEvidenceReviewQueue } from '../src/lib/evidence-ledger.mjs';
 import { createAffiliateResearchQueue } from '../src/lib/affiliate-readiness.mjs';
 import { buildOperatingBacklog } from '../src/lib/operating-backlog.mjs';
 import { buildResearchClaimReviewQueue } from '../src/lib/research-claims.mjs';
+import { buildPublisherReadiness } from '../src/lib/publisher-readiness.mjs';
 
 const policy = JSON.parse(readFileSync(new URL('../config/operating-policy.json', import.meta.url), 'utf8'));
 if (
@@ -28,6 +29,7 @@ const partnerQueue = createAffiliateResearchQueue(affiliateCandidates, products)
 const queue = buildEvidenceReviewQueue(evidence, products);
 const agentQueue = buildOperatingBacklog({ products, evidenceLeads:evidence, affiliateCandidates, policy });
 const vendorClaims = buildResearchClaimReviewQueue(JSON.parse(readFileSync(new URL('../src/data/research-claims.json', import.meta.url),'utf8')), products);
+const publisher = buildPublisherReadiness({policy,products,affiliateCandidates});
 const output = decideAutonomousActions({
   // Only the CI runner may explicitly assert successful unit/build checks.
   ciPassed: process.argv.includes('--ci-passed'),
@@ -56,6 +58,16 @@ const report = {
     productionLaunchApproved: policy.productionLaunchApproved
   },
   automation: 'decision-support-not-unrestricted-agent-execution',
+  publisherReadiness: {
+    status:publisher.status,
+    applicationReady:publisher.applicationReady,
+    ownerGatesOutstanding:publisher.ownerGates.length,
+    affiliateProgramsApplied:publisher.programApplicationsSubmitted,
+    affiliateProgramsAccepted:publisher.programsAccepted,
+    actualTraffic:publisher.actualTraffic,
+    actualEarnings:publisher.actualEarnings,
+    identityVerified:publisher.publisherIdentityVerified
+  },
   researchBacklog: {
     execution:agentQueue.execution,
     asOf:agentQueue.asOf,
