@@ -195,6 +195,19 @@ try {
   assert.equal(await page.locator('#cost-a-flatMonthly').inputValue(),'0');
   assert.equal(await page.locator('#cost-report').inputValue(),'');
 
+  // Substantial guide: exact fictional cost illustration, prelaunch indexing and links.
+  await page.goto(base + '/guides/saas-total-cost-of-ownership/', {waitUntil:'networkidle'});
+  assert.match(await page.title(),/SaaS total cost of ownership/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.equal(await page.locator('h1').count(),1);
+  assert.match(await page.locator('main').innerText(),/USD 1000.00/);
+  assert.match(await page.locator('main').innerText(),/USD 936.00/);
+  assert.match(await page.locator('main').innerText(),/USD 64.00/);
+  assert.match(await page.locator('main').innerText(),/hypothetical/i);
+  assert.equal(await page.locator('main a[href="/tools/software-cost-calculator/"]').count()>=1,true);
+  await checkAccessibility(page,'SaaS TCO educational guide desktop');
+  await page.screenshot({path:output+'/saas-tco-guide-desktop.png',fullPage:true});
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.ok(await page.locator('#recommend').isVisible(), 'Advisor button hidden on mobile');
@@ -241,6 +254,13 @@ try {
   const calculatorWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
   assert.ok(calculatorWidth<=395,'Cost calculator mobile overflow: '+calculatorWidth);
 
+  await page.goto(base + '/guides/saas-total-cost-of-ownership/', {waitUntil:'networkidle'});
+  assert.match(await page.locator('h1').innerText(),/SaaS total cost of ownership/);
+  await checkAccessibility(page,'SaaS TCO educational guide mobile');
+  await page.screenshot({path:output+'/saas-tco-guide-mobile.png',fullPage:true});
+  const tcoWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
+  assert.ok(tcoWidth<=395,'SaaS cost guide mobile overflow: '+tcoWidth);
+
   await page.goto(base + '/compare/', { waitUntil: 'networkidle' });
   await page.screenshot({ path: output + '/compare-mobile.png', fullPage: true });
   await page.locator('#compare-category').selectOption('CRM');
@@ -252,7 +272,7 @@ try {
   assert.ok(compareWidth <= 395, 'Comparison mobile overflow: ' + compareWidth);
 
   assert.deepEqual(errors, [], 'Browser JavaScript or local resource failures');
-  console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, interactive category comparisons, private requirements worksheet and cost calculator, 3 trust pages.');
+  console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, interactive category comparisons, private requirements worksheet, cost calculator and SaaS TCO guide, 3 trust pages.');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');
