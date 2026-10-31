@@ -1,4 +1,6 @@
 # StackPilot AI — Current operational state and release boundaries
+**Latest release-readiness handoff (2026-11-01):** See [private-preview UAT and separate owner approval packet](publisher-readiness/2026-11-01-private-preview-uat-release-decision.md). Last *fully verified* development SHA before this documentation change: `5976f4fe714f4d8d2a86f6791917297e2f131246` (231/231 tests, safety, Chromium and Netlify PR deployment all successful). This is **not** authenticated latest-SHA hosted UAT. User previously deleted the legacy Vercel project; **do not recreate it or interpret historical Vercel quota errors as current work**. Owner-only public launch, brand/legal, claim approvals and affiliate activation remain **NO-GO**; ₹0 budget. Closed historical issues/checkmarks are not signed real-world authorizations.
+
 **As-of snapshot:** 2026-10-31, Asia/Kolkata. **Purpose:** handoff for agents and the owner; distinguish observed evidence from assumptions. Read this before older planning notes. **Do not treat a historical dashboard screenshot or CI status as a continuously guaranteed account state.** Recheck live status before reporting.
 
 ## What is confirmed, and by whom
