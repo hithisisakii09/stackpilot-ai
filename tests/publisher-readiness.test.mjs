@@ -65,3 +65,17 @@ test('no externally asserted partner approval, revenue, contacts or secrets in o
  assert.doesNotMatch(serialized,/"applicationReady"\s*:\s*true/);
  assert.doesNotMatch(serialized,/"approved"\s*:\s*true/);
 });
+
+
+test('hosted preview and owner account settings are never inferred from repository CI',()=>{
+ const r=buildPublisherReadiness(inputs());
+ assert.equal(r.remotePreviewEvidence.status,'BLOCKED_UNVERIFIED');
+ assert.equal(r.remotePreviewEvidence.readyForPublicRelease,false);
+ assert.deepEqual(r.remotePreviewEvidence.gates.map(g=>g.id),[
+  'authenticated-current-sha-uat','unauthenticated-preview-denial','netlify-private-and-locked',
+  'live-response-security-headers','hosting-billing-and-analytics','owner-legal-editorial-approval'
+ ]);
+ assert.ok(r.remotePreviewEvidence.gates.every(g=>g.status==='UNVERIFIED'&&g.source==='owner-or-provider-observation'));
+ assert.equal(r.remotePreviewEvidence.credentialCollectionAllowed,false);
+ assert.equal(r.remotePreviewEvidence.commitsAreApprovalEvidence,false);
+});
