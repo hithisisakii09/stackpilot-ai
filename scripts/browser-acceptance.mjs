@@ -463,6 +463,64 @@ try {
   await checkAccessibility(page,'CRM migration checklist desktop');
   await page.screenshot({path:output+'/crm-migration-desktop.png',fullPage:true});
 
+  // CRM migration readiness: demonstrate safe aggregate reconciliation and offline export.
+  const crmNetwork=[];
+  const trackCrmRequest=req=>{
+    if(req.method()!=='GET'||!req.url().startsWith(base))
+      crmNetwork.push({method:req.method(),url:req.url()});
+  };
+  page.on('request',trackCrmRequest);
+  await page.goto(base+'/tools/crm-migration-readiness/',{waitUntil:'networkidle'});
+  assert.match(await page.locator('h1').innerText(),/CRM migration readiness/i);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.equal(await page.locator('#crm-form select').count(),5);
+  assert.ok(await page.locator('#crm-download').isDisabled());
+  await page.locator('#crm-form button[type="submit"]').click();
+  assert.match(await page.locator('#crm-status').innerText(),/invalid/i);
+  for(const [key,value] of Object.entries({
+    sourceRecordCount:'1200',targetRecordCount:'1193',
+    cutoverWindowMinutes:'90',measuredRollbackMinutes:'30'
+  })){
+    await page.locator('#crm-'+key).fill(value);
+  }
+  await page.locator('#crm-form button[type="submit"]').click();
+  assert.match(await page.locator('#crm-report').inputValue(),/NO_GO/);
+  assert.match(await page.locator('#crm-report').inputValue(),/record discrepancy: 7/i);
+  assert.ok(await page.locator('#crm-download').isEnabled());
+  for(const id of ['exportPermission','mappingValidation','associationOwnership','integrationChecks','backupRestore'])
+    await page.locator('#crm-'+id).selectOption('pass');
+  assert.equal(await page.locator('#crm-report').inputValue(),'');
+  assert.ok(await page.locator('#crm-download').isDisabled());
+  await page.locator('#crm-form button[type="submit"]').click();
+  assert.match(await page.locator('#crm-report').inputValue(),/NO_GO/,'Count mismatch must block even if all gates pass');
+  await page.locator('#crm-targetRecordCount').fill('1200');
+  assert.equal(await page.locator('#crm-report').inputValue(),'');
+  await page.locator('#crm-form button[type="submit"]').click();
+  assert.match(await page.locator('#crm-report').inputValue(),/READY_FOR_HUMAN_REVIEW/);
+  assert.match(await page.locator('#crm-report').inputValue(),/not authorization/i);
+  const crmDownloadPromise=page.waitForEvent('download');
+  await page.locator('#crm-download').click();
+  const crmDownload=await crmDownloadPromise;
+  assert.equal(crmDownload.suggestedFilename(),'stackpilot-crm-migration-readiness.csv');
+  const crmStream=await crmDownload.createReadStream();
+  const crmChunks=[];
+  for await(const chunk of crmStream)crmChunks.push(Buffer.from(chunk));
+  const crmCsv=Buffer.concat(crmChunks).toString('utf8');
+  assert.match(crmCsv,/^check,value,evidence_status\r\n/);
+  assert.match(crmCsv,/"record_discrepancy","0","SELF_REPORTED"/);
+  assert.match(crmCsv,/"migration_authorized","false","SELF_REPORTED"/);
+  await page.locator('#crm-measuredRollbackMinutes').fill('91');
+  assert.ok(await page.locator('#crm-download').isDisabled());
+  await page.locator('#crm-form button[type="submit"]').click();
+  assert.match(await page.locator('#crm-report').inputValue(),/rollbackExceedsWindow/);
+  await page.locator('#crm-form button[type="reset"]').click();
+  assert.ok(await page.locator('#crm-download').isDisabled());
+  assert.equal(await page.locator('#crm-report').inputValue(),'');
+  assert.deepEqual(crmNetwork,[],'CRM worksheet must never submit entered values');
+  page.off('request',trackCrmRequest);
+  await checkAccessibility(page,'CRM migration readiness desktop');
+  await page.screenshot({path:output+'/crm-readiness-desktop.png',fullPage:true});
+
   // Hosting migration guide: category-balanced buyer education; no vendor endorsements.
   await page.goto(base + '/guides/hosting-migration-checklist/', {waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(), /Hosting migration checklist/);
