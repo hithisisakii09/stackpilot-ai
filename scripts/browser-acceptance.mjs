@@ -555,6 +555,59 @@ try {
   page.off('request',trackDrillRequest);
   assert.deepEqual(drillOutbound,[],'Restore drill must not submit values or load external resources');
 
+  // Hosting hidden-cost planner: full quote decomposition and offline CSV, no submissions.
+  const hostingOutbound=[];
+  const trackHostingRequest=req=>{
+    if(req.method()!=='GET'||!req.url().startsWith(base))
+      hostingOutbound.push({method:req.method(),url:req.url()});
+  };
+  page.on('request',trackHostingRequest);
+  await page.goto(base+'/tools/hosting-hidden-costs/',{waitUntil:'networkidle'});
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.ok(await page.locator('#hosting-download').isDisabled());
+  await page.locator('#hosting-form button[type="submit"]').click();
+  assert.equal(await page.locator('#hosting-report').inputValue(),'','Empty required fields cannot create a quote');
+  for(const [key,value] of Object.entries({
+    overlapMonths:'2',baseMonthly:'100.10',backupMonthly:'5.25',bandwidthMonthly:'10',
+    supportMonthly:'20',otherMonthly:'4.65',oldHostingMonthly:'70',
+    migrationOnce:'240.50',cancellationOnce:'15.25'
+  }))await page.locator('#hosting-'+key).fill(value);
+  await page.locator('#hosting-form button[type="submit"]').click();
+  const hostingReport=await page.locator('#hosting-report').inputValue();
+  assert.match(hostingReport,/INR 2075\.75/);
+  assert.match(hostingReport,/INR 874\.55/);
+  assert.match(hostingReport,/not a verified provider quote/i);
+  assert.ok(await page.locator('#hosting-download').isEnabled());
+  const hostingDownload=page.waitForEvent('download');
+  await page.locator('#hosting-download').click();
+  const hostingFile=await hostingDownload;
+  assert.equal(hostingFile.suggestedFilename(),'stackpilot-hosting-hidden-costs.csv');
+  const hostingStream=await hostingFile.createReadStream();
+  const hostingChunks=[];
+  for await(const part of hostingStream)hostingChunks.push(Buffer.from(part));
+  const hostingCsv=Buffer.concat(hostingChunks).toString('utf8');
+  assert.match(hostingCsv,/^metric,value,evidence_status\r\n/);
+  assert.match(hostingCsv,/"total","2075\.75","UNVERIFIED"/);
+  assert.match(hostingCsv,/"provider_quote_verified","false","UNVERIFIED"/);
+  await page.locator('#hosting-backupMonthly').fill('8');
+  assert.equal(await page.locator('#hosting-report').inputValue(),'','Edit must invalidate stale report');
+  assert.ok(await page.locator('#hosting-download').isDisabled());
+  assert.ok(await page.locator('#hosting-copy').isDisabled());
+  await page.locator('#hosting-form button[type="submit"]').click();
+  assert.match(await page.locator('#hosting-report').inputValue(),/INR 2108\.75/);
+  await page.locator('#hosting-baseMonthly').fill('-1');
+  await page.locator('#hosting-form button[type="submit"]').click();
+  assert.ok(await page.locator('#hosting-download').isDisabled(),'Invalid amount must not export');
+  await page.locator('#hosting-form button[type="reset"]').click();
+  assert.equal(await page.locator('#hosting-report').inputValue(),'');
+  assert.equal(await page.locator('#hosting-baseMonthly').inputValue(),'');
+  assert.ok(await page.locator('#hosting-download').isDisabled());
+  await checkAccessibility(page,'hosting hidden-cost worksheet desktop');
+  await page.screenshot({path:output+'/hosting-hidden-costs-desktop.png',fullPage:true});
+  page.off('request',trackHostingRequest);
+  assert.deepEqual(hostingOutbound,[],'Hosting cost tool must not transmit amounts or load outside resources');
+
+
 
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
@@ -661,6 +714,18 @@ try {
   await checkAccessibility(page,'backup restore drill planner mobile');
   assert.ok((await page.evaluate(()=>document.documentElement.scrollWidth))<=395,'Restore planner mobile overflow');
   await page.screenshot({path:output+'/backup-restore-drill-mobile.png',fullPage:true});
+
+  await page.goto(base+'/tools/hosting-hidden-costs/',{waitUntil:'networkidle'});
+  for(const key of ['overlapMonths','backupMonthly','bandwidthMonthly','supportMonthly',
+    'otherMonthly','oldHostingMonthly','migrationOnce','cancellationOnce']){
+    await page.locator('#hosting-'+key).fill('0');
+  }
+  await page.locator('#hosting-baseMonthly').fill('10');
+  await page.locator('#hosting-form button[type="submit"]').click();
+  assert.match(await page.locator('#hosting-report').inputValue(),/INR 120\.00/);
+  await checkAccessibility(page,'hosting hidden-cost worksheet mobile');
+  assert.ok((await page.evaluate(()=>document.documentElement.scrollWidth))<=395,'Hosting cost mobile overflow');
+  await page.screenshot({path:output+'/hosting-hidden-costs-mobile.png',fullPage:true});
 
   await page.goto(base+'/tools/hosting-cutover-gates/',{waitUntil:'networkidle'});
   await page.locator('#gate-form button[type="submit"]').click();
