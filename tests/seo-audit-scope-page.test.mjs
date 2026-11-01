@@ -23,7 +23,10 @@ test('tool is local-only and does not endorse vendors or infer crawl credit appr
  assert.match(html,/formatSeoAuditScopeReport/);
  assert.match(html,/provider-specific/i);
  assert.match(html,/not a live crawl/i);
- assert.doesNotMatch(html,/https?:\/\/|<iframe|<form[^>]*action=|analytics|affiliateUrl|commission|Semrush|Ahrefs/i);
+ assert.doesNotMatch(html,/https?:\/\/|<iframe|<form[^>]*action=|affiliateUrl|commission|Semrush|Ahrefs/i);
+ assert.match(html,/Netlify Web Analytics is documented as enabled at the hosting layer/);
+ assert.match(html,/does not receive the entered counts/);
+ assert.doesNotMatch(html,/<script[^>]+src=["']https?:\/\//i);
 });
 test('homepage links to the tool, and Chromium acceptance covers it',()=>{
  const home=readFileSync('src/pages/index.astro','utf8');
