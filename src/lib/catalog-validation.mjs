@@ -1,4 +1,5 @@
 import { BUDGETS, GOALS, TEAM_SIZES } from './recommend.mjs';
+import { isOfficialVendorWebsite, isVendorSourceUrl } from './vendor-source.mjs';
 
 const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const nonempty = (value) => typeof value === 'string' && value.trim().length > 0;
@@ -29,7 +30,7 @@ export function validateCatalog(products) {
     for (const key of ['name', 'category', 'description']) {
       if (!nonempty(p[key])) throw new Error('Missing product ' + key + ': ' + p.id);
     }
-    if (!httpsUrl(p.website) || new URL(p.website).search || new URL(p.website).hash) throw new Error('Invalid product website: ' + p.id);
+    if (!isOfficialVendorWebsite(p)) throw new Error('Invalid official product website: ' + p.id);
     if (p.affiliateUrl !== null) throw new Error('Affiliate URLs require approval: ' + p.id);
     if (!Array.isArray(p.bestFor) || !p.bestFor.length || new Set(p.bestFor).size !== p.bestFor.length || p.bestFor.some(x => !GOALS.includes(x))) {
       throw new Error('Invalid bestFor: ' + p.id);
@@ -39,7 +40,7 @@ export function validateCatalog(products) {
     if (!Array.isArray(p.sources)) throw new Error('Sources must be an array: ' + p.id);
     const urls = new Set();
     for (const source of p.sources) {
-      if (!source || !httpsUrl(source.url) || !nonempty(source.claim) || !isDay(source.checkedAt) || urls.has(source.url + source.claim)) {
+      if (!source || !isVendorSourceUrl(p, source.url) || !nonempty(source.claim) || !isDay(source.checkedAt) || urls.has(source.url + source.claim)) {
         throw new Error('Invalid or duplicate source: ' + p.id);
       }
       urls.add(source.url + source.claim);
