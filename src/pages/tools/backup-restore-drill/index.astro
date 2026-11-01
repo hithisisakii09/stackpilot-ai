@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="description" content="Private, vendor-neutral RTO and RPO backup restore drill planning tool."/>
+<title>Backup restore drill planner | StackPilot AI</title>
+<style>
+:root{font-family:system-ui,sans-serif;background:#0b1220;color:#edf5ff;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0}
+header,main,footer{max-width:950px;margin:auto;padding:24px}
+nav{display:flex;gap:14px;flex-wrap:wrap}a{color:#7ce8c6}
+h1{font-size:clamp(30px,5vw,51px)}p,li{color:#cad9ee;line-height:1.65}
+.panel{min-width:0;overflow-wrap:anywhere;border-radius:16px;background:#152138;border:1px solid #405675;padding:22px;margin:20px 0}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+label{display:block;font-weight:650;line-height:1.5}
+input[type=text],textarea{display:block;margin-top:7px;width:100%;min-width:0;border:1px solid #91a6c4;border-radius:8px;background:#0b1220;color:#fff;padding:12px;font:inherit}
+textarea{min-height:310px;resize:vertical}
+fieldset{min-width:0}legend{font-weight:750}
+.check{display:flex;align-items:flex-start;gap:10px;font-weight:500;margin:12px 0}
+.check input{flex:none;width:18px;height:18px;margin-top:4px;accent-color:#7ce8c6}
+button{border:0;border-radius:9px;background:#7ce8c6;color:#05241e;font:inherit;font-weight:750;padding:12px 18px;cursor:pointer}
+button.secondary{background:#293d58;color:#eaf3ff;border:1px solid #91a6c4}
+button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+:focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+#drill-status{min-height:1.5em;color:#ffe2a6}
+footer{border-top:1px solid #405675}
+@media(max-width:650px){.fields{grid-template-columns:1fr}header,main,footer{padding:17px}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<header><nav aria-label="Primary navigation">
+<a href="/">← StackPilot AI</a>
+<a href="/guides/hosting-migration-checklist/">Hosting migration checklist</a>
+<a href="/tools/hosting-cutover-gates/">Hosting cutover gates</a>
+<a href="/methodology/">Methodology</a>
+</nav></header>
+<main>
+<p>Private browser-only recovery planning</p>
+<h1>Backup restore drill planner</h1>
+<p>Compare the objectives you set with measurements you recorded from an authorized restore rehearsal. The numbers are <strong>user-entered, not independently verified</strong>. This is not a live backup, restore operation, recovery audit, uptime guarantee or approval for any production change.</p>
+<p><strong>RTO</strong> is your maximum acceptable service restoration time. <strong>RPO</strong> is your maximum acceptable recovery-point age (the period of changes that might be lost). A backup timestamp and one restoration duration do not measure full application outage or actual data lost. Unknown measurements must stay blank, not zero.</p>
+<form id="drill-form" novalidate>
+<section class="panel" aria-labelledby="drill-title">
+<h2 id="drill-title">Enter goals and rehearsal observations (minutes)</h2>
+<div class="fields">
+<label for="drill-targetRtoMinutes">RTO target — allowed restoration time in minutes
+<input id="drill-targetRtoMinutes" name="targetRtoMinutes" type="text" inputmode="numeric" autocomplete="off" value="120" required/></label>
+<label for="drill-observedRestoreMinutes">Observed restore duration in minutes (leave blank if unknown)
+<input id="drill-observedRestoreMinutes" name="observedRestoreMinutes" type="text" inputmode="numeric" autocomplete="off" value="" /></label>
+<label for="drill-targetRpoMinutes">RPO target — allowed recovery-point age in minutes
+<input id="drill-targetRpoMinutes" name="targetRpoMinutes" type="text" inputmode="numeric" autocomplete="off" value="60" required/></label>
+<label for="drill-observedRecoveryPointAgeMinutes">Observed age of recovered point in minutes (leave blank if unknown)
+<input id="drill-observedRecoveryPointAgeMinutes" name="observedRecoveryPointAgeMinutes" type="text" inputmode="numeric" autocomplete="off" value="" /></label>
+</div>
+</section>
+<fieldset class="panel">
+<legend>Self-attested rehearsal checks</legend>
+<label class="check" for="drill-restoreTested"><input id="drill-restoreTested" name="restoreTested" type="checkbox"/><span>I ran an authorized restore rehearsal and observed the result</span></label>
+<label class="check" for="drill-dataIntegrityChecked"><input id="drill-dataIntegrityChecked" name="dataIntegrityChecked" type="checkbox"/><span>I checked recovered data integrity against an authorized reference</span></label>
+<p>These checks record your own assertions only. An unchecked or unknown step blocks readiness. No backup, data or proof is uploaded.</p>
+</fieldset>
+<div class="actions"><button type="submit">Evaluate my drill observations</button><button type="reset" class="secondary">Clear worksheet</button></div>
+</form>
+<p id="drill-status" role="status" aria-live="polite"></p>
+<section class="panel" aria-labelledby="drill-report-title">
+<h2 id="drill-report-title">Private, unverified recovery planning report</h2>
+<label for="drill-report">Review before copying or saving</label>
+<textarea id="drill-report" readonly placeholder="Run a planning evaluation to create a local-only report."></textarea>
+<div class="actions"><button id="drill-copy" type="button" class="secondary" disabled>Copy report</button><button id="drill-download" type="button" class="secondary" disabled>Download offline CSV</button></div>
+<p>Every number in the export is user-entered. A result of READY_FOR_HUMAN_REVIEW never overrides your real operations, security, legal or change-management signoffs.</p>
+</section>
+<section class="panel">
+<h2>Before considering a real cutover</h2>
+<ul>
+<li>Rehearse restoration in an authorized isolated environment; confirm backup completeness, relevant dependencies, permissions and encryption-key access.</li>
+<li>Measure end-to-end application availability separately from component restore time; confirm the recovery-point timestamp reflects the required datasets.</li>
+<li>Keep real evidence, credentials and customer data inside your own authorized organization systems, not in this worksheet.</li>
+</ul>
+</section>
+<p><strong>Privacy:</strong> This worksheet calculates inputs in your browser; they are not submitted to StackPilot. Netlify Web Analytics is documented as enabled at the hosting layer and may record page visits; it does not receive the form measurements. See <a href="/privacy/">privacy notes</a>.</p>
+</main>
+<footer><a href="/privacy/">Privacy</a> · <a href="/disclosure/">Disclosure</a> · StackPilot AI private preview</footer>
+<script>
+import {assessBackupRestoreDrill,formatBackupRestoreDrillReport,formatBackupRestoreDrillCsv} from '../../../lib/backup-restore-drill.mjs';
+const form=document.querySelector('#drill-form');
+const status=document.querySelector('#drill-status');
+const report=document.querySelector('#drill-report');
+const copy=document.querySelector('#drill-copy');
+const download=document.querySelector('#drill-download');
+const numbers=['targetRtoMinutes','observedRestoreMinutes','targetRpoMinutes','observedRecoveryPointAgeMinutes'];
+const flags=['restoreTested','dataIntegrityChecked'];
+let last=null;
+function invalidate(){last=null;report.value='';copy.disabled=true;download.disabled=true;}
+form.addEventListener('input',()=>{invalidate();status.textContent='Measurements changed. Reevaluate before copying or saving.';});
+form.addEventListener('change',()=>{invalidate();status.textContent='Rehearsal checks changed. Reevaluate before copying or saving.';});
+form.addEventListener('reset',()=>{invalidate();status.textContent='Worksheet cleared.';});
+form.addEventListener('submit',event=>{
+ event.preventDefault();
+ try{
+  const input=Object.fromEntries([
+   ...numbers.map(key=>[key,form.elements.namedItem(key).value]),
+   ...flags.map(key=>[key,form.elements.namedItem(key).checked])
+  ]);
+  const current=assessBackupRestoreDrill(input);
+  report.value=formatBackupRestoreDrillReport(current);
+  last=current;copy.disabled=false;download.disabled=false;
+  status.textContent=current.readiness==='NO_GO'
+   ?'NO_GO — missing or out-of-target recovery evidence needs human review.'
+   :'READY_FOR_HUMAN_REVIEW — this does not authorize a live cutover.';
+ }catch(error){
+  invalidate();status.textContent=error instanceof Error?error.message:'Check the inputs.';
+ }
+});
+copy.addEventListener('click',async()=>{
+ if(!last||!report.value)return;
+ try{await navigator.clipboard.writeText(report.value);status.textContent='Report copied.';}
+ catch{report.focus();report.select();status.textContent='Clipboard unavailable. Select and copy manually.';}
+});
+download.addEventListener('click',()=>{
+ if(!last||!report.value||download.disabled)return;
+ try{
+  const csv=formatBackupRestoreDrillCsv(last);
+  const file=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(file);
+  const anchor=document.createElement('a');
+  anchor.href=url;anchor.download='stackpilot-backup-restore-drill.csv';
+  document.body.append(anchor);anchor.click();anchor.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status.textContent='Offline CSV saved to your device. No measurements were submitted.';
+ }catch{
+  invalidate();status.textContent='CSV export failed. Recheck inputs and regenerate.';
+ }
+});
+</script>
+</body></html>
