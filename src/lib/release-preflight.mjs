@@ -115,7 +115,7 @@ export function auditStaticRoutes(pages) {
       if(isExternalOrExecutable(href))
         violations.push(path+': external linked resource');
     }
-    for (const tag of htmlTags.filter(tag=>/^<a\\b/i.test(tag))) {
+    for (const tag of htmlTags.filter(tag=>/^<a\b/i.test(tag))) {
       const href=attributeValue(tag,'href');
       if (unsafeAnchorDestination(href))
         violations.push(path+': unsafe anchor destination');
