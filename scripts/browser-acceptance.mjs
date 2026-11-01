@@ -364,6 +364,45 @@ try {
   page.off('request',captureAuditRequest);
   assert.deepEqual(auditRequests,[],'CRM audit must not submit form data or request third-party resources');
 
+  // SEO scope tool: user-entered inventory, never a live crawl or a vendor cap claim.
+  const seoOutbound=[];
+  const trackSeoRequest=request=>{
+    if(request.method()!=='GET' || !request.url().startsWith(base))
+      seoOutbound.push({method:request.method(),url:request.url()});
+  };
+  page.on('request',trackSeoRequest);
+  await page.goto(base+'/tools/seo-audit-scope/',{waitUntil:'networkidle'});
+  assert.match(await page.title(),/SEO audit scope planner/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  await page.locator('#seo-rootPages').fill('80');
+  await page.locator('#seo-folderPages').fill('20');
+  await page.locator('#seo-subdomainPages').fill('40');
+  await page.locator('#seo-pageCap').fill('90');
+  await page.locator('#seo-form button[type="submit"]').click();
+  assert.match(await page.locator('#seo-report').inputValue(),/Planned included URLs: 100/);
+  assert.match(await page.locator('#seo-report').inputValue(),/Excluded inventory URLs: 40/);
+  assert.match(await page.locator('#seo-report').inputValue(),/Excess above user-entered cap: 10/);
+  assert.match(await page.locator('#seo-report').inputValue(),/Provider allowance: UNVERIFIED/);
+  await page.locator('#seo-includeSubdomains').check();
+  assert.equal(await page.locator('#seo-report').inputValue(),'','Scope change must invalidate stale report');
+  assert.ok(await page.locator('#seo-copy').isDisabled());
+  await page.locator('#seo-form button[type="submit"]').click();
+  assert.match(await page.locator('#seo-report').inputValue(),/Planned included URLs: 140/);
+  assert.match(await page.locator('#seo-report').inputValue(),/Excess above user-entered cap: 50/);
+  await page.locator('#seo-rootPages').fill('01');
+  await page.locator('#seo-form button[type="submit"]').click();
+  assert.match(await page.locator('#seo-status').innerText(),/Invalid rootPages/);
+  assert.equal(await page.locator('#seo-report').inputValue(),'');
+  assert.ok(await page.locator('#seo-copy').isDisabled());
+  await page.locator('#seo-form button[type="reset"]').click();
+  assert.equal(await page.locator('#seo-report').inputValue(),'');
+  assert.ok(await page.locator('#seo-copy').isDisabled());
+  await checkAccessibility(page,'SEO audit scope planner desktop');
+  await page.screenshot({path:output+'/seo-audit-scope-desktop.png',fullPage:true});
+  page.off('request',trackSeoRequest);
+  assert.deepEqual(seoOutbound,[],'SEO scope planner must not submit counts or request remote resources');
+
+
 
   // Substantial guide: exact fictional cost illustration, prelaunch indexing and links.
 
@@ -458,6 +497,20 @@ try {
   await page.screenshot({path:output+'/crm-seat-audit-mobile.png',fullPage:true});
   const seatAuditOverflow=await page.evaluate(()=>({width:document.documentElement.scrollWidth, offenders:[...document.querySelectorAll('body *')].filter(el=>el.getBoundingClientRect().right>window.innerWidth+4).slice(0,8).map(el=>({tag:el.tagName.toLowerCase(),id:el.id,cls:el.className,right:Math.round(el.getBoundingClientRect().right)}))}));
   assert.ok(seatAuditOverflow.width<=395,'CRM seat audit mobile overflow: '+JSON.stringify(seatAuditOverflow));
+
+  // Mobile SEO scope plan: use the same model without hidden fields or layout overflow.
+  await page.goto(base+'/tools/seo-audit-scope/',{waitUntil:'networkidle'});
+  await page.locator('#seo-rootPages').fill('80');
+  await page.locator('#seo-folderPages').fill('20');
+  await page.locator('#seo-subdomainPages').fill('40');
+  await page.locator('#seo-pageCap').fill('90');
+  await page.locator('#seo-form button[type="submit"]').click();
+  assert.match(await page.locator('#seo-report').inputValue(),/Planned included URLs: 100/);
+  await checkAccessibility(page,'SEO audit scope planner mobile');
+  const seoWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
+  assert.ok(seoWidth<=395,'SEO scope mobile overflow: '+seoWidth);
+  await page.screenshot({path:output+'/seo-audit-scope-mobile.png',fullPage:true});
+
 
   await page.goto(base+'/tools/software-cost-calculator/',{waitUntil:'networkidle'});
   await page.locator('#cost-a-flatMonthly').fill('2');
