@@ -149,3 +149,44 @@ test('allows first-party static assets, normal official external links and inert
   ].join('')+'</body>');
   assert.deepEqual(auditStaticRoutes([{path:'index.html',html:safe}]).violations,[]);
 });
+
+
+const secureCsp = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; worker-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests";
+const withCsp = headers + '  Content-Security-Policy: '+secureCsp+'\n';
+
+test('requires a restrictive wildcard Content Security Policy before prelaunch', () => {
+  assert.deepEqual(auditDeploymentConstraints({policy,headers:withCsp,robots}).violations,[]);
+  assert.ok(auditDeploymentConstraints({policy,headers,robots}).violations.some(v=>v.includes('Content-Security-Policy')));
+});
+
+test('fails closed when CSP enables active scripts, remote connections, or unsafe framing', () => {
+  const attacks=[
+    ["script-src 'self'", "script-src 'self' 'unsafe-inline'"],
+    ["script-src 'self'", "script-src 'self' 'unsafe-eval'"],
+    ["script-src 'self'", "script-src *"],
+    ["connect-src 'self'", "connect-src 'self' https://tracking.example"],
+    ["img-src 'self' data:", "img-src *"],
+    ["frame-ancestors 'none'", "frame-ancestors *"],
+    ["object-src 'none'", "object-src https://cdn.example"],
+    ["default-src 'none'", "default-src 'self'"]
+  ];
+  for(const [original,replacement] of attacks){
+    const compromised=withCsp.replace(original,replacement);
+    const violations=auditDeploymentConstraints({policy,headers:compromised,robots}).violations;
+    assert.ok(violations.some(v=>v.includes('Content-Security-Policy')),replacement+': '+violations.join(' | '));
+  }
+  assert.ok(auditDeploymentConstraints({policy,headers:withCsp.replace("  Content-Security-Policy:", "  X-Not-CSP:"),robots}).violations.some(v=>v.includes('Content-Security-Policy')));
+});
+
+test('rejects duplicate, truncated and unexpected CSP directives', () => {
+  const wrong=[
+    withCsp+'  Content-Security-Policy: default-src *\n',
+    withCsp.replace("object-src 'none'; ",""),
+    withCsp.replace("; upgrade-insecure-requests",""),
+    withCsp.replace("; upgrade-insecure-requests","; report-uri https://tracking.example")
+  ];
+  for(const compromised of wrong){
+    const violations=auditDeploymentConstraints({policy,headers:compromised,robots}).violations;
+    assert.ok(violations.some(v=>v.includes('Content-Security-Policy')),violations.join(' | '));
+  }
+});
