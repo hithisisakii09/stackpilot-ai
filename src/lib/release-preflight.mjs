@@ -175,13 +175,13 @@ export function auditDeploymentConstraints({policy,headers,robots}={}) {
   ],
   "upgrade-insecure-requests": []
 };
-  const policies=[...wildcard.matchAll(/^\\s*Content-Security-Policy:\\s*(.+)$/gmi)].map(match=>match[1].trim());
+  const policies=[...wildcard.matchAll(/^\s*Content-Security-Policy:\s*(.+)$/gmi)].map(match=>match[1].trim());
   if(policies.length!==1) {
     violations.push('Content-Security-Policy must appear exactly once in wildcard headers');
   } else {
     const declared=new Map();
     for(const part of policies[0].split(';').map(x=>x.trim()).filter(Boolean)) {
-      const [name,...tokens]=part.split(/\\s+/);
+      const [name,...tokens]=part.split(/\s+/);
       if(!Object.hasOwn(expectedCsp,name)||declared.has(name)) {
         violations.push('Content-Security-Policy unexpected or duplicated directive: '+name);
       } else {
