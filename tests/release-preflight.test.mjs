@@ -4,7 +4,8 @@ import { auditStaticRoutes, auditDeploymentConstraints } from '../src/lib/releas
 
 const goodPage = '<!doctype html><html lang="en"><head><meta name="robots" content="noindex, nofollow"><title>StackPilot AI</title></head><body><h1>Comparison</h1></body></html>';
 const policy = {policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,hostingCandidate:'netlify-free',commercialHostingApproved:false,productionLaunchApproved:false,affiliateActivationApproved:false,paidServicesApproved:false};
-const headers = '/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n';
+const secureCsp = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; worker-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests";
+const headers = '/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Content-Security-Policy: '+secureCsp+'\n';
 const robots = 'User-agent: *\nDisallow: /\n';
 
 test('audits all generated static routes rather than a fixed hand-written shortlist', () => {
@@ -151,12 +152,12 @@ test('allows first-party static assets, normal official external links and inert
 });
 
 
-const secureCsp = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; worker-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests";
-const withCsp = headers + '  Content-Security-Policy: '+secureCsp+'\n';
+const withCsp = headers;
+const withoutCsp = headers.replace(/  Content-Security-Policy:[^\n]*\n/, '');
 
 test('requires a restrictive wildcard Content Security Policy before prelaunch', () => {
   assert.deepEqual(auditDeploymentConstraints({policy,headers:withCsp,robots}).violations,[]);
-  assert.ok(auditDeploymentConstraints({policy,headers,robots}).violations.some(v=>v.includes('Content-Security-Policy')));
+  assert.ok(auditDeploymentConstraints({policy,headers:withoutCsp,robots}).violations.some(v=>v.includes('Content-Security-Policy')));
 });
 
 test('fails closed when CSP enables active scripts, remote connections, or unsafe framing', () => {

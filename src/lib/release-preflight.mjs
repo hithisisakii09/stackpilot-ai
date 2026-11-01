@@ -125,6 +125,77 @@ export function auditDeploymentConstraints({policy,headers,robots}={}) {
     violations.push('Missing wildcard X-Content-Type-Options: nosniff');
   if(!/^\s*X-Frame-Options:\s*DENY\b/im.test(wildcard))
     violations.push('Missing wildcard X-Frame-Options: DENY');
+
+  // Browser enforcement on Netlify: a single restrictive wildcard CSP.
+  // This protects scripts and passive connections that evade static HTML scans.
+  const expectedCsp={
+  "default-src": [
+    "'none'"
+  ],
+  "script-src": [
+    "'self'"
+  ],
+  "style-src": [
+    "'self'",
+    "'unsafe-inline'"
+  ],
+  "img-src": [
+    "'self'",
+    "data:"
+  ],
+  "font-src": [
+    "'self'"
+  ],
+  "connect-src": [
+    "'self'"
+  ],
+  "form-action": [
+    "'self'"
+  ],
+  "frame-ancestors": [
+    "'none'"
+  ],
+  "frame-src": [
+    "'none'"
+  ],
+  "object-src": [
+    "'none'"
+  ],
+  "base-uri": [
+    "'self'"
+  ],
+  "worker-src": [
+    "'none'"
+  ],
+  "media-src": [
+    "'self'"
+  ],
+  "manifest-src": [
+    "'self'"
+  ],
+  "upgrade-insecure-requests": []
+};
+  const policies=[...wildcard.matchAll(/^\\s*Content-Security-Policy:\\s*(.+)$/gmi)].map(match=>match[1].trim());
+  if(policies.length!==1) {
+    violations.push('Content-Security-Policy must appear exactly once in wildcard headers');
+  } else {
+    const declared=new Map();
+    for(const part of policies[0].split(';').map(x=>x.trim()).filter(Boolean)) {
+      const [name,...tokens]=part.split(/\\s+/);
+      if(!Object.hasOwn(expectedCsp,name)||declared.has(name)) {
+        violations.push('Content-Security-Policy unexpected or duplicated directive: '+name);
+      } else {
+        declared.set(name,tokens);
+      }
+    }
+    for(const [name,required] of Object.entries(expectedCsp)){
+      const values=declared.get(name);
+      if(!values||values.length!==required.length||
+          values.slice().sort().join(' ')!==required.slice().sort().join(' ')){
+        violations.push('Content-Security-Policy invalid directive: '+name);
+      }
+    }
+  }
   const robotsText=typeof robots==='string'?robots:'';
   if(!/^\s*User-agent:\s*\*\s*$/im.test(robotsText) ||
      !/^\s*Disallow:\s*\/\s*$/im.test(robotsText))
