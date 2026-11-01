@@ -521,6 +521,64 @@ try {
   await checkAccessibility(page,'CRM migration readiness desktop');
   await page.screenshot({path:output+'/crm-readiness-desktop.png',fullPage:true});
 
+  // Owner-hosted UAT assistance: locally exercised self-report, NEVER a hosted account check.
+  const uatOutbound=[];
+  const trackUatRequest=req=>{
+    if(req.method()!=='GET'||!req.url().startsWith(base))
+      uatOutbound.push({method:req.method(),url:req.url()});
+  };
+  page.on('request',trackUatRequest);
+  await page.goto(base+'/tools/private-uat-worksheet/',{waitUntil:'networkidle'});
+  assert.match(await page.locator('h1').innerText(),/Private owner UAT evidence worksheet/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.equal(await page.locator('#owner-uat-form select').count(),6);
+  assert.ok(await page.locator('#owner-uat-download').isDisabled());
+  await page.locator('#owner-uat-form button[type="submit"]').click();
+  assert.match(await page.locator('#owner-uat-status').innerText(),/Invalid.*Git commit SHA/i);
+  const testShaA='0123456789abcdef0123456789abcdef01234567';
+  const testShaB='0123456789abcdef0123456789abcdef01234568';
+  await page.locator('#owner-uat-expectedSha').fill(testShaA);
+  await page.locator('#owner-uat-observedSha').fill(testShaB);
+  await page.locator('#owner-uat-form button[type="submit"]').click();
+  assert.match(await page.locator('#owner-uat-report').inputValue(),/BLOCKED_UNVERIFIED/);
+  assert.match(await page.locator('#owner-uat-report').inputValue(),/commitMismatch/);
+  assert.ok(await page.locator('#owner-uat-download').isEnabled());
+  for(const id of ['previewSha','authenticatedRoutes','anonymousDenial','liveHeaders','privateAndLocked','billingAnalytics'])
+    await page.locator('#owner-uat-'+id).selectOption('pass');
+  assert.equal(await page.locator('#owner-uat-report').inputValue(),'');
+  assert.ok(await page.locator('#owner-uat-download').isDisabled());
+  await page.locator('#owner-uat-form button[type="submit"]').click();
+  assert.match(await page.locator('#owner-uat-report').inputValue(),/BLOCKED_UNVERIFIED/,'Mismatch must never become a pass');
+  await page.locator('#owner-uat-observedSha').fill(testShaA);
+  assert.equal(await page.locator('#owner-uat-report').inputValue(),'');
+  await page.locator('#owner-uat-form button[type="submit"]').click();
+  const uatReport=await page.locator('#owner-uat-report').inputValue();
+  assert.match(uatReport,/OWNER_SELF_REPORTED_ONLY/);
+  assert.match(uatReport,/not a public-release authorization/i);
+  const ownerUatDownload=page.waitForEvent('download');
+  await page.locator('#owner-uat-download').click();
+  const ownerUatFile=await ownerUatDownload;
+  assert.equal(ownerUatFile.suggestedFilename(),'stackpilot-owner-uat-evidence.csv');
+  const ownerUatStream=await ownerUatFile.createReadStream();
+  const ownerUatChunks=[];
+  for await(const part of ownerUatStream)ownerUatChunks.push(Buffer.from(part));
+  const ownerUatCsv=Buffer.concat(ownerUatChunks).toString('utf8');
+  assert.match(ownerUatCsv,/^check,value,evidence_status\r\n/);
+  assert.match(ownerUatCsv,/"public_release_authorized","false","SELF_REPORTED"/);
+  assert.match(ownerUatCsv,/"hosted_uat_independently_verified","false","SELF_REPORTED"/);
+  await page.locator('#owner-uat-liveHeaders').selectOption('fail');
+  assert.ok(await page.locator('#owner-uat-download').isDisabled());
+  assert.equal(await page.locator('#owner-uat-report').inputValue(),'');
+  await page.locator('#owner-uat-form button[type="submit"]').click();
+  assert.match(await page.locator('#owner-uat-report').inputValue(),/BLOCKED_UNVERIFIED/);
+  await page.locator('#owner-uat-form button[type="reset"]').click();
+  assert.ok(await page.locator('#owner-uat-download').isDisabled());
+  assert.equal(await page.locator('#owner-uat-report').inputValue(),'');
+  assert.deepEqual(uatOutbound,[],'Owner UAT worksheet must never transmit entered values');
+  page.off('request',trackUatRequest);
+  await checkAccessibility(page,'private owner UAT worksheet desktop');
+  await page.screenshot({path:output+'/owner-uat-desktop.png',fullPage:true});
+
   // Hosting migration guide: category-balanced buyer education; no vendor endorsements.
   await page.goto(base + '/guides/hosting-migration-checklist/', {waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(), /Hosting migration checklist/);
