@@ -2,6 +2,7 @@
  * Read-only candidate comparison. No scraped data, fit inference, ranking,
  * commissions, advertising status or anonymous buyer tracking are involved.
  */
+import { isVendorSourceUrl } from './vendor-source.mjs';
 function assertUniqueProducts(products) {
   if (!Array.isArray(products) || products.some(p => !p || typeof p.id !== 'string')) {
     throw new Error('Invalid product catalog');
@@ -30,19 +31,9 @@ function info(product) {
     category: product.category,
     description: product.verified === true ? product.description : 'Unverified catalog overview: ' + product.description,
     editorialStatus: product.verified === true ? 'Editorial review completed' : 'Editorial review pending',
-    identifiedSources: Array.isArray(product.sources) ? product.sources.filter(source => {
-      if (!source || typeof source.url !== 'string') return false;
-      try {
-        const url = new URL(source.url);
-        const canonical = new URL(product.website);
-        const hostname = url.hostname.toLowerCase();
-        const root = canonical.hostname.toLowerCase().replace(/^www[.]/, '');
-        return url.protocol === 'https:' && !url.username && !url.password &&
-          !url.search && !url.hash && !url.port && url.pathname.length > 1 &&
-          (hostname === root || hostname.endsWith('.' + root) ||
-           (product.id === 'cloudways' && hostname === 'www.digitalocean.com'));
-      } catch { return false; }
-    }).length : 0,
+    identifiedSources: Array.isArray(product.sources)
+      ? product.sources.filter(source => source && isVendorSourceUrl(product,source.url)).length
+      : 0,
     teamFit: product.verified === true && product.supportedTeams?.length
       ? product.supportedTeams.join(', ')
       : 'Unverified',
