@@ -168,6 +168,9 @@ const extraRouteScenarios={
  '/':[
   ['advisor-categories','Exercise the homepage advisor with CRM, SEO and hosting selections','Advisor shows neutral category matches without paid rankings or vendor approval.']
  ],
+ '/preview-build/':[
+  ['preview-sha-authenticated','While owner is signed in to the private Netlify Deploy Preview, open /preview-build/ and compare its full source SHA with the current draft PR #1 HEAD','Report the exact full 40-character SHA match as a human-observed finding only. If UNKNOWN or mismatched, FAIL/BLOCKED. This does not verify actual-host security headers, anonymous denial, other routes or release approval.']
+ ],
  '/compare/':[
   ['comparison-negative','Compare the same vendor with itself and then different vendors','A same vendor comparison is rejected; different vendors show neutral, unverified comparison fields.']
  ],
