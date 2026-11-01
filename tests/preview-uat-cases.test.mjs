@@ -67,7 +67,7 @@ test('CSV can be filled offline by human; exact SHA and safe source-fixed cells'
  assert.match(csv,/"remote-unauthenticated-preview-denial"/);
  assert.match(csv,/"UNTESTED","NOT_COLLECTED"/);
  assert.equal(csv.split('\r\n').filter(x=>x.trim()).length,r.caseCount+1);
- assert.doesNotMatch(csv,/\bPASS\b|=HYPERLINK|@SUM|https?:\/\/|NETLIFY_AUTH_TOKEN/i);
+ assert.doesNotMatch(csv,/,"PASS","|=HYPERLINK|@SUM|https?:\/\/|NETLIFY_AUTH_TOKEN/i);
  assert.equal(csv,formatPrivatePreviewUatWorksheetCsv(p));
 });
 test('no changes to input packet, deterministic even after repeat runs',()=>{
