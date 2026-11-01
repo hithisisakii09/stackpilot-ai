@@ -1,63 +1,80 @@
 # StackPilot AI — Private preview UAT and owner release-decision packet
 
-**Prepared:** 2026-11-01 (Asia/Kolkata) · **PRIVATE / NO-GO / NOT AN APPROVAL**  
-**Baseline:** draft PR #1 head `5976f4fe714f4d8d2a86f6791917297e2f131246` on `feature/phase-1-1-recommendation-engine`. Do not apply this dated CI snapshot to a newer SHA.
+**Updated:** 2026-11-01 (Asia/Kolkata) · **PRIVATE / RELEASE NO-GO / NOT AN APPROVAL**
 
-## 1. Verified CI/deployment evidence
+**Living reference:** [Release blocker #5](https://github.com/hithisisakii09/stackpilot-ai/issues/5). Check current [draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) and its exact HEAD before testing. **Never treat a past passing SHA as a present one.**
 
-| Gate | Evidence at exact head | Result |
+## 1. Most recent fully verified application checkpoint
+
+The last application HEAD before this documentation refresh was `0a07ce3657eb4517322e88c0bd2a0ce84d755e14`. That commit had all the following GitHub evidence:
+
+| Evidence | Link and measured result | Limit |
 | --- | --- | --- |
-| Unit/build/data validation | https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41229000402 | SUCCESS; 231 tests passed, 0 failed |
-| Safety and operations | https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41229000503 | SUCCESS |
-| Chromium desktop/mobile/axe | https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41229000599 | SUCCESS |
-| Browser screenshots (expires Nov 7, 2026 UTC) | https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41229000599/artifacts/13053257202 | Evidence retained, not remote authenticated UAT |
-| Private preview package (expires Nov 3, 2026 UTC) | https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41229000503/artifacts/13052941776 | Available short term |
-| Netlify PR deployment | https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app | GitHub status success; **not an auth or accessibility proof** |
-| Vercel | No new Vercel status on exact SHA; old project owner-deleted | Do not recreate or upgrade |
+| Unit/build/data validation | [GitHub run 41275501086](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41275501086) — SUCCESS; **260/260 unit tests**, **18/18 static routes**, release preflight PASS, npm audit 0 reported vulnerabilities | Local CI/build, not provider account verification |
+| Browser acceptance | [GitHub run 41275501083](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41275501083) — SUCCESS | Local browser / axe, not authenticated hosted preview |
+| Operations/safety | [GitHub run 41275501128](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41275501128) — SUCCESS | Does not confer any approval |
+| Netlify Deploy Preview | [Private PR preview](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/) — GitHub deployment status SUCCESS on this SHA | Does **not** prove visitor access, actual response headers or remote browser acceptance |
+| Main/production | `main@c8fadcbf799e45ec41db2278aa7f84bb48c99895` as checked 2026-11-01 | Do not merge or unlock production |
 
-The web reader could not access the Netlify preview in this environment. **Do not record 401, successful anonymous denial, private access enforcement, or authenticated browser acceptance on this basis.** The owner previously reported successful authenticated/Incognito checks on an earlier preview; repeat against this SHA.
+**This document revision creates a new GitHub SHA.** Recheck CI and Netlify status on that resulting HEAD before presenting it as fully verified. Documentation-only changes do not authorize anything.
 
-## 2. Authenticated protected-preview UAT — manual checklist (not yet executed)
+Current private features include a neutral six-vendor comparison, source-status research, CRM and hosting migration checklists, user-entered cost calculator, requirements CSV worksheet and a **CRM paid-seat audit**. The homepage now links to the audit. All product/catalog claims remain unreviewed; no affiliate tracking is active.
 
-Use a normal browser authenticated to Netlify only through the vendor's legitimate login. **Do not paste passwords, session cookies, tokens, personal screenshots or customer data into GitHub or this chat.** Confirm the exact PR SHA shown for the preview is the baseline, otherwise re-run CI/status inspection and label this evidence as historic.
+## 2. Authenticated private preview UAT — evidence not yet collected
 
-| Test | Steps and expected result | Result to record |
+Use a browser legitimately signed in to the owner's Netlify account. Do **not** disclose passwords, cookies, identity documents, access tokens or customer data in GitHub, chat or screenshots. Keep any sensitive screenshots in private access-controlled storage and record only redacted status notes.
+
+Before each test: inspect the deployed preview commit in Netlify and match it to the **current draft PR HEAD**, not the historical reference above. Record `SHA | UTC/IST time | browser and viewport | test | PASS/FAIL/BLOCKED | redacted evidence location`. A 404, login page, or inaccessible web reader alone is **not proof** of anonymous denial.
+
+| Test | Action | Expected / record |
 | --- | --- | --- |
-| Gated preview | Open the preview homepage while signed in. Independently open the same URL in a fresh private/incognito session **without** logging in. | Authenticated page works; unauthenticated session denied or login-gated (capture only URL/status, redact account details). |
-| Comparison pages | Visit `/compare/`, `/research/`, `/methodology/` and `/privacy/`. | Pages load without runtime error or broken links. |
-| Six candidate rows | On `/compare/`, inspect the CRM, SEO and Hosting tables without interacting with JavaScript controls. | HubSpot/Pipedrive, Ahrefs/Semrush, Cloudways/Kinsta each alphabetical; all descriptions marked unverified, team/pricing unverified, review pending. |
-| Browser-only comparisons | In `/compare/`, compare each pair, then select the same vendor in both fields. | Six neutral questions preview, no winner; invalid duplicate shows an error and clears export. |
-| CSV export and stale-state | Download `stackpilot-vendor-questions-crm.csv`; change first vendor/category after generating results, repeat for SEO and Hosting. | Six questions + header; both vendor answers `Unverified`, blank evidence field; download disabled after changing selections until comparison is regenerated. |
-| Mobile and keyboard | Open 390px viewport or a phone; tab to controls and submit, scroll long tables horizontally by keyboard where possible. | Content readable, controls operable, focus visible, no horizontal page overflow. |
-| Robots and response protection | In authenticated DevTools network response for representative paths inspect headers. | `X-Robots-Tag: noindex, nofollow, noarchive`, and expected security headers. Note that noindex does **not** protect access. |
-| Netlify configuration | In official provider UI inspect preview & production visitor visibility and deploy locks. | Both Private, auto-publishing Locked; verify Free entitlement, credit/billing alerts, and no surprise charges. |
-| Analytics/privacy | If Netlify Analytics is enabled, verify provider plan entitlement, server/CDN log collection, disclosure suitability and retention. | Report **human privacy/legal review needed** until actually approved; do not declare tracking absent merely because browser code sends no requests. |
+| Private gated access | In authenticated browser open PR preview; in completely separate incognito browser without login open the same URL | Authenticated content works; anonymous visitor cannot see project content. Document actual observed status/screen and access scope |
+| Homepage discovery | Open homepage; use Tab/Enter on the **CRM seat audit** navigation entry | Keyboard navigation loads `/tools/crm-seat-audit/` with focus indicators |
+| CRM paid-seat arithmetic | Enter billed **8**, occupied **5**, active **5**, with no account checks | **3 vacant**, **62.50%** utilization; **INCOMPLETE**, billing impact **UNKNOWN**; no savings/refund promise |
+| CRM stale/invalid state | Check all 3 provider/account boxes and regenerate; then edit a seat count; attempt 9 occupied vs 8 billed | Human-review status (not approval); input edit clears stale report; invalid count reports error, report blank, copying disabled |
+| Cost calculator stale state | Enter two fictional quotes, calculate; then change **price**, **currency**, and **month horizon** separately | Previously generated estimate clears on each change, copy disabled until recalculation; user-entered-only caveats remain |
+| Requirements worksheet | Select CRM questions; generate and download `stackpilot-requirements-crm.csv`; change selections | Download contains only selected questions and blank unverified vendor answers; stale CSV disabled after editing |
+| Neutral comparison | Browse six candidates and compare CRM, SEO, and hosting pairs; select same vendor twice | No paid winner, unverifiable prices or affiliate links; invalid comparison clears preview/export |
+| Other routes | Visit `/research/`, `/methodology/`, `/privacy/`, `/disclosure/`, migration guides | 200/page loads in authenticated session, no console exceptions or broken routes |
+| Mobile accessibility | Repeat key CRM/cost/checklist interactions at 390px / real phone; use keyboard as practical | No horizontal document overflow, readable controls, accessible focus, working form and export |
+| Actual HTTP headers | In authenticated browser DevTools inspect response headers for homepage and a tool | `X-Robots-Tag: noindex, nofollow, noarchive`, CSP, `X-Content-Type-Options: nosniff`, and expected protections actually present; record **observed**, not just repo config |
+| No unexpected client transmission | In DevTools Network inspect form interactions with synthetic counts | No unexpected form submission or third-party requests containing input. Distinguish browser behavior from Netlify CDN/provider logs |
 
-**Evidence template:** `SHA | test name | PASS / FAIL / BLOCKED | date/time + timezone | browser + width | short non-sensitive note | screenshot URL if safe`. Do not attach private auth session data. Keep any authenticated screenshots in an access-controlled location.
+**No current-SHA authenticated UAT or unauthenticated-denial result has been demonstrated to this operator.** Local Chromium PASS is valuable but insufficient. Never claim completion or tick issue #5 without independent evidence.
 
-## 3. Editorial/research gates (all still unresolved)
+## 3. Netlify account verification — owner/provider-only
 
-Six source-backed research *candidates* exist: HubSpot (record export), Pipedrive (spreadsheet import), Ahrefs (Site Audit credits), Semrush (crawl scope), Kinsta (hosting limits/overages), Cloudways (backup product/billing differences). **Zero of six has authenticated human editorial approval.** Vendor publication does not equal independently tested functionality.
+Official provider documentation:
+- [Netlify Project visibility](https://docs.netlify.com/manage/security/secure-access-to-sites/project-visibility/)
+- [Netlify Protect deploys](https://docs.netlify.com/deploy/protect-deploys/)
 
-For each: authenticated reviewer, explicit ACCEPT WITH ATTRIBUTION / REVISE / HOLD / REJECT, validated canonical URL, date checked, edition/plan/region/currency/taxes, caveats and evidence location. Never change `approved:false`, `verified:false` or `affiliateUrl:null` from an agent-written note alone.
+For credit-based plans, Netlify's documented UI path is **Project configuration → General → Visitor access → Project visibility**. Confirm visitor visibility **Private** for **production and previews**, and that the production auto-publishing lock remains effective. This is an account control, not something that `netlify.toml`, a deploy-success check, or robots meta tags can certify. Record plan/credit-usage/alerts/billing information from authenticated provider UI **without** exposing payment details.
 
-## 4. Owner-only release gates — separate consent, not a combined checkbox
+Investigate provider-side Netlify Analytics, server/CDN logs, retention, privacy notice and account billing eligibility rather than assuming no analytics because the browser source has no tracking script. **₹0 monthly and ₹0 delegated spend remain binding; do not enable add-ons, upgrades, auto-reload, or new external browser automation charges.** If verification is unavailable, mark **BLOCKED**.
 
-| Gate | Current observed state | Who can clear |
-| --- | --- | --- |
-| Approved public brand, publisher identity, public contact address | ToolChoice Lab is a working brand; dedicated email setup owner-reported; public posting/name clearance not authorized | Owner, appropriate legal/brand review |
-| Publisher legal/privacy/analytics/affiliate policies | Draft text; Netlify Analytics reported enabled; no final approval | Owner with legal/privacy review |
-| Commercial host billing and public use eligibility | Netlify Free is the planned candidate; live account entitlement and usage not independently checked here | Owner/provider dashboard |
-| Authenticated current-SHA remote UAT and anonymous denial | Not yet verified for latest SHA | Owner with access or authorized authenticated tester |
-| Product-claim editorial signoff | 0/6 approved; no third-party independent product tests proven | Authenticated human editor |
-| Affiliate acceptance, tax/KYC/contracts, tracking and payment | No approval; contracts and real data absent | Owner + affiliate networks |
-| Public-domain/DNS, branch merge, production unlock, indexing and public launch | Not authorized; main unchanged | **Separate explicit owner approval** |
-| Paid services/marketing | ₹0/month, ₹0 delegated spending; no purchases permitted | Separate explicit owner approval to raise budget |
+## 4. Editorial claims — six separate human decisions
 
-Do not interpret closed historical GitHub issues or checked planning tasks as authorization. No revenue/traffic/click/conversion assertions without first-party actual evidence.
+Candidates requiring independent human review:
+1. HubSpot export/association limits
+2. Pipedrive spreadsheet import limits
+3. Ahrefs Site Audit crawl credit differences
+4. Semrush crawl/scope restrictions
+5. Kinsta hosting limits/overage conditions
+6. Cloudways backups and restore/billing differences (public documents contain a potentially conflicting description)
 
-## 5. Operating instructions to autonomous agents
+Each needs reviewer identity (privately tracked), dated official URL, edition/plan/region/time caveats, decision **ACCEPT WITH ATTRIBUTION / REVISE / HOLD / REJECT**, and supporting redacted evidence. Research agents may collect links and drafts but **may not self-approve**. Currently **0/6 approved**. Do not set any `verified` flag true or activate `affiliateUrl` from research alone.
 
-Continue safe read-only source freshness monitoring, independent buyer-tools engineering, draft research and CI repair on the feature branch. Respect the existing daily operator, hourly incident watch and growth agent; do not duplicate automations. Check exact-head CI before new development. On CI red, open/track issue and fix safely; on unknown preview accessibility, report BLOCKED rather than bypassing protection. The PR must remain draft and unmerged; Netlify remains private/locked/noindex; deleted Vercel project must not be recreated; affiliates remain off; spend is ₹0.
+## 5. Distinct owner/legal/commercial gates
 
-**Release verdict: NO-GO.** A human may record one gate as satisfied without satisfying any other gate. The packet documents work, not public publication permission.
+- Confirm public brand and owner/publisher identity. *ToolChoice Lab* is a working label only; public trademark/brand clearance and renaming are not authorized.
+- Approve the contact address, accurate publisher privacy/disclosure terms, hosting/account logging and any analytics use, through suitable human/legal review.
+- Verify account-specific free commercial hosting eligibility, the privacy/lock controls and non-metered budget in Netlify dashboard.
+- Collect actual affiliate-program acceptance and required agreements/KYC/tax details **outside GitHub**. No applications, tracked links or revenue are approved or demonstrated by a draft.
+- Authorize **main merge**, **public production unlock**, **DNS/domain exposure**, **indexing**, **affiliate activation**, and **public launch** as distinct explicit future decisions, not one blanket approval.
+- Respect **₹0 spend**, no contracts, and no recreation of the owner-deleted Vercel project.
+
+**Release verdict: NO-GO** until the above prerequisites are separately fulfilled. Do not infer release permission from CI, an owner checklist planning checkmark, an old private-preview test, or a successful Netlify build.
+
+## 6. Agent handoff
+
+Safe autonomous work may continue on the development branch: reproducible test-first improvements, source freshness research, editorial drafts, and CI failure repairs. The existing engineering operator, growth agent and incident watch remain scheduled. Do not launch duplicate schedules or incur metered services. Keep PR #1 draft, main stable, preview private/nonindexed, affiliates inactive and policy budget ₹0. The live release blocker is [issue #5](https://github.com/hithisisakii09/stackpilot-ai/issues/5), not this document's historical commit SHA.
