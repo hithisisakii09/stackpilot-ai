@@ -3,7 +3,7 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
-const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', 'tools/requirements-checklist/index.html', 'tools/software-cost-calculator/index.html', 'guides/saas-total-cost-of-ownership/index.html', 'guides/crm-migration-checklist/index.html', 'guides/hosting-migration-checklist/index.html', ...products.map(p => `software/${p.id}/index.html`)];
+const pages = ['index.html', 'compare/index.html', 'methodology/index.html', 'privacy/index.html', 'disclosure/index.html', 'research/index.html', 'tools/requirements-checklist/index.html', 'tools/software-cost-calculator/index.html', 'tools/crm-seat-audit/index.html', 'guides/saas-total-cost-of-ownership/index.html', 'guides/crm-migration-checklist/index.html', 'guides/hosting-migration-checklist/index.html', ...products.map(p => `software/${p.id}/index.html`)];
 for (const page of pages) {
   const path = join('dist', page);
   assert.ok(existsSync(path), `Missing built route: ${path}`);
@@ -56,3 +56,8 @@ assert.match(tcoGuide,/USD 1000\.00/);
 assert.match(tcoGuide,/USD 936\.00/);
 assert.match(tcoGuide,/USD 64\.00/);
 assert.match(tcoGuide,/\/tools\/software-cost-calculator\//);
+
+const seatAudit = readFileSync('dist/tools/crm-seat-audit/index.html','utf8');
+assert.match(seatAudit,/CRM paid-seat audit/);
+assert.match(seatAudit,/Vacant seats do not automatically mean refunds or savings/);
+assert.match(seatAudit,/not submitted to StackPilot/);
