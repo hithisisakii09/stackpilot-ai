@@ -507,6 +507,55 @@ try {
   page.off('request',trackGateRequest);
   assert.deepEqual(gateOutbound,[],'Hosting assessor must not submit selections or load external resources');
 
+  // Backup restore drill: browser-only RTO/RPO planning, never cutover permission.
+  const drillOutbound=[];
+  const trackDrillRequest=req=>{
+    if(req.method()!=='GET'||!req.url().startsWith(base))
+      drillOutbound.push({method:req.method(),url:req.url()});
+  };
+  page.on('request',trackDrillRequest);
+  await page.goto(base+'/tools/backup-restore-drill/',{waitUntil:'networkidle'});
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.ok(await page.locator('#drill-download').isDisabled());
+  await page.locator('#drill-form button[type="submit"]').click();
+  assert.match(await page.locator('#drill-report').inputValue(),/NO_GO/);
+  assert.match(await page.locator('#drill-report').inputValue(),/UNKNOWN/);
+  await page.locator('#drill-observedRestoreMinutes').fill('75');
+  await page.locator('#drill-observedRecoveryPointAgeMinutes').fill('25');
+  await page.locator('#drill-restoreTested').check();
+  await page.locator('#drill-dataIntegrityChecked').check();
+  assert.equal(await page.locator('#drill-report').inputValue(),'','Changes invalidate previous report');
+  await page.locator('#drill-form button[type="submit"]').click();
+  assert.match(await page.locator('#drill-report').inputValue(),/READY_FOR_HUMAN_REVIEW/);
+  assert.match(await page.locator('#drill-report').inputValue(),/not authorization/);
+  assert.ok(await page.locator('#drill-download').isEnabled());
+  const drillCsvPromise=page.waitForEvent('download');
+  await page.locator('#drill-download').click();
+  const drillCsvFile=await drillCsvPromise;
+  assert.equal(drillCsvFile.suggestedFilename(),'stackpilot-backup-restore-drill.csv');
+  const drillCsvStream=await drillCsvFile.createReadStream();
+  const drillCsvChunks=[];
+  for await(const part of drillCsvStream)drillCsvChunks.push(Buffer.from(part));
+  const drillCsv=Buffer.concat(drillCsvChunks).toString('utf8');
+  assert.match(drillCsv,/^metric,value,evidence_status\r\n/);
+  assert.match(drillCsv,/"observed_restore_minutes","75","UNVERIFIED"/);
+  assert.match(drillCsv,/"readiness","READY_FOR_HUMAN_REVIEW","UNVERIFIED"/);
+  assert.match(drillCsv,/"cutover_authorized","false","UNVERIFIED"/);
+  await page.locator('#drill-observedRestoreMinutes').fill('140');
+  assert.ok(await page.locator('#drill-download').isDisabled(),'Editing time disables stale CSV');
+  assert.equal(await page.locator('#drill-report').inputValue(),'');
+  await page.locator('#drill-form button[type="submit"]').click();
+  assert.match(await page.locator('#drill-report').inputValue(),/NO_GO/);
+  await page.locator('#drill-form button[type="reset"]').click();
+  assert.equal(await page.locator('#drill-report').inputValue(),'');
+  assert.ok(await page.locator('#drill-download').isDisabled());
+  assert.equal(await page.locator('#drill-observedRestoreMinutes').inputValue(),'');
+  await checkAccessibility(page,'backup restore drill planner desktop');
+  await page.screenshot({path:output+'/backup-restore-drill-desktop.png',fullPage:true});
+  page.off('request',trackDrillRequest);
+  assert.deepEqual(drillOutbound,[],'Restore drill must not submit values or load external resources');
+
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.ok(await page.locator('#recommend').isVisible(), 'Advisor button hidden on mobile');
@@ -602,6 +651,16 @@ try {
   const tcoWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
   assert.ok(tcoWidth<=395,'SaaS cost guide mobile overflow: '+tcoWidth);
 
+
+  await page.goto(base+'/tools/backup-restore-drill/',{waitUntil:'networkidle'});
+  await page.locator('#drill-observedRestoreMinutes').fill('75');
+  await page.locator('#drill-observedRecoveryPointAgeMinutes').fill('25');
+  await page.locator('#drill-form button[type="submit"]').click();
+  assert.match(await page.locator('#drill-report').inputValue(),/NO_GO/);
+  assert.ok(await page.locator('#drill-download').isEnabled(),'NO_GO reports can be saved for a human review');
+  await checkAccessibility(page,'backup restore drill planner mobile');
+  assert.ok((await page.evaluate(()=>document.documentElement.scrollWidth))<=395,'Restore planner mobile overflow');
+  await page.screenshot({path:output+'/backup-restore-drill-mobile.png',fullPage:true});
 
   await page.goto(base+'/tools/hosting-cutover-gates/',{waitUntil:'networkidle'});
   await page.locator('#gate-form button[type="submit"]').click();
