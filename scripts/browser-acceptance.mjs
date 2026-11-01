@@ -266,6 +266,20 @@ try {
   assert.match(await page.locator('#cost-status').innerText(),/calculated locally/);
   await checkAccessibility(page,'cost calculator desktop');
   await page.screenshot({path:output+'/cost-calculator-desktop.png',fullPage:true});
+  // Changing an entered-cost estimate must invalidate the old displayed and copyable report.
+  await page.locator('#cost-a-flatMonthly').fill('11.10');
+  assert.equal(await page.locator('#cost-report').inputValue(),'','Editing a cost must clear the stale estimate');
+  assert.ok(await page.locator('#cost-copy').isDisabled(),'Editing a cost must disable copying the old estimate');
+  assert.match(await page.locator('#cost-status').innerText(),/Inputs changed/i);
+  await page.locator('#cost-calculate').click();
+  assert.ok(await page.locator('#cost-copy').isEnabled());
+  await page.locator('#cost-currency').selectOption('USD');
+  assert.equal(await page.locator('#cost-report').inputValue(),'','Currency change must invalidate the estimate');
+  assert.ok(await page.locator('#cost-copy').isDisabled());
+  await page.locator('#cost-calculate').click();
+  await page.locator('#cost-months').selectOption('6');
+  assert.equal(await page.locator('#cost-report').inputValue(),'','Horizon change must invalidate the estimate');
+  assert.ok(await page.locator('#cost-copy').isDisabled());
   await page.locator('#cost-a-flatMonthly').fill('-1');
   await page.locator('#cost-calculate').click();
   assert.match(await page.locator('#cost-status').innerText(),/Invalid .*amount/i);
