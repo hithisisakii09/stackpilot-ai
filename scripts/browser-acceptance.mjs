@@ -323,6 +323,19 @@ try {
   assert.match(await page.locator('#seat-status').innerText(),/cannot exceed billed seats/);
   assert.equal(await page.locator('#seat-report').inputValue(),'');
   assert.ok(await page.locator('#seat-copy').isDisabled());
+  // A form reset must not preserve a human-review status, stale report or confirmation flags.
+  await page.locator('#seat-form button[type="reset"]').click();
+  assert.equal(await page.locator('#seat-report').inputValue(),'');
+  assert.ok(await page.locator('#seat-copy').isDisabled());
+  for(const id of ['seat-accountModelConfirmed','seat-roleRequirementsConfirmed','seat-billingChangeDateConfirmed']){
+    assert.ok(!(await page.locator('#'+id).isChecked()),'Reset must clear '+id);
+  }
+  assert.equal(await page.locator('#seat-billedSeats').inputValue(),'0');
+  assert.equal(await page.locator('#seat-occupiedPaidSeats').inputValue(),'0');
+  assert.match(await page.locator('#seat-status').innerText(),/Worksheet cleared/);
+  await page.locator('#seat-form button[type="submit"]').click();
+  assert.match(await page.locator('#seat-report').inputValue(),/INCOMPLETE/);
+  assert.doesNotMatch(await page.locator('#seat-report').inputValue(),/READY_FOR_HUMAN_REVIEW/);
   await checkAccessibility(page,'CRM paid-seat audit desktop');
   await page.screenshot({path:output+'/crm-seat-audit-desktop.png',fullPage:true});
 
