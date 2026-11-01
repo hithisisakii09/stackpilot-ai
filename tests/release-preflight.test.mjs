@@ -59,3 +59,33 @@ test('does not mutate supplied inputs or assert site access from a static scan',
   assert.equal(Object.hasOwn(route,'authenticatedAccessVerified'),false);
   assert.equal(Object.hasOwn(deploy,'publicLaunchAuthorized'),false);
 });
+
+test('blocks protocol-relative, unquoted and active-scheme external scripts and forms', () => {
+  const cases=[
+    ['<script src=//telemetry.example/collect.js></script>','externally hosted script'],
+    ['<script SRC=https://telemetry.example/collect.js></script>','externally hosted script'],
+    ['<script src="data:text/javascript,alert(1)"></script>','externally hosted script'],
+    ['<form action=//telemetry.example/submit method=post></form>','external form action'],
+    ["<form ACTION='javascript:alert(1)'></form>",'external form action'],
+    ['<form action=https://telemetry.example/submit></form>','external form action']
+  ];
+  for(const [injection,expected] of cases){
+    const html=goodPage.replace('</body>',injection+'</body>');
+    const violations=auditStaticRoutes([{path:'index.html',html}]).violations;
+    assert.ok(violations.some(v=>v.includes(expected)),injection+': '+violations.join(' | '));
+  }
+});
+
+test('rejects external form submission overrides while allowing local URLs and inert data-src', () => {
+  const cases=[
+    '<form action="/local"><button type=submit formaction=//telemetry.example/submit>Send</button></form>',
+    '<form action="/local"><input type=submit formaction="https://telemetry.example/submit"></form>'
+  ];
+  for(const injection of cases){
+    const html=goodPage.replace('</body>',injection+'</body>');
+    const violations=auditStaticRoutes([{path:'index.html',html}]).violations;
+    assert.ok(violations.some(v=>v.includes('external form submission override')),injection+': '+violations.join(' | '));
+  }
+  const safe=goodPage.replace('</body>','<script data-src="https://example.com/inert.js"></script><script src="/_astro/app.js"></script><form action="/local"><button type=submit formaction="/safe">Go</button></form></body>');
+  assert.deepEqual(auditStaticRoutes([{path:'index.html',html:safe}]).violations,[]);
+});
