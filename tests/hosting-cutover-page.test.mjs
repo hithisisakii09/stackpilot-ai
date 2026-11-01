@@ -10,11 +10,14 @@ test('private hosting cutover gate assessor route exists and opts out of search'
  assert.match(page(),/not an authorization/i);
 });
 test('all five gates require labelled selectors with unknown as default',()=>{
+ const model=readFileSync('src/lib/hosting-cutover-assessment.mjs','utf8');
  for(const key of ['dnsEmail','backupRestore','tlsDependencies','rollbackAuthority','retentionBilling']){
-  assert.match(page(),new RegExp('id="gate-'+key+'"'),key);
-  assert.match(page(),new RegExp('for="gate-'+key+'"'),key+' label');
-  assert.match(page(),new RegExp('name="'+key+'"'),key+' name');
+  assert.match(model,new RegExp("id:'"+key+"'"),key+' source');
  }
+ assert.match(page(),/HOSTING_GATE_DEFINITIONS\.map/);
+ assert.match(page(),/for=\{'gate-'\+g\.id\}/);
+ assert.match(page(),/id=\{'gate-'\+g\.id\}/);
+ assert.match(page(),/name=\{g\.id\}/);
  assert.match(page(),/value="not-assessed"/);
  assert.match(page(),/value="pass"/);
  assert.match(page(),/value="fail"/);
