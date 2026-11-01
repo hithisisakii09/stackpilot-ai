@@ -58,7 +58,7 @@ export function auditStaticRoutes(pages) {
     // Treat all absolute/protocol-relative resource URLs as unreviewed.
     const resourceRules=[
       ['img',['src','srcset']],
-      ['iframe',['src','srcdoc']],
+      ['iframe',['src']],
       ['object',['data']],
       ['embed',['src']],
       ['source',['src','srcset']],
@@ -69,6 +69,11 @@ export function auditStaticRoutes(pages) {
     const htmlTags=html.match(/<[a-z][a-z0-9-]*\b[^>]*>/gi)||[];
     for (const [type,attrs] of resourceRules) {
       const tags=htmlTags.filter(tag=>new RegExp('^<'+type+'\\b','i').test(tag));
+      // srcdoc can contain HTML tags and '>' inside a quoted value. The
+      // lightweight opening-tag scan may end before that quote closes, so
+      // reject the attribute presence rather than requiring a parsed value.
+      if(type==='iframe' && tags.some(tag=>/\ssrcdoc\s*=/i.test(tag)))
+        violations.push(path+': inline iframe srcdoc forbidden');
       for (const tag of tags) {
         for (const attr of attrs) {
           const value=attributeValue(tag,attr);
