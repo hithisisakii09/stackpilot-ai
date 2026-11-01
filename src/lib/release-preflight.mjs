@@ -16,6 +16,27 @@ function isExternalOrExecutable(value) {
     /^(?:\/\/|[a-z][a-z0-9+.-]*:)/i.test(value.trim());
 }
 
+// A rendered anchor can execute script or disclose navigation over plaintext HTTP.
+// Decode entity-encoded schemes and ignore control characters normalized by URL parsers.
+// This is a conservative defense-in-depth scan, not a full HTML URL parser.
+function unsafeAnchorDestination(value) {
+  if (typeof value !== 'string') return false;
+  const decoded=value.replace(/&(?:#(x[0-9a-f]+|[0-9]+);?|([a-z][a-z0-9]*);?)/gi,
+    (full,hex,decimal,named)=>{
+      if (hex || decimal) {
+        const code=hex?Number.parseInt(hex.slice(1),16):Number.parseInt(decimal,10);
+        return Number.isInteger(code) && code>0 && code<=0x10ffff &&
+          !(code>=0xd800 && code<=0xdfff) ? String.fromCodePoint(code) : '\uFFFD';
+      }
+      const safeNamed={amp:'&',colon:':',tab:'\t',newline:'\n',sol:'/'};
+      return safeNamed[named.toLowerCase()] ?? full;
+    });
+  const href=decoded.replace(/[\u0000-\u0020\u007f]/g,'');
+  if (href.startsWith('//')) return true;
+  const scheme=/^([a-z][a-z0-9+.-]*):/i.exec(href);
+  return Boolean(scheme && !['https','mailto'].includes(scheme[1].toLowerCase()));
+}
+
 export function auditStaticRoutes(pages) {
   const violations=[];
   if (!Array.isArray(pages) || pages.length===0) return {checkedRoutes:0,violations:['No generated HTML routes found']};
@@ -93,6 +114,11 @@ export function auditStaticRoutes(pages) {
       const href=attributeValue(tag,'href');
       if(isExternalOrExecutable(href))
         violations.push(path+': external linked resource');
+    }
+    for (const tag of htmlTags.filter(tag=>/^<a\\b/i.test(tag))) {
+      const href=attributeValue(tag,'href');
+      if (unsafeAnchorDestination(href))
+        violations.push(path+': unsafe anchor destination');
     }
     if(metaTags.some(tag=>String(attributeValue(tag,'http-equiv')).toLowerCase()==='refresh'))
       violations.push(path+': automatic meta refresh forbidden');
