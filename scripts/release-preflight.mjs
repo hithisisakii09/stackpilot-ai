@@ -6,6 +6,7 @@ import {readFileSync,readdirSync} from 'node:fs';
 import {join,relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {auditStaticRoutes,auditDeploymentConstraints} from '../src/lib/release-preflight.mjs';
+import {auditInternalNavigation} from '../src/lib/internal-navigation-audit.mjs';
 
 const root=new URL('../',import.meta.url);
 const dist=new URL('../dist/',import.meta.url);
@@ -16,15 +17,16 @@ function walk(directory) {
     const path=join(directory,entry.name);
     if(entry.isSymbolicLink()) throw new Error('Symlinks not permitted in built route scan: '+path);
     if(entry.isDirectory())return walk(path);
-    return entry.isFile() && entry.name.endsWith('.html')?[path]:[];
+    return entry.isFile()?[path]:[];
   });
 }
-let routes,deploy;
+let routes,deploy,navigation;
 try {
-  const pages=walk(distPath).map(file=>({
-    path:relative(distPath,file).split('\\').join('/'),
-    html:readFileSync(file,'utf8')
+  const allFiles=walk(distPath).map(file=>relative(distPath,file).split('\\').join('/'));
+  const pages=allFiles.filter(path=>path.endsWith('.html')).map(path=>({
+    path,html:readFileSync(join(distPath,path),'utf8')
   }));
+  navigation=auditInternalNavigation(pages,allFiles);
   routes=auditStaticRoutes(pages);
   deploy=auditDeploymentConstraints({
     policy:JSON.parse(read(new URL('config/operating-policy.json',root))),
@@ -34,12 +36,14 @@ try {
 } catch(error) {
   routes={checkedRoutes:0,violations:[error instanceof Error ? error.message : 'Unable to inspect built assets']};
   deploy={violations:[]};
+  navigation={checkedLinks:0,violations:[]};
 }
-const violations=[...routes.violations,...deploy.violations];
+const violations=[...routes.violations,...deploy.violations,...navigation.violations];
 const output={
   check:'static-prelaunch-engineering-only',
   status:violations.length?'BLOCKED':'PASS',
   checkedRoutes:routes.checkedRoutes,
+  checkedLinks:navigation.checkedLinks,
   violations,
   remoteAccessVerified:false,
   publisherAndLegalApproved:false,
@@ -49,7 +53,7 @@ const output={
 if(process.argv.includes('--json')) {
   process.stdout.write(JSON.stringify(output,null,2)+'\n');
 }else{
-  console.log('Static prelaunch audit:',output.status,'| Generated routes scanned:',output.checkedRoutes);
+  console.log('Static prelaunch audit:',output.status,'| Generated routes scanned:',output.checkedRoutes,'| Internal links checked:',output.checkedLinks);
   for(const issue of violations)console.error('BLOCKER:',issue);
   console.log('Remote authentication, owner/legal/editorial review and public production remain separate NO-GO gates.');
 }
