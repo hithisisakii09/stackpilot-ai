@@ -24,7 +24,9 @@ assert.match(home, /\/guides\/saas-total-cost-of-ownership\//);
 assert.match(home, /\/guides\/crm-migration-checklist\//);
 assert.match(home, /\/guides\/hosting-migration-checklist\//);
 const worksheet = readFileSync('dist/tools/requirements-checklist/index.html','utf8');
-assert.match(worksheet,/No vendor scoring, referral links, accounts, analytics, or server submission/);
+assert.match(worksheet,/No vendor scoring, affiliate links, accounts, or worksheet submission/);
+assert.match(worksheet,/Netlify Web Analytics is enabled at the hosting layer/);
+assert.doesNotMatch(worksheet,/No vendor scoring, referral links, accounts, analytics, or server submission/);
 const compare = readFileSync('dist/compare/index.html', 'utf8');
 for (const product of products) assert.ok(compare.includes(product.name), `Compare page omits ${product.name}`);
 console.log(`Static route smoke passed for ${pages.length} pages`);
@@ -49,6 +51,8 @@ assert.match(staticHeaders, /X-Content-Type-Options:\s*nosniff/i,
 const costCalculator = readFileSync('dist/tools/software-cost-calculator/index.html','utf8');
 assert.match(costCalculator,/We do not supply or verify the prices/);
 assert.match(costCalculator,/All calculations happen locally in your browser/);
+assert.match(costCalculator,/Netlify Web Analytics is enabled at the hosting layer/);
+assert.doesNotMatch(costCalculator,/No product endorsements, affiliate links, signups, account data, cookies, or tracking/);
 assert.match(costCalculator,/currency exchange/);
 
 const tcoGuide=readFileSync('dist/guides/saas-total-cost-of-ownership/index.html','utf8');
