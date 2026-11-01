@@ -89,3 +89,63 @@ test('rejects external form submission overrides while allowing local URLs and i
   const safe=goodPage.replace('</body>','<script data-src="https://example.com/inert.js"></script><script src="/_astro/app.js"></script><form action="/local"><button type=submit formaction="/safe">Go</button></form></body>');
   assert.deepEqual(auditStaticRoutes([{path:'index.html',html:safe}]).violations,[]);
 });
+
+
+test('blocks third-party image pixels, source/srcset and embedded frames', () => {
+  const cases=[
+    ['<img src=https://telemetry.example/pixel.gif alt="">','external embedded resource'],
+    ['<img srcset="/local.png 1x, https://tracker.example/pixel@2x.png 2x" alt="">','external embedded resource'],
+    ['<iframe src="//partner.example/frame"></iframe>','external embedded resource'],
+    ['<iframe srcdoc="<script>fetch(&quot;https://tracker.example&quot;)</script>"></iframe>','iframe srcdoc'],
+    ['<object data="https://tracker.example/embed"></object>','external embedded resource'],
+    ['<embed src=//tracker.example/embed>','external embedded resource'],
+    ['<source srcset="https://tracker.example/media.webp 1x">','external embedded resource'],
+    ['<video poster=https://tracker.example/poster.png></video>','external embedded resource'],
+    ['<audio src="//tracker.example/stream.mp3"></audio>','external embedded resource']
+  ];
+  for (const [injection,reason] of cases) {
+    const rendered=goodPage.replace('</body>',injection+'</body>');
+    const result=auditStaticRoutes([{path:'index.html',html:rendered}]);
+    assert.ok(result.violations.some(v=>v.includes(reason)),injection+': '+result.violations.join(' | '));
+  }
+});
+
+test('blocks external stylesheet, preconnect, prefetched resources and automatic redirects', () => {
+  const cases=[
+    ['<link rel=stylesheet href="https://cdn.example/theme.css">','external linked resource'],
+    ['<link rel=preconnect href="//tracker.example">','external linked resource'],
+    ['<link rel="dns-prefetch" href="https://tracker.example">','external linked resource'],
+    ['<link rel=preload as=script href=https://tracker.example/js>','external linked resource'],
+    ['<meta http-equiv="refresh" content="0;url=https://tracker.example">','meta refresh']
+  ];
+  for (const [injection,reason] of cases) {
+    const rendered=goodPage.replace('</head>',injection+'</head>');
+    const result=auditStaticRoutes([{path:'index.html',html:rendered}]);
+    assert.ok(result.violations.some(v=>v.includes(reason)),injection+': '+result.violations.join(' | '));
+  }
+});
+
+test('blocks third-party CSS imports and background image URLs', () => {
+  const cases=[
+    '<style>@import "https://fonts.example/theme.css";</style>',
+    '<style>.hero{background-image:url(//tracker.example/pixel.png)}</style>',
+    '<div style="background:url(https://tracker.example/pixel.png)">Hello</div>'
+  ];
+  for(const injection of cases){
+    const result=auditStaticRoutes([{path:'index.html',html:goodPage.replace('</body>',injection+'</body>')}]);
+    assert.ok(result.violations.some(v=>v.includes('external CSS resource')),injection+': '+result.violations.join(' | '));
+  }
+});
+
+test('allows first-party static assets, normal official external links and inert data attributes', () => {
+  const safe=goodPage.replace('</body>',[
+    '<img alt="local" src="/images/logo.webp" srcset="/images/logo.webp 1x, /images/logo2.webp 2x">',
+    '<link rel="stylesheet" href="/_astro/app.css">',
+    '<script src="/_astro/app.js"></script>',
+    '<a href="https://www.hubspot.com/" target="_blank" rel="noopener noreferrer">Official site</a>',
+    '<img alt="inert" data-src="https://tracker.example/never-loaded.jpg">',
+    '<style>.box{background:url(/images/local.png)}</style>',
+    '<div style="background-image:url(/images/local.png)">Preview</div>'
+  ].join('')+'</body>');
+  assert.deepEqual(auditStaticRoutes([{path:'index.html',html:safe}]).violations,[]);
+});
