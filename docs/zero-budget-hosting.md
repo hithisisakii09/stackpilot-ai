@@ -5,7 +5,7 @@
 - Owner created **Netlify** project `inspiring-chaja-cfb85f` and showed **Production visibility Private**, **Deploy Preview visibility Private**, **Auto Publishing Locked**. Production was published at older `main@c8fadcb` per dashboard. GitHub reports successful private Netlify Deploy Preview builds for draft PR #1; these are not owner authorization for public release.
 - Owner reported logged-in preview homepage/compare/research working and Incognito blocked. That is user-reported, **not** independent security assurance for every new SHA.
 - The code-level policy in `config/operating-policy.json` remains fail-closed and does not prove a signed account or verified pricing entitlement. Read `docs/current-operational-state.md` for evidence and unresolved verification.
-- The old Masher **Vercel Hobby** preview is not the launch host and GitHub reports an upgrade-linked **build-rate limit**. Do not pay, upgrade, or attempt a public commercial affiliate business on Vercel Hobby.
+- The owner previously **deleted the old Vercel project** and asked to stop deploying there. Historical Vercel Hobby build-rate-limit reports are not current operational evidence. **Do not recreate, deploy there, upgrade, or pay.**
 
 ## Hosting recommendation
 **Primary candidate: Netlify Free** for the current all-static Astro website.
@@ -22,6 +22,30 @@ Official references:
 - https://developers.cloudflare.com/pages/framework-guides/deploy-an-astro-site/
 
 Commercial hosting eligibility and terms must be rechecked at actual signup/launch. Do not equate zero monetary cost with unlimited resource or support guarantees.
+
+## November 1, 2026 — Current official Netlify Free facts vs account evidence
+
+**What is documented publicly, not an account-specific measurement:**
+
+| Question | Official current position | Impact on StackPilot |
+| --- | --- | --- |
+| Can a commercial software-information site use Free? | Netlify says its Free plan permits commercial projects, subject to its terms and limits | **Candidate hosting is commercially plausible**; legal/affiliate/site-specific review is still pending |
+| What is the monthly monetary charge? | Credit-based Free lists **$0/month and 300 monthly credits with a hard cap and no auto recharge** | **₹0 cash** can be maintained on this plan without upgrading, but availability is not guaranteed |
+| What happens on exhaustion? | Netlify says **all projects sharing the team credit allowance pause** until a new billing cycle or an owner-authorized plan change | Do **not** interpret an outage from exhausted credits as an automatic bill; do not upgrade without separate owner approval |
+| Do private Deploy Preview builds consume credits? | **Deploy Preview and branch deployment creation: zero deployment credits**; web requests and bandwidth still consume credits | Current CI preview deployments are not necessarily zero consumption in total; authenticated browsing and request probes use some shared allowance |
+| Can a visitor access private previews? | On credit-based Free, private projects generally require the **Team Owner** to sign in; production and previews have separate visibility scope | Confirm both are currently Private in **this account**. Anonymous HTTP 401 from CI on two routes does **not** verify every route, all regions or the current deployed SHA |
+| Is this the user's actual pricing plan? | **Unknown.** Netlify documents separate credit-based and legacy plans | **Only the authorized owner** can read the actual account's Plan details, remaining credits, transaction/upgrade options and private visibility |
+
+Official evidence: [Netlify credit-based plans](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/credit-based-pricing-plans/), [credit accounting](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/how-credits-work/), [billing FAQ](https://docs.netlify.com/manage/accounts-and-billing/billing/billing-for-credit-based-plans/billing-faq-for-credit-based-plans/), [project visibility](https://docs.netlify.com/manage/security/secure-access-to-sites/project-visibility/) and [Netlify's commercial Free plan explanation](https://www.netlify.com/blog/introducing-netlify-free-plan/). Source descriptions are based on publicly documented terms checked **2026-11-01**, not permission for account changes.
+
+**Owner-only read-only checklist (record redacted PASS/FAIL/BLOCKED, never credentials):**
+
+1. In Netlify, choose the **actual StackPilot project `inspiring-chaja-cfb85f`**. Open **Usage & billing → Plan details / Credit balance**, confirm credit-based Free or actual plan type, current credit consumption, upcoming renewal/reset and any billing commitments. Do not select Upgrade, credit packs, auto recharge or payment methods.
+2. In **Project configuration → General → Visitor access → Project visibility**, confirm **both production and previews are Private**, and inspect **Auto Publishing** (last owner observation: Locked). Do not change either setting.
+3. While signed in, open [Preview build identity](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/preview-build/) and compare its **full 40-character build commit** against the current [draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) HEAD. UNKNOWN, mismatched or blocked means **FAIL/BLOCKED**. Compare actual hosted functionality against the current CI-generated `uat-cases.csv` for every published static page and test anonymous denial separately. The displayed build SHA is not independently signed proof of the served contents.
+4. Separately inspect live **response headers**, analytics behavior, and human editorial/publisher/legal/privacy gates. Do not upload real credentials, personal data, screenshot tokens or contracts to GitHub/chat. **No approval should be inferred from a completed checklist item alone**.
+
+**Release decision remains NO-GO**: private GitHub draft PR is unmerged, `commercialHostingApproved`, `productionLaunchApproved`, `affiliateActivationApproved` and `paidServicesApproved` remain false, with ₹0 delegated spending. Public launch still requires a separate explicit owner authorization after all evidence.
 
 ## Current repository configuration and QA
 - `netlify.toml` — Astro static build to `dist`, Node.js 22.23.4.
