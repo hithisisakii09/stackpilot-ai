@@ -51,6 +51,16 @@ try {
   assert.match(await page.title(), /StackPilot AI/);
   assert.ok((await page.locator('h1').innerText()).includes('Explore software categories'));
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  // A buyer should discover the privacy-first CRM seat audit without a deep link.
+  const seatAuditHomeLink=page.locator('header nav a[href="/tools/crm-seat-audit/"]');
+  assert.equal(await seatAuditHomeLink.count(),1,'Homepage must link to CRM seat audit');
+  await seatAuditHomeLink.focus();
+  assert.ok(await seatAuditHomeLink.evaluate(el=>document.activeElement===el));
+  await page.keyboard.press('Enter');
+  await page.waitForURL(base+'/tools/crm-seat-audit/');
+  assert.match(await page.locator('h1').innerText(),/CRM paid-seat audit/);
+  await page.goto(base+'/',{waitUntil:'networkidle'});
+
   await page.screenshot({ path: output + '/home-desktop.png', fullPage: true });
   await checkAccessibility(page, 'homepage desktop');
 
