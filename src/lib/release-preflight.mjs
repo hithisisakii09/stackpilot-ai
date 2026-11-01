@@ -53,6 +53,51 @@ export function auditStaticRoutes(pages) {
     const submitControls=html.match(/<(?:button|input)\b[^>]*>/gi)||[];
     if(submitControls.some(tag=>isExternalOrExecutable(attributeValue(tag,'formaction'))))
       violations.push(path+': unexpected external form submission override');
+    // Browser resources can leak visitor metadata without JavaScript, e.g. a
+    // tracking pixel, iframe, cross-site preload, or remote CSS font/image.
+    // Treat all absolute/protocol-relative resource URLs as unreviewed.
+    const resourceRules=[
+      ['img',['src','srcset']],
+      ['iframe',['src','srcdoc']],
+      ['object',['data']],
+      ['embed',['src']],
+      ['source',['src','srcset']],
+      ['audio',['src']],
+      ['video',['src','poster']],
+      ['track',['src']]
+    ];
+    const htmlTags=html.match(/<[a-z][a-z0-9-]*\b[^>]*>/gi)||[];
+    for (const [type,attrs] of resourceRules) {
+      const tags=htmlTags.filter(tag=>new RegExp('^<'+type+'\\b','i').test(tag));
+      for (const tag of tags) {
+        for (const attr of attrs) {
+          const value=attributeValue(tag,attr);
+          if (value===null) continue;
+          if (attr==='srcdoc') {
+            violations.push(path+': inline iframe srcdoc forbidden');
+          } else if (attr==='srcset') {
+            if(value.split(',').some(candidate=>isExternalOrExecutable(candidate.trim().split(/\s+/)[0])))
+              violations.push(path+': external embedded resource ('+type+' '+attr+')');
+          } else if(isExternalOrExecutable(value)) {
+            violations.push(path+': external embedded resource ('+type+' '+attr+')');
+          }
+        }
+      }
+    }
+    for (const tag of htmlTags.filter(tag=>/^<link\b/i.test(tag))) {
+      const href=attributeValue(tag,'href');
+      if(isExternalOrExecutable(href))
+        violations.push(path+': external linked resource');
+    }
+    if(metaTags.some(tag=>String(attributeValue(tag,'http-equiv')).toLowerCase()==='refresh'))
+      violations.push(path+': automatic meta refresh forbidden');
+    const embeddedStyle=html.match(/<style\b[^>]*>[\s\S]*?<\/style>/gi)||[];
+    const inlineStyle=htmlTags.map(tag=>attributeValue(tag,'style')).filter(value=>value!==null);
+    // A static HTML regexp is defense-in-depth, not full CSS parsing.
+    const cssExternal=/(?:@import\s+(?:url\(\s*)?["']?\s*|url\(\s*["']?\s*)(?:https?:\/\/|\/\/)/i;
+    if([...embeddedStyle,...inlineStyle].some(fragment=>cssExternal.test(fragment)))
+      violations.push(path+': external CSS resource');
+
   }
   return {checkedRoutes:pages.length,violations};
 }
