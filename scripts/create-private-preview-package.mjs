@@ -8,7 +8,7 @@ import { readFileSync, readdirSync, lstatSync, existsSync, mkdirSync, writeFileS
 import { join, relative } from 'node:path';
 import { buildPrivatePreviewManifest } from '../src/lib/preview-package.mjs';
 import { buildPublisherReadiness } from '../src/lib/publisher-readiness.mjs';
-import { buildPrivatePreviewUatPacket,formatPrivatePreviewUatPacketMarkdown } from '../src/lib/preview-uat-packet.mjs';
+import { buildPrivatePreviewUatPacket,formatPrivatePreviewUatPacketMarkdown,formatPrivatePreviewUatWorksheetCsv } from '../src/lib/preview-uat-packet.mjs';
 
 const root = join(process.cwd(), 'dist');
 assert.ok(existsSync(root), 'Build dist first; do not deploy without validation');
@@ -56,4 +56,5 @@ assert.equal(packet.remoteAuthenticatedUatPassed,false,'No hosted UAT in CI');
 assert.equal(packet.releaseVerdict,'NO_GO','Private artifact must remain NO-GO');
 writeFileSync('artifacts/private-preview/uat-packet.json',JSON.stringify(packet,null,2)+'\n');
 writeFileSync('artifacts/private-preview/uat-packet.md',formatPrivatePreviewUatPacketMarkdown(packet));
+writeFileSync('artifacts/private-preview/uat-cases.csv',formatPrivatePreviewUatWorksheetCsv(packet));
 console.log(`Private preview package validated: ${htmlCount} pages; ${manifest.fileCount} files; ${manifest.totalBytes} bytes; UAT gates all UNVERIFIED; no publication or spending`);
