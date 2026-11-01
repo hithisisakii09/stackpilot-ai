@@ -459,6 +459,54 @@ try {
   await checkAccessibility(page,'hosting migration checklist desktop');
   await page.screenshot({path:output+'/hosting-migration-desktop.png',fullPage:true});
 
+
+  // Hosting cutover assessor: never self-authorize a migration.
+  const gateOutbound=[];
+  const trackGateRequest=req=>{
+    if(req.method()!=='GET' || !req.url().startsWith(base))
+      gateOutbound.push({method:req.method(),url:req.url()});
+  };
+  page.on('request',trackGateRequest);
+  await page.goto(base+'/tools/hosting-cutover-gates/',{waitUntil:'networkidle'});
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.equal(await page.locator('#gate-form select').count(),5);
+  assert.ok(await page.locator('#gate-download').isDisabled());
+  await page.locator('#gate-form button[type="submit"]').click();
+  assert.match(await page.locator('#gate-report').inputValue(),/NO_GO/);
+  assert.match(await page.locator('#gate-report').inputValue(),/Not assessed: 5/);
+  for(const id of ['dnsEmail','backupRestore','tlsDependencies','rollbackAuthority','retentionBilling']){
+    await page.locator('#gate-'+id).selectOption('pass');
+  }
+  assert.equal(await page.locator('#gate-report').inputValue(),'','Changing evidence invalidates prior assessment');
+  await page.locator('#gate-form button[type="submit"]').click();
+  assert.match(await page.locator('#gate-report').inputValue(),/READY_FOR_HUMAN_REVIEW/);
+  assert.match(await page.locator('#gate-report').inputValue(),/not authorization/);
+  const hostingGateDownload=page.waitForEvent('download');
+  await page.locator('#gate-download').click();
+  const gateFile=await hostingGateDownload;
+  assert.equal(gateFile.suggestedFilename(),'stackpilot-hosting-cutover-gates.csv');
+  const gateStream=await gateFile.createReadStream();
+  const gateChunks=[];
+  for await(const part of gateStream)gateChunks.push(Buffer.from(part));
+  const gateCsv=Buffer.concat(gateChunks).toString('utf8');
+  assert.match(gateCsv,/^gate,status,evidence_status\r\n/);
+  assert.match(gateCsv,/"overall_readiness","READY_FOR_HUMAN_REVIEW","UNVERIFIED"/);
+  assert.match(gateCsv,/"launch_authorized","false","UNVERIFIED"/);
+  await page.locator('#gate-backupRestore').selectOption('fail');
+  assert.ok(await page.locator('#gate-download').isDisabled(),'Changed gate invalidates prior CSV');
+  await page.locator('#gate-form button[type="submit"]').click();
+  assert.match(await page.locator('#gate-report').inputValue(),/NO_GO/);
+  assert.match(await page.locator('#gate-report').inputValue(),/Backup restore: fail/);
+  await page.locator('#gate-form button[type="reset"]').click();
+  assert.equal(await page.locator('#gate-report').inputValue(),'');
+  assert.ok(await page.locator('#gate-copy').isDisabled());
+  assert.ok(await page.locator('#gate-download').isDisabled());
+  assert.equal(await page.locator('#gate-backupRestore').inputValue(),'not-assessed');
+  await checkAccessibility(page,'hosting cutover assessor desktop');
+  await page.screenshot({path:output+'/hosting-cutover-assessor-desktop.png',fullPage:true});
+  page.off('request',trackGateRequest);
+  assert.deepEqual(gateOutbound,[],'Hosting assessor must not submit selections or load external resources');
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.ok(await page.locator('#recommend').isVisible(), 'Advisor button hidden on mobile');
@@ -553,6 +601,14 @@ try {
   await page.screenshot({path:output+'/saas-tco-guide-mobile.png',fullPage:true});
   const tcoWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
   assert.ok(tcoWidth<=395,'SaaS cost guide mobile overflow: '+tcoWidth);
+
+
+  await page.goto(base+'/tools/hosting-cutover-gates/',{waitUntil:'networkidle'});
+  await page.locator('#gate-form button[type="submit"]').click();
+  assert.match(await page.locator('#gate-report').inputValue(),/NO_GO/);
+  await checkAccessibility(page,'hosting cutover assessor mobile');
+  assert.ok((await page.evaluate(()=>document.documentElement.scrollWidth))<=395,'Hosting assessor mobile overflow');
+  await page.screenshot({path:output+'/hosting-cutover-assessor-mobile.png',fullPage:true});
 
   await page.goto(base + '/guides/hosting-migration-checklist/', {waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(), /Hosting migration checklist/);
