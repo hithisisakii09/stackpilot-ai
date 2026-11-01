@@ -79,3 +79,13 @@ test('hosted preview and owner account settings are never inferred from reposito
  assert.equal(r.remotePreviewEvidence.credentialCollectionAllowed,false);
  assert.equal(r.remotePreviewEvidence.commitsAreApprovalEvidence,false);
 });
+
+test('human-readable readiness CLI exposes remote evidence blockers without implying approval',async()=>{
+ const {execFileSync}=await import('node:child_process');
+ const output=execFileSync(process.execPath,['scripts/publisher-readiness-report.mjs'],{encoding:'utf8'});
+ for(const id of ['authenticated-current-sha-uat','unauthenticated-preview-denial','netlify-private-and-locked','live-response-security-headers','hosting-billing-and-analytics','owner-legal-editorial-approval']){
+  assert.ok(output.includes(id+': UNVERIFIED'),'CLI must show blocker '+id);
+ }
+ assert.match(output,/Remote hosted-release evidence: BLOCKED_UNVERIFIED/);
+ assert.match(output,/No authorization, contract, KYC, payment or public launch occurs here/);
+});
