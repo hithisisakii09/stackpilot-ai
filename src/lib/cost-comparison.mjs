@@ -50,7 +50,14 @@ export function compareSubscriptionCosts(input){
  const months=integer(input.months,'month horizon',1,60);
  const optionA=scenario(input.optionA,months,'Option A');
  const optionB=scenario(input.optionB,months,'Option B');
+ // Snapshot only allowed fields, not references to mutable form state.
+ const inputSnapshot={
+  currency:input.currency,months:input.months,
+  optionA:Object.fromEntries(fields.map(key=>[key,input.optionA[key]])),
+  optionB:Object.fromEntries(fields.map(key=>[key,input.optionB[key]]))
+ };
  return {
+  input:inputSnapshot,
   currency:input.currency,
   months,
   formula:'(monthly base + price per seat × seats + other monthly costs) × months + one-time costs',
@@ -68,9 +75,30 @@ export function formatMinorUnits(value,currency){
  const minor=String(value%100).padStart(2,'0');
  return currency+' '+whole+'.'+minor;
 }
+// A locally calculated amount is not external verification of a vendor price.
+// Recompute the caller's entire result before generating a trusted-looking report.
+function exactlyEqual(actual,expected){
+ if(expected===null||typeof expected!=='object')return Object.is(actual,expected);
+ if(!actual||typeof actual!=='object'||Array.isArray(actual)||
+    Object.getPrototypeOf(actual)!==Object.prototype)return false;
+ const expectedKeys=Object.keys(expected),keys=Object.keys(actual);
+ return keys.length===expectedKeys.length&&expectedKeys.every(key=>
+  own(actual,key)&&exactlyEqual(actual[key],expected[key]));
+}
+function validateCostReport(comparison){
+ if(!comparison||typeof comparison!=='object'||Array.isArray(comparison)||
+    !own(comparison,'input')||comparison.dataSource!=='user-entered-only'||
+    comparison.independentlyVerified!==false)
+  throw new Error('Invalid cost comparison report provenance');
+ let expected;
+ try{expected=compareSubscriptionCosts(comparison.input);}
+ catch{throw new Error('Invalid cost comparison report input snapshot');}
+ if(!exactlyEqual(comparison,expected))
+  throw new Error('Invalid cost comparison report integrity: amounts or field set differ from original input');
+ return expected;
+}
 export function plainTextCostReport(comparison){
- if(!comparison||comparison.dataSource!=='user-entered-only'||comparison.independentlyVerified!==false)
-  throw new Error('Only user-provided estimate results can be exported');
+ comparison=validateCostReport(comparison);
  const f=v=>formatMinorUnits(v,comparison.currency);
  const line=(name,x)=>name+': monthly '+f(x.recurringMonthlyMinor)+
   ', one-time '+f(x.oneTimeFeeMinor)+', '+comparison.months+'-month total '+f(x.totalMinor);
