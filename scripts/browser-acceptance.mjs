@@ -311,7 +311,8 @@ try {
   assert.match(await page.locator('#seat-report').inputValue(),/62\.50%/);
   await checkAccessibility(page,'CRM paid-seat audit mobile');
   await page.screenshot({path:output+'/crm-seat-audit-mobile.png',fullPage:true});
-  assert.ok((await page.evaluate(()=>document.documentElement.scrollWidth))<=395,'CRM seat audit mobile overflow');
+  const seatAuditOverflow=await page.evaluate(()=>({width:document.documentElement.scrollWidth, offenders:[...document.querySelectorAll('body *')].filter(el=>el.getBoundingClientRect().right>window.innerWidth+4).slice(0,8).map(el=>({tag:el.tagName.toLowerCase(),id:el.id,cls:el.className,right:Math.round(el.getBoundingClientRect().right)}))}));
+  assert.ok(seatAuditOverflow.width<=395,'CRM seat audit mobile overflow: '+JSON.stringify(seatAuditOverflow));
 
   await page.goto(base + '/guides/saas-total-cost-of-ownership/', {waitUntil:'networkidle'});
   assert.match(await page.title(),/SaaS total cost of ownership/);
