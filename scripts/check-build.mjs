@@ -18,6 +18,8 @@ assert.match(home, /\/methodology\//);
 assert.match(home, /Affiliate disclosure/);
 assert.match(home, /\/tools\/requirements-checklist\//);
 assert.match(home, /\/tools\/software-cost-calculator\//);
+assert.match(home, /\/tools\/crm-seat-audit\//, 'Homepage must link to private CRM seat audit');
+assert.match(home, /Audit your paid CRM seats/, 'Homepage must make CRM seat audit discoverable');
 assert.match(home, /\/guides\/saas-total-cost-of-ownership\//);
 assert.match(home, /\/guides\/crm-migration-checklist\//);
 assert.match(home, /\/guides\/hosting-migration-checklist\//);
