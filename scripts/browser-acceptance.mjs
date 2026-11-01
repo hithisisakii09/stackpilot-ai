@@ -304,16 +304,6 @@ try {
 
   // Substantial guide: exact fictional cost illustration, prelaunch indexing and links.
 
-  await page.goto(base+'/tools/crm-seat-audit/',{waitUntil:'networkidle'});
-  await page.locator('#seat-billedSeats').fill('8');
-  await page.locator('#seat-occupiedPaidSeats').fill('5');
-  await page.locator('#seat-form button[type="submit"]').click();
-  assert.match(await page.locator('#seat-report').inputValue(),/62\.50%/);
-  await checkAccessibility(page,'CRM paid-seat audit mobile');
-  await page.screenshot({path:output+'/crm-seat-audit-mobile.png',fullPage:true});
-  const seatAuditOverflow=await page.evaluate(()=>({width:document.documentElement.scrollWidth, offenders:[...document.querySelectorAll('body *')].filter(el=>el.getBoundingClientRect().right>window.innerWidth+4).slice(0,8).map(el=>({tag:el.tagName.toLowerCase(),id:el.id,cls:el.className,right:Math.round(el.getBoundingClientRect().right)}))}));
-  assert.ok(seatAuditOverflow.width<=395,'CRM seat audit mobile overflow: '+JSON.stringify(seatAuditOverflow));
-
   await page.goto(base + '/guides/saas-total-cost-of-ownership/', {waitUntil:'networkidle'});
   assert.match(await page.title(),/SaaS total cost of ownership/);
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
@@ -388,6 +378,16 @@ try {
   await page.screenshot({ path: output + '/worksheet-mobile.png', fullPage: true });
   const worksheetWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   assert.ok(worksheetWidth <= 395, 'Worksheet mobile overflow: ' + worksheetWidth);
+
+  await page.goto(base+'/tools/crm-seat-audit/',{waitUntil:'networkidle'});
+  await page.locator('#seat-billedSeats').fill('8');
+  await page.locator('#seat-occupiedPaidSeats').fill('5');
+  await page.locator('#seat-form button[type="submit"]').click();
+  assert.match(await page.locator('#seat-report').inputValue(),/62\.50%/);
+  await checkAccessibility(page,'CRM paid-seat audit mobile');
+  await page.screenshot({path:output+'/crm-seat-audit-mobile.png',fullPage:true});
+  const seatAuditOverflow=await page.evaluate(()=>({width:document.documentElement.scrollWidth, offenders:[...document.querySelectorAll('body *')].filter(el=>el.getBoundingClientRect().right>window.innerWidth+4).slice(0,8).map(el=>({tag:el.tagName.toLowerCase(),id:el.id,cls:el.className,right:Math.round(el.getBoundingClientRect().right)}))}));
+  assert.ok(seatAuditOverflow.width<=395,'CRM seat audit mobile overflow: '+JSON.stringify(seatAuditOverflow));
 
   await page.goto(base+'/tools/software-cost-calculator/',{waitUntil:'networkidle'});
   await page.locator('#cost-a-flatMonthly').fill('2');
