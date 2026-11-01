@@ -442,11 +442,18 @@ try {
   const worksheetWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   assert.ok(worksheetWidth <= 395, 'Worksheet mobile overflow: ' + worksheetWidth);
 
+  const mobileAuditRequests=[];
+  const captureMobileAuditRequest=request=>{
+    if(request.method()!=='GET'||!request.url().startsWith(base)) mobileAuditRequests.push({method:request.method(),url:request.url()});
+  };
+  page.on('request',captureMobileAuditRequest);
   await page.goto(base+'/tools/crm-seat-audit/',{waitUntil:'networkidle'});
   await page.locator('#seat-billedSeats').fill('8');
   await page.locator('#seat-occupiedPaidSeats').fill('5');
   await page.locator('#seat-form button[type="submit"]').click();
   assert.match(await page.locator('#seat-report').inputValue(),/62\.50%/);
+  page.off('request',captureMobileAuditRequest);
+  assert.deepEqual(mobileAuditRequests,[],'CRM paid-seat audit mobile must not submit buyer-entered counts');
   await checkAccessibility(page,'CRM paid-seat audit mobile');
   await page.screenshot({path:output+'/crm-seat-audit-mobile.png',fullPage:true});
   const seatAuditOverflow=await page.evaluate(()=>({width:document.documentElement.scrollWidth, offenders:[...document.querySelectorAll('body *')].filter(el=>el.getBoundingClientRect().right>window.innerWidth+4).slice(0,8).map(el=>({tag:el.tagName.toLowerCase(),id:el.id,cls:el.className,right:Math.round(el.getBoundingClientRect().right)}))}));
