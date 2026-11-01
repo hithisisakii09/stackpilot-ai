@@ -13,12 +13,12 @@
   nav{display:flex;gap:16px;flex-wrap:wrap}a{color:#7ce8c6}
   h1{font-size:clamp(30px,5vw,52px)}
   p{color:#c8d9ed;line-height:1.6}
-  .panel{background:#152138;border:1px solid #3d5776;padding:22px;border-radius:16px;margin:20px 0}
+  .panel{min-width:0;overflow-wrap:anywhere;background:#152138;border:1px solid #3d5776;padding:22px;border-radius:16px;margin:20px 0}
   .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
   label{display:block;margin:10px 0;line-height:1.4;font-weight:600}
   input[type=text],textarea{display:block;width:100%;min-width:0;margin-top:7px;background:#0b1220;border:1px solid #91a5c0;border-radius:8px;color:#fff;padding:11px;font:inherit}
   textarea{min-height:300px;resize:vertical}
-  .check{display:flex;align-items:flex-start;gap:10px;font-weight:500}
+  fieldset{min-width:0}.check{display:flex;align-items:flex-start;gap:10px;font-weight:500}
   .check input{margin-top:4px;accent-color:#7ce8c6;width:18px;height:18px;flex:none}
   button{background:#7ce8c6;color:#06231d;border:0;border-radius:9px;padding:12px 18px;font-weight:750;cursor:pointer}
   button.secondary{background:#293d58;color:#edf5ff;border:1px solid #7f95b2}
