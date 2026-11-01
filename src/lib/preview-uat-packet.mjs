@@ -158,3 +158,116 @@ export function formatPrivatePreviewUatPacketMarkdown(input){
   ''
  ].join('\n');
 }
+
+
+/**
+ * Create a revision-bound checklist, not a claim that remote UAT happened.
+ * Every scenario is a locally generated prompt for the authenticated owner.
+ */
+const extraRouteScenarios={
+ '/':[
+  ['advisor-categories','Exercise the homepage advisor with CRM, SEO and hosting selections','Advisor shows neutral category matches without paid rankings or vendor approval.']
+ ],
+ '/compare/':[
+  ['comparison-negative','Compare the same vendor with itself and then different vendors','A same vendor comparison is rejected; different vendors show neutral, unverified comparison fields.']
+ ],
+ '/tools/requirements-checklist/':[
+  ['requirements-csv','Select a category, generate a requirements worksheet, download CSV and edit the selections','Offline CSV contains selected requirements only; editing invalidates the prior export.']
+ ],
+ '/tools/crm-seat-audit/':[
+  ['crm-seat-counts','Evaluate eight billed seats, five occupied seats and five active seats','Three vacant seats and 62.50% utilization; no promised refund or independently verified subscription.']
+ ],
+ '/tools/software-cost-calculator/':[
+  ['cost-staleness','Enter two example quotes and change amount, currency and horizon after calculation','Estimates use entered values only and stale copy/export output is disabled after a change.']
+ ],
+ '/tools/seo-audit-scope/':[
+  ['seo-audit-offline','Prepare a sample offline crawl scope and download the CSV','The scope is a local planning worksheet, not a vendor crawl-credit guarantee; edits invalidate the CSV.']
+ ],
+ '/tools/hosting-cutover-gates/':[
+  ['cutover-default','Evaluate five unassessed hosting cutover criteria','NO_GO remains until every critical check is self-attested; no live cutover is authorized.'],
+  ['cutover-human-review','Set five host cutover criteria to user-entered pass and reevaluate','READY_FOR_HUMAN_REVIEW only; changing one check blocks stale export and never authorizes production.']
+ ],
+ '/tools/backup-restore-drill/':[
+  ['backup-unknown','Leave observed restore time and recovery point age unknown','NO_GO with unknown measurements; no simulated recovery success claimed.'],
+  ['backup-human-review','Enter observations within user-set RTO/RPO and self-attest both drill checks','READY_FOR_HUMAN_REVIEW only; CSV is offline and no data loss or downtime guarantee is claimed.']
+ ],
+ '/privacy/':[
+  ['privacy-analytics','Review privacy disclosures for hosting-layer visit analytics and local-only tools','Page-visit analytics distinction is visible; tool values are not represented as remotely submitted.']
+ ],
+ '/disclosure/':[
+  ['affiliate-disclosures','Review partnership disclosure on the unpublished private site','Inactive affiliate tracking and unverified research are accurately described; no earnings claim.']
+ ]
+};
+const remoteExpectations={
+ 'authenticated-current-sha-uat':'Owner opens every route in a signed-in authorized Netlify session on the exact deployed commit, and records findings independently.',
+ 'unauthenticated-preview-denial':'Independent anonymous browser must not reveal preview content; a redirect alone is insufficient evidence of private access enforcement.',
+ 'netlify-private-and-locked':'Owner checks actual Netlify preview/private visibility and confirms production auto-publishing remains locked in provider settings.',
+ 'live-response-security-headers':'Observe actual security headers, noindex and Content-Security-Policy in hosted HTTP responses, not merely in repository files.',
+ 'hosting-billing-and-analytics':'Owner confirms hosting billing eligibility, zero-cost usage, and actual provider-side analytics and retention controls.',
+ 'owner-legal-editorial-approval':'Legal, publisher-identity, privacy, and editorial decisions are independently reviewed by authorized humans, not inferred from CI.'
+};
+export function buildPrivatePreviewUatCases(packet){
+ // The Markdown formatter applies the exact fail-closed packet validation.
+ formatPrivatePreviewUatPacketMarkdown(packet);
+ const cases=[];
+ function add({id,route,buildSha256,objective,expected}){
+  if(typeof objective!=='string'||objective.length<6||
+     typeof expected!=='string'||expected.length<11)
+   throw new Error('Invalid private UAT case scenario');
+  cases.push({
+   id,sourceCommit:packet.sourceCommit,route,buildSha256,
+   objective,expected,result:'UNTESTED',evidence:'NOT_COLLECTED',
+   releaseAuthorized:false
+  });
+ }
+ for(const entry of packet.routes){
+  const label=entry.path==='/'?'root':entry.path.slice(1,-1).replaceAll('/','-');
+  add({
+   id:'route-smoke-'+label,
+   route:entry.path,buildSha256:entry.buildSha256,
+   objective:'Signed-in route and navigation check',
+   expected:'Owner verifies authenticated Netlify preview route responds with page content, functional links, no console errors and the matching reviewed commit.'
+  });
+  for(const [name,objective,expected] of extraRouteScenarios[entry.path]??[]){
+   add({id:'scenario-'+name,route:entry.path,buildSha256:entry.buildSha256,objective,expected});
+  }
+ }
+ for(const gate of packet.remoteGates){
+  const expected=remoteExpectations[gate.id];
+  if(!expected)throw new Error('Invalid remote UAT gate scenario');
+  add({
+   id:'remote-'+gate.id,route:'',buildSha256:'',
+   objective:'Independent external/provider evidence check',
+   expected
+  });
+ }
+ cases.sort((a,b)=>a.id.localeCompare(b.id,'en'));
+ const ids=new Set();
+ for(const entry of cases){
+  if(ids.has(entry.id)||!/^[-a-z0-9]+$/.test(entry.id)||
+     entry.sourceCommit!==packet.sourceCommit||
+     entry.result!=='UNTESTED'||entry.evidence!=='NOT_COLLECTED'||
+     entry.releaseAuthorized!==false||
+     (entry.route!==''&&!packet.routes.some(r=>r.path===entry.route&&r.buildSha256===entry.buildSha256))||
+     (entry.route===''&&entry.buildSha256!==''))
+   throw new Error('Invalid private UAT case ID, route or authorization');
+  ids.add(entry.id);
+ }
+ return {
+  schemaVersion:1,sourceCommit:packet.sourceCommit,
+  caseCount:cases.length,releaseVerdict:'NO_GO',releaseAuthorized:false,cases
+ };
+}
+export function formatPrivatePreviewUatWorksheetCsv(packet){
+ const plan=buildPrivatePreviewUatCases(packet);
+ // Fixed-schema source-backed rows, not an interactive input field or a "verified" export.
+ const quote=(value)=>'"'+String(value).replaceAll('"','""')+'"';
+ const lines=['case_id,source_commit,route,build_sha256,scenario,expected,result,evidence'];
+ for(const entry of plan.cases){
+  lines.push([
+   entry.id,entry.sourceCommit,entry.route,entry.buildSha256,
+   entry.objective,entry.expected,entry.result,entry.evidence
+  ].map(quote).join(','));
+ }
+ return lines.join('\r\n')+'\r\n';
+}
