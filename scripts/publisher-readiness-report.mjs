@@ -19,5 +19,8 @@ if(process.argv.includes('--json')) {
  console.log('Affiliate research candidates:',report.programCandidates.length);
  console.log('Applications submitted: 0; accepted: 0; active links: 0; earnings unknown');
  for(const gate of report.ownerGates)console.log('-',gate.id+':',gate.status);
+ console.log('Remote hosted-release evidence:',report.remotePreviewEvidence.status);
+ for(const gate of report.remotePreviewEvidence.gates)console.log('-',gate.id+':',gate.status);
+ console.log('These remote/provider checks cannot be completed from GitHub CI or static repository data.');
  console.log('No authorization, contract, KYC, payment or public launch occurs here.');
 }
