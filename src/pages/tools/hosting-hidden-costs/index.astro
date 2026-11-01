@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="description" content="Calculate hidden hosting costs from your own estimates: backups, bandwidth, support, migration and overlap."/>
+<title>Hosting hidden costs worksheet | StackPilot AI</title>
+<style>
+:root{font-family:system-ui,sans-serif;background:#0b1220;color:#edf5ff;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0}
+header,main,footer{max-width:1020px;margin:auto;padding:24px}
+nav{display:flex;gap:16px;flex-wrap:wrap}a{color:#7ce8c6;overflow-wrap:anywhere}
+h1{font-size:clamp(32px,5vw,56px);line-height:1.13}h2{font-size:clamp(21px,3vw,28px)}
+p,li{color:#c9d9ed;line-height:1.7}
+.panel{border:1px solid #405675;background:#152138;border-radius:16px;padding:22px;margin:20px 0;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+label{display:block;line-height:1.5;font-weight:650}
+input,select,textarea{font:inherit;min-width:0;width:100%;display:block;margin-top:8px;padding:12px;color:#fff;background:#0b1220;border:1px solid #91a5c0;border-radius:8px}
+input,select{min-height:46px}
+textarea{min-height:350px;resize:vertical}
+small{display:block;color:#d3e3f6;font-weight:400}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
+button{font:inherit;font-weight:750;border:0;border-radius:9px;background:#7ce8c6;color:#06231d;padding:12px 18px;cursor:pointer}
+button.secondary{border:1px solid #91a5c0;color:#edf5ff;background:#293d58}
+button:disabled{opacity:.5;cursor:not-allowed}
+:focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+#hosting-status{min-height:1.5em;color:#ffe2a6}
+footer{border-top:1px solid #405675}
+@media(max-width:620px){.grid{grid-template-columns:1fr}header,main,footer{padding:16px}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<header><nav aria-label="Site navigation">
+<a href="/">← StackPilot AI</a>
+<a href="/guides/hosting-migration-checklist/">Hosting migration guide</a>
+<a href="/tools/software-cost-calculator/">Software cost calculator</a>
+<a href="/methodology/">Methodology</a>
+</nav></header>
+<main>
+<p>Private browser-only buyer planning · no provider quote verification</p>
+<h1>Hosting hidden costs worksheet</h1>
+<p>Make a hosting budget from <strong>your own currency amounts</strong>. Compare the base-plan headline with your estimated backups, bandwidth/egress, support, other ongoing fees, and migration/overlap costs. <strong>All values are user-entered, not verified provider prices.</strong> This is not a purchasing recommendation or a hosting cutover authorization.</p>
+<p><strong>Enter zero explicitly if your own estimate is zero.</strong> Unknown provider fees must be checked with the provider before relying on a total. The worksheet has no external price feed or exchange-rate conversion.</p>
+<form id="hosting-form" novalidate>
+<section class="panel" aria-labelledby="hosting-settings">
+<h2 id="hosting-settings">Comparison period</h2>
+<div class="grid">
+<label for="hosting-currency">Currency
+<select id="hosting-currency" name="currency"><option value="INR">INR — Indian rupees</option><option value="USD">USD — US dollars</option><option value="EUR">EUR — euros</option><option value="GBP">GBP — British pounds</option></select>
+</label>
+<label for="hosting-months">Planning horizon
+<select id="hosting-months" name="months"><option value="1">1 month</option><option value="6">6 months</option><option value="12" selected>12 months</option><option value="24">24 months</option><option value="36">36 months</option><option value="60">60 months</option></select>
+</label>
+<label for="hosting-overlapMonths">Months paying both old and new hosts
+<small>A whole number between 0 and your selected horizon</small>
+<input id="hosting-overlapMonths" name="overlapMonths" type="text" inputmode="numeric" autocomplete="off" value="" placeholder="For example, 2" required/>
+</label>
+</div>
+</section>
+<section class="panel" aria-labelledby="hosting-recurring">
+<h2 id="hosting-recurring">Monthly cost estimates</h2>
+<p>Use prices in the same currency. Do not insert actual credentials, invoices or identifying records.</p>
+<div class="grid">
+<label for="hosting-baseMonthly">New hosting base monthly amount
+<input id="hosting-baseMonthly" name="baseMonthly" type="text" inputmode="decimal" autocomplete="off" placeholder="100.10" value="" required/>
+</label>
+<label for="hosting-backupMonthly">Monthly backups and retention
+<input id="hosting-backupMonthly" name="backupMonthly" type="text" inputmode="decimal" autocomplete="off" value="" required/>
+</label>
+<label for="hosting-bandwidthMonthly">Monthly bandwidth, egress and overages allowance
+<input id="hosting-bandwidthMonthly" name="bandwidthMonthly" type="text" inputmode="decimal" autocomplete="off" value="" required/>
+</label>
+<label for="hosting-supportMonthly">Monthly support and maintenance
+<input id="hosting-supportMonthly" name="supportMonthly" type="text" inputmode="decimal" autocomplete="off" value="" required/>
+</label>
+<label for="hosting-otherMonthly">Other monthly usage, storage or add-on fees
+<input id="hosting-otherMonthly" name="otherMonthly" type="text" inputmode="decimal" autocomplete="off" value="" required/>
+</label>
+<label for="hosting-oldHostingMonthly">Old hosting monthly charge during overlap only
+<input id="hosting-oldHostingMonthly" name="oldHostingMonthly" type="text" inputmode="decimal" autocomplete="off" value="" required/>
+</label>
+</div>
+</section>
+<section class="panel" aria-labelledby="hosting-onetime">
+<h2 id="hosting-onetime">One-time estimates</h2>
+<div class="grid">
+<label for="hosting-migrationOnce">Migration or setup work, once
+<input id="hosting-migrationOnce" name="migrationOnce" type="text" inputmode="decimal" autocomplete="off" value="" required/>
+</label>
+<label for="hosting-cancellationOnce">Cancellation, transfer or exit charges, once
+<input id="hosting-cancellationOnce" name="cancellationOnce" type="text" inputmode="decimal" autocomplete="off" value="" required/>
+</label>
+</div>
+</section>
+<div class="actions"><button type="submit">Calculate my hosting estimate</button><button type="reset" class="secondary">Clear estimates</button></div>
+</form>
+<p id="hosting-status" role="status" aria-live="polite"></p>
+<section class="panel" aria-labelledby="hosting-result-label">
+<h2 id="hosting-result-label">Your unverified cost breakdown</h2>
+<label for="hosting-report">Copyable, user-entered planning report</label>
+<textarea id="hosting-report" readonly placeholder="Fill in all estimates, then calculate a private report."></textarea>
+<div class="actions">
+<button id="hosting-copy" class="secondary" type="button" disabled>Copy report</button>
+<button id="hosting-download" class="secondary" type="button" disabled>Download offline CSV</button>
+</div>
+</section>
+<section class="panel">
+<h2>How the total is calculated</h2>
+<p><strong>Base-only headline:</strong> base monthly × horizon. <strong>Additional:</strong> (backup + bandwidth + support + other monthly) × horizon + old-host monthly × overlap months + one-time migration + one-time cancellation. <strong>Total:</strong> base-only headline + additional.</p>
+<p>Taxes, exchange fees, actual metered usage, regional plan restrictions, retention policies, credits, early termination rules, discounts and future price changes are excluded unless represented in your own entered allowances. A smaller budget is not proof of suitability, available capacity or savings.</p>
+</section>
+<p><strong>Privacy:</strong> Calculations and the CSV file stay in your browser; the values are not submitted to StackPilot. Netlify Web Analytics is enabled at the hosting layer and can record page visits, without receiving these form measurements. See <a href="/privacy/">privacy notes</a>.</p>
+</main>
+<footer><a href="/privacy/">Privacy</a> · <a href="/disclosure/">Disclosure</a> · StackPilot AI private preview</footer>
+<script>
+import {calculateHostingHiddenCosts,formatHostingHiddenCostReport,formatHostingHiddenCostCsv} from '../../../lib/hosting-hidden-costs.mjs';
+const form=document.querySelector('#hosting-form');
+const status=document.querySelector('#hosting-status');
+const report=document.querySelector('#hosting-report');
+const copy=document.querySelector('#hosting-copy');
+const download=document.querySelector('#hosting-download');
+const fields=['currency','months','overlapMonths','baseMonthly','backupMonthly','bandwidthMonthly',
+ 'supportMonthly','otherMonthly','oldHostingMonthly','migrationOnce','cancellationOnce'];
+let last=null;
+function invalidate(){
+ last=null;report.value='';copy.disabled=true;download.disabled=true;
+}
+form.addEventListener('input',()=>{
+ invalidate();status.textContent='Amounts changed. Recalculate before copying or saving.';
+});
+form.addEventListener('change',()=>{
+ invalidate();status.textContent='Settings changed. Recalculate before copying or saving.';
+});
+form.addEventListener('reset',()=>{
+ invalidate();status.textContent='Estimates cleared.';
+});
+form.addEventListener('submit',event=>{
+ event.preventDefault();
+ try{
+  const values=Object.fromEntries(fields.map(key=>[key,form.elements.namedItem(key).value]));
+  const result=calculateHostingHiddenCosts(values);
+  report.value=formatHostingHiddenCostReport(result);
+  last=result;copy.disabled=false;download.disabled=false;
+  status.textContent='User-entered estimate ready for review. No vendor quote verified.';
+ }catch(error){
+  invalidate();status.textContent=error instanceof Error?error.message:'Check all amounts.';
+ }
+});
+copy.addEventListener('click',async()=>{
+ if(!last||copy.disabled)return;
+ try{await navigator.clipboard.writeText(report.value);status.textContent='Report copied.';}
+ catch{report.focus();report.select();status.textContent='Clipboard unavailable; select and copy manually.';}
+});
+download.addEventListener('click',()=>{
+ if(!last||download.disabled)return;
+ try{
+  const csv=formatHostingHiddenCostCsv(last);
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const anchor=document.createElement('a');
+  anchor.href=url;anchor.download='stackpilot-hosting-hidden-costs.csv';
+  document.body.append(anchor);anchor.click();anchor.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status.textContent='Offline CSV saved; no amounts were submitted.';
+ }catch{
+  invalidate();status.textContent='Export failed. Recalculate to retry.';
+ }
+});
+</script>
+</body>
+</html>
