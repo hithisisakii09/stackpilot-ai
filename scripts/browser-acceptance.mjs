@@ -275,7 +275,44 @@ try {
   assert.equal(await page.locator('#cost-a-flatMonthly').inputValue(),'0');
   assert.equal(await page.locator('#cost-report').inputValue(),'');
 
+
+  // CRM seat audit: strictly buyer-supplied counts and no inferred savings.
+  await page.goto(base+'/tools/crm-seat-audit/',{waitUntil:'networkidle'});
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  await page.locator('#seat-billedSeats').fill('8');
+  await page.locator('#seat-occupiedPaidSeats').fill('5');
+  await page.locator('#seat-activeUsers').fill('5');
+  await page.locator('#seat-deactivatedUsers').fill('1');
+  await page.locator('#seat-form button[type="submit"]').click();
+  assert.match(await page.locator('#seat-report').inputValue(),/62\.50%/);
+  assert.match(await page.locator('#seat-report').inputValue(),/Billing impact: UNKNOWN/);
+  assert.match(await page.locator('#seat-report').inputValue(),/INCOMPLETE/);
+  await page.locator('#seat-accountModelConfirmed').check();
+  await page.locator('#seat-roleRequirementsConfirmed').check();
+  await page.locator('#seat-billingChangeDateConfirmed').check();
+  assert.equal(await page.locator('#seat-report').inputValue(),'','Changed checks must invalidate stale report');
+  await page.locator('#seat-form button[type="submit"]').click();
+  assert.match(await page.locator('#seat-report').inputValue(),/READY_FOR_HUMAN_REVIEW/);
+  assert.match(await page.locator('#seat-report').inputValue(),/refund entitlement/);
+  await page.locator('#seat-occupiedPaidSeats').fill('9');
+  await page.locator('#seat-form button[type="submit"]').click();
+  assert.match(await page.locator('#seat-status').innerText(),/cannot exceed billed seats/);
+  assert.equal(await page.locator('#seat-report').inputValue(),'');
+  assert.ok(await page.locator('#seat-copy').isDisabled());
+  await checkAccessibility(page,'CRM paid-seat audit desktop');
+  await page.screenshot({path:output+'/crm-seat-audit-desktop.png',fullPage:true});
+
   // Substantial guide: exact fictional cost illustration, prelaunch indexing and links.
+
+  await page.goto(base+'/tools/crm-seat-audit/',{waitUntil:'networkidle'});
+  await page.locator('#seat-billedSeats').fill('8');
+  await page.locator('#seat-occupiedPaidSeats').fill('5');
+  await page.locator('#seat-form button[type="submit"]').click();
+  assert.match(await page.locator('#seat-report').inputValue(),/62\.50%/);
+  await checkAccessibility(page,'CRM paid-seat audit mobile');
+  await page.screenshot({path:output+'/crm-seat-audit-mobile.png',fullPage:true});
+  assert.ok((await page.evaluate(()=>document.documentElement.scrollWidth))<=395,'CRM seat audit mobile overflow');
+
   await page.goto(base + '/guides/saas-total-cost-of-ownership/', {waitUntil:'networkidle'});
   assert.match(await page.title(),/SaaS total cost of ownership/);
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
