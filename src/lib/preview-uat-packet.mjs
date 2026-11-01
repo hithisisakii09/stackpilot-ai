@@ -183,6 +183,9 @@ const extraRouteScenarios={
  '/tools/seo-audit-scope/':[
   ['seo-audit-offline','Prepare a sample offline crawl scope and download the CSV','The scope is a local planning worksheet, not a vendor crawl-credit guarantee; edits invalidate the CSV.']
  ],
+ '/tools/hosting-hidden-costs/':[
+  ['hosting-cost-csv','Enter base hosting, backup, bandwidth, support, migration and old-host overlap estimates','Offline total separates recurring fees, one-time charges and overlap; CSV shows UNVERIFIED and edits disable stale downloads.']
+ ],
  '/tools/hosting-cutover-gates/':[
   ['cutover-default','Evaluate five unassessed hosting cutover criteria','NO_GO remains until every critical check is self-attested; no live cutover is authorized.'],
   ['cutover-human-review','Set five host cutover criteria to user-entered pass and reevaluate','READY_FOR_HUMAN_REVIEW only; changing one check blocks stale export and never authorizes production.']
