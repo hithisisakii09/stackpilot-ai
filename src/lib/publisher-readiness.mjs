@@ -66,6 +66,22 @@ export function buildPublisherReadiness({policy,products,affiliateCandidates}={}
   publisherIdentityVerified:false,audienceVerified:false,
   editorialClaimsApproved:0,
   programApplicationsSubmitted:0,programsAccepted:0,trackingLinksEnabled:0,
-  ownerGates, programCandidates
+  ownerGates, programCandidates,
+  // CI and a successful preview deploy do not establish hosted access, billing,
+  // headers, or a human approval. These need external evidence; never auto-pass.
+  remotePreviewEvidence:{
+   status:'BLOCKED_UNVERIFIED',
+   readyForPublicRelease:false,
+   credentialCollectionAllowed:false,
+   commitsAreApprovalEvidence:false,
+   gates:[
+    'authenticated-current-sha-uat',
+    'unauthenticated-preview-denial',
+    'netlify-private-and-locked',
+    'live-response-security-headers',
+    'hosting-billing-and-analytics',
+    'owner-legal-editorial-approval'
+   ].map(id=>({id,status:'UNVERIFIED',source:'owner-or-provider-observation'}))
+  }
  };
 }
