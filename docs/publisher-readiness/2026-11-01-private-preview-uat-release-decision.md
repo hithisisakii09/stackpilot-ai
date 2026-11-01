@@ -4,7 +4,16 @@
 
 **Living reference:** [Release blocker #5](https://github.com/hithisisakii09/stackpilot-ai/issues/5). Check current [draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) and its exact HEAD before testing. **Never treat a past passing SHA as a present one.**
 
-## 1. Most recent fully verified application checkpoint
+## Current next-action: verify served preview source commit while signed in
+
+1. Open the protected [Preview build identity page](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/preview-build/) in the **authenticated Netlify Deploy Preview**. A source-identity link is also in the homepage footer. An anonymous 401 response is expected from a private preview and is *not* a substitute for this signed-in check.
+2. Inspect the **current** [draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) full HEAD SHA and compare all **40 characters** to the page's displayed Netlify `COMMIT_REF`, provided only in genuine PR #1 Deploy Preview build context. If the page says UNKNOWN, its SHA differs, or it cannot be accessed with authorized login, record **FAIL/BLOCKED**, not PASS.
+3. In the current SHA-bound private GitHub Actions `stackpilot-private-preview-package`, use `uat-cases.csv` and mark `preview-sha-authenticated` as PASS/FAIL/BLOCKED **based on your own actual hosted observation**, then exercise all remaining routes. Never upload account credentials, cookies, customer records, or Netlify tokens.
+4. Matching printed build metadata is **not independently cryptographic evidence**, not a live-header, provider account or anonymous-access security audit, not remote-route UAT and never release approval. Production, contract, affiliate and spending gates remain **NO-GO**.
+
+**Historical reference table below is deliberately retained as an old checkpoint, not the latest CI result.** Always inspect the PR's exact current SHA and Actions runs before making any claim.
+
+## 1. Historical application checkpoint (NOT CURRENT)
 
 The last application HEAD before this documentation refresh was `0a07ce3657eb4517322e88c0bd2a0ce84d755e14`. That commit had all the following GitHub evidence:
 
