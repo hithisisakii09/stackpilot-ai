@@ -300,6 +300,13 @@ try {
   assert.equal(await page.locator('#cost-report').inputValue(),'');
 
 
+  // Capture requests during buyer-entered CRM seat auditing. No entered data may be submitted.
+  const auditRequests=[];
+  const captureAuditRequest=request=>{
+    if(request.method()!=='GET' || !request.url().startsWith(base)) auditRequests.push({method:request.method(),url:request.url()});
+  };
+  page.on('request',captureAuditRequest);
+
   // CRM seat audit: strictly buyer-supplied counts and no inferred savings.
   await page.goto(base+'/tools/crm-seat-audit/',{waitUntil:'networkidle'});
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
@@ -338,6 +345,9 @@ try {
   assert.doesNotMatch(await page.locator('#seat-report').inputValue(),/READY_FOR_HUMAN_REVIEW/);
   await checkAccessibility(page,'CRM paid-seat audit desktop');
   await page.screenshot({path:output+'/crm-seat-audit-desktop.png',fullPage:true});
+  page.off('request',captureAuditRequest);
+  assert.deepEqual(auditRequests,[],'CRM audit must not submit form data or request third-party resources');
+
 
   // Substantial guide: exact fictional cost illustration, prelaunch indexing and links.
 
