@@ -14,13 +14,26 @@ export function buildResearchQueue(products, { today = new Date().toISOString().
   if (!now || !Number.isInteger(staleAfterDays) || staleAfterDays < 1) throw new Error('Invalid research queue options');
   return products.map((product) => {
     const sources = Array.isArray(product.sources) ? product.sources : [];
-    const validDates = sources.map(s => parsedDay(s.checkedAt)).filter(Boolean);
-    const newest = validDates.length ? validDates.reduce((a, b) => a > b ? a : b) : null;
+    // A checkedAt in the future is not evidence of freshness. Nor should an
+    // invalid date be hidden by a second, correctly dated source.
+    const acceptedDates = [];
+    let invalidSourceDate = false;
+    let futureSourceDate = false;
+    for (const source of sources) {
+      const date = parsedDay(source?.checkedAt);
+      if (!date) invalidSourceDate = true;
+      else if (date > now) futureSourceDate = true;
+      else acceptedDates.push(date);
+    }
+    const newest = acceptedDates.length ? acceptedDates.reduce((a, b) => a > b ? a : b) : null;
     const ageDays = newest ? Math.floor((now - newest) / DAY) : null;
     const blockers = [];
     if (product.verified !== true) blockers.push('editorial-review-pending');
     if (sources.length === 0) blockers.push('no-source-evidence');
-    if (ageDays === null || ageDays > staleAfterDays) blockers.push('source-refresh-required');
+    if (futureSourceDate) blockers.push('future-source-date');
+    if (invalidSourceDate) blockers.push('invalid-source-date');
+    if (ageDays === null || ageDays > staleAfterDays || futureSourceDate || invalidSourceDate)
+      blockers.push('source-refresh-required');
     if (!Array.isArray(product.supportedTeams) || product.supportedTeams.length === 0) blockers.push('team-fit-unknown');
     if (!Array.isArray(product.budgetTiers) || product.budgetTiers.length === 0) blockers.push('budget-fit-unknown');
     if (product.pricing?.status !== 'verified') blockers.push('pricing-unverified');
