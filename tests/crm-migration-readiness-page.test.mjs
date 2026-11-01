@@ -13,10 +13,9 @@ test('CRM migration worksheet is private noindex and explicitly never authorizes
 test('labelled aggregate fields and five select gates require safe inputs',()=>{
  const html=page();
  for(const key of ['sourceRecordCount','targetRecordCount','cutoverWindowMinutes','measuredRollbackMinutes']){
-  assert.match(html,new RegExp('id="crm-'+key+'"'),key);
-  assert.match(html,new RegExp('for="crm-'+key+'"'),key+' label');
+  assert.match(html,new RegExp("id:'"+key+"'"),key+' declared input metadata');
  }
- for(const term of ['CRM_MIGRATION_GATES.map','value="not-assessed"','value="pass"','value="fail"','required']){
+ for(const term of ['numericInputs.map',"for={'crm-'+field.id}","id={'crm-'+field.id}",'CRM_MIGRATION_GATES.map','value="not-assessed"','value="pass"','value="fail"','required']){
   assert.ok(html.includes(term),term);
  }
 });
