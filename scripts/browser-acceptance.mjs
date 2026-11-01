@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict';
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { routePathsFromBuiltHtml, assertExactBrowserRouteCoverage } from '../src/lib/browser-route-coverage.mjs';
 import { mkdir } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { chromium } from 'playwright';
@@ -7,6 +10,20 @@ import AxeBuilder from '@axe-core/playwright';
 const base = 'http://127.0.0.1:4321';
 const output = 'artifacts/browser-qa';
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+// Only files from the current static build are eligible for the route-wide browser pass.
+function emittedBuildFiles(root='dist',subdir=''){
+ const files=[];
+ for(const entry of readdirSync(join(root,subdir),{withFileTypes:true})){
+  const relative=subdir?subdir+'/'+entry.name:entry.name;
+  if(entry.isSymbolicLink())throw new Error('Symlink in built browser inventory');
+  if(entry.isDirectory())files.push(...emittedBuildFiles(root,relative));
+  else if(entry.isFile())files.push(relative);
+  else throw new Error('Unexpected build filesystem entry');
+ }
+ return files;
+}
 
 async function ready() {
   for (let i = 0; i < 60; i++) {
@@ -775,6 +792,31 @@ try {
   await checkAccessibility(page, 'interactive comparison mobile');
   const compareWidth = await page.evaluate(() => document.documentElement.scrollWidth);
   assert.ok(compareWidth <= 395, 'Comparison mobile overflow: ' + compareWidth);
+
+
+  // Full-build browser gate: every emitted page, at BOTH canonical desktop and mobile widths.
+  // This is local static preview QA only, not authenticated hosted Netlify UAT.
+  const allBuiltRoutes=routePathsFromBuiltHtml(emittedBuildFiles());
+  for(const viewport of [{name:'desktop',width:1440,height:900},{name:'mobile',width:390,height:844}]){
+    await page.setViewportSize({width:viewport.width,height:viewport.height});
+    const visited=[];
+    for(const route of allBuiltRoutes){
+      const response=await page.goto(base+route,{waitUntil:'domcontentloaded'});
+      assert.equal(response?.status(),200,'Build route browser HTTP failure: '+route+' '+viewport.name);
+      assert.equal(await page.locator('h1').count(),1,'Expected one h1 in '+route+' '+viewport.name);
+      assert.ok((await page.locator('h1').innerText()).trim().length>0,'Empty h1 in '+route);
+      assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/,
+        'Private page unexpectedly indexable: '+route);
+      await checkAccessibility(page, 'built '+route+' '+viewport.name);
+      if(viewport.name==='mobile'){
+        const scrollWidth=await page.evaluate(()=>document.documentElement.scrollWidth);
+        assert.ok(scrollWidth<=395,'New mobile horizontal overflow on '+route+': '+scrollWidth);
+      }
+      visited.push(route);
+    }
+    const count=assertExactBrowserRouteCoverage(allBuiltRoutes,visited);
+    console.log('Static browser accessibility sweep:',count,'of',count,'built pages',viewport.name,'PASS');
+  }
 
   assert.deepEqual(errors, [], 'Browser JavaScript or local resource failures');
   console.log('Browser QA passed: desktop/mobile, 3 advisor scenarios, 6 profiles, interactive category comparisons, private requirements worksheet, cost calculator and SaaS TCO guide, 3 trust pages.');
