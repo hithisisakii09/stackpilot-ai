@@ -51,7 +51,7 @@ export function formatHostingCutoverReport(result){
  const checked=verifyResult(result);
  const lines=[
   'StackPilot AI — Private hosting cutover checkpoint worksheet',
-  'All five statuses were entered by a user; no evidence was independently verified.',
+  'UNVERIFIED — all five statuses were entered by a user; no evidence was independently verified.',
   'Hosting cutover planning outcome: '+checked.status,
   'Passed: '+checked.passed+'; Failed: '+checked.failed+'; Not assessed: '+checked.notAssessed,
   ''
@@ -63,7 +63,7 @@ export function formatHostingCutoverReport(result){
  lines.push(
   '',
   'This is not authorization to change DNS, migrate customer records, retire hosting, or launch production.',
-  'Even READY_FOR_HUMAN_REVIEW is only a request for an authorized decision-maker to review actual evidence.',
+  'Even READY_FOR_HUMAN_REVIEW is only ready for human review of actual evidence, not a migration approval.',
   'Keep proof, approvals, contract terms, domain names and credentials in your own authorized system.',
   'No statuses were submitted to StackPilot.'
  );
