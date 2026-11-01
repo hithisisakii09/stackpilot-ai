@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
+ <meta name="robots" content="noindex, nofollow"/>
+ <meta name="description" content="Private browser-only vendor-neutral SEO audit scope planning worksheet."/>
+ <title>SEO audit scope planner | StackPilot AI</title>
+ <style>
+  :root{font-family:system-ui,sans-serif;background:#0b1220;color:#edf5ff;color-scheme:dark}
+  *{box-sizing:border-box}body{margin:0}
+  header,main,footer{max-width:960px;margin:auto;padding:24px}
+  nav{display:flex;gap:16px;flex-wrap:wrap}a{color:#7ce8c6}
+  h1{font-size:clamp(29px,5vw,51px)}
+  p,li{color:#c8d9ed;line-height:1.6}
+  .panel{min-width:0;overflow-wrap:anywhere;background:#152138;border:1px solid #3d5776;padding:22px;border-radius:16px;margin:20px 0}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  label{display:block;margin:10px 0;line-height:1.4;font-weight:600}
+  input[type=text],textarea{display:block;width:100%;min-width:0;margin-top:7px;background:#0b1220;border:1px solid #91a5c0;border-radius:8px;color:#fff;padding:11px;font:inherit}
+  textarea{min-height:290px;resize:vertical}
+  fieldset{min-width:0}.check{display:flex;gap:10px;align-items:flex-start;font-weight:500}
+  .check input{margin-top:4px;accent-color:#7ce8c6;flex:none;width:18px;height:18px}
+  button{background:#7ce8c6;color:#06231d;border:0;border-radius:9px;padding:12px 18px;font-weight:750;cursor:pointer}
+  button.secondary{background:#293d58;color:#edf5ff;border:1px solid #7f95b2}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:15px}
+  :focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+  #seo-status{min-height:1.5em;color:#ffe2a6}
+  footer{border-top:1px solid #374c67;margin-top:30px}
+  @media(max-width:650px){.grid{grid-template-columns:1fr}header,main,footer{padding:18px}.panel{padding:16px}}
+ </style>
+</head>
+<body>
+<header><nav aria-label="Primary navigation">
+ <a href="/">← StackPilot AI</a>
+ <a href="/tools/requirements-checklist/">Requirements checklist</a>
+ <a href="/guides/saas-total-cost-of-ownership/">SaaS cost guide</a>
+ <a href="/methodology/">Methodology</a>
+</nav></header>
+<main>
+ <p>Private browser-only buyer worksheet</p>
+ <h1>SEO audit scope planner</h1>
+ <p>Estimate how many URLs you <strong>intend to include</strong> in a future site audit, then compare that number with your own planning cap. This is not a live crawl or a verified page count. No website URLs are requested or fetched.</p>
+ <p>Make the three page groups <strong>mutually exclusive</strong> so pages are never counted twice: main-domain pages outside your selected subfolders, pages inside selected subfolders, and pages on subdomains. Count pages yourself from a permissioned inventory. You control the optional categories and cap.</p>
+ <form id="seo-form" novalidate>
+  <section class="panel" aria-label="User-entered URL inventory">
+   <h2>Your page inventory</h2>
+   <div class="grid">
+    <label for="seo-rootPages">Main-domain pages outside listed subfolders
+     <input type="text" id="seo-rootPages" name="rootPages" value="0" inputmode="numeric" autocomplete="off" required/>
+    </label>
+    <label for="seo-folderPages">Pages in separately counted subfolders
+     <input type="text" id="seo-folderPages" name="folderPages" value="0" inputmode="numeric" autocomplete="off" required/>
+    </label>
+    <label for="seo-subdomainPages">Pages on subdomains
+     <input type="text" id="seo-subdomainPages" name="subdomainPages" value="0" inputmode="numeric" autocomplete="off" required/>
+    </label>
+    <label for="seo-pageCap">Your own hypothetical page cap (not a vendor allowance)
+     <input type="text" id="seo-pageCap" name="pageCap" value="100" inputmode="numeric" autocomplete="off" required/>
+    </label>
+   </div>
+  </section>
+  <fieldset class="panel">
+   <legend>Which groups will you include?</legend>
+   <p>The main-domain group is always included. Other groups are included only when selected.</p>
+   <label class="check" for="seo-includeFolders"><input type="checkbox" id="seo-includeFolders" name="includeFolders" checked/><span>Include the selected subfolders</span></label>
+   <label class="check" for="seo-includeSubdomains"><input type="checkbox" id="seo-includeSubdomains" name="includeSubdomains"/><span>Include the subdomains</span></label>
+  </fieldset>
+  <div class="actions"><button type="submit">Calculate planned audit scope</button><button type="reset" class="secondary">Clear worksheet</button></div>
+ </form>
+ <p id="seo-status" role="status" aria-live="polite"></p>
+ <section class="panel" aria-labelledby="seo-report-title">
+  <h2 id="seo-report-title">Your private scope report</h2>
+  <label for="seo-report">Copyable plan with limits and unknowns</label>
+  <textarea id="seo-report" readonly placeholder="Enter counts and calculate a planning report."></textarea>
+  <div class="actions"><button type="button" id="seo-copy" class="secondary" disabled>Copy report</button></div>
+ </section>
+ <section class="panel" aria-labelledby="seo-checks">
+  <h2 id="seo-checks">Before you actually run an audit</h2>
+  <ul>
+   <li>Check whether redirects, canonical URLs, robots rules, non-HTML files, duplicate paths and JavaScript-rendered pages affect the inventory.</li>
+   <li>Check your exact provider, plan, region, crawl settings and billing period. A page cap and crawl credits may be different units.</li>
+   <li>Only audit domains you own or have permission to test. This worksheet does not scan a live site.</li>
+  </ul>
+ </section>
+ <p><strong>Privacy:</strong> Counts stay in this browser tab. There is no account signup, form transmission, analytics, ranking, affiliate link or provider-specific claim. Report copying is initiated by you only.</p>
+</main>
+<footer><a href="/privacy/">Privacy notes</a> · <a href="/disclosure/">Affiliate disclosure</a> · © StackPilot AI (working name)</footer>
+<script>
+ import {planSeoAuditScope,formatSeoAuditScopeReport} from '../../../lib/seo-audit-scope.mjs';
+ const form=document.querySelector('#seo-form');
+ const report=document.querySelector('#seo-report');
+ const status=document.querySelector('#seo-status');
+ const copy=document.querySelector('#seo-copy');
+ const counts=['rootPages','folderPages','subdomainPages','pageCap'];
+ const toggles=['includeFolders','includeSubdomains'];
+ function invalidate(){report.value='';copy.disabled=true;}
+ form.addEventListener('input',()=>{invalidate();status.textContent='Inputs changed. Recalculate the planning report.';});
+ form.addEventListener('change',()=>{invalidate();status.textContent='Scope changed. Recalculate the planning report.';});
+ form.addEventListener('submit',event=>{
+  event.preventDefault();
+  try{
+   const input=Object.fromEntries([
+    ...counts.map(key=>[key,form.elements.namedItem(key).value]),
+    ...toggles.map(key=>[key,form.elements.namedItem(key).checked])
+   ]);
+   const result=planSeoAuditScope(input);
+   report.value=formatSeoAuditScopeReport(result);
+   copy.disabled=false;
+   status.textContent=result.status==='EMPTY_SCOPE'
+    ?'No pages selected. Check your inventory before planning a crawl.'
+    :result.status==='ABOVE_USER_CAP'
+     ?'Plan exceeds your own entered page cap. No vendor limit has been verified.'
+     :'Plan fits your entered page cap. Provider-specific limits remain unverified.';
+  }catch(error){
+   invalidate();
+   status.textContent=error instanceof Error?error.message:'Check all page counts.';
+  }
+ });
+ form.addEventListener('reset',()=>{invalidate();status.textContent='Worksheet cleared.';});
+ copy.addEventListener('click',async()=>{
+  if(!report.value)return;
+  try{await navigator.clipboard.writeText(report.value);status.textContent='Planning report copied.';}
+  catch{report.focus();report.select();status.textContent='Clipboard unavailable. Select and copy the text manually.';}
+ });
+</script>
+</body>
+</html>
