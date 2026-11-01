@@ -212,6 +212,11 @@ try {
   await page.goto(base + '/tools/requirements-checklist/', { waitUntil: 'networkidle' });
   assert.match(await page.title(), /StackPilot AI/);
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  const worksheetOutbound=[];
+  const captureWorksheetRequest=req=>{
+    if(req.method()!=='GET' || !req.url().startsWith(base)) worksheetOutbound.push({method:req.method(),url:req.url()});
+  };
+  page.on('request',captureWorksheetRequest);
   assert.equal(await page.locator('#worksheet-criteria input[type="checkbox"]').count(), 7);
   await page.locator('#generate-worksheet').click();
   assert.match(await page.locator('#status').innerText(), /Select at least one requirement/);
@@ -252,10 +257,18 @@ try {
   await page.locator('#reset-worksheet').click();
   assert.equal(await page.locator('#worksheet-output').inputValue(), '');
 
+  page.off('request',captureWorksheetRequest);
+  assert.deepEqual(worksheetOutbound,[],'Worksheet interactions must not submit counts or contact external endpoints');
+
   // Pricing truth: calculate only buyer-supplied prices, never vendor claims.
   await page.goto(base + '/tools/software-cost-calculator/', { waitUntil:'networkidle' });
   assert.match(await page.title(), /StackPilot AI/);
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  const calculatorOutbound=[];
+  const captureCalculatorRequest=req=>{
+    if(req.method()!=='GET' || !req.url().startsWith(base)) calculatorOutbound.push({method:req.method(),url:req.url()});
+  };
+  page.on('request',captureCalculatorRequest);
   assert.equal(await page.locator('fieldset[data-option]').count(), 2);
   await page.locator('#cost-a-flatMonthly').fill('10.10');
   await page.locator('#cost-a-seatMonthly').fill('2.50');
@@ -299,6 +312,9 @@ try {
   assert.equal(await page.locator('#cost-a-flatMonthly').inputValue(),'0');
   assert.equal(await page.locator('#cost-report').inputValue(),'');
 
+
+  page.off('request',captureCalculatorRequest);
+  assert.deepEqual(calculatorOutbound,[],'Cost calculator interactions must not submit quotes or contact external endpoints');
 
   // Capture requests during buyer-entered CRM seat auditing. No entered data may be submitted.
   const auditRequests=[];
