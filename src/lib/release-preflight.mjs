@@ -2,6 +2,20 @@
  * Fail-closed, read-only audit of build outputs and development release locks.
  * This is NOT remote access verification, legal approval or public launch clearance.
  */
+// Match real HTML attribute names, not inert data-* attributes. Accept quoted
+// and unquoted forms; browser-only runtime tests remain a separate release gate.
+function attributeValue(tag,name) {
+  const pattern=/\s([a-z][a-z0-9:-]*)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'`=<>]+))/gi;
+  for(const match of tag.matchAll(pattern)){
+    if(match[1].toLowerCase()===name) return match[2]??match[3]??match[4];
+  }
+  return null;
+}
+function isExternalOrExecutable(value) {
+  return typeof value==='string' &&
+    /^(?:\/\/|[a-z][a-z0-9+.-]*:)/i.test(value.trim());
+}
+
 export function auditStaticRoutes(pages) {
   const violations=[];
   if (!Array.isArray(pages) || pages.length===0) return {checkedRoutes:0,violations:['No generated HTML routes found']};
@@ -30,10 +44,15 @@ export function auditStaticRoutes(pages) {
       violations.push(path+': missing html lang="en"');
     if(!/<title\b[^>]*>[^<\s][^<]*<\/title>/i.test(html))
       violations.push(path+': missing nonempty document title');
-    if(/<script\b[^>]*\bsrc\s*=\s*["']https?:\/\//i.test(html))
+    const scripts=html.match(/<script\b[^>]*>/gi)||[];
+    if(scripts.some(tag=>isExternalOrExecutable(attributeValue(tag,'src'))))
       violations.push(path+': unexpected externally hosted script');
-    if(/<form\b[^>]*\baction\s*=\s*["']https?:\/\//i.test(html))
+    const forms=html.match(/<form\b[^>]*>/gi)||[];
+    if(forms.some(tag=>isExternalOrExecutable(attributeValue(tag,'action'))))
       violations.push(path+': unexpected external form action');
+    const submitControls=html.match(/<(?:button|input)\b[^>]*>/gi)||[];
+    if(submitControls.some(tag=>isExternalOrExecutable(attributeValue(tag,'formaction'))))
+      violations.push(path+': unexpected external form submission override');
   }
   return {checkedRoutes:pages.length,violations};
 }
