@@ -174,6 +174,11 @@ const extraRouteScenarios={
  '/tools/requirements-checklist/':[
   ['requirements-csv','Select a category, generate a requirements worksheet, download CSV and edit the selections','Offline CSV contains selected requirements only; editing invalidates the prior export.']
  ],
+ '/tools/crm-migration-readiness/':[
+  ['crm-reconcile-default','Leave one or more CRM migration evidence selectors unassessed with matching sample counts','NO_GO until all checks are self-reported passing; no migration approval is inferred.'],
+  ['crm-reconcile-mismatch','Try 1,200 source and 1,193 target test records with passing gates','NO_GO with record discrepancy of 7 even when all gate statuses say pass.'],
+  ['crm-rollback-export','Try matching 1,200 records, 90-minute change window and a measured 30-minute rollback; download CSV','READY_FOR_HUMAN_REVIEW only, offline self-reported CSV, stale export invalidates when fields change.']
+ ],
  '/tools/crm-seat-audit/':[
   ['crm-seat-counts','Evaluate eight billed seats, five occupied seats and five active seats','Three vacant seats and 62.50% utilization; no promised refund or independently verified subscription.']
  ],
