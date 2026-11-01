@@ -67,3 +67,43 @@ export function formatSeoAuditScopeReport(result){
     'No website was fetched and no entered data was submitted to StackPilot.'
   ].join('\n');
 }
+
+
+/**
+ * Offline, spreadsheet-friendly audit-scope export.
+ * Recompute the report from its own strictly bounded input and compare all
+ * fields before exporting; do not launder a fabricated approval or count.
+ * Column labels and statuses are fixed text; data values are numbers/booleans.
+ */
+export function formatSeoAuditScopeCsv(result){
+  if(!result||typeof result!=='object'||Array.isArray(result))
+    throw new Error('Invalid SEO audit result');
+  const expected=planSeoAuditScope({
+    rootPages:result.rootPages,
+    folderPages:result.folderPages,
+    subdomainPages:result.subdomainPages,
+    pageCap:result.pageCap,
+    includeFolders:result.includeFolders,
+    includeSubdomains:result.includeSubdomains
+  });
+  if(Object.keys(result).length!==Object.keys(expected).length ||
+     Object.keys(expected).some(key=>!Object.hasOwn(result,key) || result[key]!==expected[key]))
+    throw new Error('Invalid or unverified SEO audit result');
+  const rows=[
+    ['root_pages',result.rootPages,'User-entered only'],
+    ['folder_pages',result.folderPages,'User-entered only'],
+    ['subdomain_pages',result.subdomainPages,'User-entered only'],
+    ['include_folders',result.includeFolders?'yes':'no','User-entered only'],
+    ['include_subdomains',result.includeSubdomains?'yes':'no','User-entered only'],
+    ['planned_included_urls',result.includedPages,'User-entered only'],
+    ['excluded_inventory_urls',result.excludedPages,'User-entered only'],
+    ['user_entered_page_cap',result.pageCap,'Not a vendor allowance'],
+    ['unused_page_cap',result.remainingPages,'Not a vendor allowance'],
+    ['excess_above_user_cap',result.excessPages,'Not a vendor allowance'],
+    ['scope_status',result.status,'Unverified estimate'],
+    ['provider_allowance','UNVERIFIED','UNVERIFIED'],
+    ['provider_crawl_credits','','UNKNOWN']
+  ];
+  const escapeCell=value=>'"'+String(value).replaceAll('"','""')+'"';
+  return ['metric,value,verification_status',...rows.map(row=>row.map(escapeCell).join(','))].join('\r\n')+'\r\n';
+}
