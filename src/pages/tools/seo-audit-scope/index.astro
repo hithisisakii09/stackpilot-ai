@@ -73,7 +73,8 @@
   <h2 id="seo-report-title">Your private scope report</h2>
   <label for="seo-report">Copyable plan with limits and unknowns</label>
   <textarea id="seo-report" readonly placeholder="Enter counts and calculate a planning report."></textarea>
-  <div class="actions"><button type="button" id="seo-copy" class="secondary" disabled>Copy report</button></div>
+  <div class="actions"><button type="button" id="seo-copy" class="secondary" disabled>Copy report</button><button type="button" id="seo-download" class="secondary" disabled>Download CSV</button></div>
+  <p>The CSV saves only your entered counts, selected scope and hypothetical planning cap to your device. It never contains verified vendor allowances or account information.</p>
  </section>
  <section class="panel" aria-labelledby="seo-checks">
   <h2 id="seo-checks">Before you actually run an audit</h2>
@@ -83,18 +84,20 @@
    <li>Only audit domains you own or have permission to test. This worksheet does not scan a live site.</li>
   </ul>
  </section>
- <p><strong>Privacy:</strong> Counts stay in this browser tab. There is no account signup, form transmission, third-party tracking, ranking, affiliate link or provider-specific claim. Report copying is initiated by you only.</p>
+ <p><strong>Privacy:</strong> Entered counts remain in this browser tab unless you choose to copy or download a report. Netlify Web Analytics is documented as enabled at the hosting layer and may record page visits; it does not receive the entered counts from this browser-only worksheet. See <a href="/privacy/">privacy notes</a> and verify the current hosting configuration. No account signup, input submission, paid ranking, affiliate link or vendor-specific allowance claim is part of this tool.</p>
 </main>
 <footer><a href="/privacy/">Privacy notes</a> · <a href="/disclosure/">Affiliate disclosure</a> · © StackPilot AI (working name)</footer>
 <script>
- import {planSeoAuditScope,formatSeoAuditScopeReport} from '../../../lib/seo-audit-scope.mjs';
+ import {planSeoAuditScope,formatSeoAuditScopeReport,formatSeoAuditScopeCsv} from '../../../lib/seo-audit-scope.mjs';
  const form=document.querySelector('#seo-form');
  const report=document.querySelector('#seo-report');
  const status=document.querySelector('#seo-status');
  const copy=document.querySelector('#seo-copy');
+ const download=document.querySelector('#seo-download');
+ let generatedResult=null;
  const counts=['rootPages','folderPages','subdomainPages','pageCap'];
  const toggles=['includeFolders','includeSubdomains'];
- function invalidate(){report.value='';copy.disabled=true;}
+ function invalidate(){report.value='';copy.disabled=true;download.disabled=true;generatedResult=null;}
  form.addEventListener('input',()=>{invalidate();status.textContent='Inputs changed. Recalculate the planning report.';});
  form.addEventListener('change',()=>{invalidate();status.textContent='Scope changed. Recalculate the planning report.';});
  form.addEventListener('submit',event=>{
@@ -106,7 +109,9 @@
    ]);
    const result=planSeoAuditScope(input);
    report.value=formatSeoAuditScopeReport(result);
+   generatedResult=result;
    copy.disabled=false;
+   download.disabled=false;
    status.textContent=result.status==='EMPTY_SCOPE'
     ?'No pages selected. Check your inventory before planning a crawl.'
     :result.status==='ABOVE_USER_CAP'
@@ -118,6 +123,25 @@
   }
  });
  form.addEventListener('reset',()=>{invalidate();status.textContent='Worksheet cleared.';});
+ download.addEventListener('click',()=>{
+  if(!generatedResult||!report.value||download.disabled)return;
+  try{
+   const csv=formatSeoAuditScopeCsv(generatedResult);
+   const file=new Blob([csv],{type:'text/csv;charset=utf-8'});
+   const url=URL.createObjectURL(file);
+   const link=document.createElement('a');
+   link.href=url;
+   link.download='stackpilot-seo-audit-scope.csv';
+   document.body.append(link);
+   link.click();
+   link.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),1000);
+   status.textContent='CSV saved on your device. No entered data was submitted to StackPilot.';
+  }catch{
+   invalidate();
+   status.textContent='CSV export unavailable. Recheck inputs and recalculate.';
+  }
+ });
  copy.addEventListener('click',async()=>{
   if(!report.value)return;
   try{await navigator.clipboard.writeText(report.value);status.textContent='Planning report copied.';}
