@@ -66,3 +66,44 @@ test('official vendor URLs cannot hide referral query parameters', () => {
   records[0].website = 'https://www.hubspot.com/?ref=unapproved';
   assert.throws(() => validateCatalog(records), /website/);
 });
+
+
+test('catalog sources must be first-party vendor research, not arbitrary HTTPS third parties', () => {
+  for (const sourceUrl of [
+    'https://phishing.example/research',
+    'https://knowledge.hubspot.com.phishing.example/research',
+    'https://knowledge.hubspot.com/',
+    'https://knowledge.hubspot.com:8443/export',
+    'https://user:password@knowledge.hubspot.com/export',
+    'https://knowledge.hubspot.com/export?ref=affiliate',
+    'https://knowledge.hubspot.com/export#tracking'
+  ]) {
+    const records=catalog();
+    records[0].sources[0].url=sourceUrl;
+    assert.throws(()=>validateCatalog(records),/source|vendor|official/i,sourceUrl);
+  }
+});
+
+test('catalog accepts official vendor documentation subdomains without claiming review', () => {
+  const records=catalog();
+  records[0].sources[0].url='https://knowledge.hubspot.com/import-and-export/export-records';
+  assert.equal(validateCatalog(records),6);
+  assert.equal(records[0].verified,false);
+});
+
+test('Cloudways DigitalOcean product documentation is a narrow named official exception', () => {
+  const records=catalog();
+  assert.equal(validateCatalog(records),6);
+  const cloudways=records.find(p=>p.id==='cloudways');
+  cloudways.sources[0].url='https://www.digitalocean.com/blog/unrelated-content';
+  assert.throws(()=>validateCatalog(records),/source|vendor|official/i);
+});
+
+test('shared vendor provenance predicate agrees with catalog rules', async () => {
+  const mod=await import('../src/lib/vendor-source.mjs');
+  const hubspot=catalog().find(p=>p.id==='hubspot');
+  assert.equal(mod.isVendorSourceUrl(hubspot,'https://knowledge.hubspot.com/import-and-export/export-records'),true);
+  assert.equal(mod.isVendorSourceUrl(hubspot,'https://knowledge.hubspot.com.evil.example/x'),false);
+  assert.equal(mod.isVendorSourceUrl(hubspot,'https://www.hubspot.com/'),false);
+  assert.equal(mod.isVendorSourceUrl(catalog().find(p=>p.id==='cloudways'),'https://www.digitalocean.com/products/cloudways'),true);
+});
