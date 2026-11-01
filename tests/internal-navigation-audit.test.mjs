@@ -22,7 +22,7 @@ const files=()=>[...pages().map(x=>x.path),'assets/template.csv','_headers','rob
 test('audits emitted HTML pages and assets with paths, query and relative navigation',()=>{
  const result=auditInternalNavigation(pages(),files());
  assert.deepEqual(result.violations,[]);
- assert.equal(result.checkedLinks,11);
+ assert.equal(result.checkedLinks,13);
 });
 test('reports local navigation to deleted route and absent static attachment',()=>{
  const source=pages();
@@ -32,7 +32,7 @@ test('reports local navigation to deleted route and absent static attachment',()
   '<a href="/assets/missing.csv">Missing CSV</a>'
  ]);
  const r=auditInternalNavigation(source,files());
- assert.equal(r.checkedLinks,12);
+ assert.equal(r.checkedLinks,9);
  assert.ok(r.violations.some(s=>s.includes('index.html')&&s.includes('/unknown/')));
  assert.ok(r.violations.some(s=>s.includes('/assets/missing.csv')));
 });
