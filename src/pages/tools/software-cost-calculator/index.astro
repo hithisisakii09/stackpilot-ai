@@ -117,6 +117,14 @@ const fields = [
       ['flatMonthly','seatMonthly','seats','extrasMonthly','oneTimeFee'].map(key=>
         [key,section.querySelector('input[name="'+key+'"]').value])
     );
+    // A changed input or comparison horizon invalidates previously calculated figures.
+    const invalidateEstimate=()=>{
+      report.value='';
+      copy.disabled=true;
+      status.textContent='Inputs changed. Compare entered costs again.';
+    };
+    form.addEventListener('input',invalidateEstimate);
+    form.addEventListener('change',invalidateEstimate);
     form.addEventListener('submit',event=>{
       event.preventDefault();
       try{
