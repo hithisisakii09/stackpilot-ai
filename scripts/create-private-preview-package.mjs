@@ -7,6 +7,8 @@ import { createHash } from 'node:crypto';
 import { readFileSync, readdirSync, lstatSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { buildPrivatePreviewManifest } from '../src/lib/preview-package.mjs';
+import { buildPublisherReadiness } from '../src/lib/publisher-readiness.mjs';
+import { buildPrivatePreviewUatPacket,formatPrivatePreviewUatPacketMarkdown } from '../src/lib/preview-uat-packet.mjs';
 
 const root = join(process.cwd(), 'dist');
 assert.ok(existsSync(root), 'Build dist first; do not deploy without validation');
@@ -45,4 +47,13 @@ assert.ok(entries.some(f => f.path === 'guides/crm-migration-checklist/index.htm
 const manifest=buildPrivatePreviewManifest(entries,policy,sha);
 mkdirSync('artifacts/private-preview',{recursive:true});
 writeFileSync('artifacts/private-preview/manifest.json', JSON.stringify(manifest,null,2)+'\n');
-console.log(`Private preview package validated: ${htmlCount} pages; ${manifest.fileCount} files; ${manifest.totalBytes} bytes; no publication or spending`);
+const affiliateCandidates=JSON.parse(readFileSync('src/data/affiliate-programs.json','utf8'));
+const publisher=buildPublisherReadiness({policy,products,affiliateCandidates});
+const packet=buildPrivatePreviewUatPacket({manifest,policy,publisher});
+// These are route questions for a human; even a successful build never marks UAT or launch approved.
+assert.equal(packet.sourceCommit,manifest.sourceCommit,'UAT packet must be bound to exact build SHA');
+assert.equal(packet.remoteAuthenticatedUatPassed,false,'No hosted UAT in CI');
+assert.equal(packet.releaseVerdict,'NO_GO','Private artifact must remain NO-GO');
+writeFileSync('artifacts/private-preview/uat-packet.json',JSON.stringify(packet,null,2)+'\n');
+writeFileSync('artifacts/private-preview/uat-packet.md',formatPrivatePreviewUatPacketMarkdown(packet));
+console.log(`Private preview package validated: ${htmlCount} pages; ${manifest.fileCount} files; ${manifest.totalBytes} bytes; UAT gates all UNVERIFIED; no publication or spending`);
