@@ -22,9 +22,10 @@ function isExternalOrExecutable(value) {
 function unsafeAnchorDestination(value) {
   if (typeof value !== 'string') return false;
   const decoded=value.replace(/&(?:#(x[0-9a-f]+|[0-9]+);?|([a-z][a-z0-9]*);?)/gi,
-    (full,hex,decimal,named)=>{
-      if (hex || decimal) {
-        const code=hex?Number.parseInt(hex.slice(1),16):Number.parseInt(decimal,10);
+    (full,numeric,named)=>{
+      if (numeric) {
+        const hex=numeric[0].toLowerCase()==='x';
+        const code=Number.parseInt(hex?numeric.slice(1):numeric,hex?16:10);
         return Number.isInteger(code) && code>0 && code<=0x10ffff &&
           !(code>=0xd800 && code<=0xdfff) ? String.fromCodePoint(code) : '\uFFFD';
       }
