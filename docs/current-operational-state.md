@@ -1,73 +1,61 @@
-# StackPilot AI — Current operational state and release boundaries
-**Latest release-readiness handoff (2026-11-01):** See [private-preview UAT and separate owner approval packet](publisher-readiness/2026-11-01-private-preview-uat-release-decision.md). Last *fully verified* development SHA before this documentation change: `5976f4fe714f4d8d2a86f6791917297e2f131246` (231/231 tests, safety, Chromium and Netlify PR deployment all successful). This is **not** authenticated latest-SHA hosted UAT. User previously deleted the legacy Vercel project; **do not recreate it or interpret historical Vercel quota errors as current work**. Owner-only public launch, brand/legal, claim approvals and affiliate activation remain **NO-GO**; ₹0 budget. Closed historical issues/checkmarks are not signed real-world authorizations.
+# StackPilot AI — Current operational state and safe next actions
 
-**As-of snapshot:** 2026-10-31, Asia/Kolkata. **Purpose:** handoff for agents and the owner; distinguish observed evidence from assumptions. Read this before older planning notes. **Do not treat a historical dashboard screenshot or CI status as a continuously guaranteed account state.** Recheck live status before reporting.
+**Snapshot date:** 2026-11-01 (Asia/Kolkata). **Type:** dated development handoff, **not** a live Netlify account-state guarantee or public-release approval. Every autonomous agent must first fetch the current [draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1), its exact head SHA, the matching GitHub Actions runs and Netlify provider commit status. Older claims were moved to the [October archive](history/2026-10-31-operational-state-snapshot.md).
 
-## What is confirmed, and by whom
+## Most recent fully verified development checkpoint before this documentation update
 
-| Source type | As-of evidence | Limits |
+| Source | Evidence as of 2026-11-01 | Limit |
 | --- | --- | --- |
-| **Owner screenshot** — Netlify dashboard | Netlify project `inspiring-chaja-cfb85f` with old published production `main@c8fadcb`; **Production visibility Private**, **Deploy Preview visibility Private**, **Auto Publishing Locked**. | These are UI settings at the time of screenshot. They do not constitute an independent anonymous-access penetration test, proof of a current Netlify plan, or ongoing quota availability. |
-| **User-reported browser** acceptance | Owner confirmed login-accessible homepage, comparison and research pages, and that an unauthenticated Incognito window could not access the private preview. | User-reported checks of an earlier preview, not automated remote authenticated UAT of each new SHA or a security audit. |
-| **GitHub commit status** | The development pull request, including `bf7fdb6`, has received successful **Netlify Deploy Preview** statuses, with URL `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app`; these are distinct from production. | `SUCCESS` means a provider-reported deployment, not user authentication or proof that current site content is accessible to the owner. Check the latest PR commit. |
-| **GitHub repository/CI** | Draft PR #1 on `feature/phase-1-1-recommendation-engine`, versus `main@c8fadcb`, remained unmerged at inspection. The verified development preview contains 16 Astro static pages following the CRM migration guide addition. At exact commit `bf7fdb6d5f1baa6cae7a0dbf9987f0014c75a920`, build, operations and Chromium desktop/mobile browser workflows passed. | Never assume a prior green check remains green after changes. Check CI against the **exact head commit**. |
-| **Vercel provider commit status** | The separate legacy **Vercel Hobby** preview (`masher2`) reported a build-rate limit and an upgrade prompt. | This is a **Vercel preview quota limitation**, not proof that Netlify production is down. **No paid upgrade** or additional Vercel spend is authorized. |
-| **Repository policy** | `config/operating-policy.json` records monthly budget **₹0**, delegated spending **₹0**, and all launch, paid-service, hosting-approval, and affiliate-activation flags false. | This is a software safeguard, **not** signed contractual, legal, banking, or provider-account evidence. |
+| GitHub draft PR #1 | Branch `feature/phase-1-1-recommendation-engine` at exact SHA `67e1b2666ce7ab415297221839e3fcf7b7344dfc`; **draft and unmerged** at inspection | This is the *previous verified checkpoint*, not a promise about whatever future SHA is now at HEAD |
+| [Validate/build #41306545758](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41306545758) | **SUCCESS**; 361/361 tests; static prelaunch audit **PASS**, 22 emitted HTML routes and 201 HTML anchor links examined; `npm audit` reported **0 vulnerabilities** | Unit/static checks and dependency audit do not establish hosted access or vendor claim accuracy |
+| [Safety/operations #41306545713](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41306545713) | **SUCCESS**; preview artifact generated for 22 HTML pages, 35 static files, 213966 bytes; all hosted UAT approval gates **UNVERIFIED** | Build packaging creates no hosted test result, provider approval or permission to publish |
+| [Chromium browser #41306545792](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41306545792) | **SUCCESS**; local desktop/mobile interactions, accessibility and regression coverage | This is local Astro/Chromium, **not authenticated testing of actual Netlify** |
+| GitHub commit status | Netlify `netlify/inspiring-chaja-cfb85f/deploy-preview`: **SUCCESS** for the same checkpoint SHA | Deployment notification **does not** prove current Netlify visibility/lock/billing, or anonymous-access denial |
+| Owner screenshots/reports (older) | Owner previously confirmed Private production and preview visibility, Auto Publishing Locked, signed-in browsing and anonymous Incognito denial for **earlier** builds | These are historical owner observations, not evidence tied to the current commit |
 
-## Current working platform
-- **Primary private development preview:** Netlify Deploy Preview `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app`. The owner has confirmed protected browsing earlier; successful GitHub preview status should be reconfirmed on the current PR SHA.
-- **Existing production deployment:** Netlify `https://inspiring-chaja-cfb85f.netlify.app`, a **published but privately visible older build**, at `main@c8fadcb` as observed in owner screenshot. "Published" in provider terminology does **not** mean the owner has authorized a public launch.
-- **Legacy preview:** Vercel Hobby `masher2` is not the commercial/public launch platform; its build-rate limit is documented and should **not** trigger a paid plan upgrade.
-- **Code source:** private GitHub `hithisisakii09/stackpilot-ai`, draft [PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1). The feature branch and `main` are distinct. No autonomous merge is authorized.
-- **Build and defense:** Astro static, `netlify.toml`, `public/_headers`, `public/robots.txt`, and per-page meta noindex; GitHub Actions also validates the static build and test suite. **noindex is not access control**: private visibility must be enforced by the hosting service, not search-engine directives.
+**CAUTION:** This file is a human-readable snapshot and will naturally become older than subsequent commits. **Do not use its recorded SHA to mark UAT or CI for a newer SHA as passed.** Recheck live PR HEAD, then all required runs and provider statuses, before every consequential action or claim.
 
+## Current product scope
 
-## Verified 2026-10-31 development checkpoint
-- **Exact checked commit:** `bf7fdb6d5f1baa6cae7a0dbf9987f0014c75a920` on draft PR #1, not merged to `main`.
-- **Build and validation:** [success](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41181607821).
-- **Safety and operations report:** [success](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41181607850).
-- **Chromium desktop/mobile acceptance and keyboard scrolling:** [success](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41181607800).
-- **GitHub Netlify private deploy-preview status:** success at this SHA; this is not authenticated remote acceptance.
-- **Anonymous external fetch:** nine documented private preview routes returned HTTP 401 on 2026-10-31. Point-in-time sample only, not exhaustive security proof. Evidence and route list recorded in GitHub [issue #2](https://github.com/hithisisakii09/stackpilot-ai/issues/2).
-- **Open gates:** authenticated remote desktop/mobile owner testing, actual Netlify account credits/billing and visibility recheck, editorial signoff on six candidate vendor statements, publisher/legal/privacy verification, affiliate approvals if separately authorized, and explicit owner public release authorization.
-- **Latest baseline:** 16 static pages. Legacy Vercel Hobby build-rate-limit is not a blocker to private Netlify development.
-- **Authorization boundary:** ₹0, private/locked, no merge, public indexing, contracts or affiliate activation.
+- Private Astro static MVP with 6 neutral software research candidates (CRM, SEO, hosting). All product feature/price/fit claims **remain unapproved and unverified**; affiliate URLs null and no paid ranking or affiliate activation.
+- At the checkpoint: **22 generated HTML pages**, including homepage category explorer, comparison, vendor profiles, research/methodology, disclosure/privacy, CRM and hosting migration guides, SaaS cost guide, software requirements worksheet, CRM paid-seat audit, SEO audit-scope planner, software cost calculator, hosting cutover-gate assessor, backup RTO/RPO planner and hosting hidden-cost worksheet.
+- Pure client-side tools use user-supplied data, strict input constraints and offline CSV/report exports. Calculators are examples, **not** real vendor quotes. Static link-integrity checks scanned 201 rendered anchor links. A successful local scan is not proof of hosted navigation.
+- Automated `stackpilot-private-preview-package` GitHub Actions artifact includes a SHA-bound build manifest, UAT routes, and human-only CSV checklist, retained for **3 days**. Every route begins **UNTESTED**; hosted authentication, security headers, provider billing and owner reviews begin **UNVERIFIED**.
 
-## Release gates — current state
-- **No public launch** or search-engine indexing authorized. Do not unlock Netlify's production auto-publishing, change visitor visibility, merge `main`, attach public DNS, remove robots/noindex, or promote code without separate explicit owner approval.
-- **No affiliate activation** or real referral links; the six software catalog entries are not independently approved products, partner research leads are unapplied, and reported commissions remain unknown. Neither vendor-claimed facts nor affiliate program existence proves program acceptance.
-- **No paid upgrade**, purchases, domains, AI services, ad spend, payment methods, or contractual acceptance. Monthly budget **₹0**; delegated spending **₹0**.
-- **Editorial approval pending** for every product claim and pricing comparison. The product-specific source notes are only candidate vendor statements until a real designated reviewer authenticates claims and addresses plan, geography, date and conditions.
-- Publisher brand/identity and contact information, final legal/privacy and affiliate disclosures, commercial host-account entitlement and billing checks, custom domain choice, actual audience evidence, affiliate applications and KYC/tax/payout details still require the owner where applicable. Do not request secrets in a repository issue.
+## Working platform and unchangeable current authorization boundary
 
-## Not independently verified
-1. Netlify plan/account-level billing entitlement, active credit/usage quotas and any stored payment method.
-2. Netlify visitor-auth enforcement via an independent, unauthenticated HTTP test at the latest SHA. The owner previously reported successful Incognito blocking.
-3. The remote **authenticated** full UI and response headers of each new Netlify Deploy Preview. Local CI Chromium/axe tests are not that same test.
-4. Any current production change beyond the older dashboard screenshot, legal signoff, editorial approvals, traffic, commission conversion, or actual monetary revenue.
-5. Continued public reachability of every vendor-documentation URL; automated crawlers can disagree with the publisher website (e.g., Kinsta docs source index versus direct fetch).
+- **Source:** private GitHub `hithisisakii09/stackpilot-ai`. Development on `feature/phase-1-1-recommendation-engine` and **draft PR #1**; do not merge to `main`.
+- **Primary separate private candidate:** Netlify Deploy Preview [`deploy-preview-1--inspiring-chaja-cfb85f.netlify.app`](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/). GitHub reported success at the checkpoint. Do not assume anonymous access is blocked on the latest SHA until individually verified; **noindex is not authentication**.
+- **Production:** an older Netlify build previously displayed as Private in an owner screenshot. Production Auto Publishing was observed Locked. **Do not unlock, promote, publicize, add public DNS, remove noindex, or change visibility** without a separate explicit owner decision and completed gates.
+- **Vercel:** owner **deleted the former Vercel project** and instructed us to stop deploying there. Do not recreate, trigger a Vercel deployment or infer current production outage from historical Vercel quota reports.
+- **Operating limits:** `config/operating-policy.json` fixes monthly budget **₹0**, delegated spend **₹0**, `hostingCandidate: netlify-free`, and **false** for `commercialHostingApproved`, `productionLaunchApproved`, `affiliateActivationApproved`, `paidServicesApproved`. No payments, vendor applications, paid services, contracts, legal assent or banking/KYC work in an autonomous cycle.
+- **Working publisher name:** ToolChoice Lab, pending trademark/identity/legal review. Owner-provided contact information is **not by itself permission** to publish it or assert business verification.
 
-## Verified checkpoint — 2026-10-31 later development cycle
-- **Exact head:** `97c5b18c312c75d6fc91850fc3d36760b33c035b` (draft PR #1; development branch, not `main`).
-- **GitHub build/tests:** [SUCCESS](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41195030857).
-- **Safety/operations:** [SUCCESS](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41195030899).
-- **Chromium desktop/mobile acceptance:** [SUCCESS](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41195030943).
-- **Netlify PRIVATE Deploy Preview:** GitHub commit status SUCCESS. This does not independently establish authenticated remote UAT or present account settings.
-- **Current product:** 17 static pages; requirements worksheet locally exports CSV with vendor responses blank and status Unverified; CRM and hosting migration guides are private/noindex.
-- **Open owner-only gates:** authenticated exact-head remote acceptance, billing/credit-plan UI evidence, final privacy/legal/contact, six editorial claim approvals, and separate publication/monetization authorization.
-- **Budget/release constraints:** ₹0 per month and ₹0 delegated; no production merge, public access/indexing, affiliate activation, contracts or purchases.
+## Outstanding release blockers (all remain NO-GO)
 
-## What the autonomous agents should do next
-1. Read `AGENTS.md`, this file, operating policy and latest [GitHub PR](https://github.com/hithisisakii09/stackpilot-ai/pull/1). Reconcile any stale snapshot against **current** GitHub checks and owner-provided provider UI evidence.
-2. Run/read `npm run ops:report -- --json`, `npm run ops:backlog -- --json`, `npm run research:claims -- --json` and `npm run partners:queue -- --json` as appropriate, without changing accounts.
-3. Prioritize source freshness and original comparison usefulness. Keep `status:candidate`, approvals false, vendor prices unknown, all affiliate URLs null and unreviewed claims out of public copy.
-4. Run test-first changes only on the development branch. For final claims cite the exact CI, browser and Netlify status checks. Separate local browser QA from remote provider UAT.
-5. Keep existing ChatGPT daily development/growth and hourly incident-watch tasks bounded and economical; report Vercel quota conditions without silently upgrading.
-6. Escalate **only owner-only decisions** from [issue #2](https://github.com/hithisisakii09/stackpilot-ai/issues/2) and commercial [issue #3](https://github.com/hithisisakii09/stackpilot-ai/issues/3). No public, paid, contract, account or legal actions without explicit authorization.
+1. **Authenticated actual-host UAT:** an authorized human must confirm the Netlify Deploy Preview shows the **same exact head SHA**, exercise every emitted route with the private `uat-cases.csv` and record minimal non-sensitive evidence. Local GitHub Chromium tests are not sufficient.
+2. **Anonymous access denial:** independently verify the current private preview refuses unauthenticated content. A login redirect alone must not be reported as exhaustive access-control proof. Never request passwords, cookies, private headers or tokens in chat/GitHub.
+3. **Live HTTP security/privacy:** compare real hosted security headers and noindex response with the local `_headers`, verify analytics behavior and provider-side access controls. Source files do not prove network responses.
+4. **Netlify account/terms:** authorized owner checks current Private/Locked settings, commercial use and plan entitlement, billing, usage/credit limits, possible stored payment methods and provider-side analytics controls. No upgrades permitted.
+5. **Editorial, publisher and legal:** original buyer guides and all 6 vendor candidate records still require real evidence review and appropriate legal/privacy/disclosure/brand verification. Affiliate program applications, approval, tracking, real traffic and earnings remain unverified or absent. There is no revenue claim.
+6. **Separate publication authorization:** only the owner may approve production/public visibility, indexing, merge, domain, contracts, and partner activation after evidence. A code commit, CI green, autonomous-agent report, closed issue, or historical screenshot cannot provide that authority.
 
-## References for provenance
-- [Draft development PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1)
-- [Owner's GitHub release checklist #2](https://github.com/hithisisakii09/stackpilot-ai/issues/2)
-- [Official affiliate eligibility research](affiliate-eligibility/2026-10-31-primary-source-review.md)
-- [Editorial research backlog #4](https://github.com/hithisisakii09/stackpilot-ai/issues/4)
-- `docs/roadmap-to-launch.md` and `docs/zero-budget-hosting.md` for planning; this dated report supersedes outdated **status claims**, not the underlying policy or owner permissions.
+## Next safe autonomous actions
+
+1. **Refresh source facts first:** inspect PR #1, commit SHA, exact-head Actions runs and Netlify commit status; inspect `AGENTS.md`, this handoff, `config/operating-policy.json`, and release gates. Do not report a stale checkout as current.
+2. **Keep preparing private buyer value:** original research, synthetic sample data, accessibility, validation, local browser QA and non-secret owner checklists. Do not mark vendor claims verified, manufacture visitors or use public SEO indexing before approval.
+3. **Prefer material blockers over redundant tools:** fix failing tests/security/accessibility; maintain exact-SHA human UAT packet; do not keep adding calculators just to increase page count.
+4. **Follow test-first discipline** on new engineering behavior (Superpowers RED→GREEN, gstack plan/review/QA) and identify exact current run IDs and outcomes in PR #1. Do not install external scripts without consent.
+5. **Keep owner tasks bounded:** a reviewer can supply *non-sensitive conclusions* (e.g. route passed/failed, hosted status), but real credentials, KYC, payment methods, contracts and legal documents remain outside GitHub/chat.
+6. **Do not duplicate existing daily autonomous operator, growth agent and hourly incident watch.** They may prepare research/advisories under the same NO-GO policy; they may not autonomously authorize production or spend.
+
+## References
+
+- [Private draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1)
+- [Source-bound human UAT packet and approval decision](publisher-readiness/2026-11-01-private-preview-uat-release-decision.md)
+- [October historical operational snapshot](history/2026-10-31-operational-state-snapshot.md)
+- [Owner release checks, issue #2](https://github.com/hithisisakii09/stackpilot-ai/issues/2) and [commercial decisions, issue #3](https://github.com/hithisisakii09/stackpilot-ai/issues/3)
+- [Organic growth research roadmap](growth/2026-10-31-zero-budget-organic-acquisition-pipeline.md)
+- `docs/roadmap-to-launch.md`, `docs/zero-budget-hosting.md` and `AGENTS.md`.
+
+**Overall verdict: ENGINEERING PREVIEW CHECKPOINT PASSED, PUBLIC RELEASE NO-GO.** Neither this dated checkpoint nor subsequent independent CI successes can bypass owner-only gates.
