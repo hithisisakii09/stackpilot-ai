@@ -218,3 +218,41 @@ test('fails closed if robots.txt adds an allow rule or crawler-specific bypass',
   }
   assert.deepEqual(auditDeploymentConstraints({policy,headers,robots:'# Prelaunch only\n'+robots+'\n# Comments allowed\n'}).violations,[]);
 });
+
+test('rejects spoofed or malformed noindex metadata but accepts valid robot tokens',()=>{
+ const page=meta=>goodPage.replace('<meta name="robots" content="noindex, nofollow">',meta);
+ const rejected=[
+  '<meta data-name="robots" content="noindex">',
+  '<meta name="robots" data-content="noindex">',
+  '<meta name="robots" content="noindex-test">',
+  '<meta name="robots" content="index, noindex">',
+  '<meta name="robots" content="noindex"><meta name="robots" content="index">'
+ ];
+ for(const injected of rejected){
+  const result=auditStaticRoutes([{path:'index.html',html:page(injected)}]);
+  assert.ok(result.violations.some(v=>v.includes('noindex')),injected+': '+result.violations.join(' | '));
+ }
+ for(const ok of [
+  '<meta name="robots" content="noindex">',
+  '<meta name=robots content=noindex>',
+  "<meta content='nofollow, noindex' name='robots'>"
+ ]){
+  assert.deepEqual(auditStaticRoutes([{path:'index.html',html:page(ok)}]).violations,[],ok);
+ }
+});
+
+test('rejects invalid noindex, nosniff and DENY security header values',()=>{
+ const variants=[
+  ['X-Robots-Tag','noindex-not-a-directive'],
+  ['X-Robots-Tag','noindex, index'],
+  ['X-Robots-Tag','noindex, nofollow, unexpected'],
+  ['X-Content-Type-Options','nosniff-but-invalid'],
+  ['X-Frame-Options','DENY-unknown']
+ ];
+ for(const [name,value] of variants){
+  const modified=headers.replace(new RegExp('('+name+': )[^\\n]+'),'$1'+value);
+  const violations=auditDeploymentConstraints({policy,headers:modified,robots}).violations;
+  assert.ok(violations.some(v=>v.includes(name)),name+': '+value+'; '+violations.join(' | '));
+ }
+ assert.deepEqual(auditDeploymentConstraints({policy,headers,robots}).violations,[]);
+});

@@ -57,11 +57,14 @@ export function auditStaticRoutes(pages) {
     }
     const html=page.html;
     const metaTags=html.match(/<meta\b[^>]*>/gi) || [];
-    const noindex=metaTags.some(tag=>
-      /\bname\s*=\s*["']robots["']/i.test(tag) &&
-      /\bcontent\s*=\s*["'][^"']*\bnoindex\b/i.test(tag)
-    );
-    if(!noindex) violations.push(path+': missing noindex meta robots directive');
+    // Only the actual name/content attributes count. A data-name spoof or
+    // token such as noindex-test must not satisfy the prelaunch requirement.
+    const robotsDirectives=metaTags
+      .filter(tag=>String(attributeValue(tag,'name')??'').trim().toLowerCase()==='robots')
+      .flatMap(tag=>String(attributeValue(tag,'content')??'')
+        .split(',').map(value=>value.trim().toLowerCase()));
+    const noindex=robotsDirectives.includes('noindex') && !robotsDirectives.includes('index');
+    if(!noindex) violations.push(path+': missing or conflicting noindex meta robots directive');
     if(!/<html\b[^>]*\blang\s*=\s*["']en["']/i.test(html))
       violations.push(path+': missing html lang="en"');
     if(!/<title\b[^>]*>[^<\s][^<]*<\/title>/i.test(html))
@@ -158,12 +161,20 @@ export function auditDeploymentConstraints({policy,headers,robots}={}) {
       .filter(line=>line.trim().toLowerCase().startsWith(name.toLowerCase()+':')).length;
     if(count!==1) violations.push('Duplicate or missing wildcard header: '+name);
   }
-  if(!/^\s*X-Robots-Tag:\s*noindex\b/im.test(wildcard))
-    violations.push('Missing wildcard X-Robots-Tag: noindex');
-  if(!/^\s*X-Content-Type-Options:\s*nosniff\b/im.test(wildcard))
-    violations.push('Missing wildcard X-Content-Type-Options: nosniff');
-  if(!/^\s*X-Frame-Options:\s*DENY\b/im.test(wildcard))
-    violations.push('Missing wildcard X-Frame-Options: DENY');
+  const headerValue=name=>wildcard.split(/\r?\n/).map(line=>line.trim())
+    .find(line=>line.toLowerCase().startsWith(name.toLowerCase()+':'))
+    ?.slice(name.length+1).trim()??'';
+  const robotsDirectives=headerValue('X-Robots-Tag')
+    .split(',').map(value=>value.trim().toLowerCase());
+  const allowedRobots=new Set(['noindex','nofollow','noarchive']);
+  if(!robotsDirectives.includes('noindex')||
+     robotsDirectives.some(value=>!allowedRobots.has(value))||
+     new Set(robotsDirectives).size!==robotsDirectives.length)
+    violations.push('Missing or malformed wildcard X-Robots-Tag: noindex');
+  if(headerValue('X-Content-Type-Options').toLowerCase()!=='nosniff')
+    violations.push('Missing or malformed wildcard X-Content-Type-Options: nosniff');
+  if(headerValue('X-Frame-Options').toUpperCase()!=='DENY')
+    violations.push('Missing or malformed wildcard X-Frame-Options: DENY');
 
   // Browser enforcement on Netlify: a single restrictive wildcard CSP.
   // This protects scripts and passive connections that evade static HTML scans.
