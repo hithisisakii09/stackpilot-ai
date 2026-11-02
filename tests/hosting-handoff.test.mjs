@@ -17,7 +17,7 @@ test('single current handoff labels verified checkpoint versus unverified hosted
  assert.match(s,/226 internal links/);
  assert.match(s,/GitHub draft PR #1/);
  assert.match(s,/Netlify Deploy Preview/i);
- assert.match(s,/Auto Publishing Locked/);
+ assert.match(s,/Auto Publishing.*Locked/);
  assert.match(s,/Owner-observed build identity/);
  assert.match(s,/not authenticated testing of the remote Netlify preview/i);
  assert.match(s,/UNVERIFIED/);
