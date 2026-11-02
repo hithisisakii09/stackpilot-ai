@@ -12,7 +12,7 @@
 - A candidate-only evidence ledger and research workbench at `/research/` (sources logged for inspection, not verified claims)
 - `noindex, nofollow` protections on every page pending release approval
 
-**No prices or product suitability are verified; there are no affiliate links or production deployment.**
+**Editorial status:** no vendor feature, price, or product-fit claims have been approved, and no affiliate tracking links are active. A **private Netlify Deploy Preview** is in use; it is not a public launch. An older private production build remains on `main` and must not be replaced without separate owner approval.
 
 ## Local setup
 
@@ -43,12 +43,12 @@ npm run check:build
 - Evidence model: `docs/product-evidence-contract.md`
 - Manual QA and release gates: `docs/prelaunch-qa.md`
 - `affiliateUrl` must be `null` for every product, enforced by validation.
-- No autonomous LLM research/publishing jobs are installed. `research:queue` only prints local review priorities.
+- No autonomous research or publishing service runs inside the website. `research:queue` only prints local review priorities; the separate ChatGPT operator, growth agent, and incident-watch tasks run outside the app and cannot approve claims, publish, or spend.
 - Team-size and budget inputs produce additional fit scoring only with approved evidence, which currently does not exist.
 
 ## Publication status
 
-The development branch is **not ready for public launch**. The site intentionally carries no-index directives and provisional legal/privacy notes. A domain, hosting operator, reviewed legal policy, verified product/price data, manual browser QA, and separate user authorization are required before any production publication, merge, or affiliate activation.
+The development branch is **not ready for public launch**. It intentionally carries noindex directives and provisional legal/privacy notes. Public release still requires current-SHA authenticated owner UAT, independent anonymous-access and live-header checks, human editorial approval of vendor claims, publisher/legal/privacy review, and separate explicit authorization for merge, public production, indexing, and affiliate activation. Local CI and Chromium checks do not replace hosted owner UAT.
 
 ## Development method
 
@@ -66,8 +66,17 @@ npm run ops:report
 npm run ops:report -- --json
 ```
 
-The decision policy is in `src/lib/autonomy-policy.mjs`. A read-only GitHub Actions workflow generates downloadable `stackpilot-operations-report` artifacts from the draft PR. Two ChatGPT recurring tasks are enabled: daily safe-development operator and hourly incident watch. Their existence does not activate external affiliate programs or guarantee agent-run development success. For the full operating model and one-time approvals, read `docs/autonomous-business.md` and private GitHub issue #2.
+The decision policy is in `src/lib/autonomy-policy.mjs`. A read-only GitHub Actions workflow generates downloadable `stackpilot-operations-report` artifacts from the draft PR. Three ChatGPT recurring tasks are enabled outside the app: daily autonomous operator, daily growth agent, and hourly incident watch. Their existence does not activate external affiliate programs or guarantee agent-run development success. For the full operating model and one-time approvals, read `docs/autonomous-business.md` and private GitHub issue #2.
 
 
-## ₹0 hosting preparation (not deployed)
-Owner operating budget: **₹0/month**, delegated spend: **₹0**. Netlify Free is the current commercial-friendly static hosting candidate; Cloudflare Pages Free is the alternative. Files `netlify.toml`, `public/_headers`, and `config/operating-policy.json` prepare an eventual deployment while maintaining noindex and budget safeguards. The site has **not** been published to Netlify, and the existing protected Vercel preview is unchanged. Service signup, contracts, paid upgrades and public deployment each require separate explicit permission. See `docs/zero-budget-hosting.md`.
+## ₹0 hosting policy and private Netlify preview
+
+Owner operating budget: **₹0/month**, delegated spend: **₹0**. The current private Deploy Preview is [hosted on Netlify](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/); its [build identity page](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/preview-build/) displays the source commit used for the preview. This is a protected development preview, **not** public launch approval.
+
+- Owner screenshots dated 2026-11-02 showed Netlify production and preview visibility **Private**, Auto Publishing **Locked**, the Free plan at **$0.00**, 300 monthly credits with 285 remaining, and no Add-ons section visible. The owner also reported no charges in the checked billing history. These are point-in-time owner observations, not a future billing guarantee; recheck the provider UI before consequential decisions.
+- The older private production deployment remains on `main`; do not replace or unlock it without separate owner authorization. GitHub draft PR #1 remains unmerged.
+- **Netlify Web Analytics is enabled at the hosting layer.** The application itself has no client-side analytics script or tracking cookies, but Netlify Web Analytics derives aggregated reports from CDN logs and the provider may process network/access logs. Final privacy, retention, and legal review remains outstanding; do not describe the overall hosting setup as analytics-free.
+- `netlify.toml`, `public/_headers`, and `config/operating-policy.json` prepare the static site and preserve noindex/budget safeguards. **Noindex and `robots.txt` do not enforce authentication**; Netlify project visibility is a separate control.
+- The former Vercel project was deleted by the owner. Do not recreate it, reconnect it, deploy to it, or pay for an upgrade. Cloudflare Pages Free remains an unconnected fallback candidate only.
+
+Service signups, contracts, paid upgrades, account changes, public deployment, indexing, and affiliate activation each require separate explicit permission. See [the zero-budget hosting notes](docs/zero-budget-hosting.md), [the current operational handoff](docs/current-operational-state.md), and [release blocker #5](https://github.com/hithisisakii09/stackpilot-ai/issues/5).

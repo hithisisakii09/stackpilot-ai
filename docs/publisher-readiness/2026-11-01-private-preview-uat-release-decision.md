@@ -1,14 +1,18 @@
 # StackPilot AI — Private preview UAT and owner release-decision packet
 
-**Updated:** 2026-11-01 (Asia/Kolkata) · **PRIVATE / RELEASE NO-GO / NOT AN APPROVAL**
+**Updated:** 2026-11-02 (Asia/Kolkata) · **PRIVATE / RELEASE NO-GO / NOT AN APPROVAL**
 
 **Living reference:** [Release blocker #5](https://github.com/hithisisakii09/stackpilot-ai/issues/5). Check current [draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) and its exact HEAD before testing. **Never treat a past passing SHA as a present one.**
 
-## Current next-action: verify served preview source commit while signed in
+## Current next-action: refresh build identity, then complete authenticated owner UAT
 
-1. Open the protected [Preview build identity page](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/preview-build/) in the **authenticated Netlify Deploy Preview**. A source-identity link is also in the homepage footer. An anonymous 401 response is expected from a private preview and is *not* a substitute for this signed-in check.
-2. Inspect the **current** [draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) full HEAD SHA and compare all **40 characters** to the page's displayed Netlify `COMMIT_REF`, provided only in genuine PR #1 Deploy Preview build context. If the page says UNKNOWN, its SHA differs, or it cannot be accessed with authorized login, record **FAIL/BLOCKED**, not PASS.
-3. In the current SHA-bound private GitHub Actions `stackpilot-private-preview-package`, use `uat-cases.csv` and mark `preview-sha-authenticated` as PASS/FAIL/BLOCKED **based on your own actual hosted observation**, then exercise all remaining routes. Never upload account credentials, cookies, customer records, or Netlify tokens.
+**Last build-identity check: OWNER-OBSERVED PASS (2026-11-02) for the then-current SHA.** The owner supplied a screenshot of the authenticated [Preview build identity page](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/preview-build/) showing full SHA `ff88a68691e5cf8705250cca5245f03a7fa06957` and `Expected preview PR: 1`, matching PR #1 HEAD at that time. This is a visual match of build-time metadata only—not cryptographic provenance, proof of every served asset, authenticated route coverage, anonymous-access denial, live security headers or release approval.
+
+**This documentation-only refresh creates a new PR commit.** After it lands and Netlify finishes the private Deploy Preview, re-open the identity page while signed in and compare all 40 SHA characters to the new PR #1 HEAD. The previous `ff88...` screenshot does not certify the new commit.
+
+1. Open the protected [Preview build identity page](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/preview-build/) in the **authenticated Netlify Deploy Preview**. If it says UNKNOWN, differs from the new PR HEAD, or cannot be accessed with authorized login, record **FAIL/BLOCKED**, not PASS.
+2. Once the SHA matches, use the current SHA-bound private GitHub Actions `stackpilot-private-preview-package` and its `uat-cases.csv` to exercise every hosted route and buyer-tool workflow. Mark each result only from your own actual observation. Never upload account credentials, cookies, customer records, or Netlify tokens.
+3. Independently test anonymous denial, live response headers, analytics/logging behavior and current Netlify Private/Locked settings. A two-path CI 401 canary or noindex directive is not exhaustive access-control proof.
 4. Matching printed build metadata is **not independently cryptographic evidence**, not a live-header, provider account or anonymous-access security audit, not remote-route UAT and never release approval. Production, contract, affiliate and spending gates remain **NO-GO**.
 
 **Historical reference table below is deliberately retained as an old checkpoint, not the latest CI result.** Always inspect the PR's exact current SHA and Actions runs before making any claim.
