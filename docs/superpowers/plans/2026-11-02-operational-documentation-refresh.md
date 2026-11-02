@@ -54,6 +54,13 @@
 - [x] Make the next action a fresh identity check for the new documentation commit, followed by authenticated route UAT.
 - [x] Keep anonymous-access, live-header, analytics, editorial and publication gates separate.
 
+### Task 4: Reconcile the handoff regression guard
+
+**Files:** Modify `tests/hosting-handoff.test.mjs`.
+
+- [x] Reproduce the exact-head CI failure: the handoff test expected the 2026-11-01 snapshot, 361 tests, 22 routes and 201 links.
+- [x] Update the handoff guard to the 2026-11-02 dated checkpoint and its 430-test / 25-route / 226-link evidence; retain the private-preview, analytics, and owner-only gate checks.
+
 ### Verification
 
 - [x] Read `AGENTS.md`, the current operational handoff, the operating policy and the relevant gstack/Superpowers public skill references.

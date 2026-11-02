@@ -10,17 +10,20 @@ const handoffs=['AGENTS.md','docs/autonomous-business.md','docs/zero-budget-host
 test('single current handoff labels verified checkpoint versus unverified hosted observations',()=>{
  assert.ok(existsSync(state),'Missing authoritative operational status handoff');
  const s=read(state);
- assert.match(s,/Snapshot date:.*2026-11-01/);
- assert.match(s,/previous verified checkpoint/i);
- assert.match(s,/361\/361 tests/);
- assert.match(s,/22 emitted HTML routes/);
- assert.match(s,/201 HTML anchor links/);
+ assert.match(s,/Snapshot date:.*2026-11-02/);
+ assert.match(s,/last verified application-code checkpoint/i);
+ assert.match(s,/430\/430 tests/);
+ assert.match(s,/25 generated HTML routes/);
+ assert.match(s,/226 internal links/);
  assert.match(s,/GitHub draft PR #1/);
  assert.match(s,/Netlify Deploy Preview/i);
  assert.match(s,/Auto Publishing Locked/);
- assert.match(s,/Owner screenshots\/reports \(older\)/);
- assert.match(s,/not.*authenticated testing of actual Netlify/i);
+ assert.match(s,/Owner-observed build identity/);
+ assert.match(s,/not authenticated testing of the remote Netlify preview/i);
  assert.match(s,/UNVERIFIED/);
+ assert.match(s,/285 remaining/);
+ assert.match(s,/Netlify Web Analytics is enabled/);
+ assert.match(s,/0\/6 approved/);
  assert.match(s,/noindex is not authentication/i);
  assert.match(s,/historical/i);
 });
