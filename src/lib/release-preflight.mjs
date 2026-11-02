@@ -1,3 +1,4 @@
+import {hasExternalCssResource} from './static-asset-audit.mjs';
 /**
  * Fail-closed, read-only audit of build outputs and development release locks.
  * This is NOT remote access verification, legal approval or public launch clearance.
@@ -135,9 +136,10 @@ export function auditStaticRoutes(pages) {
       violations.push(path+': automatic meta refresh forbidden');
     const embeddedStyle=html.match(/<style\b[^>]*>[\s\S]*?<\/style>/gi)||[];
     const inlineStyle=htmlTags.map(tag=>attributeValue(tag,'style')).filter(value=>value!==null);
-    // A static HTML regexp is defense-in-depth, not full CSS parsing.
-    const cssExternal=/(?:@import\s+(?:url\(\s*)?["']?\s*|url\(\s*["']?\s*)(?:https?:\/\/|\/\/)/i;
-    if([...embeddedStyle,...inlineStyle].some(fragment=>cssExternal.test(fragment)))
+    // Decode HTML references in style attributes, then CSS escapes, before
+    // checking inline CSS. Emitted stylesheet files are audited separately.
+    const cssFragments=[...embeddedStyle,...inlineStyle.map(decodeHtmlUrlReferences)];
+    if(cssFragments.some(hasExternalCssResource))
       violations.push(path+': external CSS resource');
 
   }

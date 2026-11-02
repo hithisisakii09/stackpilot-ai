@@ -285,3 +285,24 @@ test('allows encoded local resource paths and official links without treating in
  ].join('')+'</body>');
  assert.deepEqual(auditStaticRoutes([{path:'index.html',html:page}]).violations,[]);
 });
+
+test('blocks HTML-entity and CSS-escaped external URLs in inline styles',()=>{
+ const cases=[
+  ['<div style="background:url(https&colon;//tracker.example/pixel.png)"></div>','HTML entity in style attribute'],
+  ['<style>.hero{background:url(h\\74 tps://tracker.example/pixel.png)}</style>','hex-escaped CSS scheme'],
+  ['<style>@import url(\\68 ttps://fonts.example/theme.css);</style>','escaped CSS import scheme'],
+  ['<style>.hero{background:url(\\2f\\2f tracker.example/pixel.png)}</style>','escaped protocol-relative URL']
+ ];
+ for(const [injection,label] of cases){
+  const violations=auditStaticRoutes([{path:'index.html',html:goodPage.replace('</body>',injection+'</body>')}]).violations;
+  assert.ok(violations.some(v=>v.includes('external CSS resource')),label+': '+violations.join(' | '));
+ }
+});
+
+test('allows encoded first-party CSS paths and ordinary local CSS escapes',()=>{
+ const safe=goodPage.replace('</body>',[
+  '<div style="background:url(&sol;images/local.png)"></div>',
+  '<style>.hero{background:url(\\2f images/local.png)}</style>'
+ ].join('')+'</body>');
+ assert.deepEqual(auditStaticRoutes([{path:'index.html',html:safe}]).violations,[]);
+});

@@ -12,6 +12,24 @@ const assetAttrs={
 };
 const localFile=/^[A-Za-z0-9_][A-Za-z0-9_./@-]*$/;
 const linkedResources=new Set(['stylesheet','icon','modulepreload','preload','prefetch','manifest','apple-touch-icon']);
+
+const cssExternalResource=/(?:@import\s+(?:url\(\s*)?["']?\s*|url\(\s*["']?\s*)(?:https?:\/\/|\/\/)/i;
+function decodeCssEscapes(value){
+ return value.replace(/\\([0-9a-f]{1,6})(?:\r\n|[\t\n\r\f ])?|\\([\s\S])/gi,(full,hex,escaped)=>{
+  if(hex){
+   const point=Number.parseInt(hex,16);
+   return point===0||point>0x10ffff||(point>=0xd800&&point<=0xdfff)
+    ?'\uFFFD':String.fromCodePoint(point);
+  }
+  if(escaped===undefined)return '';
+  return /[\r\n\f]/.test(escaped)?'':escaped;
+ });
+}
+/** Conservative defense-in-depth check; not a full CSS parser. */
+export function hasExternalCssResource(css){
+ return typeof css==='string'&&cssExternalResource.test(decodeCssEscapes(css));
+}
+
 function attrs(tag){
  const result=Object.create(null);
  for(const m of tag.matchAll(attrPattern))result[m[1].toLowerCase()]=m[2]??m[3]??m[4];
@@ -31,12 +49,37 @@ function emittedPath(raw,base){
  if(!path||path.endsWith('/'))path+='index.html';
  return localFile.test(path)?path:null;
 }
-export function auditStaticAssetReferences(pages,files){
+export function auditStaticAssetReferences(pages,files,stylesheets=[]){
  const violations=[];
  let checkedAssets=0;
  if(!Array.isArray(files)||files.length===0||!Array.isArray(pages)||pages.length===0)
   return {checkedAssets,violations:['Missing build pages or static file inventory for asset check']};
  const inventory=new Set(files);
+ if(!Array.isArray(stylesheets)){
+  violations.push('Invalid emitted stylesheet content inventory');
+  stylesheets=[];
+ }
+ const cssPaths=[...inventory].filter(path=>typeof path==='string'&&/\.css$/i.test(path));
+ const cssContent=new Map();
+ for(const stylesheet of stylesheets){
+  if(typeof stylesheet?.path!=='string'||!inventory.has(stylesheet.path)||
+     !/\.css$/i.test(stylesheet.path)||typeof stylesheet.content!=='string'){
+   violations.push('Invalid emitted stylesheet record');
+   continue;
+  }
+  if(cssContent.has(stylesheet.path)){
+   violations.push('Duplicate emitted stylesheet content: '+stylesheet.path);
+   continue;
+  }
+  cssContent.set(stylesheet.path,stylesheet.content);
+ }
+ for(const path of cssPaths){
+  if(!cssContent.has(path)){
+   violations.push('Missing emitted stylesheet contents: '+path);
+  }else if(hasExternalCssResource(cssContent.get(path))){
+   violations.push(path+': external CSS resource');
+  }
+ }
  for(const page of pages){
   if(typeof page?.path!=='string'||typeof page?.html!=='string'){
    violations.push('Invalid rendered page in asset audit');continue;

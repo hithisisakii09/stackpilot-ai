@@ -29,7 +29,7 @@ test('supports nested page relative references, query, fragment and srcset sizes
   '<a href="/some-other-route/">Not an asset</a>'
  ].join(''));
  const files=['tools/demo/index.html','_astro/app.js','_astro/main.css','images/logo.webp','images/logo@2x.webp','images/hero.webp','images/hero2.webp'];
- const r=auditStaticAssetReferences([page(html,'tools/demo/index.html')],files);
+ const r=auditStaticAssetReferences([page(html,'tools/demo/index.html')],files,[{path:'_astro/main.css',content:'.hero{background:url(/images/local.webp)}'}]);
  assert.equal(r.checkedAssets,7);
  assert.deepEqual(r.violations,[]);
 });
@@ -65,4 +65,31 @@ test('repository release preflight must include all emitted first-party assets',
  assert.match(cli,/auditStaticAssetReferences/);
  assert.match(cli,/assets\.violations/);
  assert.match(cli,/checkedAssets/);
+});
+
+test('audits emitted first-party CSS files for external imports and escaped remote URLs',()=>{
+ const files=['index.html','_astro/site.css','_astro/legacy.css'];
+ const sheets=[
+  {path:'_astro/site.css',content:'@import url("https://fonts.example/theme.css");'},
+  {path:'_astro/legacy.css',content:'.hero{background-image:url(\\68 ttps://tracker.example/pixel.png)}'}
+ ];
+ const r=auditStaticAssetReferences([page(local(''))],files,sheets);
+ assert.ok(r.violations.some(v=>v.includes('_astro/site.css: external CSS resource')),r.violations.join(' | '));
+ assert.ok(r.violations.some(v=>v.includes('_astro/legacy.css: external CSS resource')),r.violations.join(' | '));
+});
+
+test('fails closed when stylesheet content is missing and allows local/data CSS references',()=>{
+ const files=['index.html','_astro/site.css'];
+ const missing=auditStaticAssetReferences([page(local(''))],files);
+ assert.ok(missing.violations.some(v=>v.includes('Missing emitted stylesheet contents: _astro/site.css')));
+ const safe=auditStaticAssetReferences([page(local(''))],files,[
+  {path:'_astro/site.css',content:'@import url("/fonts/local.css"); .hero{background:url(data:image/png;base64,AAAA)}'}
+ ]);
+ assert.deepEqual(safe.violations,[]);
+});
+
+test('release preflight reads every emitted CSS file and passes contents to the asset audit',()=>{
+ const cli=readFileSync(new URL('../scripts/release-preflight.mjs',import.meta.url),'utf8');
+ assert.ok(cli.includes('const stylesheets=allFiles.filter(path=>/\\.css$/i.test(path)).map(path=>({'));
+ assert.ok(cli.includes('assets=auditStaticAssetReferences(pages,allFiles,stylesheets);'));
 });

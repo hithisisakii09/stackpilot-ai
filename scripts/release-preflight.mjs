@@ -28,7 +28,10 @@ try {
     path,html:readFileSync(join(distPath,path),'utf8')
   }));
   navigation=auditInternalNavigation(pages,allFiles);
-  assets=auditStaticAssetReferences(pages,allFiles);
+  const stylesheets=allFiles.filter(path=>/\.css$/i.test(path)).map(path=>({
+    path,content:readFileSync(join(distPath,path),'utf8')
+  }));
+  assets=auditStaticAssetReferences(pages,allFiles,stylesheets);
   routes=auditStaticRoutes(pages);
   deploy=auditDeploymentConstraints({
     policy:JSON.parse(read(new URL('config/operating-policy.json',root))),
