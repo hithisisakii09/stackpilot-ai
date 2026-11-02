@@ -191,3 +191,30 @@ test('rejects duplicate, truncated and unexpected CSP directives', () => {
     assert.ok(violations.some(v=>v.includes('Content-Security-Policy')),violations.join(' | '));
   }
 });
+
+test('fails closed if Netlify headers add route-level overrides or duplicate noindex', () => {
+  const variants=[
+    headers+'\n/tools/*\n  X-Robots-Tag: index, follow\n',
+    headers+'\n/tools/*\n  Content-Security-Policy: default-src *\n',
+    headers+'\n/*\n  X-Robots-Tag: index\n',
+    headers+'  X-Robots-Tag: index, follow\n'
+  ];
+  for(const compromised of variants){
+    const violations=auditDeploymentConstraints({policy,headers:compromised,robots}).violations;
+    assert.ok(violations.length>0,'Competing Netlify header rule was not rejected');
+  }
+});
+
+test('fails closed if robots.txt adds an allow rule or crawler-specific bypass', () => {
+  const variants=[
+    robots+'Allow: /\n',
+    robots+'User-agent: Googlebot\nAllow: /\n',
+    robots+'Disallow: /\n'
+  ];
+  for(const compromised of variants){
+    const violations=auditDeploymentConstraints({policy,headers,robots:compromised}).violations;
+    assert.ok(violations.some(v=>v.includes('crawl')||v.includes('robots')),
+      'Conflicting robots rule was not rejected: '+compromised);
+  }
+  assert.deepEqual(auditDeploymentConstraints({policy,headers,robots:'# Prelaunch only\n'+robots+'\n# Comments allowed\n'}).violations,[]);
+});
