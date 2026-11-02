@@ -148,7 +148,7 @@ export function auditDeploymentConstraints({policy,headers,robots}={}) {
   // override prelaunch security/noindex behavior even when /* remains intact.
   // The unpublished site permits only one global wildcard block.
   const headerScopes=text.split(/\r?\n/).map(line=>line.trim())
-    .filter(line=>line.startsWith('/') && !line.startsWith('//'));
+    .filter(line=>line.startsWith('/'));
   if(headerScopes.length!==1 || headerScopes[0]!=='/*')
     violations.push('Unsafe Netlify headers: route-specific override or duplicate wildcard scope');
   const rule=text.match(/(?:^|\r?\n)\/\*\s*\r?\n((?:[ \t]+[^\r\n]*\r?\n?)*)/);
@@ -241,8 +241,8 @@ export function auditDeploymentConstraints({policy,headers,robots}={}) {
   const robotsRules=robotsText.split(/\r?\n/).map(line=>line.trim())
     .filter(line=>line.length>0 && !line.startsWith('#'));
   if(robotsRules.length!==2 ||
-     !/^User-agent:\\s*\\*$/i.test(robotsRules[0]) ||
-     !/^Disallow:\\s*\\/$/i.test(robotsRules[1]))
+     !/^User-agent:\s*\*$/i.test(robotsRules[0]) ||
+     !/^Disallow:\s*\/$/i.test(robotsRules[1]))
     violations.push('Unsafe robots.txt: unexpected or conflicting crawl directives');
   if(!/^\s*User-agent:\s*\*\s*$/im.test(robotsText) ||
      !/^\s*Disallow:\s*\/\s*$/im.test(robotsText))
