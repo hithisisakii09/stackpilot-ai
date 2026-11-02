@@ -18,7 +18,7 @@
 
 **Editorial status:** all six vendor research-claim records remain candidate-only and unapproved (**0/6 approved**). No affiliate links, partner acceptance, public indexing, or public launch is authorized.
 
-**Important SHA invalidation:** this documentation-only refresh will create a new commit and move the PR head. After it lands, refresh the exact PR SHA, CI runs and Netlify commit status; the owner must recheck the preview identity page against the new SHA before current-SHA UAT. The previous screenshot only matched `ff88...`.
+**Important SHA rule:** `ff88a68691e5cf8705250cca5245f03a7fa06957` is the last verified application-code checkpoint. The documentation-only refresh has moved PR #1 to a new head; any later commit moves it again. Do not carry the previous screenshot or CI evidence forward. After all documentation commits are complete, fetch the final PR head and require exact-head CI/Netlify status plus a fresh owner-observed build-identity check before current-SHA UAT.
 
 ## Current product scope
 

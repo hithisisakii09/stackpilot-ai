@@ -13,7 +13,7 @@
 ## Global Constraints
 
 - Monthly budget and delegated spend remain **₹0**.
-- Keep branch `feature/phase-1-1-recommendation-engine`; do not change `main), merge, publish publicly, enable indexing, or activate affiliates.
+- Keep branch `feature/phase-1-1-recommendation-engine`; do not change `main`, merge, publish publicly, enable indexing, or activate affiliates.
 - Do not change Netlify visibility, Auto Publishing, analytics, billing, or other provider settings.
 - Do not recreate or deploy to the owner-deleted Vercel project.
 - Preserve all six vendor claims as unapproved; do not invent legal, publisher, traffic, or revenue approvals.
