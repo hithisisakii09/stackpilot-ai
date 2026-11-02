@@ -256,3 +256,32 @@ test('rejects invalid noindex, nosniff and DENY security header values',()=>{
  }
  assert.deepEqual(auditDeploymentConstraints({policy,headers,robots}).violations,[]);
 });
+
+test('rejects entity-encoded third-party resource URLs before any private preview build',()=>{
+ const cases=[
+  ['<script src="&#x68;ttps://tracker.example/collect.js"></script>','externally hosted script'],
+  ['<form action="&#x68;ttps://tracker.example/submit"></form>','external form action'],
+  ['<button formaction="&#x6a;avascript:alert(1)">Go</button>','external form submission override'],
+  ['<img src="https&colon;//tracker.example/pixel.gif">','external embedded resource'],
+  ['<img srcset="/images/local.png 1x, &sol;&sol;tracker.example/pixel.png 2x">','external embedded resource'],
+  ['<iframe src="&sol;&sol;tracker.example/frame"></iframe>','external embedded resource'],
+  ['<link rel="dns-prefetch" href="&sol;&sol;tracker.example">','external linked resource'],
+  ['<link rel="preconnect" href="&#x2f;&#x2f;tracker.example">','external linked resource']
+ ];
+ for(const [injection,reason] of cases){
+  const page=goodPage.replace('</body>',injection+'</body>');
+  const r=auditStaticRoutes([{path:'index.html',html:page}]);
+  assert.ok(r.violations.some(v=>v.includes(reason)),injection+': '+r.violations.join(' | '));
+ }
+});
+
+test('allows encoded local resource paths and official links without treating inert data attributes as fetches',()=>{
+ const page=goodPage.replace('</body>',[
+  '<script src="&#x2f;_astro/app.js"></script>',
+  '<img src="&sol;images/logo.svg" alt="">',
+  '<a href="https://www.hubspot.com/">Official</a>',
+  '<img data-src="&#x68;ttps://tracker.example/inert.gif" alt="">',
+  '<link rel="stylesheet" href="/_astro/main.css">'
+ ].join('')+'</body>');
+ assert.deepEqual(auditStaticRoutes([{path:'index.html',html:page}]).violations,[]);
+});

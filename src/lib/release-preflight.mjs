@@ -11,31 +11,38 @@ function attributeValue(tag,name) {
   }
   return null;
 }
-function isExternalOrExecutable(value) {
-  return typeof value==='string' &&
-    /^(?:\/\/|[a-z][a-z0-9+.-]*:)/i.test(value.trim());
-}
-
-// A rendered anchor can execute script or disclose navigation over plaintext HTTP.
-// Decode entity-encoded schemes and ignore control characters normalized by URL parsers.
-// This is a conservative defense-in-depth scan, not a full HTML URL parser.
-function unsafeAnchorDestination(value) {
-  if (typeof value !== 'string') return false;
-  const decoded=value.replace(/&(?:#(x[0-9a-f]+|[0-9]+);?|([a-z][a-z0-9]*);?)/gi,
+// HTML decodes character references in URL-bearing attributes before navigation
+// or network requests. Reuse the same limited decoder for anchors and
+// fetched resources so disguised external destinations do not pass preflight.
+// A static regexp remains defense in depth; browser UAT is a separate gate.
+function decodeHtmlUrlReferences(value) {
+  if(typeof value!=='string') return '';
+  return value.replace(/&(?:#(x[0-9a-f]+|[0-9]+);?|([a-z][a-z0-9]*);?)/gi,
     (full,numeric,named)=>{
-      if (numeric) {
+      if(numeric){
         const hex=numeric[0].toLowerCase()==='x';
         const code=Number.parseInt(hex?numeric.slice(1):numeric,hex?16:10);
-        return Number.isInteger(code) && code>0 && code<=0x10ffff &&
-          !(code>=0xd800 && code<=0xdfff) ? String.fromCodePoint(code) : '\uFFFD';
+        return Number.isInteger(code)&&code>0&&code<=0x10ffff&&
+          !(code>=0xd800&&code<=0xdfff)?String.fromCodePoint(code):'\uFFFD';
       }
-      const safeNamed={amp:'&',colon:':',tab:'\t',newline:'\n',sol:'/'};
-      return safeNamed[named.toLowerCase()] ?? full;
+      const namedReferences={amp:'&',colon:':',tab:'\t',newline:'\n',sol:'/'};
+      return namedReferences[named.toLowerCase()]??full;
     });
-  const href=decoded.replace(/[\u0000-\u0020\u007f]/g,'');
-  if (href.startsWith('//')) return true;
+}
+function normalizedUrlAttribute(value) {
+  return decodeHtmlUrlReferences(value).trim().replace(/[\u0000-\u0020\u007f]/g,'');
+}
+function isExternalOrExecutable(value) {
+  if(typeof value!=='string') return false;
+  const candidate=normalizedUrlAttribute(value);
+  return /^(?:\/\/|[a-z][a-z0-9+.-]*:)/i.test(candidate);
+}
+function unsafeAnchorDestination(value) {
+  if(typeof value!=='string') return false;
+  const href=normalizedUrlAttribute(value);
+  if(href.startsWith('//')) return true;
   const scheme=/^([a-z][a-z0-9+.-]*):/i.exec(href);
-  return Boolean(scheme && !['https','mailto'].includes(scheme[1].toLowerCase()));
+  return Boolean(scheme&&!['https','mailto'].includes(scheme[1].toLowerCase()));
 }
 
 export function auditStaticRoutes(pages) {
