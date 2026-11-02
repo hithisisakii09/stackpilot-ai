@@ -80,11 +80,72 @@ No keyword-volume, ranking, difficulty, traffic or conversion dataset was availa
 6. **Use a buyer-owned test property.** Run a small authorized crawl, record the settings and actual result, and compare it with the estimate. Do not test against a third-party site without permission.
 7. **Make the purchase decision only after the scope worksheet is complete.** If plan, project verification, page count or rendering entitlement is unknown, label the estimate UNKNOWN rather than recommending a tier.
 
-### Draft opening (unpublished)
+### Full draft article (unpublished)
 
-> An SEO audit limit is not always a simple count of every URL a crawler discovers. Some products count only certain internal HTML responses; others also distinguish the monthly allowance from the maximum pages in one audit. A verified website can have a different allowance from an unverified project, and JavaScript rendering may depend on the toolkit tier. Before choosing a plan, write down the site you are allowed to crawl, the pages you actually need, how often you will audit them and which reports you must export. Then compare those requirements with the vendor's current documentation for the exact plan—not a headline number from an old comparison article.
+# How to Compare SEO Audit Crawl Limits Without Mixing Up the Numbers
 
-> This guide compares published plan rules, not the accuracy of either product's audit findings. No StackPilot hands-on test, paid subscription, vendor account or third-party website crawl has been performed.
+An SEO audit limit is not always a simple count of every URL a crawler discovers. Some products count only certain internal HTML responses; others distinguish the monthly allowance from the maximum pages in one audit. A verified website can have a different allowance from an unverified project, and JavaScript rendering may depend on the toolkit tier.
+
+Before choosing a plan, write down the site you are allowed to crawl, the pages you actually need, how often you will audit them and which reports you must export. Then compare those requirements with the vendor's current documentation for the exact plan—not a headline number from an old comparison article.
+
+## Start with the unit being counted
+
+Ahrefs says Site Audit crawl credits are consumed by internal HTML pages that return HTTP 200. Its help page says redirects, error responses, images, CSS, JavaScript resources and external URLs do not consume those credits. That means the number of URLs a crawler discovers can be higher than the number of credit-consuming pages.
+
+Ahrefs also separates verified and unverified projects. Its September 3, 2026 Starter-plan table lists 5,000 crawl credits per verified project per month for Free, Starter and Lite. For unverified projects, it lists no Site Audit allowance on Free, 500 pages and 10,000 crawl credits on Starter, and 25,000 pages and 100,000 crawl credits on Lite. The same page separately lists shared account credits, so do not treat those shared credits as Site Audit crawl credits.
+
+The practical question is not simply “How many URLs are on my site?” It is “How many internal HTML pages that qualify under this product's rules will be crawled, under my actual project-verification state and subscription?”
+
+## Compare monthly allowance and per-audit cap separately
+
+Semrush documents both a monthly page allowance and a maximum number of pages in one audit. Its current help page lists the following limits:
+
+| Semrush subscription | Monthly pages | Maximum pages in one audit | Audits running at once |
+| --- | ---: | ---: | ---: |
+| No SEO Toolkit | 100 | 100 | 1 |
+| Pro SEO Toolkit | 100,000 | 20,000 | 2 |
+| Guru SEO Toolkit | 300,000 | 20,000 | 2 |
+| Business SEO Toolkit | 1,000,000 | 100,000 | 5 |
+
+Semrush says JavaScript rendering is available with Guru or Business SEO Toolkit. Its documentation also maps Semrush One Starter to Pro SEO Toolkit, Semrush One Pro+ to Guru, and Semrush One Advanced to Business. Verify the exact product name and entitlement shown in the account before relying on that mapping.
+
+A monthly allowance does not guarantee that one audit can consume the whole allowance. For example, a monthly total may be large while a single audit is capped at a smaller number. If you schedule repeated audits, check both the per-audit maximum and how many audits may run concurrently.
+
+## Set the crawl scope before estimating pages
+
+A root-domain crawl can include subdomains and subfolders. If you only need a blog, a documentation site or a regional subfolder, narrow the scope deliberately. Record whether the audit uses the website crawler, a sitemap or an imported URL list; those choices can change the set of pages included.
+
+For a useful estimate, record:
+
+- the canonical hostname and every permitted subdomain;
+- the subfolders that are in scope;
+- sitemap URLs and any imported URL list;
+- parameterized and duplicate URL patterns;
+- an estimate of internal HTML pages returning HTTP 200;
+- whether important pages require JavaScript rendering;
+- how often the audit will run and which reports must be exported.
+
+Do not crawl a client's or third party's site without permission. Project verification is an ownership control, not a box to work around.
+
+## Run a small, authorized test before choosing a plan
+
+If you control the website, use a small test crawl with the intended scope and settings. Record the project-verification state, crawler source, page cap, rendering option and actual result. Compare the observed credit/page consumption with your estimate. If the numbers differ, investigate redirects, duplicate paths, error responses, resource requests and subdomain scope before upgrading.
+
+Do not present a sample crawl as proof of a vendor's overall accuracy or performance. It only shows what happened for that site, configuration, plan and date.
+
+## A buyer's decision rule
+
+Choose a plan only after you can answer five questions:
+
+1. Which pages are in scope, and which of them consume the vendor's crawl unit?
+2. Is the allowance monthly, per project, per audit or shared across tools?
+3. Does project verification change the allowance?
+4. Do you need JavaScript rendering, concurrent audits, schedules or particular exports?
+5. Are the subscription name, currency, region, tax, renewal and overage terms confirmed for the account you will actually use?
+
+If any answer is unknown, keep the estimate marked UNKNOWN and ask the vendor or account owner. Do not infer a bill from a marketing headline or select a higher plan just because two products use different counting rules.
+
+This article compares published plan rules, not the accuracy of either product's audit findings. No StackPilot hands-on test, paid subscription, vendor account or third-party website crawl has been performed. All numeric limits above are vendor-published snapshots and must be rechecked before publication.
 
 ### Buyer worksheet fields and editorial acceptance
 
