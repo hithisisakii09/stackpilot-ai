@@ -57,6 +57,16 @@
 ## References
 
 - [Private draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1)
+- [Phase 3 Quality, Security, and Trust Audit](publisher-readiness/2026-11-03-phase-3-quality-security-and-trust-audit.md)
+- [Privacy inventory and data flows](privacy-inventory-and-data-flows.md)
+- [Mobile manual testing guide](mobile-manual-testing-guide.md)
+- [Security monitoring and incident playbook](security-monitoring-and-incident-playbook.md)
+- [Phase 4 brand and domain clearance](phase-4-launch-preparation/brand-and-domain-clearance.md)
+- [Phase 4 public release checklist](phase-4-launch-preparation/public-release-checklist.md)
+- [Phase 4 indexing and SEO launch plan](phase-4-launch-preparation/indexing-and-seo-launch-plan.md)
+- [Phase 4 hosting cost comparison](phase-4-launch-preparation/hosting-cost-comparison.md)
+- [Phase 4 rollback and incident playbook](phase-4-launch-preparation/rollback-and-incident-playbook.md)
+- [Phase 4 launch risk register](phase-4-launch-preparation/launch-risk-register.md)
 - [Source-bound human UAT packet and approval decision](publisher-readiness/2026-11-01-private-preview-uat-release-decision.md)
 - [October historical operational snapshot](history/2026-10-31-operational-state-snapshot.md)
 - [Owner release checks, issue #2](https://github.com/hithisisakii09/stackpilot-ai/issues/2) and [commercial decisions, issue #3](https://github.com/hithisisakii09/stackpilot-ai/issues/3)
