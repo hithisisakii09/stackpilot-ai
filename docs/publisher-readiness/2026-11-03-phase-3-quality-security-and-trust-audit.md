@@ -21,7 +21,7 @@ X-Frame-Options: DENY
 Permissions-Policy: camera=(), microphone=(), geolocation=()
 ```
 - **Execution Boundary:** External script injection, remote iframe framing (`frame-ancestors 'none'`), and unauthorized form POST targets (`form-action 'self'`) are disallowed.
-- **Hosted vs. Source Verification:** The above configuration is verified in local source files and validated by `scripts/release-preflight.mjs`. Actual HTTP response headers must be independently verified by the owner on the live Netlify preview using browser DevTools.
+- **Hosted vs. Source Verification:** The above configuration is verified in local source files and validated at build-time by `scripts/release-preflight.mjs`. **Source configuration does not prove live network behavior.** Actual HTTP response headers must be independently verified by the owner on the live Netlify preview using browser DevTools.
 
 ### 1.2 Robots, Noindex & Crawl Prevention
 - **`public/robots.txt`:** Fully restricts crawlers (`User-agent: *`, `Disallow: /`).
@@ -34,8 +34,9 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 - **Input Sanitization & Output Escaping:** All calculators and worksheets (cost calculator, CRM seat audit, hosting hidden costs, SEO audit scope) run entirely client-side. Formula-injection risks in CSV exports are mitigated by escaping formula trigger characters (`=`, `+`, `-`, `@`).
 
 ### 1.4 Dependency Security
-- Astro was upgraded to `7.4.4` to remediate upstream CVEs.
-- `npm audit` reports **0 vulnerabilities**.
+- Astro dependency is defined as `"astro": "^7.4.4"` in `package.json` (locked to `7.4.4` in committed `package-lock.json`, and resolving `7.4.5` in GitHub Actions CI runners).
+- In GitHub Actions CI, `npm audit --omit=dev --audit-level=high` reports **0 high or critical vulnerabilities** in production dependencies.
+- A full development-dependency audit on the locked graph similarly reports **0 vulnerabilities**.
 
 ---
 
@@ -71,16 +72,18 @@ All 25 emitted static routes were audited across desktop and mobile form factors
 | `/disclosure/` | Disclosure | Affiliate disclosure | States no active affiliate links | Notice callout |
 | `/privacy/` | Privacy Notice | Privacy notes | Details Netlify CDN logging | Notice callout |
 
-- **Accessibility (WCAG 2.1 AA):** All 25 routes pass axe-core scans in automated headless browser sweeps. Each page includes a single `<h1>` element, semantic `<main>`, `<nav>`, `<header>`, and `<footer>` regions, and accessible color contrast.
-- **Horizontal Overflow:** All pages apply `box-sizing: border-box` and mobile-breakpoint media queries (`@media (max-width: 600px)`–`700px`) collapsing grids to `1fr`. Horizontal scroll width remains $\le 395\text{px}$ on standard 390px mobile viewports.
+- **Automated Accessibility (WCAG 2.1 AA):** All 25 routes pass automated axe-core scans in Chromium browser sweeps (`scripts/browser-acceptance.mjs`) testing rulesets `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`. Each page includes a single `<h1>` element, semantic `<main>`, `<nav>`, `<header>`, and `<footer>` regions, and accessible color contrast. **Automated accessibility testing covers automated rules only; manual mobile hardware and screen-reader testing remains a separate human gate.**
+- **Horizontal Overflow:** All pages apply `box-sizing: border-box` and mobile-breakpoint media queries (`@media (max-width: 600px)`–`700px`) collapsing grids to `1fr`. Horizontal scroll width is asserted to remain $\le 395\text{px}$ on standard 390px mobile viewports.
 
 ---
 
 ## 3. Performance & Maintainability Review
 
-- **Total Static Build Weight:** 257.4 KB across 40 files in `dist/`.
+- **Total Static Build Weight:** 257,462 bytes (under Linux LF) / 257,478 bytes (under Windows CRLF) across 40 files in `dist/`.
 - **Largest HTML Document:** `index.html` at 14.5 KB.
 - **Static Assets:** 10 bundled JavaScript chunks (all client-side calculators combined total < 60 KB).
+- **Measured Build Timing:** Full static compilation of all 25 pages completes in **2.28s–3.76s** in local builds and ~3.5s in CI runners.
+- **Measured Local Preview Response:** Headless HTTP responses under `astro preview` average **< 45ms** per static page route.
 - **External Network Requests:** 0 external CSS, 0 Google Fonts, 0 tracking scripts, 0 third-party CDNs.
 - **Maintainability & DRY:** Common data schemas and validation logic reside in `src/lib/` and are shared between client Astro pages and automated test scripts.
 
@@ -93,6 +96,7 @@ All 25 emitted static routes were audited across desktop and mobile form factors
 3. **Static Build Smoke Test (`node scripts/check-build.mjs`):** Confirmed all 25 pages exist, are non-indexed, and bear the StackPilot AI brand identity.
 4. **Release Preflight (`node scripts/release-preflight.mjs`):** PASS (25 routes scanned, 226 internal links verified, 10 static assets verified).
 5. **Operating Policy & Operations Report:** Fail-closed defaults confirmed (`canPublish: false`, `canMonetize: false`, `canSpend: false`).
+6. **Anonymous Preview Canary:** Automated CI probe of two fixed routes (`/` and `/preview-build/`) returned HTTP 401. This verifies that Netlify visitor authentication is engaged; it is **not** an exhaustive access-control audit.
 
 ---
 

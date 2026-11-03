@@ -40,3 +40,8 @@ test('dependency graph is locked and CI installs it reproducibly', () => {
   assert.match(workflow, /npm ci/);
   assert.match(workflow, /contents: read/);
 });
+
+test('.gitignore excludes generated artifacts directory to prevent accidental commits', () => {
+  const gitignore = read('.gitignore');
+  assert.match(gitignore, /^artifacts\/$/m, '.gitignore must contain an "artifacts/" entry');
+});
