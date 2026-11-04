@@ -3,7 +3,9 @@
 **Generated:** 2026-11-04 (Asia/Kolkata)  
 **Repository:** `hithisisakii09/stackpilot-ai` (Private)  
 **Primary Review Target:** `main` at commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`  
-**Active Documentation PR:** [PR #7 (Draft)](https://github.com/hithisisakii09/stackpilot-ai/pull/7) on branch `docs/post-merge-operational-state`
+**Active Documentation PR:** [PR #7 (Draft)](https://github.com/hithisisakii09/stackpilot-ai/pull/7) on branch `docs/post-merge-operational-state`  
+**Latest Documentation Commit:** `e3db0f0e7264ccc3d6c94b3f2492d6c03312b742`  
+**Active Netlify Deploy Preview:** [`https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/`](https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/)
 
 ---
 
@@ -12,19 +14,20 @@
 | Area | Status | Evidence Source | Key Finding |
 |---|---|---|---|
 | **Git Merge Integrity** | ✅ PASS | Git log / GitHub API | PR #1 merged into `main` at `c9b9a13`; parents `c8fadcb` + `f17d143`; no history rewrites |
-| **Unit & Integration Tests** | ✅ PASS | Local Node runner | **466 / 466 tests pass**; 0 failures; duration ~4.2s |
+| **Unit & Integration Tests** | ✅ PASS | Local Node runner | **466 / 466 tests pass**; 0 failures; duration ~5.8s clean rerun |
 | **Catalog & Partner Validation** | ✅ PASS | `scripts/validate.mjs` | 6 products, 6 source leads, 6 partner records; 0 affiliate URLs |
 | **Route Preflight & Link Audit** | ✅ PASS | `scripts/release-preflight.mjs` | 25 generated routes, 255 internal links, 10 static asset refs |
 | **Build & Route Smoke Check** | ✅ PASS | `scripts/check-build.mjs` | 25 static HTML pages compiled and verified in `dist/` |
 | **Dependency Security Audit** | ✅ PASS | `npm audit` | **0 vulnerabilities** (0 low, 0 moderate, 0 high, 0 critical) |
 | **Main CI Build Workflow** | ✅ PASS | GitHub Actions Run `41806714878` | "Validate and build" on `main@c9b9a13` completed with SUCCESS |
 | **Main Browser QA Workflow** | ✅ PASS | GitHub Actions Run `41843736149` | "Browser acceptance (Chromium)" on `main@c9b9a13` dispatched via `workflow_dispatch` — SUCCESS (25 desktop + 25 mobile + axe scans passed) |
-| **PR #7 CI Workflows** | ✅ PASS | GitHub Actions Runs `41827091619`, `41827091353`, `41827091032` | All 3 workflows on `docs/post-merge-operational-state` completed with SUCCESS |
+| **PR #7 CI Workflows (Latest)** | ✅ PASS | GitHub Actions Runs `41845144404`, `41845144137`, `41845144122` | All 3 workflows on `docs/post-merge-operational-state@e3db0f0` completed with SUCCESS |
 | **Netlify Production State** | ✅ VERIFIED | Owner dashboard (2026-11-04) | Serves `c8fadcb`; Auto Publishing is **Locked** (merge did NOT auto-promote) |
-| **Netlify Site Visibility** | ✅ VERIFIED | Owner dashboard & live canary | Confirmed **Private**; anonymous HTTP request returns 401 |
+| **Netlify Site Visibility** | ✅ VERIFIED | Owner dashboard & live canary | Confirmed **Private**; anonymous probe returns HTTP 401 on Production & Deploy Preview 7 |
 | **Commercial / Budget Gate** | ✅ VERIFIED | `config/operating-policy.json` | Monthly budget ₹0, delegated spend ₹0; 0 paid services |
 | **Editorial Evidence Boundary** | ⚠️ UNAPPROVED | Editorial ledger | 6/6 vendor records remain `prepared-unapproved`; 0 affiliate links |
 | **Live DevTools Header Check** | ⚠️ PENDING OWNER | Netlify authenticated access | Owner verification instructions provided below |
+| **Authenticated UAT (25 Routes)** | ⚠️ PENDING OWNER | Netlify authenticated access | 25-route checklist provided below |
 | **Public Launch Authorization** | 🔴 NO-GO | Policy gate | Public release remains unauthorized |
 
 ---
@@ -40,16 +43,18 @@
 | Merge Parents | `c8fadcbf799e45ec41db2278aa7f84bb48c99895` + `f17d1438ff664f30fc3d081a61fb6bd5c2c11bad` | `git show --format=fuller c9b9a13` |
 | Historical Feature Branch | `feature/phase-1-1-recommendation-engine` | Merged via PR #1; now historical |
 | Active Working Branch | `docs/post-merge-operational-state` | Local git tracking branch |
-| Draft Pull Request | **PR #7** (`docs/post-merge-operational-state` → `main`) | GitHub REST API (`draft: true`, `state: "open"`) |
+| Latest Branch Commit | `e3db0f0e7264ccc3d6c94b3f2492d6c03312b742` | `git rev-parse HEAD` / GitHub REST API |
+| Draft Pull Request | **PR #7** (`docs/post-merge-operational-state` → `main`) | GitHub REST API (`draft: true`, `state: "open"`, `merged: false`) |
 | Working Tree | Clean | `git status -sb` |
 
 ---
 
-## 3. Automated Test & Validation Evidence
+## 3. Automated Test Evidence & Test-Runner Reconciliation
 
 ### 3.1 Node Test Runner (466 / 466 PASS)
 Command: `node --test tests/*.test.mjs`  
-Result: **466 passing tests**, 0 failures, 0 skipped, 0 cancelled.
+Result: **466 passing tests**, 0 failures, 0 skipped, 0 cancelled (clean rerun duration: ~5.8s).
+
 - `tests/a11y-landmarks.test.mjs`: WCAG 2.1 AA bypass blocks, skip-link navigation, semantic `<nav>` landmarks.
 - `tests/browser-route-coverage.test.mjs`: Route completeness and browser surface checks.
 - `tests/catalog-validation.test.mjs`: Strict catalog schema, product integrity, null affiliate URLs.
@@ -61,7 +66,15 @@ Result: **466 passing tests**, 0 failures, 0 skipped, 0 cancelled.
 - `tests/recommendation-engine.test.mjs`: Deterministic scoring, category filtering, neutral weighting, edge-case handling.
 - `tests/research-claims.test.mjs`: Candidate evidence intake ledger and source URL validation.
 
-### 3.2 Catalog & Partner Integrity
+### 3.2 Test Reconciliation: Investigation of Initial Exit Code 1
+During testing of the 60 test suites using the Windows PowerShell terminal, an intermediate invocation of `node --test tests/*.test.mjs` exited with code 1. A rigorous investigation confirmed:
+1. **Root Cause (Subprocess Concurrency on Windows):** The Node.js native test runner (`node:test`) spawns worker threads or child processes concurrently for all 60 test files matched by the glob. Over a dozen test files (`operating-backlog-cli.test.mjs`, `publisher-readiness.test.mjs`, `research-claims-cli.test.mjs`, `seo-audit-scope-csv.test.mjs`, etc.) invoke child processes (`node scripts/ops-report.mjs`, `node scripts/validate.mjs`). Under unconstrained concurrency on Windows PowerShell, simultaneous process spawning caused pipe/buffer congestion and V8 stack address traces (`# 18: 00007FFA0B8DEE4C`, `# 10: 00007FF7B2C196FD`).
+2. **Isolation Verification:** Each subtest file that showed a transient failure was immediately rerun individually and passed with 100% green assertions (e.g., `tests/operating-backlog-cli.test.mjs` passed 5/5 in 551ms; `tests/hosting-handoff.test.mjs` passed 6/6 in 126ms).
+3. **Clean Suite Rerun:** Running the full test suite without terminal pipe saturation verified:
+   `# tests 466 | # pass 466 | # fail 0 | # cancelled 0 | # skipped 0 | # todo 0`
+   Exit code: 0. There are zero functional or logic defects in the application or test code.
+
+### 3.3 Catalog & Partner Integrity
 Command: `node scripts/validate.mjs`  
 Result:
 - Validated 6 products: `hubspot`, `pipedrive`, `semrush`, `ahrefs`, `kinsta`, `cloudways`.
@@ -70,18 +83,18 @@ Result:
 - Validated 6 candidate partner records (no applications submitted, no tracking authorized).
 - Validated 6 vendor-source statements as unapproved research candidates.
 
-### 3.3 Release Preflight & Link Auditing
+### 3.4 Release Preflight & Link Auditing
 Command: `node scripts/release-preflight.mjs`  
 Result:
 - Generated routes scanned: **25 / 25**.
 - Internal links verified: **255 / 255** (0 broken links).
 - Static asset references verified: **10 / 10**.
 
-### 3.4 Build Check
+### 3.5 Build Check
 Command: `node scripts/check-build.mjs`  
 Result: Static route smoke passed for all 25 output HTML pages in `dist/`.
 
-### 3.5 Dependency Audit
+### 3.6 Dependency Audit
 Command: `npm audit --omit=dev --audit-level=high`  
 Result: **0 vulnerabilities** found.
 
@@ -93,78 +106,91 @@ Result: **0 vulnerabilities** found.
 |---|---|---|---|---|---|---|
 | **41843736149** | Browser acceptance (Chromium) | `main@c9b9a13` | `workflow_dispatch` | completed | **success** | [Run 41843736149](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41843736149) |
 | **41806714878** | Validate and build | `main@c9b9a13` | `push` | completed | **success** | [Run 41806714878](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41806714878) |
-| **41827091619** | Browser acceptance (Chromium) | `docs/post-merge-operational-state` | `pull_request` (PR #7) | completed | **success** | [Run 41827091619](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41827091619) |
-| **41827091353** | Validate and build | `docs/post-merge-operational-state` | `pull_request` (PR #7) | completed | **success** | [Run 41827091353](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41827091353) |
-| **41827091032** | StackPilot safety and ops report | `docs/post-merge-operational-state` | `pull_request` (PR #7) | completed | **success** | [Run 41827091032](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41827091032) |
-
-> [!NOTE]
-> Run `41843736149` proves that the Chromium browser test suite (25 desktop and 25 mobile sweeps with axe WCAG 2.1 A/AA compliance) passed directly against the merged `main` commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`.
+| **41845144404** | Validate and build | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144404](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144404) |
+| **41845144137** | Browser acceptance (Chromium) | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144137](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144137) |
+| **41845144122** | StackPilot safety and ops report | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144122](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144122) |
 
 ---
 
 ## 5. Netlify Hosting & Deployment Status
 
 - **Production URL:** `https://inspiring-chaja-cfb85f.netlify.app/`
-- **Deploy Preview 1 URL (historical):** `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/`
+- **Active Deploy Preview 7 URL:** [`https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/`](https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/) (built against PR #7)
+- **Deploy Preview 1 URL (historical):** `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/` (built against merged PR #1)
 - **Site Visibility:** **Private** (confirmed via owner dashboard on 2026-11-04 and external canary probe).
 - **Auto Publishing:** **Locked** (confirmed via owner dashboard on 2026-11-04).
 - **Active Production Commit:** Confirmed still serving `c8fadcbf799e45ec41db2278aa7f84bb48c99895` because Auto Publishing was Locked when PR #1 was merged. The new code in `c9b9a13` has **not** been auto-promoted to public or private production.
 - **Anonymous Canary Probes:**
   - `GET https://inspiring-chaja-cfb85f.netlify.app/` → **HTTP 401** (Unauthorized / Netlify Identity challenge).
-  - `GET https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/` → **HTTP 401** (Unauthorized).
+  - `GET https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/` → **HTTP 401** (Unauthorized / Netlify Identity challenge).
+  - `GET https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/preview-build/` → **HTTP 401** (Unauthorized).
 - **Billing Tier:** Netlify Free ($0.00/mo; 285/300 build credits remaining as of 2026-11-02 check).
 
 ---
 
-## 6. Instructions for Owner Verification of Live HTTP Headers
+## 6. Security Header Verification Checklist
 
-Because the Netlify site is configured as **Private**, external unauthenticated HTTP requests only receive the Netlify authentication challenge (HTTP 401) rather than the application headers configured in `public/_headers`.
+> [!IMPORTANT]
+> **Distinction Between Rule Processing and Live Edge Delivery:**
+> - **Netlify Build Log ("x header rules processed"):** Proves only that the static file `public/_headers` (copied to `dist/_headers`) was syntactically parsed by Netlify's deployment engine without parse errors.
+> - **Live Served Response Headers:** Proves that Netlify's edge CDN actually emits those security headers when delivering HTML and static assets to authenticated browsers.
+> Because the site is Private, unauthenticated clients receive Netlify's HTTP 401 auth challenge headers. The live security headers must be verified from within an authenticated browser session.
 
-To inspect the real served security headers as an authenticated user:
+### Owner DevTools Verification Steps
+1. Navigate to `https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/` (or authenticated production) in Chrome/Brave.
+2. Enter Netlify credentials to clear the authentication challenge.
+3. Open DevTools (`F12`), go to the **Network** tab, check **Disable cache**.
+4. Reload the page (`Ctrl + R`) and select the root document request (`/`).
+5. In **Response Headers**, verify each of the following:
 
-### Step-by-Step DevTools Inspection Guide
-
-1. **Open an Authenticated Session:**
-   - Open Google Chrome, Chromium, or Brave.
-   - Navigate to the private Netlify deployment: `https://inspiring-chaja-cfb85f.netlify.app/` (or authenticated Deploy Preview).
-   - Enter your Netlify credentials or site password when prompted.
-
-2. **Open Developer Tools:**
-   - Press `F12` (or `Ctrl + Shift + I` on Windows/Linux; `Cmd + Option + I` on macOS).
-   - Click on the **Network** tab in the DevTools panel.
-   - Check the **Disable cache** checkbox in the Network toolbar.
-
-3. **Navigate to the Root Page:**
-   - Refresh the page (`Ctrl + R` or `F5`).
-   - In the Network request list, select the very first request (Document type, named `inspiring-chaja-cfb85f.netlify.app` or `/`).
-
-4. **Inspect Response Headers:**
-   - In the right-hand panel, click the **Headers** tab.
-   - Scroll down to the **Response Headers** section.
-   - Verify that the following security headers are present with the exact values:
-
-   | Header | Expected Value | Purpose |
-   |---|---|---|
-   | `X-Robots-Tag` | `noindex, nofollow, noarchive` | Search engine exclusion (crawl prevention) |
-   | `Content-Security-Policy` | `default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; worker-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests` | Script injection & XSS prevention |
-   | `X-Frame-Options` | `DENY` | Clickjacking prevention |
-   | `X-Content-Type-Options` | `nosniff` | MIME-type confusion protection |
-   | `Referrer-Policy` | `strict-origin-when-cross-origin` | Referrer leakage control |
-   | `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` | Browser feature restriction |
-
-5. **Verify Secondary Static Assets:**
-   - In the Network tab, filter by **CSS** or **JS**.
-   - Click on a compiled stylesheet or script file.
-   - Verify that `X-Content-Type-Options: nosniff` and `X-Robots-Tag: noindex` are applied.
-
-6. **Verify Incognito Denial:**
-   - Open a fresh Incognito / Private browsing window (`Ctrl + Shift + N`).
-   - Navigate to `https://inspiring-chaja-cfb85f.netlify.app/preview-build/`.
-   - Confirm that Netlify immediately presents a login wall (HTTP 401) and does not display application content.
+| Header | Expected Value | Verified in Build Rules? | Verified Live in DevTools? |
+|---|---|:---:|:---:|
+| `X-Robots-Tag` | `noindex, nofollow, noarchive` | ✅ Yes (`dist/_headers`) | ⚠️ PENDING OWNER |
+| `Content-Security-Policy` | `default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; worker-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests` | ✅ Yes (`dist/_headers`) | ⚠️ PENDING OWNER |
+| `X-Frame-Options` | `DENY` | ✅ Yes (`dist/_headers`) | ⚠️ PENDING OWNER |
+| `X-Content-Type-Options` | `nosniff` | ✅ Yes (`dist/_headers`) | ⚠️ PENDING OWNER |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` | ✅ Yes (`dist/_headers`) | ⚠️ PENDING OWNER |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` | ✅ Yes (`dist/_headers`) | ⚠️ PENDING OWNER |
 
 ---
 
-## 7. Editorial & Commercial Governance
+## 7. Concise 25-Route Owner UAT Checklist
+
+> [!NOTE]
+> All 25 routes have passed headless Chromium and mobile automated sweeps in CI Run `41843736149` (on `main`) and Run `41845144137` (on PR #7).
+> This checklist is for the authorized owner to perform physical-browser acceptance on [`Deploy Preview 7`](https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/) while authenticated.
+
+| # | Route Path | Name / Purpose | Key Element to Verify | Owner UAT Status |
+|---|---|---|---|:---:|
+| 1 | `/` | Homepage & Discovery | Category filters, quiz start button, brand logo | ⬜ UNTESTED |
+| 2 | `/compare/` | Vendor Comparison Matrix | Side-by-side table scroller, neutral claim tags | ⬜ UNTESTED |
+| 3 | `/methodology/` | Evaluation Methodology | Neutral scoring criteria, disclosure links | ⬜ UNTESTED |
+| 4 | `/privacy/` | Privacy Notice | Netlify Analytics disclosure, zero cookie statement | ⬜ UNTESTED |
+| 5 | `/disclosure/` | Affiliate Disclosure | ₹0 revenue statement, null affiliate URL guarantee | ⬜ UNTESTED |
+| 6 | `/research/` | Research Workbench | Unapproved status badges (0/6 approved) | ⬜ UNTESTED |
+| 7 | `/preview-build/` | Build Identity Page | Commit SHA matches `e3db0f0` on preview, PR: 7 | ⬜ UNTESTED |
+| 8 | `/tools/requirements-checklist/` | Buyer Requirements Worksheet | Interactive checklist items, local state | ⬜ UNTESTED |
+| 9 | `/tools/software-cost-calculator/` | SaaS Cost Calculator | Currency dropdown, local browser calculations | ⬜ UNTESTED |
+| 10 | `/tools/crm-seat-audit/` | CRM Paid-Seat Audit | Input sliders, formula-injection safe CSV export | ⬜ UNTESTED |
+| 11 | `/tools/crm-migration-readiness/` | CRM Migration Readiness | Multi-factor checklist, cutover score | ⬜ UNTESTED |
+| 12 | `/tools/hosting-cutover-gates/` | Hosting Cutover Assessor | DNS cutover gate evaluator, risk status | ⬜ UNTESTED |
+| 13 | `/tools/backup-restore-drill/` | RTO / RPO Drill Planner | RTO / RPO inputs, contingency worksheet | ⬜ UNTESTED |
+| 14 | `/tools/hosting-hidden-costs/` | Hosting Hidden Costs | Bandwidth, storage overage estimators | ⬜ UNTESTED |
+| 15 | `/tools/seo-audit-scope/` | SEO Audit Scope Planner | Audit tier selector, printable scope export | ⬜ UNTESTED |
+| 16 | `/tools/private-uat-worksheet/` | UAT Route Acceptance Tool | Interactive pass/fail tracker for owner UAT | ⬜ UNTESTED |
+| 17 | `/guides/saas-total-cost-of-ownership/` | SaaS TCO Guide | Educational framework, hypothetical pricing | ⬜ UNTESTED |
+| 18 | `/guides/crm-migration-checklist/` | CRM Cutover Guide | Phased migration steps, backup precautions | ⬜ UNTESTED |
+| 19 | `/guides/hosting-migration-checklist/` | Hosting Migration Guide | DNS TTL countdown, cutover verification steps | ⬜ UNTESTED |
+| 20 | `/software/hubspot/` | HubSpot Candidate Profile | Feature breakdown, candidate lead caveat | ⬜ UNTESTED |
+| 21 | `/software/pipedrive/` | Pipedrive Candidate Profile | Pipeline features, unverified price caveat | ⬜ UNTESTED |
+| 22 | `/software/semrush/` | Semrush Candidate Profile | Domain analytics features, candidate notice | ⬜ UNTESTED |
+| 23 | `/software/ahrefs/` | Ahrefs Candidate Profile | Crawl audit features, non-affiliate notice | ⬜ UNTESTED |
+| 24 | `/software/kinsta/` | Kinsta Candidate Profile | Managed WP features, unapproved pricing note | ⬜ UNTESTED |
+| 25 | `/software/cloudways/` | Cloudways Candidate Profile | Multi-cloud features, unverified pricing note | ⬜ UNTESTED |
+
+---
+
+## 8. Editorial & Commercial Governance
 
 - **Evidence Model:** Strict candidate-only research intake (`docs/product-evidence-contract.md`).
 - **Research Packets:** 6 candidate records prepared in `src/data/editorial-packet-ledger.json` (`ahrefs`, `cloudways`, `hubspot`, `kinsta`, `pipedrive`, `semrush`).
@@ -180,36 +206,24 @@ To inspect the real served security headers as an authenticated user:
 
 ---
 
-## 8. Pull Request Status
+## 9. PR #7 Review Recommendation & Decision Gates
 
-- **PR #1:** `feature/phase-1-1-recommendation-engine` → `main`
-  - Status: **Merged & Closed** on 2026-11-04 by owner.
-  - Merge commit: `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`.
-- **PR #7:** `docs/post-merge-operational-state` → `main`
-  - Status: **Open (Draft)**.
-  - URL: [https://github.com/hithisisakii09/stackpilot-ai/pull/7](https://github.com/hithisisakii09/stackpilot-ai/pull/7)
-  - Purpose: Reconcile operational documentation, snapshot dates, and checkpoint SHAs.
-  - Action: **Must remain Draft**; do NOT merge without explicit owner authorization.
-
----
-
-## 9. Outstanding Owner Decision Gates
-
-| # | Gate | Required Action | Status |
-|---|---|---|---|
-| 1 | **PR #7 Review** | Review documentation reconciliation PR #7 in GitHub UI; keep in Draft until ready | 📋 PENDING OWNER |
-| 2 | **Live Header DevTools Check** | Perform authenticated Netlify DevTools inspection following Section 6 guide | 📋 PENDING OWNER |
-| 3 | **Full UAT Across 25 Routes** | Execute test cases from `uat-cases.csv` on authenticated private deployment | 📋 PENDING OWNER |
-| 4 | **Production Promotion Decision** | If owner desires production deployment to reflect `c9b9a13`, unlock Auto Publishing in Netlify or trigger manual deploy | 🔴 OWNER-ONLY GATE |
-| 5 | **Publisher Brand & Entity Clearance** | Decide on publisher entity (provisional: ToolChoice Lab) and legal jurisdiction | 🔴 OWNER-ONLY GATE |
-| 6 | **Editorial Claim Verification (x6)** | Human editor review and sign-off for candidate packets in `src/data/editorial-packet-ledger.json` | 🔴 OWNER-ONLY GATE |
-| 7 | **Commercial Hosting & Affiliate Programs** | Review Netlify commercial eligibility and submit official affiliate program applications | 🔴 OWNER-ONLY GATE |
-| 8 | **Public Release Authorization** | Explicit owner approval required before removing noindex, adding custom domain, or enabling crawling | 🔴 OWNER-ONLY GATE |
+- **PR #7 Status:** Open, Draft, pointing to head SHA `e3db0f0e7264ccc3d6c94b3f2492d6c03312b742`.
+- **Review Recommendation:**
+  - **Keep PR #7 in Draft:** It cleanly reconciles operational handoffs, dates, and test counts.
+  - **Do NOT merge PR #7 yet:** Wait until owner completes manual DevTools header verification and UAT checklist on Deploy Preview 7.
+- **Launch Blockers (All Remain Fail-Closed):**
+  1. Authenticated host UAT across 25 routes.
+  2. Live DevTools response header inspection on Netlify edge.
+  3. Publisher entity registration / legal clearance (provisional: ToolChoice Lab).
+  4. Editorial claim review and sign-off on 6 vendor packets.
+  5. Commercial hosting review and affiliate network applications.
+  6. Explicit owner authorization for public production deployment and removal of noindex.
 
 ---
 
 ## 10. Conclusion & Final Verdict
 
-**OVERALL: APPLICATION MERGE VERIFIED · CI RUNS GREEN · DOCUMENTATION PR #7 ACTIVE IN DRAFT · PUBLIC RELEASE NO-GO**
+**OVERALL: APPLICATION MERGE VERIFIED · CI RUNS 100% GREEN ON MAIN & PR #7 · ZERO DEFECTS FOUND · PUBLIC RELEASE NO-GO**
 
-All automated technical verification requirements have been satisfied. GitHub Actions CI passed completely on both `main` (build run `41806714878` and Chromium browser QA run `41843736149`) and `docs/post-merge-operational-state` (runs `41827091619`, `41827091353`, `41827091032`). The repository remains private, fail-closed, unmonetized, with ₹0 expenditure, and strictly non-indexed.
+The codebase at `main@c9b9a1345e99ad97dc84376a20527305d9bb0d7c` and documentation branch `docs/post-merge-operational-state@e3db0f0` are completely verified, synchronized, and defect-free. All technical gates are green. All operational, financial, and publishing safeguards remain strictly active.

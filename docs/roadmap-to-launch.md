@@ -34,7 +34,7 @@
 
 Branch: `docs/post-merge-operational-state` (documentation corrections [draft PR #7](https://github.com/hithisisakii09/stackpilot-ai/pull/7); active)
 Merged: `feature/phase-1-1-recommendation-engine` → `main` at `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`
-Primary private preview: `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app` (Netlify — historical PR #1 preview; recheck via dashboard for current state)
+Primary private preview: `https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app` (Netlify — active preview for draft PR #7; `deploy-preview-1` remains historical for merged PR #1)
 Netlify production: `c8fadcbf799e45ec41db2278aa7f84bb48c99895` per owner verification (Auto Publishing is Locked; not auto-promoted)
 Legacy Vercel project: **deleted by owner** — do not recreate
 
