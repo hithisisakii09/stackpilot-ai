@@ -9,7 +9,7 @@
 | Source | Evidence at verified commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c` (post-merge `main`) | Limit |
 | --- | --- | --- |
 | GitHub draft PR #1 | Branch `feature/phase-1-1-recommendation-engine` **merged** into `main` on 2026-11-04 by owner authorization; merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`. Historical baseline: draft PR #1 was open and **unmerged** at `c6e72f294f55b6a80863d7c5f396333d3a44171d`; `main` previously at `c8fadcbf799e45ec41db2278aa7f84bb48c99895`. A documentation correction branch `docs/post-merge-operational-state` is open as a new draft PR; that PR must remain draft and unmerged until explicit owner authorization. | No subsequent PR may merge to `main` without fresh explicit owner authorization |
-| GitHub Actions CI on `main` | **Owner verified 2026-11-04:** all CI jobs green for merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c` — tests, validate, build, ops-report all passed. | Chromium browser-qa workflow requires manual dispatch (triggers on PR or `workflow_dispatch` only, not on push to main). |
+| GitHub Actions CI on `main` | **Owner verified 2026-11-04:** all CI jobs green for merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c` (build run `41806714878`). Chromium browser-qa dispatched via `workflow_dispatch` on `main` (run `41843736149`) — **SUCCESS** (25 desktop + 25 mobile + axe scans passed). | Remote protected preview UAT is separately reported. |
 | Validate/build CI | **SUCCESS**; **466/466 tests** (expanded with WCAG 2.1 AA accessibility landmarks, skip-link navigation, CWE-1236 CSV spreadsheet formula injection hardening, and core engine edge-case stress suites), 25 generated HTML routes, 226 internal links, 10 HTML asset references, `npm audit` 0 vulnerabilities | Exact-SHA CI evidence; does not prove hosted access or vendor claim accuracy |
 | Safety/operations CI | **SUCCESS**; private preview package: 25 pages / 40 files / 257,462 bytes (CI/Linux); anonymous CI canary returned HTTP 401 on two fixed routes | Two fixed-path probes are not exhaustive anonymous-access or authentication verification |
 | Chromium browser CI | **SUCCESS**; 25/25 desktop and 25/25 mobile accessibility sweeps; axe WCAG 2.1 A/AA checks passed; browser acceptance passed for all three advisor scenarios, six software profiles, comparisons, and buyer tools | Headless Chromium in Linux container against built assets, not authenticated physical device testing of remote preview (not authenticated testing of the remote Netlify preview) |
@@ -64,6 +64,8 @@
 ## References
 
 - [Merged PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) (merged 2026-11-04; was: GitHub draft PR #1)
+- [Draft PR #7](https://github.com/hithisisakii09/stackpilot-ai/pull/7) (documentation state reconciliation)
+- [Post-merge verification report](post-merge-verification-report.md)
 - [Phase 3 Quality, Security, and Trust Audit](publisher-readiness/2026-11-03-phase-3-quality-security-and-trust-audit.md)
 
 - [Privacy inventory and data flows](privacy-inventory-and-data-flows.md)

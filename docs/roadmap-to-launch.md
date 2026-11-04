@@ -32,10 +32,10 @@
 
 > **Updated 2026-11-04:** PR #1 (`feature/phase-1-1-recommendation-engine` → `main`) was merged by the owner. The active development branch is now `docs/post-merge-operational-state` (documentation corrections, draft PR — do not merge without owner authorization). The former draft PR #1 URL is https://github.com/hithisisakii09/stackpilot-ai/pull/1 (now merged/closed).
 
-Branch: `docs/post-merge-operational-state` (documentation corrections draft PR; active)
+Branch: `docs/post-merge-operational-state` (documentation corrections [draft PR #7](https://github.com/hithisisakii09/stackpilot-ai/pull/7); active)
 Merged: `feature/phase-1-1-recommendation-engine` → `main` at `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`
 Primary private preview: `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app` (Netlify — historical PR #1 preview; recheck via dashboard for current state)
-Netlify production: `main` — which commit is served requires **owner dashboard verification** (Auto Publishing was Locked)
+Netlify production: `c8fadcbf799e45ec41db2278aa7f84bb48c99895` per owner verification (Auto Publishing is Locked; not auto-promoted)
 Legacy Vercel project: **deleted by owner** — do not recreate
 
 To pick up any future work: read `docs/current-operational-state.md`, inspect the latest `main` SHA and Netlify private status; run `npm test`, `npm run research:evidence`, `npm run ops:backlog -- --json` and Chromium browser QA. Do not claim a phase complete until exact-commit CI confirms.
