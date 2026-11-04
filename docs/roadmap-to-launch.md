@@ -1,7 +1,7 @@
 # StackPilot AI — From Protected Preview to Commercial Launch
 
-**Status: Netlify PRIVATE Deploy Preview in use, older Netlify production privately visible and auto-publishing LOCKED per owner screenshots. GitHub main remains unchanged; no public commercial launch.**
-**Current evidence and limitations:** `docs/current-operational-state.md`. Vercel Hobby is a legacy, build-rate-limited preview, not the commercial host.
+**Status: PR #1 merged into `main` on 2026-11-04 (merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`). Netlify production visibility remains Private and Auto Publishing Locked per owner screenshots — which commit production now serves requires owner verification. No public commercial launch.**
+**Current evidence and limitations:** `docs/current-operational-state.md`. Vercel Hobby is a deleted legacy project; do not recreate.
 **Required workflow:** read `AGENTS.md`; use gstack architecture/review/QA and Superpowers plans/TDD/debug/verification on every sprint.
 
 ## Phase gates
@@ -24,16 +24,18 @@
 - No automatic conversion from vendor-source lead to verified fact: **the current static system cannot authenticate editors or approve claims**.
 - No production merge, public domain/indexing, traffic acquisition, affiliate link activation, payments or real-user tracking without separate authorization.
 - No fabricated approval history, fictitious reviews or guesswork about vendor pricing.
-- Free Vercel Hobby has commercial-use limitations; review plan eligibility before monetization.
+- Free Vercel Hobby has commercial-use limitations; the former Vercel project was deleted by the owner — do not recreate it.
 - A protected Netlify Deploy Preview's SUCCESS status is not a public launch or a substitute for live authenticated browser testing. The owner reported an earlier successful login/Incognito check; exact new SHAs still require separate remote QA.
-- Confirm older `main` production target and avoid disrupting it.
+- Confirm current Netlify production commit via dashboard and avoid disrupting it.
 
 ## Current handoff
 
-Branch: `feature/phase-1-1-recommendation-engine`
-Draft PR: https://github.com/hithisisakii09/stackpilot-ai/pull/1
-Primary private preview: `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app` (Netlify)
-Existing Netlify privately visible production: `main@c8fadcb` as of owner screenshot, **do not unlock or replace**
-Legacy noncommercial Vercel preview: `masher2/stackpilot-ai` (Hobby build-rate limit)
+> **Updated 2026-11-04:** PR #1 (`feature/phase-1-1-recommendation-engine` → `main`) was merged by the owner. The active development branch is now `docs/post-merge-operational-state` (documentation corrections, draft PR — do not merge without owner authorization). The former draft PR #1 URL is https://github.com/hithisisakii09/stackpilot-ai/pull/1 (now merged/closed).
 
-To pick up any future work: read `docs/current-operational-state.md`, inspect the latest PR SHA and Netlify private status; run `npm test`, `npm run research:evidence`, `npm run ops:backlog -- --json` and Chromium browser QA. Do not claim a phase complete until exact-commit CI confirms.
+Branch: `docs/post-merge-operational-state` (documentation corrections draft PR; active)
+Merged: `feature/phase-1-1-recommendation-engine` → `main` at `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`
+Primary private preview: `https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app` (Netlify — historical PR #1 preview; recheck via dashboard for current state)
+Netlify production: `main` — which commit is served requires **owner dashboard verification** (Auto Publishing was Locked)
+Legacy Vercel project: **deleted by owner** — do not recreate
+
+To pick up any future work: read `docs/current-operational-state.md`, inspect the latest `main` SHA and Netlify private status; run `npm test`, `npm run research:evidence`, `npm run ops:backlog -- --json` and Chromium browser QA. Do not claim a phase complete until exact-commit CI confirms.

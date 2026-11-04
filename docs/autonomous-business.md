@@ -6,7 +6,7 @@
 Run an independent, AI-assisted SaaS discovery and affiliate business with minimal routine manual oversight, not a static list of products. Automation must remain truthful, auditable, rate-limited and compliant.
 
 ## Actual runtime components
-1. **GitHub + Netlify Private Deploy Preview**: Astro site, draft PR #1, private Netlify preview, unit/build/accessibility/browser CI. Old privately visible Netlify production remains on `main@c8fadcb` per owner screenshot with auto publishing locked. Legacy Vercel Hobby preview is rate-limited and not the production/commercial platform.
+1. **GitHub + Netlify**: Astro site, `main` at merged commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c` (PR #1 merged 2026-11-04), private Netlify preview, unit/build/accessibility/browser CI. Active development branch is `docs/post-merge-operational-state` (documentation corrections draft PR). Netlify production visibility remains Private and Auto Publishing Locked per owner screenshots — which commit production now serves requires owner dashboard verification. Former draft PR #1 is now merged/closed. Legacy Vercel Hobby project was **deleted by owner**; do not recreate.
 2. **Daily autonomous operator task** (ChatGPT scheduled task): review StackPilot GitHub and the Netlify private preview, prioritize fixes, make test-first development-branch changes when tools/permissions permit, and escalate genuine owner approvals.
 3. **Hourly incident watch** (ChatGPT scheduled task): watch CI, deployment state, safety boundaries, and material failures; notify only for meaningful changes.
 4. **`npm run ops:report`**: purely local policy engine; shows actionable work and blockers. Machine output: `npm run ops:report -- --json`.

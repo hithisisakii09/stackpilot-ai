@@ -66,7 +66,7 @@ npm run ops:report
 npm run ops:report -- --json
 ```
 
-The decision policy is in `src/lib/autonomy-policy.mjs`. A read-only GitHub Actions workflow generates downloadable `stackpilot-operations-report` artifacts from the draft PR. Three ChatGPT recurring tasks are enabled outside the app: daily autonomous operator, daily growth agent, and hourly incident watch. Their existence does not activate external affiliate programs or guarantee agent-run development success. For the full operating model and one-time approvals, read `docs/autonomous-business.md` and private GitHub issue #2.
+The decision policy is in `src/lib/autonomy-policy.mjs`. A read-only GitHub Actions workflow generates downloadable `stackpilot-operations-report` artifacts from pull requests or manual dispatch. Three ChatGPT recurring tasks are enabled outside the app: daily autonomous operator, daily growth agent, and hourly incident watch. Their existence does not activate external affiliate programs or guarantee agent-run development success. For the full operating model and one-time approvals, read `docs/autonomous-business.md` and private GitHub issue #2.
 
 
 ## ₹0 hosting policy and private Netlify preview
@@ -74,7 +74,7 @@ The decision policy is in `src/lib/autonomy-policy.mjs`. A read-only GitHub Acti
 Owner operating budget: **₹0/month**, delegated spend: **₹0**. The current private Deploy Preview is [hosted on Netlify](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/); its [build identity page](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/preview-build/) displays the source commit used for the preview. This is a protected development preview, **not** public launch approval.
 
 - Owner screenshots dated 2026-11-02 showed Netlify production and preview visibility **Private**, Auto Publishing **Locked**, the Free plan at **$0.00**, 300 monthly credits with 285 remaining, and no Add-ons section visible. The owner also reported no charges in the checked billing history. These are point-in-time owner observations, not a future billing guarantee; recheck the provider UI before consequential decisions.
-- The older private production deployment remains on `main`; do not replace or unlock it without separate owner authorization. GitHub draft PR #1 remains unmerged.
+- Production `main` is now at merged commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c` (PR #1 merged 2026-11-04). Netlify production visibility remains Private and Auto Publishing Locked per owner screenshots — which commit production now serves requires owner dashboard verification. Do not unlock or replace without separate owner authorization.
 - **Netlify Web Analytics is enabled at the hosting layer.** The application itself has no client-side analytics script or tracking cookies, but Netlify Web Analytics derives aggregated reports from CDN logs and the provider may process network/access logs. Final privacy, retention, and legal review remains outstanding; do not describe the overall hosting setup as analytics-free.
 - `netlify.toml`, `public/_headers`, and `config/operating-policy.json` prepare the static site and preserve noindex/budget safeguards. **Noindex and `robots.txt` do not enforce authentication**; Netlify project visibility is a separate control.
 - The former Vercel project was deleted by the owner. Do not recreate it, reconnect it, deploy to it, or pay for an upgrade. Cloudflare Pages Free remains an unconnected fallback candidate only.

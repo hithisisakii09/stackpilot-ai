@@ -1,16 +1,18 @@
 # StackPilot AI — Current operational state and safe next actions
 
-**Snapshot date:** 2026-11-03 (Asia/Kolkata). **Type:** dated development handoff, not a live Netlify account-state guarantee or public-release approval. Before consequential actions, fetch the current [draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1), exact head SHA, matching GitHub Actions runs, and Netlify commit status. This snapshot records the last verified application-code and readiness audit checkpoint.
+> **POST-MERGE UPDATE (2026-11-04):** GitHub draft PR #1 was merged into `main` by the owner on 2026-11-04. The merged `main` SHA is `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`. All 466 tests pass on `main`. The feature branch `feature/phase-1-1-recommendation-engine` is now a historical/inactive branch. The historical record of when draft PR #1 was **unmerged** is preserved below for provenance; do not merge any subsequent PR to `main` without fresh explicit owner authorization.
+
+**Snapshot date:** 2026-11-04 (Asia/Kolkata). **Type:** dated development handoff, not a live Netlify account-state guarantee or public-release approval. Before consequential actions, fetch the current [merged PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) (now closed), exact head SHA, matching GitHub Actions runs, and Netlify commit status. This snapshot records the last verified application-code and readiness audit checkpoint.
 
 ## Last verified application-code and readiness audit checkpoint
 
-| Source | Evidence at verified commit `c6e72f294f55b6a80863d7c5f396333d3a44171d` | Limit |
+| Source | Evidence at verified commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c` (post-merge `main`) | Limit |
 | --- | --- | --- |
-| GitHub draft PR #1 | Branch `feature/phase-1-1-recommendation-engine`, open, **draft and unmerged**; `main` remains at `c8fadcbf799e45ec41db2278aa7f84bb48c99895` | PR #1 must remain draft and unmerged until explicit owner authorization |
+| GitHub draft PR #1 | Branch `feature/phase-1-1-recommendation-engine` **merged** into `main` on 2026-11-04 by owner authorization; merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`. Historical baseline: draft PR #1 was open and **unmerged** at `c6e72f294f55b6a80863d7c5f396333d3a44171d`; `main` previously at `c8fadcbf799e45ec41db2278aa7f84bb48c99895`. A documentation correction branch `docs/post-merge-operational-state` is open as a new draft PR; that PR must remain draft and unmerged until explicit owner authorization. | No subsequent PR may merge to `main` without fresh explicit owner authorization |
 | Validate/build CI | **SUCCESS**; **466/466 tests** (expanded with WCAG 2.1 AA accessibility landmarks, skip-link navigation, CWE-1236 CSV spreadsheet formula injection hardening, and core engine edge-case stress suites), 25 generated HTML routes, 226 internal links, 10 HTML asset references, `npm audit` 0 vulnerabilities | Exact-SHA CI evidence; does not prove hosted access or vendor claim accuracy |
 | Safety/operations CI | **SUCCESS**; private preview package: 25 pages / 40 files / 257,462 bytes (CI/Linux); anonymous CI canary returned HTTP 401 on two fixed routes | Two fixed-path probes are not exhaustive anonymous-access or authentication verification |
 | Chromium browser CI | **SUCCESS**; 25/25 desktop and 25/25 mobile accessibility sweeps; axe WCAG 2.1 A/AA checks passed; browser acceptance passed for all three advisor scenarios, six software profiles, comparisons, and buyer tools | Headless Chromium in Linux container against built assets, not authenticated physical device testing of remote preview (not authenticated testing of the remote Netlify preview) |
-| Netlify Deploy Preview | Commit status **SUCCESS** for the same SHA: [private preview](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/) | Provider build status does not prove authenticated route UAT, anonymous denial, current visibility settings, or live headers |
+| Netlify Deploy Preview | Commit status **SUCCESS** for the same SHA: [private preview](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/) — this is now a historical artifact as PR #1 is merged. Anonymous probe from local machine returned HTTP 401. Owner must verify via Netlify dashboard whether production auto-promoted or remains at `c8fadcb`. | Provider build status does not prove authenticated route UAT, anonymous denial, current visibility settings, or live headers. Which commit production currently serves is BLOCKED pending owner verification. |
 | Owner-observed build identity | On 2026-11-02, owner screenshot showed the authenticated [preview identity page](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/preview-build/) displaying full SHA `ff88a68691e5cf8705250cca5245f03a7fa06957` and `Expected preview PR: 1`, matching PR #1 at that time; fresh observation required for later commits | Visual match of build-time metadata only—not cryptographic provenance, all-served-assets proof, remote route QA, security verification, or release approval |
 | Netlify billing snapshot | Owner screenshots showed Free at **$0.00**, 300 monthly credits with **285 remaining**, and Auto Publishing Locked; owner reported no charges | Point-in-time owner observation, not a future billing guarantee or commercial/legal approval |
 
@@ -33,34 +35,34 @@
 
 ## Working platform and unchangeable current authorization boundary
 
-- **Source:** private GitHub `hithisisakii09/stackpilot-ai`. Development on `feature/phase-1-1-recommendation-engine` and **draft PR #1**; do not merge to `main`.
-- **Primary private preview:** Netlify Deploy Preview [`deploy-preview-1--inspiring-chaja-cfb85f.netlify.app`](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/). Recheck status and build identity on fresh pushes. Do not assume anonymous access is blocked until independently verified; **noindex is not authentication**.
-- **Production:** the older private Netlify production deployment remains on `main@c8fadcbf799e45ec41db2278aa7f84bb48c99895`. Owner screenshots dated 2026-11-02 showed production and preview visibility **Private** and Auto Publishing **Locked**. These are point-in-time observations; recheck in the provider UI before consequential decisions. **Do not unlock, promote, publicize, add public DNS, remove noindex, or change visibility** without separate explicit owner authorization.
+- **Source:** private GitHub `hithisisakii09/stackpilot-ai`. `main` is now at merged commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`. Feature branch `feature/phase-1-1-recommendation-engine` is a historical/inactive branch. Active documentation work is on `docs/post-merge-operational-state` as a draft PR; do not merge.
+- **Primary private preview:** Netlify Deploy Preview [`deploy-preview-1--inspiring-chaja-cfb85f.netlify.app`](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/). This was the preview for PR #1 (now merged/closed). Recheck status via Netlify dashboard. Do not assume anonymous access is blocked until independently verified; **noindex is not authentication**.
+- **Production:** the Netlify production deployment may remain on `main@c8fadcbf799e45ec41db2278aa7f84bb48c99895` (Auto Publishing was Locked per owner screenshots) or may have auto-promoted to `c9b9a1345e99ad97dc84376a20527305d9bb0d7c` after the merge — **BLOCKED, owner must verify via Netlify dashboard**. Anonymous probe of `inspiring-chaja-cfb85f.netlify.app` returned HTTP 401. Owner screenshots dated 2026-11-02 showed production and preview visibility **Private** and Auto Publishing **Locked**. These are point-in-time observations; recheck in the provider UI before consequential decisions. **Do not unlock, promote, publicize, add public DNS, remove noindex, or change visibility** without separate explicit owner authorization.
 - **Vercel:** owner **deleted the former Vercel project** and instructed us to stop deploying there. Do not recreate, trigger a Vercel deployment or infer current production outage from historical Vercel quota reports.
 - **Operating limits:** `config/operating-policy.json` fixes monthly budget **₹0**, delegated spend **₹0**, `hostingCandidate: netlify-free`, and **false** for `commercialHostingApproved`, `productionLaunchApproved`, `affiliateActivationApproved`, `paidServicesApproved`. No payments, vendor applications, paid services, contracts, legal assent or banking/KYC work in an autonomous cycle. Netlify Web Analytics is enabled at the hosting layer; the final privacy/retention review is still open.
 - **Working publisher name:** ToolChoice Lab, pending trademark/identity/legal review. Owner-provided contact information is **not by itself permission** to publish it or assert business verification.
 
 ## Outstanding release blockers (all remain NO-GO)
 
-1. **Authenticated actual-host UAT:** an authorized human must confirm the Netlify Deploy Preview shows the **same exact head SHA**, exercise every emitted route with the private `uat-cases.csv` and record minimal non-sensitive evidence. Local GitHub Chromium tests are not sufficient.
+1. **Authenticated actual-host UAT:** an authorized human must confirm the Netlify Deploy Preview (or production) shows the **same exact head SHA** `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`, exercise every emitted route with the private `uat-cases.csv` and record minimal non-sensitive evidence. Local GitHub Chromium tests are not sufficient.
 2. **Anonymous access denial:** independently verify the current private preview refuses unauthenticated content. A login redirect alone must not be reported as exhaustive access-control proof. Never request passwords, cookies, private headers or tokens in chat/GitHub.
 3. **Live HTTP security/privacy:** compare real hosted security headers and noindex response with the local `_headers`, verify analytics behavior and provider-side access controls. Source files do not prove network responses.
-4. **Netlify account/terms:** authorized owner checks current Private/Locked settings, commercial use and plan entitlement, billing, usage/credit limits, possible stored payment methods and provider-side analytics controls. No upgrades permitted.
-5. **Editorial, publisher and legal:** original buyer guides and all 6 vendor candidate records still require real evidence review and appropriate legal/privacy/disclosure/brand verification. Affiliate program applications, approval, tracking, real traffic and earnings remain unverified or absent. There is no revenue claim.
+4. **Netlify account/terms:** authorized owner checks current Private/Locked settings, which commit production now serves (auto-promoted or still `c8fadcb`?), commercial use and plan entitlement, billing, usage/credit limits, possible stored payment methods and provider-side analytics controls. No upgrades permitted.
+5. **Editorial, publisher and legal:** original buyer guides and all 6 vendor candidate records still require real evidence review and appropriate legal/privacy/disclosure/brand verification. Affiliate program applications, approval, tracking, real traffic and earnings remain unverified or absent. There is no revenue claim. No affiliate activation is authorized.
 6. **Separate publication authorization:** only the owner may approve production/public visibility, indexing, merge, domain, contracts, and partner activation after evidence. A code commit, CI green, autonomous-agent report, closed issue, or historical screenshot cannot provide that authority.
 
 ## Next safe autonomous actions
 
-1. **Refresh source facts first:** inspect PR #1, commit SHA, exact-head Actions runs and Netlify commit status; inspect `AGENTS.md`, this handoff, `config/operating-policy.json`, and release gates. Do not report a stale checkout as current.
+1. **Refresh source facts first:** inspect merged PR #1, current `main` SHA `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`, exact-head Actions runs and Netlify commit status; inspect `AGENTS.md`, this handoff, `config/operating-policy.json`, and release gates. Do not report a stale checkout as current.
 2. **Keep preparing private buyer value:** original research, synthetic sample data, accessibility, validation, local browser QA and non-secret owner checklists. Do not mark vendor claims verified, manufacture visitors or use public SEO indexing before approval.
 3. **Prefer material blockers over redundant tools:** fix failing tests/security/accessibility; maintain exact-SHA human UAT packet; do not keep adding calculators just to increase page count.
-4. **Follow test-first discipline** on new engineering behavior (Superpowers RED→GREEN, gstack plan/review/QA) and identify exact current run IDs and outcomes in PR #1. Do not install external scripts without consent.
+4. **Follow test-first discipline** on new engineering behavior (Superpowers RED→GREEN, gstack plan/review/QA). Do not install external scripts without consent.
 5. **Keep owner tasks bounded:** a reviewer can supply *non-sensitive conclusions* (e.g. route passed/failed, hosted status), but real credentials, KYC, payment methods, contracts and legal documents remain outside GitHub/chat.
 6. **Do not duplicate existing daily autonomous operator, growth agent and hourly incident watch.** They may prepare research/advisories under the same NO-GO policy; they may not autonomously authorize production or spend.
 
 ## References
 
-- [Private draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1)
+- [Merged PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) (merged 2026-11-04; was: GitHub draft PR #1)
 - [Phase 3 Quality, Security, and Trust Audit](publisher-readiness/2026-11-03-phase-3-quality-security-and-trust-audit.md)
 
 - [Privacy inventory and data flows](privacy-inventory-and-data-flows.md)
@@ -79,4 +81,4 @@
 - [Organic growth research roadmap](growth/2026-10-31-zero-budget-organic-acquisition-pipeline.md)
 - `docs/roadmap-to-launch.md`, `docs/zero-budget-hosting.md` and `AGENTS.md`.
 
-**Overall verdict: ENGINEERING PREVIEW CHECKPOINT PASSED, PUBLIC RELEASE NO-GO.** Neither this dated checkpoint nor subsequent independent CI successes can bypass owner-only gates.
+**Overall verdict: PR #1 MERGED TO MAIN — ENGINEERING CHECKPOINT PASSED, PUBLIC RELEASE NO-GO.** Neither this dated checkpoint nor subsequent independent CI successes can bypass owner-only gates.
