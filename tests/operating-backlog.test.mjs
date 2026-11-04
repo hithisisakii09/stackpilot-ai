@@ -142,7 +142,7 @@ test('packet manifest points to a real private six-vendor source note without cl
   const content=readFileSync(new URL('../docs/editorial-drafts/2026-11-03-plan-scoped-vendor-evidence-review.md',import.meta.url),'utf8');
   for(const product of products) assert.ok(content.includes('## '+product.name));
   assert.match(content,/Approved claims: 0/);
-  assert.match(content,/not independently tested/i);
+  assert.match(content,/No customer account, paid plan/i);
 });
 
 test('does not mutate caller data or leak referral URLs', () => {
