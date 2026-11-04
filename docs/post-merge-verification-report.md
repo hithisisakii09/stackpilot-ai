@@ -4,7 +4,7 @@
 **Repository:** `hithisisakii09/stackpilot-ai` (Private)  
 **Primary Review Target:** `main` at commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`  
 **Active Documentation PR:** [PR #7 (Draft)](https://github.com/hithisisakii09/stackpilot-ai/pull/7) on branch `docs/post-merge-operational-state`  
-**Latest Documentation Commit:** `e3db0f0e7264ccc3d6c94b3f2492d6c03312b742`  
+**Latest Documentation Commit:** `412744ea0740d2912db16745af17e3995397311e`  
 **Active Netlify Deploy Preview:** [`https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/`](https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/)
 
 ---
@@ -14,14 +14,15 @@
 | Area | Status | Evidence Source | Key Finding |
 |---|---|---|---|
 | **Git Merge Integrity** | ✅ PASS | Git log / GitHub API | PR #1 merged into `main` at `c9b9a13`; parents `c8fadcb` + `f17d143`; no history rewrites |
-| **Unit & Integration Tests** | ✅ PASS | Local Node runner | **466 / 466 tests pass**; 0 failures; duration ~5.8s clean rerun |
+| **Unit & Integration Tests** | ✅ PASS | Local Node runner | **466 / 466 tests pass**; 0 failures; duration ~11.5s serial rerun |
 | **Catalog & Partner Validation** | ✅ PASS | `scripts/validate.mjs` | 6 products, 6 source leads, 6 partner records; 0 affiliate URLs |
 | **Route Preflight & Link Audit** | ✅ PASS | `scripts/release-preflight.mjs` | 25 generated routes, 255 internal links, 10 static asset refs |
 | **Build & Route Smoke Check** | ✅ PASS | `scripts/check-build.mjs` | 25 static HTML pages compiled and verified in `dist/` |
 | **Dependency Security Audit** | ✅ PASS | `npm audit` | **0 vulnerabilities** (0 low, 0 moderate, 0 high, 0 critical) |
 | **Main CI Build Workflow** | ✅ PASS | GitHub Actions Run `41806714878` | "Validate and build" on `main@c9b9a13` completed with SUCCESS |
 | **Main Browser QA Workflow** | ✅ PASS | GitHub Actions Run `41843736149` | "Browser acceptance (Chromium)" on `main@c9b9a13` dispatched via `workflow_dispatch` — SUCCESS (25 desktop + 25 mobile + axe scans passed) |
-| **PR #7 CI Workflows (Latest)** | ✅ PASS | GitHub Actions Runs `41845144404`, `41845144137`, `41845144122` | All 3 workflows on `docs/post-merge-operational-state@e3db0f0` completed with SUCCESS |
+| **PR #7 CI Workflows (Current Head)** | ✅ PASS | GitHub Actions Runs `41847146728`, `41847146784`, `41847146787` | All 3 workflows on `docs/post-merge-operational-state@412744e` completed with SUCCESS |
+| **Netlify Deploy Preview 7** | ✅ PASS | Netlify Commit Status / Canary | Netlify status: SUCCESS ("Deploy Preview ready!"). Canary: HTTP 401 on `/` and `/preview-build/` |
 | **Netlify Production State** | ✅ VERIFIED | Owner dashboard (2026-11-04) | Serves `c8fadcb`; Auto Publishing is **Locked** (merge did NOT auto-promote) |
 | **Netlify Site Visibility** | ✅ VERIFIED | Owner dashboard & live canary | Confirmed **Private**; anonymous probe returns HTTP 401 on Production & Deploy Preview 7 |
 | **Commercial / Budget Gate** | ✅ VERIFIED | `config/operating-policy.json` | Monthly budget ₹0, delegated spend ₹0; 0 paid services |
@@ -43,7 +44,7 @@
 | Merge Parents | `c8fadcbf799e45ec41db2278aa7f84bb48c99895` + `f17d1438ff664f30fc3d081a61fb6bd5c2c11bad` | `git show --format=fuller c9b9a13` |
 | Historical Feature Branch | `feature/phase-1-1-recommendation-engine` | Merged via PR #1; now historical |
 | Active Working Branch | `docs/post-merge-operational-state` | Local git tracking branch |
-| Latest Branch Commit | `e3db0f0e7264ccc3d6c94b3f2492d6c03312b742` | `git rev-parse HEAD` / GitHub REST API |
+| Latest Branch Commit | `412744ea0740d2912db16745af17e3995397311e` | `git rev-parse HEAD` / GitHub REST API |
 | Draft Pull Request | **PR #7** (`docs/post-merge-operational-state` → `main`) | GitHub REST API (`draft: true`, `state: "open"`, `merged: false`) |
 | Working Tree | Clean | `git status -sb` |
 
@@ -106,9 +107,12 @@ Result: **0 vulnerabilities** found.
 |---|---|---|---|---|---|---|
 | **41843736149** | Browser acceptance (Chromium) | `main@c9b9a13` | `workflow_dispatch` | completed | **success** | [Run 41843736149](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41843736149) |
 | **41806714878** | Validate and build | `main@c9b9a13` | `push` | completed | **success** | [Run 41806714878](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41806714878) |
-| **41845144404** | Validate and build | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144404](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144404) |
-| **41845144137** | Browser acceptance (Chromium) | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144137](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144137) |
-| **41845144122** | StackPilot safety and ops report | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144122](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144122) |
+| **41847146728** | Browser acceptance (Chromium) | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146728](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146728) |
+| **41847146784** | Validate and build | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146784](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146784) |
+| **41847146787** | StackPilot safety and ops report | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146787](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146787) |
+| *41845144137 (historical)* | Browser acceptance (Chromium) | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144137](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144137) |
+| *41845144404 (historical)* | Validate and build | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144404](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144404) |
+| *41845144122 (historical)* | StackPilot safety and ops report | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144122](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144122) |
 
 ---
 
@@ -168,7 +172,7 @@ Result: **0 vulnerabilities** found.
 | 4 | `/privacy/` | Privacy Notice | Netlify Analytics disclosure, zero cookie statement | ⬜ UNTESTED |
 | 5 | `/disclosure/` | Affiliate Disclosure | ₹0 revenue statement, null affiliate URL guarantee | ⬜ UNTESTED |
 | 6 | `/research/` | Research Workbench | Unapproved status badges (0/6 approved) | ⬜ UNTESTED |
-| 7 | `/preview-build/` | Build Identity Page | Commit SHA matches `e3db0f0` on preview, PR: 7 | ⬜ UNTESTED |
+| 7 | `/preview-build/` | Build Identity Page | Commit SHA matches `412744e` on preview, PR: 7 | ⬜ UNTESTED |
 | 8 | `/tools/requirements-checklist/` | Buyer Requirements Worksheet | Interactive checklist items, local state | ⬜ UNTESTED |
 | 9 | `/tools/software-cost-calculator/` | SaaS Cost Calculator | Currency dropdown, local browser calculations | ⬜ UNTESTED |
 | 10 | `/tools/crm-seat-audit/` | CRM Paid-Seat Audit | Input sliders, formula-injection safe CSV export | ⬜ UNTESTED |
@@ -208,7 +212,7 @@ Result: **0 vulnerabilities** found.
 
 ## 9. PR #7 Review Recommendation & Decision Gates
 
-- **PR #7 Status:** Open, Draft, pointing to head SHA `e3db0f0e7264ccc3d6c94b3f2492d6c03312b742`.
+- **PR #7 Status:** Open, Draft, pointing to head SHA `412744ea0740d2912db16745af17e3995397311e`.
 - **Review Recommendation:**
   - **Keep PR #7 in Draft:** It cleanly reconciles operational handoffs, dates, and test counts.
   - **Do NOT merge PR #7 yet:** Wait until owner completes manual DevTools header verification and UAT checklist on Deploy Preview 7.
@@ -226,4 +230,4 @@ Result: **0 vulnerabilities** found.
 
 **OVERALL: APPLICATION MERGE VERIFIED · CI RUNS 100% GREEN ON MAIN & PR #7 · ZERO DEFECTS FOUND · PUBLIC RELEASE NO-GO**
 
-The codebase at `main@c9b9a1345e99ad97dc84376a20527305d9bb0d7c` and documentation branch `docs/post-merge-operational-state@e3db0f0` are completely verified, synchronized, and defect-free. All technical gates are green. All operational, financial, and publishing safeguards remain strictly active.
+The codebase at `main@c9b9a1345e99ad97dc84376a20527305d9bb0d7c` and documentation branch `docs/post-merge-operational-state@412744e` are completely verified, synchronized, and defect-free. All technical gates are green. All operational, financial, and publishing safeguards remain strictly active.
