@@ -26,8 +26,8 @@ test('prepared evidence packets stop repeating P30 drafting while every claim st
   assert.equal(result.metrics.preparedEvidencePackets,6);
   assert.equal(result.metrics.editorialReviewsPending,6);
   assert.equal(result.automatic.filter(t=>t.action==='draft-evidence-review').length,0);
-  assert.equal(result.automatic.filter(t=>t.action==='locate-official-program').length,1);
-  assert.equal(result.automatic.filter(t=>t.action==='recheck-program-eligibility').length,5);
+  assert.equal(result.automatic.filter(t=>t.action==='locate-official-program').length,0);
+  assert.equal(result.automatic.filter(t=>t.action==='recheck-program-eligibility').length,0);
   assert.ok(result.automatic.every(t=>t.autonomy==='automatic' && !t.claimsApproved));
   assert.ok(result.ownerGates.some(g=>g.id==='editorial-approval'));
 });
@@ -65,11 +65,13 @@ test('unrecorded sources produce research collection tasks, never approvals', ()
   assert.ok(result.automatic.every(t=>!['approve-evidence','publish-production','activate-affiliate'].includes(t.action)));
 });
 
-test('affiliate candidates get research tasks, not real applications', () => {
+test('fresh affiliate research reviews do not repeat as daily tasks or grant applications', () => {
   const result=buildOperatingBacklog(make());
   assert.equal(result.automatic.filter(t=>t.action==='recheck-program-eligibility').length,5);
   assert.equal(result.automatic.filter(t=>t.action==='locate-official-program').length,1);
-  assert.equal(result.metrics.programDiscoveryGaps,1);
+  assert.equal(result.metrics.programDiscoveryGaps,0);
+  assert.equal(result.metrics.programsWithoutPublicAffiliateProgram,1);
+  assert.equal(result.metrics.affiliateReviewsDue,0);
   assert.ok(result.automatic.every(t=>!['submit-application','activate-affiliate','accept-contract','pay'].includes(t.action)));
 });
 
