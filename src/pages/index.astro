@@ -33,13 +33,6 @@ button?.addEventListener('click', () => {
       note.textContent = 'Important: ' + caution;
       section.append(note);
     }
-    const profileLink = document.createElement('a');
-    profileLink.href = '/software/' + product.id + '/';
-    profileLink.textContent = 'View ' + product.name + ' research profile';
-    profileLink.style.display = 'inline-block';
-    profileLink.style.marginRight = '14px';
-    section.append(profileLink);
-
     const link = document.createElement('a');
     link.href = product.website;
     link.textContent = 'Check details at the official provider';
