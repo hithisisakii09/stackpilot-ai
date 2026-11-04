@@ -109,7 +109,7 @@ Source:
 Vendor statements observed:
 - Ahrefs says workspace members share the workspace's limits.
 - Removing a member removes that member's access immediately.
-- If the removed member count exceeds the seats available on the plan, the User seats add-on enters a pending downgrade state that takes effect at the end of the billing period; the article says this applies to monthly and annual plans.
+- When a removed member was occupying an additional User seat beyond the plan's included seat allowance, Ahrefs says the User seats add-on enters a pending downgrade state that takes effect at the end of the billing period; the article says this applies to monthly and annual plans.
 - The page distinguishes Owner, Admin and Member capabilities and says workspace data, including search history and keyword lists, is shared between members.
 
 **Buyer caveat:** immediate access removal is not the same as an immediate subscription downgrade. Confirm the exact plan, add-on state and billing period. Shared workspace data and role visibility also deserve review before inviting or removing a member.
