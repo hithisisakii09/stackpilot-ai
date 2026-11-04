@@ -23,6 +23,9 @@ const pages = [
   'guides/saas-total-cost-of-ownership/index.html',
   'guides/crm-migration-checklist/index.html',
   'guides/hosting-migration-checklist/index.html',
+  'compare/hubspot-vs-pipedrive/index.html',
+  'compare/semrush-vs-ahrefs/index.html',
+  'compare/kinsta-vs-cloudways/index.html',
   ...products.map(p => `software/${p.id}/index.html`)
 ];
 for (const page of pages) {
@@ -34,6 +37,7 @@ for (const page of pages) {
 }
 const home = readFileSync('dist/index.html', 'utf8');
 assert.match(home, /\/compare\//);
+assert.match(home, /\/compare\/hubspot-vs-pipedrive\//);
 assert.match(home, /\/software\/hubspot\//);
 assert.match(home, /\/methodology\//);
 assert.match(home, /Affiliate disclosure/);
@@ -50,6 +54,7 @@ assert.match(worksheet,/Netlify Web Analytics is enabled at the hosting layer/);
 assert.doesNotMatch(worksheet,/No vendor scoring, referral links, accounts, analytics, or server submission/);
 const compare = readFileSync('dist/compare/index.html', 'utf8');
 for (const product of products) assert.ok(compare.includes(product.name), `Compare page omits ${product.name}`);
+assert.match(compare, /\/compare\/hubspot-vs-pipedrive\//);
 console.log(`Static route smoke passed for ${pages.length} pages`);
 
 assert.ok(existsSync('dist/robots.txt'), 'Prelaunch robots.txt missing');
