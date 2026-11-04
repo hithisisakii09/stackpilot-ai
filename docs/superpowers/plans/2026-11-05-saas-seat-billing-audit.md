@@ -69,5 +69,5 @@
 ## Status
 
 - [x] Branch created from the verified main checkpoint.
-- [ ] Research brief committed.
+- [x] Research brief committed in `1b5ec6030bae63ed170d511e21f664c2ded086d3`.
 - [ ] Draft PR and exact-head CI/preview verification complete.
