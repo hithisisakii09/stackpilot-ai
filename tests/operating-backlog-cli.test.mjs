@@ -9,7 +9,9 @@ test('read-only CLI produces bounded JSON queue with no real-world action',()=>{
  const q=run('scripts/operating-backlog.mjs');
  assert.equal(q.asOf,'2026-11-04');
  assert.equal(q.execution,'advisory-only');
- assert.equal(q.automatic.length,6);
+ assert.equal(q.automatic.length,0);
+ assert.equal(q.metrics.programsWithoutPublicAffiliateProgram,1);
+ assert.equal(q.metrics.affiliateReviewsDue,0);
  assert.equal(q.metrics.preparedEvidencePackets,6);
  assert.equal(q.metrics.editorialReviewsPending,6);
  assert.equal(q.ownerGates.length,4);
@@ -24,7 +26,7 @@ test('read-only CLI supports deterministic freshness reassessment',()=>{
 test('operations report exposes the backlog but still cannot launch',()=>{
  const r=run('scripts/ops-report.mjs',['--json']);
  assert.equal(r.researchBacklog.execution,'advisory-only');
- assert.equal(r.researchBacklog.automaticTasks,6);
+ assert.equal(r.researchBacklog.automaticTasks,0);
  assert.equal(r.researchBacklog.preparedEvidencePackets,6);
  assert.equal(r.researchBacklog.editorialReviewsPending,6);
  assert.equal(r.researchBacklog.ownerApprovalGates,4);
@@ -41,7 +43,7 @@ test('read-only GitHub CI archives the next-action queue without deploying',()=>
 });
 test('only safe action names appear in the queue, with zero earnings assertions',()=>{
  const x=run('scripts/operating-backlog.mjs');
- const allowed=new Set(['collect-primary-source','refresh-primary-source','draft-evidence-review','locate-official-program','recheck-program-eligibility']);
+ const allowed=new Set(['collect-primary-source','refresh-primary-source','draft-evidence-review','locate-official-program','recheck-program-eligibility','recheck-program-status']);
  assert.ok(x.automatic.every(t=>allowed.has(t.action)));
  assert.equal(x.metrics.verifiedRevenue,null);
  assert.equal(x.metrics.acceptedAffiliatePrograms,0);
