@@ -10,9 +10,9 @@ const handoffs=['AGENTS.md','docs/autonomous-business.md','docs/zero-budget-host
 test('single current handoff labels verified checkpoint versus unverified hosted observations',()=>{
  assert.ok(existsSync(state),'Missing authoritative operational status handoff');
  const s=read(state);
- assert.match(s,/Snapshot date:.*(2026-11-02|2026-11-03)/);
+ assert.match(s,/Snapshot date:.*(2026-11-02|2026-11-03|2026-11-04)/);
  assert.match(s,/\b(last\s+)?verified application-code.*checkpoint/i);
- assert.match(s,/(430|431|432|438|446|454|466)\/\1 tests/);
+ assert.match(s,/(430|431|432|438|446|454|466|468)\/\1 tests/);
  assert.match(s,/25 generated HTML routes/);
  assert.match(s,/226 internal links/);
  assert.match(s,/GitHub draft PR #1/);
