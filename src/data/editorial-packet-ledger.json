@@ -1,0 +1,62 @@
+[
+  {
+    "id": "vendor-evidence-review-ahrefs",
+    "productId": "ahrefs",
+    "documentPath": "docs/editorial-drafts/2026-11-03-plan-scoped-vendor-evidence-review.md",
+    "preparedOn": "2026-11-03",
+    "status": "prepared-unapproved",
+    "sourceIds": [
+      "ahrefs-official-source"
+    ]
+  },
+  {
+    "id": "vendor-evidence-review-cloudways",
+    "productId": "cloudways",
+    "documentPath": "docs/editorial-drafts/2026-11-03-plan-scoped-vendor-evidence-review.md",
+    "preparedOn": "2026-11-03",
+    "status": "prepared-unapproved",
+    "sourceIds": [
+      "cloudways-official-source"
+    ]
+  },
+  {
+    "id": "vendor-evidence-review-hubspot",
+    "productId": "hubspot",
+    "documentPath": "docs/editorial-drafts/2026-11-03-plan-scoped-vendor-evidence-review.md",
+    "preparedOn": "2026-11-03",
+    "status": "prepared-unapproved",
+    "sourceIds": [
+      "hubspot-official-source"
+    ]
+  },
+  {
+    "id": "vendor-evidence-review-kinsta",
+    "productId": "kinsta",
+    "documentPath": "docs/editorial-drafts/2026-11-03-plan-scoped-vendor-evidence-review.md",
+    "preparedOn": "2026-11-03",
+    "status": "prepared-unapproved",
+    "sourceIds": [
+      "kinsta-official-source"
+    ]
+  },
+  {
+    "id": "vendor-evidence-review-pipedrive",
+    "productId": "pipedrive",
+    "documentPath": "docs/editorial-drafts/2026-11-03-plan-scoped-vendor-evidence-review.md",
+    "preparedOn": "2026-11-03",
+    "status": "prepared-unapproved",
+    "sourceIds": [
+      "pipedrive-official-source"
+    ]
+  },
+  {
+    "id": "vendor-evidence-review-semrush",
+    "productId": "semrush",
+    "documentPath": "docs/editorial-drafts/2026-11-03-plan-scoped-vendor-evidence-review.md",
+    "preparedOn": "2026-11-03",
+    "status": "prepared-unapproved",
+    "sourceIds": [
+      "semrush-official-source"
+    ]
+  }
+]
