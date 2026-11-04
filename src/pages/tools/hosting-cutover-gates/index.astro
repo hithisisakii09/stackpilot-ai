@@ -31,13 +31,15 @@ button:disabled{opacity:.5;cursor:not-allowed}
 #gate-status{color:#ffe2a6;min-height:1.5em}
 footer{border-top:1px solid #405675;margin-top:20px}
 @media(max-width:650px){header,main,footer{padding:17px}.panel{padding:16px}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
 </style>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to main content</a>
 <header><nav aria-label="Primary navigation">
 <a href="/">← StackPilot AI</a><a href="/guides/hosting-migration-checklist/">Hosting migration guide</a><a href="/tools/requirements-checklist/">Requirements checklist</a><a href="/methodology/">Methodology</a>
 </nav></header>
-<main>
+<main id="main">
 <p>Private browser-only preparation tool</p>
 <h1>Hosting cutover gate assessor</h1>
 <p>Use five checkpoints to identify missing cutover evidence before asking your authorized owner to review a hosting migration. This tool is <strong>not an authorization</strong> to switch traffic, change DNS, spend money, stop an old server, or move customer data.</p>

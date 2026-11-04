@@ -4,7 +4,18 @@
  */
 import { isVendorSourceUrl } from './vendor-source.mjs';
 function assertUniqueProducts(products) {
-  if (!Array.isArray(products) || products.some(p => !p || typeof p.id !== 'string')) {
+  if (
+    !Array.isArray(products) ||
+    products.some(
+      (p) =>
+        !p ||
+        typeof p.id !== 'string' ||
+        typeof p.category !== 'string' ||
+        p.category.trim().length === 0 ||
+        typeof p.name !== 'string' ||
+        p.name.trim().length === 0
+    )
+  ) {
     throw new Error('Invalid product catalog');
   }
   if (products.some(p => !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(p.id))) {

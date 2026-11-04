@@ -1,3 +1,5 @@
+import { escapeSpreadsheetCsvCell } from './buyer-worksheet.mjs';
+
 /**
  * Fail-closed hosting migration decision PREPARATION, not a release gate.
  * Browser-only user-entered statuses; never verify evidence or authorize DNS.
@@ -76,6 +78,5 @@ export function formatHostingCutoverCsv(result){
  const rows=HOSTING_GATE_DEFINITIONS.map(g=>[g.label,checked[g.id],'UNVERIFIED']);
  rows.push(['overall_readiness',checked.status,'UNVERIFIED']);
  rows.push(['launch_authorized','false','UNVERIFIED']);
- const cell=s=>'"'+String(s).replaceAll('"','""')+'"';
- return ['gate,status,evidence_status',...rows.map(row=>row.map(cell).join(','))].join('\r\n')+'\r\n';
+ return ['gate,status,evidence_status',...rows.map(row=>row.map(escapeSpreadsheetCsvCell).join(','))].join('\r\n')+'\r\n';
 }

@@ -71,9 +71,9 @@ export function buildBuyerWorksheet(category,selectedIds){
  * values are currently exportable, never arbitrary buyer-entered answers.
  */
 export function escapeSpreadsheetCsvCell(value) {
- if(typeof value!=='string')throw new Error('CSV cell must be text');
- const safe=/^[\s\uFEFF]*[=+\-@]/u.test(value) ? "'"+value : value;
- return '"'+safe.replaceAll('"','""')+'"';
+ const text = String(value ?? '').replaceAll('\0', '');
+ const safe = /^[\s\uFEFF]*[=+\-@\t\r|%]/u.test(text) ? "'" + text : text;
+ return '"' + safe.replaceAll('"', '""') + '"';
 }
 
 /** Export selected buyer questions, with every vendor response unverified and blank. */

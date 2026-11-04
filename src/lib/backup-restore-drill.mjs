@@ -1,3 +1,5 @@
+import { escapeSpreadsheetCsvCell } from './buyer-worksheet.mjs';
+
 /**
  * Offline, deterministic RTO/RPO planning on user-entered observations only.
  * RTO and RPO are goals, not verified service continuity or data-loss outcomes.
@@ -101,6 +103,5 @@ export function formatBackupRestoreDrillCsv(result){
   ['readiness',r.readiness,'UNVERIFIED'],
   ['cutover_authorized','false','UNVERIFIED']
  ];
- const safeCell=s=>'"'+String(s).replaceAll('"','""')+'"';
- return ['metric,value,evidence_status',...rows.map(row=>row.map(safeCell).join(','))].join('\r\n')+'\r\n';
+ return ['metric,value,evidence_status',...rows.map(row=>row.map(escapeSpreadsheetCsvCell).join(','))].join('\r\n')+'\r\n';
 }

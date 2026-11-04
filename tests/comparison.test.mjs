@@ -149,3 +149,20 @@ test('static comparison is alphabetical and never mutates original catalog', asy
   assert.deepEqual(comparison.categoryComparisonRows(products,'SEO').map(x=>x.name),['Ahrefs','Semrush']);
   assert.deepEqual(products,original);
 });
+
+test('assertUniqueProducts rejects products with missing, non-string, or empty category', () => {
+  for (const category of [undefined, null, 123, '', '   ']) {
+    const invalid = [{ ...products[0], category }, ...products.slice(1)];
+    assert.throws(() => comparisonCategories(invalid), /Invalid product catalog/);
+    assert.throws(() => categoryCandidates(invalid, 'CRM'), /Invalid product catalog/);
+  }
+});
+
+test('assertUniqueProducts rejects products with missing, non-string, or empty name', () => {
+  for (const name of [undefined, null, 456, '', '   ']) {
+    const invalid = [{ ...products[0], name }, ...products.slice(1)];
+    assert.throws(() => comparisonCategories(invalid), /Invalid product catalog/);
+    assert.throws(() => categoryCandidates(invalid, 'CRM'), /Invalid product catalog/);
+  }
+});
+

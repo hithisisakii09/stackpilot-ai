@@ -24,11 +24,13 @@ caption{padding:9px 0;text-align:left;color:#c9d9ed}
 :focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
 footer{border-top:1px solid #405675}
 @media(max-width:600px){header,main,footer{padding:16px}section{padding:16px}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
 </style>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to main content</a>
 <header><nav aria-label="Site navigation"><a href="/">StackPilot AI</a><a href="/tools/requirements-checklist/">Requirements checklist</a><a href="/tools/software-cost-calculator/">Cost calculator</a><a href="/methodology/">Methodology</a></nav></header>
-<main>
+<main id="main">
 <p>Hosting buyer education · private prelaunch draft</p>
 <h1>Hosting migration checklist: reduce avoidable cutover risks</h1>
 <p>A hosting move is not just a change of subscription. DNS records, mail delivery, certificates, backups, background jobs and third-party integrations can fail even if the new website loads correctly. This is a planning guide, <strong>not a vendor endorsement</strong>. Following a checklist does <strong>not guarantee uninterrupted service</strong>. Use authorized staging and backups, and consult your technical operator for production changes.</p>

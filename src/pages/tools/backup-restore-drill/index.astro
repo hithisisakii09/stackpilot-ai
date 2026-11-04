@@ -28,16 +28,18 @@ button:disabled{opacity:.5;cursor:not-allowed}
 #drill-status{min-height:1.5em;color:#ffe2a6}
 footer{border-top:1px solid #405675}
 @media(max-width:650px){.fields{grid-template-columns:1fr}header,main,footer{padding:17px}.panel{padding:16px}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
 </style>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to main content</a>
 <header><nav aria-label="Primary navigation">
 <a href="/">← StackPilot AI</a>
 <a href="/guides/hosting-migration-checklist/">Hosting migration checklist</a>
 <a href="/tools/hosting-cutover-gates/">Hosting cutover gates</a>
 <a href="/methodology/">Methodology</a>
 </nav></header>
-<main>
+<main id="main">
 <p>Private browser-only recovery planning</p>
 <h1>Backup restore drill planner</h1>
 <p>Compare the objectives you set with measurements you recorded from an authorized restore rehearsal. The numbers are <strong>user-entered, not independently verified</strong>. This is not a live backup, restore operation, recovery audit, uptime guarantee or approval for any production change.</p>

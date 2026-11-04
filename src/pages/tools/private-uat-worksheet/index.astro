@@ -28,13 +28,15 @@ button:disabled{opacity:.48;cursor:not-allowed}.actions{display:flex;gap:12px;fl
 #owner-uat-status{min-height:1.5em;color:#ffe2a6}
 footer{border-top:1px solid #405675}
 @media(max-width:650px){header,main,footer{padding:16px}.panel{padding:16px}.inputs{grid-template-columns:1fr}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
 </style>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to main content</a>
 <header><nav aria-label="Site navigation">
 <a href="/">← StackPilot AI</a><a href="/preview-build/">Preview build identity</a><a href="/privacy/">Privacy</a><a href="/methodology/">Methodology</a>
 </nav></header>
-<main>
+<main id="main">
 <p>Private browser-only owner review · ₹0 budget</p>
 <h1>Private owner UAT evidence worksheet</h1>
 <p>This worksheet records <strong>your self-reported checks</strong> after you personally open StackPilot's protected Netlify Deploy Preview. It <strong>does not test the hosted site for you</strong>, authenticate anyone, validate access restrictions, change provider settings or grant publication permission.</p>
@@ -89,7 +91,7 @@ footer{border-top:1px solid #405675}
 <p>The separately generated <a href="https://github.com/hithisisakii09/stackpilot-ai/actions/workflows/agent-ops.yml" rel="noopener noreferrer" target="_blank">private CI UAT packet</a> lists all emitted pages to inspect. Test each route while authenticated; confirm separate anonymous denial and live security headers; inspect Netlify's real Private/Locked, Free plan, analytics and credit usage settings; keep evidence in your authorized local system. All product claims and legal/editorial signoffs remain independently gated.</p>
 </section>
 </main>
-<footer><a href="/disclosure/">Disclosures</a> · StackPilot AI private development</footer>
+<footer><a href="/disclosure/">Disclosures</a> · <a href="/privacy/">Privacy notes</a> · StackPilot AI private development</footer>
 <script>
 import {OWNER_UAT_CHECKS,assessOwnerUatEvidence,formatOwnerUatReport,formatOwnerUatCsv} from '../../../lib/owner-uat-worksheet.mjs';
 const fields=['expectedSha','observedSha',...OWNER_UAT_CHECKS.map(x=>x.id)];

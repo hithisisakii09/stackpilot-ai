@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {recommend} from '../src/lib/recommend.mjs';
+import {recommend, TEAM_SIZES, BUDGETS, GOALS} from '../src/lib/recommend.mjs';
 
 const hubspot={id:'hubspot',name:'HubSpot',bestFor:['sales'],verified:false,affiliateUrl:null};
 const verified={id:'other',name:'Other',bestFor:['sales'],verified:true,supportedTeams:['2–20'],budgetTiers:['Moderate'],affiliateUrl:null};
@@ -58,3 +58,38 @@ test('unreviewed compatibility annotations do not become positive claims',()=>{
  assert.equal(Object.hasOwn(b,'score'),false);
  assert.match(a.cautions.join(' '),/not been verified/);
 });
+
+test('exported criteria constants are frozen', () => {
+  assert.ok(Object.isFrozen(TEAM_SIZES));
+  assert.ok(Object.isFrozen(BUDGETS));
+  assert.ok(Object.isFrozen(GOALS));
+});
+
+test('defensive product list handling for non-arrays and null entries', () => {
+  assert.deepEqual(recommend(null, input), []);
+  assert.deepEqual(recommend(undefined, input), []);
+  assert.deepEqual(recommend('not-an-array', input), []);
+  const mixed = [null, undefined, hubspot, { bestFor: 'not-array' }];
+  const results = recommend(mixed, input);
+  assert.equal(results.length, 1);
+  assert.equal(results[0].product.id, 'hubspot');
+});
+
+test('non-object or null options reject cleanly', () => {
+  assert.throws(() => recommend([hubspot], null), /Invalid recommendation inputs/);
+  assert.throws(() => recommend([hubspot], undefined), /Invalid recommendation inputs/);
+  assert.throws(() => recommend([hubspot], 'not-object'), /Invalid recommendation inputs/);
+  assert.throws(() => recommend([hubspot], {}), /Invalid recommendation inputs/);
+});
+
+test('defensive sorting handles missing product name or id without throwing', () => {
+  const noName = { id: 'x', bestFor: ['sales'] };
+  const noId = { name: 'Alpha', bestFor: ['sales'] };
+  const normal = { id: 'beta', name: 'Beta', bestFor: ['sales'] };
+  const results = recommend([noName, noId, normal], input);
+  assert.equal(results.length, 3);
+  assert.equal(results[0].product.name, undefined);
+  assert.equal(results[1].product.name, 'Alpha');
+  assert.equal(results[2].product.name, 'Beta');
+});
+

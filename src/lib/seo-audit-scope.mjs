@@ -1,3 +1,5 @@
+import { escapeSpreadsheetCsvCell } from './buyer-worksheet.mjs';
+
 /**
  * Client-only, vendor-neutral Site Audit scope arithmetic.
  * This never crawls a website, checks a vendor plan, stores data or transmits counts.
@@ -104,6 +106,5 @@ export function formatSeoAuditScopeCsv(result){
     ['provider_allowance','UNVERIFIED','UNVERIFIED'],
     ['provider_crawl_credits','','UNKNOWN']
   ];
-  const escapeCell=value=>'"'+String(value).replaceAll('"','""')+'"';
-  return ['metric,value,verification_status',...rows.map(row=>row.map(escapeCell).join(','))].join('\r\n')+'\r\n';
+  return ['metric,value,verification_status',...rows.map(row=>row.map(escapeSpreadsheetCsvCell).join(','))].join('\r\n')+'\r\n';
 }

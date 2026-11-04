@@ -3,6 +3,7 @@
  * Never validates provider quotes, commits purchases, or contacts providers.
  */
 import {formatMinorUnits} from './cost-comparison.mjs';
+import { escapeSpreadsheetCsvCell } from './buyer-worksheet.mjs';
 const moneyFields=['baseMonthly','backupMonthly','bandwidthMonthly','supportMonthly',
  'otherMonthly','oldHostingMonthly','migrationOnce','cancellationOnce'];
 const fields=['currency','months','overlapMonths',...moneyFields];
@@ -112,6 +113,5 @@ export function formatHostingHiddenCostCsv(result){
   ['total',decimalCents(r.totalMinor)],
   ['provider_quote_verified','false'],['purchase_authorized','false']
  ];
- const safe=value=>'"'+String(value).replaceAll('"','""')+'"';
- return ['metric,value,evidence_status',...rows.map(([k,v])=>[k,v,'UNVERIFIED'].map(safe).join(','))].join('\r\n')+'\r\n';
+ return ['metric,value,evidence_status',...rows.map(([k,v])=>[k,v,'UNVERIFIED'].map(escapeSpreadsheetCsvCell).join(','))].join('\r\n')+'\r\n';
 }

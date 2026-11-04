@@ -4,7 +4,8 @@
 <meta name="robots" content="noindex, nofollow"/><meta name="description" content="Prototype data handling notes for StackPilot AI."/>
 <title>Privacy notes | StackPilot AI</title><style>
 :root{font-family:system-ui,sans-serif;background:#0b1220;color:#edf4ff}body{margin:0}header,main,footer{max-width:820px;margin:auto;padding:24px}a{color:#7ce8c6}p,li{line-height:1.8;color:#c4d1e4}main{min-height:65vh}
-</style></head><body><header><a href="/">← StackPilot AI</a></header><main>
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
+</style></head><body><a href="#main" class="skip-link">Skip to main content</a><header><nav aria-label="Site navigation"><a href="/">← StackPilot AI</a></nav></header><main id="main">
 <h1>Prototype privacy notes</h1>
 <p>StackPilot AI's current recommendation quiz runs in the browser and does not submit quiz selections to a StackPilot backend. The application code currently has no user registration, client-side analytics scripts, tracking cookies, or payment collection.</p>
 <p>Netlify Web Analytics is enabled at the hosting layer. It derives aggregated usage reports from CDN server logs, including pageviews and approximate visitor location, and uses IP addresses to derive visitor counts. It does not require a browser-side analytics script or analytics tracking cookies. Separately, Netlify may process network and access logs to provide and secure hosting. External vendor websites have their own privacy practices. These are prototype notes, not a final public-launch privacy policy.</p>

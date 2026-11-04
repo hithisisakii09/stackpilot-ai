@@ -33,9 +33,12 @@ const needsRefresh = queue.filter(item => item.needsRefresh).length;
     .status { font-weight: 650; color: #f3c774; }
     ul { padding-left: 24px; }
     @media(max-width:700px) { .grid { grid-template-columns: 1fr; } }
+    .skip-link { position: absolute; top: -100px; left: 16px; background: #7ce8c6; color: #06231d; padding: 10px 16px; font-weight: 700; border-radius: 6px; z-index: 1000; text-decoration: none; }
+    .skip-link:focus { top: 16px; outline: 3px solid #fff; }
   </style>
 </head>
 <body>
+  <a href="#main" class="skip-link">Skip to main content</a>
   <header>
     <nav aria-label="Site navigation">
       <a href="/">← StackPilot AI</a>
@@ -43,7 +46,7 @@ const needsRefresh = queue.filter(item => item.needsRefresh).length;
       <a href="/methodology/">Methodology</a>
     </nav>
   </header>
-  <main>
+  <main id="main">
     <p>Editorial research · pre-launch</p>
     <h1>Research workbench</h1>
     <p class="notice"><strong>No product claims or pricing have been editorially approved.</strong>

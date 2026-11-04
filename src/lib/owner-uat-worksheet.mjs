@@ -1,3 +1,5 @@
+import { escapeSpreadsheetCsvCell } from './buyer-worksheet.mjs';
+
 /**
  * Owner-entered LOCAL-only observations for a private Netlify Deploy Preview.
  * No external observation, identity proof, authentication or release approval.
@@ -90,6 +92,5 @@ export function formatOwnerUatCsv(result){
   ['public_release_authorized','false'],['account_settings_changed','false'],
   ['can_spend','false'],['editorial_approved','false']
  ];
- const cell=s=>'"'+String(s).replaceAll('"','""')+'"';
- return ['check,value,evidence_status',...rows.map(row=>[...row,'SELF_REPORTED'].map(cell).join(','))].join('\r\n')+'\r\n';
+ return ['check,value,evidence_status',...rows.map(row=>[...row,'SELF_REPORTED'].map(escapeSpreadsheetCsvCell).join(','))].join('\r\n')+'\r\n';
 }

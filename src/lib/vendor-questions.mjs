@@ -1,3 +1,5 @@
+import { escapeSpreadsheetCsvCell } from './buyer-worksheet.mjs';
+
 /** Neutral, locally exported comparison checklist. No vendor facts are inferred. */
 const COMMON_QUESTIONS = [
   ['Pricing and contract','What is the written current total price, currency, tax, renewal term, cancellation policy and usage limit for our plan and region?'],
@@ -10,11 +12,6 @@ const CATEGORY_QUESTION = {
   CRM: ['Migration and portability','Can we validate a sample pipeline import, field mapping, duplicates and rollback before committing?'],
   SEO: ['SEO usage limits','What crawl and query limits apply to the proposed plan, and how can we verify quota and overage policies?'],
   Hosting: ['Hosting recovery drill','How is backup restoration tested, and what are the actual retention, downtime and overage policies?']
-};
-const safeCell = value => {
-  const text=String(value).replaceAll('\0','');
-  const safe=/^\s*[=+\-@]/.test(text) ? "'"+text : text;
-  return '"'+safe.replaceAll('"','""')+'"';
 };
 export function listVendorQuestions(model) {
   if (!model || !Object.hasOwn(CATEGORY_QUESTION,model.category) ||
@@ -35,5 +32,5 @@ export function buildVendorQuestionsCsv(model) {
   const rows=[header,...questions.map(({criterion,question})=>[
     model.category,criterion,question,first.name,'Unverified',second.name,'Unverified',''
   ])];
-  return rows.map(row=>row.map(safeCell).join(',')).join('\r\n')+'\r\n';
+  return rows.map(row=>row.map(escapeSpreadsheetCsvCell).join(',')).join('\r\n')+'\r\n';
 }

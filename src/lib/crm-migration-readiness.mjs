@@ -1,3 +1,5 @@
+import { escapeSpreadsheetCsvCell } from './buyer-worksheet.mjs';
+
 /**
  * Vendor-neutral CRM cutover preparation: all data is user-entered aggregate
  * counts and self-attested evidence. No real data, provider access, or approval.
@@ -108,6 +110,5 @@ export function formatCrmMigrationReadinessCsv(result){
   ['independently_verified','false'],
   ['migration_authorized','false']
  ];
- const cell=s=>'"'+String(s).replaceAll('"','""')+'"';
- return ['check,value,evidence_status',...rows.map(row=>[...row,'SELF_REPORTED'].map(cell).join(','))].join('\r\n')+'\r\n';
+ return ['check,value,evidence_status',...rows.map(row=>[...row,'SELF_REPORTED'].map(escapeSpreadsheetCsvCell).join(','))].join('\r\n')+'\r\n';
 }
