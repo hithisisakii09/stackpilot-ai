@@ -12,6 +12,7 @@ const OWNER_GATES = [
   ['affiliate-contract','Owner must submit real applications, verify eligibility, accept program terms and payout/KYC processes'],
   ['public-release','Owner must explicitly authorize public visibility, production, search indexing and monetization']
 ];
+const PACKET_FIELDS = ['documentPath','id','preparedOn','productId','sourceIds','status'];
 const dateValid = value => {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const d = new Date(value + 'T00:00:00.000Z');
@@ -30,9 +31,63 @@ function task(productId, action, priority, reason, sourceIds=[]) {
   return {id: action + ':' + productId,productId,priority,action,reason,
     autonomy:'automatic',approvalRequired:false,claimsApproved:false,sourceIds};
 }
+function validateEditorialPackets(packets,evidence,today) {
+  if (!Array.isArray(packets)) throw new Error('Invalid editorial packet ledger');
+  const expectedByProduct=new Map(evidence.map(entry=>[
+    entry.productId,entry.leads.map(lead=>lead.id).sort()
+  ]));
+  const seenIds=new Set();
+  const seenProducts=new Set();
+  const byProduct=new Map();
+  for(const packet of packets) {
+    if (!packet || typeof packet!=='object' || Array.isArray(packet) ||
+        JSON.stringify(Object.keys(packet).sort())!==JSON.stringify(PACKET_FIELDS)) {
+      throw new Error('Invalid editorial packet fields');
+    }
+    if (typeof packet.id!=='string' || !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(packet.id) ||
+        seenIds.has(packet.id)) {
+      throw new Error('Duplicate or invalid editorial packet id');
+    }
+    if (typeof packet.productId!=='string' || !expectedByProduct.has(packet.productId) ||
+        seenProducts.has(packet.productId)) {
+      throw new Error('Duplicate or unknown editorial packet product');
+    }
+    if (typeof packet.documentPath!=='string' ||
+        !/^docs\/editorial-drafts\/[a-z0-9][a-z0-9._/-]*\.md$/i.test(packet.documentPath) ||
+        packet.documentPath.includes('..')) {
+      throw new Error('Unsafe editorial packet document path');
+    }
+    if (!dateValid(packet.preparedOn) || packet.preparedOn>today) {
+      throw new Error('Invalid or future editorial packet date');
+    }
+    if (packet.status!=='prepared-unapproved') {
+      throw new Error('Editorial packet must remain prepared-unapproved');
+    }
+    if (!Array.isArray(packet.sourceIds) || packet.sourceIds.length===0 ||
+        packet.sourceIds.some(id=>typeof id!=='string' || !/^[a-z0-9-]+$/.test(id)) ||
+        new Set(packet.sourceIds).size!==packet.sourceIds.length) {
+      throw new Error('Invalid editorial packet source IDs');
+    }
+    const actual=[...packet.sourceIds].sort();
+    const expected=expectedByProduct.get(packet.productId);
+    if (expected.length===0 || JSON.stringify(actual)!==JSON.stringify(expected)) {
+      throw new Error('Editorial packet source IDs do not match current evidence');
+    }
+    seenIds.add(packet.id);
+    seenProducts.add(packet.productId);
+    byProduct.set(packet.productId,packet);
+  }
+  return byProduct;
+}
+const indiaToday = () => {
+  const parts=Object.fromEntries(new Intl.DateTimeFormat('en-US',{
+    timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'
+  }).formatToParts(new Date()).map(part=>[part.type,part.value]));
+  return parts.year+'-'+parts.month+'-'+parts.day;
+};
 export function buildOperatingBacklog({
-  products, evidenceLeads, affiliateCandidates, policy,
-  today = new Date().toISOString().slice(0,10), staleAfterDays=90
+  products, evidenceLeads, affiliateCandidates, editorialPackets=[], policy,
+  today = indiaToday(), staleAfterDays=90
 } = {}) {
   if (!safePolicy(policy)) throw new Error('Unapproved budget or launch policy');
   if (!dateValid(today)) throw new Error('Invalid reference date');
@@ -50,6 +105,7 @@ export function buildOperatingBacklog({
     if(product.affiliateUrl!==null) throw new Error('Unapproved affiliate URL');
   }
   const evidence=buildEvidenceReviewQueue(evidenceLeads,products,{today,staleAfterDays});
+  const packetByProduct=validateEditorialPackets(editorialPackets,evidence,today);
   const affiliates=createAffiliateResearchQueue(affiliateCandidates,products,{today});
   if (affiliates.length !== products.length ||
       products.some(p=>!affiliates.some(x=>x.productId===p.id))) {
@@ -66,7 +122,7 @@ export function buildOperatingBacklog({
       automatic.push(task(entry.productId,'refresh-primary-source',20,
         'Candidate source intake is older than the configured freshness window; recheck claims manually.',
         sources));
-    } else {
+    } else if(!packetByProduct.has(entry.productId)) {
       automatic.push(task(entry.productId,'draft-evidence-review',30,
         'Prepare a claim-level, plan-scoped verification brief; do not mark evidence approved.',
         sources));
@@ -93,6 +149,8 @@ export function buildOperatingBacklog({
       unreviewedProducts:evidence.filter(e=>e.editorialStatus!=='Reviewed').length,
       evidenceLeadCount:evidenceLeads.length,
       sourcesNeedingRefresh:evidence.filter(e=>e.sourceLeadCount>0 && e.needsRefresh).length,
+      preparedEvidencePackets:packetByProduct.size,
+      editorialReviewsPending:packetByProduct.size,
       programCandidates:affiliates.filter(a=>a.researchStatus==='candidate').length,
       programDiscoveryGaps:affiliates.filter(a=>a.researchStatus==='program-discovery-needed').length,
       approvedClaims:0,

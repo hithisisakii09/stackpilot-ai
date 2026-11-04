@@ -25,18 +25,22 @@ const products = JSON.parse(readFileSync(new URL('../src/data/products.json', im
 const evidence = JSON.parse(readFileSync(new URL('../src/data/evidence-leads.json', import.meta.url), 'utf8'));
 validateCatalog(products);
 const affiliateCandidates = JSON.parse(readFileSync(new URL('../src/data/affiliate-programs.json', import.meta.url), 'utf8'));
+const editorialPackets = JSON.parse(readFileSync(new URL('../src/data/editorial-packet-ledger.json', import.meta.url), 'utf8'));
 const partnerQueue = createAffiliateResearchQueue(affiliateCandidates, products);
 const queue = buildEvidenceReviewQueue(evidence, products);
-const agentQueue = buildOperatingBacklog({ products, evidenceLeads:evidence, affiliateCandidates, policy });
+const agentQueue = buildOperatingBacklog({ products, evidenceLeads:evidence, affiliateCandidates, editorialPackets, policy });
+for(const packet of editorialPackets) {
+  const note=readFileSync(new URL('../'+packet.documentPath,import.meta.url),'utf8');
+  if(!note.includes('Approved claims: 0') || !note.includes('human editorial review')) {
+    throw new Error('Editorial packet document is missing its explicit unapproved review boundary');
+  }
+}
 const vendorClaims = buildResearchClaimReviewQueue(JSON.parse(readFileSync(new URL('../src/data/research-claims.json', import.meta.url),'utf8')), products);
 const publisher = buildPublisherReadiness({policy,products,affiliateCandidates});
 const output = decideAutonomousActions({
-  // Only the CI runner may explicitly assert successful unit/build checks.
   ciPassed: process.argv.includes('--ci-passed'),
-  // This CLI has no authenticated remote browser evidence: fail closed.
   browserQaPassed: false,
   vendorClaimsApproved: products.length > 0 && products.every(p => p.verified === true),
-  // No authenticated approval or billing data comes from this static repository.
   privacyPolicyApproved: false,
   commercialHostingApproved: false,
   productionApproval: false,
@@ -74,6 +78,8 @@ const report = {
     automaticTasks:agentQueue.automatic.length,
     ownerApprovalGates:agentQueue.ownerGates.length,
     sourcesNeedingRefresh:agentQueue.metrics.sourcesNeedingRefresh,
+    preparedEvidencePackets:agentQueue.metrics.preparedEvidencePackets,
+    editorialReviewsPending:agentQueue.metrics.editorialReviewsPending,
     priorityTaskIds:agentQueue.automatic.slice(0,6).map(t=>t.id)
   },
   vendorClaimIntake: {

@@ -39,8 +39,8 @@
 - status is always prepared-unapproved.
 - sourceIds must exactly match current evidenceLeads for the product.
 
-- [ ] Write tests for suppression, missing/partial packets, stale-source precedence, malformed manifests, deterministic order and non-mutation.
-- [ ] Verify RED on the old builder; expected failures are ignored editorialPackets, repeated P30 tasks and missing packet metrics.
+- [x] Write tests for suppression, missing/partial packets, stale-source precedence, malformed manifests, deterministic order and non-mutation.
+- [x] Verify RED on the old builder; six focused assertions failed for the expected missing packet-aware behavior, with the packet-document assertion passing.
 
 ## Task 2: Implement fail-closed packet-aware backlog
 
@@ -54,8 +54,8 @@
 - Add metrics.preparedEvidencePackets and metrics.editorialReviewsPending.
 - Suppress only draft-evidence-review when a validated matching packet exists; do not suppress collect-primary-source or refresh-primary-source.
 
-- [ ] Implement exact-schema, source-coverage, date and path validation.
-- [ ] Pass the same ledger into CLI and operations report.
+- [x] Implement exact-schema, source-coverage, date and path validation.
+- [x] Pass the same ledger into CLI and operations report.
 - [ ] Verify focused tests GREEN and full npm test.
 
 ## Task 3: Review and verify exact commit
