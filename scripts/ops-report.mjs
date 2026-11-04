@@ -95,6 +95,8 @@ const report = {
   affiliatePreparation: {
     candidatePrograms:partnerQueue.filter(p=>p.researchStatus==='candidate').length,
     discoveryGaps:partnerQueue.filter(p=>p.researchStatus==='program-discovery-needed').length,
+    programsWithoutPublicAffiliateProgram:partnerQueue.filter(p=>p.researchStatus==='no-public-program-found').length,
+    reviewsDue:agentQueue.metrics.affiliateReviewsDue,
     applicationsSubmitted:0,
     programsAccepted:0,
     trackingLinksEnabled:0,
