@@ -3,13 +3,15 @@ import assert from 'node:assert/strict';
 import {execFileSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 
-const run = (name,args=['--json','--as-of=2026-10-31'])=>
+const run = (name,args=['--json','--as-of=2026-11-04'])=>
  JSON.parse(execFileSync(process.execPath,[name,...args],{encoding:'utf8'}));
 test('read-only CLI produces bounded JSON queue with no real-world action',()=>{
  const q=run('scripts/operating-backlog.mjs');
  assert.equal(q.asOf,'2026-10-31');
  assert.equal(q.execution,'advisory-only');
- assert.equal(q.automatic.length,12);
+ assert.equal(q.automatic.length,6);
+ assert.equal(q.metrics.preparedEvidencePackets,6);
+ assert.equal(q.metrics.editorialReviewsPending,6);
  assert.equal(q.ownerGates.length,4);
  assert.equal(q.metrics.unreviewedProducts,6);
  assert.equal(q.canSpend,false);
@@ -22,7 +24,9 @@ test('read-only CLI supports deterministic freshness reassessment',()=>{
 test('operations report exposes the backlog but still cannot launch',()=>{
  const r=run('scripts/ops-report.mjs',['--json']);
  assert.equal(r.researchBacklog.execution,'advisory-only');
- assert.equal(r.researchBacklog.automaticTasks,12);
+ assert.equal(r.researchBacklog.automaticTasks,6);
+ assert.equal(r.researchBacklog.preparedEvidencePackets,6);
+ assert.equal(r.researchBacklog.editorialReviewsPending,6);
  assert.equal(r.researchBacklog.ownerApprovalGates,4);
  assert.equal(r.canPublish,false);
  assert.equal(r.canMonetize,false);
