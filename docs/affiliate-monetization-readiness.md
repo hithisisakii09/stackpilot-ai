@@ -1,10 +1,10 @@
 # Affiliate monetization preparation — candidate research, no activation
-As of 2026-10-31. `₹0` cash budget and no permission to sign up, apply, accept contracts, remove noindex, make the site public, or enable tracked URLs.
+Original intake: 2026-10-31. Latest public-source review: 2026-11-04. `₹0` cash budget and no permission to sign up, apply, accept contracts, remove noindex, make the site public, or enable tracked URLs.
 
 ## What this phase actually delivers
 - A validated, machine-readable **research intake** for all six listed vendors in `src/data/affiliate-programs.json`.
-- Five *official-looking vendor program pages* identified for further owner review; Ahrefs is explicitly a gap requiring program discovery. These URLs are untracked candidate information, not referral links.
-- A deterministic, **read-only** queue via `npm run partners:queue` or `npm run partners:queue -- --json`.
+- Five public affiliate-program candidate pages remain under owner review. For Ahrefs, no public registration page was found on 2026-11-04; the ledger records `no-public-program-found`, not a confirmed offer or a claim that private arrangements are impossible. These URLs are untracked candidate information, not referral links.
+- A deterministic, **read-only** queue via `npm run partners:queue` or `npm run partners:queue -- --json`; `lastReviewedOn` is separate from original `sourceLoggedOn`, and fresh program reviews are not repeated daily.
 - Integration into `npm run ops:report -- --json` and `npm test`. All status values fail closed: applications 0, acceptance 0, referrals 0, actual earnings unknown.
 - No automated partner applications or approval mutations. The owner must provide real identity/contract consent and separate activation approval.
 
@@ -16,7 +16,7 @@ As of 2026-10-31. `₹0` cash budget and no permission to sign up, apply, accept
 | Kinsta | https://kinsta.com/affiliates/ | Review editorial-depth and own-domain requirements; incomplete/list-only websites are typically not eligible |
 | Semrush | https://www.semrush.com/lp/affiliate-program/en/ | Review current thresholds; official FAQ indicates ~1,000 monthly visitors or substantial relevant professional social audience |
 | Cloudways | https://support.cloudways.com/en/articles/5134056-how-to-join-cloudways-affiliate-program-faqs-benefits | Verify current country/payout terms and account-related requirements; do not pay for hosting or create an account |
-| Ahrefs | *(not established)* | Locate and verify a current primary-source program before representing it as available |
+| Ahrefs | *(no public registration found on 2026-11-04)* | Recheck official status after the 90-day review window; no public application or terms currently established |
 
 These are research leads, not certified policy summaries. Any commission amounts, tracking cookies, actual terms and country eligibility must be verified at application time. Vendor program rules can change and approval is entirely discretionary.
 
