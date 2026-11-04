@@ -10,6 +10,7 @@ const identity=buildPreviewBuildIdentity({
  COMMIT_REF:process.env.COMMIT_REF
 });
 const known=identity.status==='PREVIEW_COMMIT_REPORTED';
+const prLabel=known&&identity.prNumber!=null?`PR #${identity.prNumber}`:'unknown PR';
 ---
 <!doctype html>
 <html lang="en">
@@ -39,20 +40,20 @@ footer{border-top:1px solid #405675}
 <main id="main">
 <p>Private reviewer utility · no user submission</p>
 <h1>Preview build identity</h1>
-<p>This page shows limited <strong>build-time metadata</strong> from the protected Netlify PR preview. It is intended for an authorized reviewer to compare the displayed Git commit with draft PR #1 while signed in. No private account credentials or user information are read here.</p>
+<p>This page shows limited <strong>build-time metadata</strong> from the protected Netlify deploy-preview. It is intended for an authorized reviewer to compare the displayed Git commit with the current draft pull request while signed in. No private account credentials or user information are read here.</p>
 <section class="panel" aria-labelledby="build-status-label">
 <h2 id="build-status-label">Reported build status</h2>
 <p><strong>{known?'Netlify Deploy Preview commit reported':'Unavailable — cannot confirm served commit'}</strong></p>
-<p>{known?'Netlify build context identified the PR #1 Git commit shown below.':'This was not identified as Netlify Deploy Preview for PR #1 with valid Git commit metadata. Do not infer the deployed source version from this page.'}</p>
+<p>{known?`Netlify build context identified the ${prLabel} Git commit shown below.`:'This was not identified as a valid Netlify Deploy Preview with valid Git commit metadata. Do not infer the deployed source version from this page.'}</p>
 <p>Full source commit (from Netlify build variables, if available):</p>
 <code>{identity.sourceCommit??'UNKNOWN — no reliable preview commit available'}</code>
-<p>Expected preview PR: {identity.prNumber??'unknown'}</p>
+<p>Detected preview PR: {identity.prNumber??'unknown'}</p>
 </section>
 <section class="panel">
 <h2>How to verify the candidate</h2>
 <ol>
 <li>Open this page inside your legitimately <strong>authenticated</strong> Netlify Deploy Preview, not just the GitHub static-build artifact.</li>
-<li>Open <a href="https://github.com/hithisisakii09/stackpilot-ai/pull/1" rel="noopener noreferrer" target="_blank">draft PR #1</a> separately and copy its current full HEAD commit SHA.</li>
+<li>Open the current draft PR on GitHub separately and copy its current full HEAD commit SHA.</li>
 <li>Compare all 40 characters with the SHA displayed above. If anything differs, says UNKNOWN, or the page does not load, record <strong>FAIL or BLOCKED</strong> instead of PASS.</li>
 <li>Repeat actual route and UI checks, anonymous denial, security response headers and provider-account checks separately. Record only redacted results in your controlled UAT worksheet.</li>
 </ol>

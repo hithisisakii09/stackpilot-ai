@@ -5,7 +5,7 @@ import {buildPreviewBuildIdentity} from '../src/lib/preview-build-identity.mjs';
 const sha='0123456789abcdef0123456789abcdef01234567';
 const good=(more={})=>({
  NETLIFY:'true',CONTEXT:'deploy-preview',PULL_REQUEST:'true',
- REVIEW_ID:'1',COMMIT_REF:sha,...more
+ REVIEW_ID:'7',COMMIT_REF:sha,...more
 });
 const flags=result=>{
  assert.deepEqual(
@@ -15,11 +15,11 @@ const flags=result=>{
   [false,false,false,false,false,0]
  );
 };
-test('valid Netlify PR1 build metadata reports an exact source SHA without granting approval',()=>{
+test('valid Netlify PR build metadata reports an exact source SHA and PR number without granting approval',()=>{
  const info=buildPreviewBuildIdentity(good());
  assert.equal(info.status,'PREVIEW_COMMIT_REPORTED');
  assert.equal(info.sourceCommit,sha);
- assert.equal(info.prNumber,1);
+ assert.equal(info.prNumber,7,'prNumber must be a parsed integer matching REVIEW_ID');
  assert.equal(info.source,'netlify-build-environment');
  assert.deepEqual(Object.keys(info).sort(),[
   'anonymousPreviewDenialVerified','authenticatedHostedUatPassed','delegatedSpendINR',
@@ -28,15 +28,32 @@ test('valid Netlify PR1 build metadata reports an exact source SHA without grant
  ].sort());
  flags(info);
 });
-test('missing Netlify context, production, other PR or missing SHA always redact purported source SHA',()=>{
+test('PR number 1 is also accepted (original PR; must not be regressed)',()=>{
+ const info=buildPreviewBuildIdentity(good({REVIEW_ID:'1'}));
+ assert.equal(info.status,'PREVIEW_COMMIT_REPORTED');
+ assert.equal(info.prNumber,1);
+ flags(info);
+});
+test('any positive integer REVIEW_ID string is accepted',()=>{
+ for(const id of ['2','10','100','999']){
+  const info=buildPreviewBuildIdentity(good({REVIEW_ID:id}));
+  assert.equal(info.status,'PREVIEW_COMMIT_REPORTED',`REVIEW_ID ${id} must be accepted`);
+  assert.equal(info.prNumber,Number(id));
+ }
+});
+test('missing or invalid Netlify context, non-positive or malformed REVIEW_ID always redact source SHA',()=>{
  for(const attrs of [
   {NETLIFY:undefined},{NETLIFY:'false'},
   {CONTEXT:'production'},{CONTEXT:'branch-deploy'},{CONTEXT:undefined},
   {PULL_REQUEST:'false'},{PULL_REQUEST:undefined},
-  {REVIEW_ID:'2'},{REVIEW_ID:undefined},
+  // Invalid REVIEW_ID values
+  {REVIEW_ID:'0'},{REVIEW_ID:'-1'},{REVIEW_ID:'1.5'},
+  {REVIEW_ID:'01'},{REVIEW_ID:''},{REVIEW_ID:undefined},
+  {REVIEW_ID:'abc'},{REVIEW_ID:' 7'},{REVIEW_ID:'7 '},
+  // Invalid COMMIT_REF values
   {COMMIT_REF:undefined},{COMMIT_REF:''},{COMMIT_REF:'main'},
   {COMMIT_REF:sha.slice(0,39)},{COMMIT_REF:sha.toUpperCase()},
-  {COMMIT_REF:sha+'Z'}, {COMMIT_REF:'\n'+sha},
+  {COMMIT_REF:sha+'Z'},{COMMIT_REF:'\n'+sha},
  ]){
   const info=buildPreviewBuildIdentity(good(attrs));
   assert.equal(info.status,'UNVERIFIED_CONTEXT',JSON.stringify(attrs));
@@ -78,12 +95,14 @@ test('new private review page and homepage use actual provider metadata, no netw
  assert.match(page,/UNVERIFIED_CONTEXT|Unavailable/);
  assert.match(page,/not.*(proof|authorization|guarantee)/i);
  assert.doesNotMatch(page,/<script|<form|fetch\(|XMLHttpRequest|localStorage|affiliateUrl|NETLIFY_AUTH_TOKEN|cookie/i);
+ // Must not contain hardcoded PR number references in display text
+ assert.doesNotMatch(page,/draft PR #1\b/i,'page must not hardcode PR #1 in display text');
  assert.match(home,/href="\/preview-build\/"/);
 });
 test('owner SHA-bound UAT asks for actual authenticated hosted identity match, not a CI approval',()=>{
  const packet=readFileSync('src/lib/preview-uat-packet.mjs','utf8');
  const doc=readFileSync('docs/publisher-readiness/2026-11-01-private-preview-uat-release-decision.md','utf8');
- assert.match(packet,/'\/preview-build\/':\[/);
+ assert.match(packet,/\'\/preview-build\/\':\[/);
  assert.match(packet,/owner.*SHA|SHA.*owner|match.*PR HEAD/i);
  assert.match(doc,/\/preview-build\//);
  assert.match(doc,/PR HEAD/i);
