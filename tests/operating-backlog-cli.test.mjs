@@ -7,7 +7,7 @@ const run = (name,args=['--json','--as-of=2026-11-04'])=>
  JSON.parse(execFileSync(process.execPath,[name,...args],{encoding:'utf8'}));
 test('read-only CLI produces bounded JSON queue with no real-world action',()=>{
  const q=run('scripts/operating-backlog.mjs');
- assert.equal(q.asOf,'2026-10-31');
+ assert.equal(q.asOf,'2026-11-04');
  assert.equal(q.execution,'advisory-only');
  assert.equal(q.automatic.length,6);
  assert.equal(q.metrics.preparedEvidencePackets,6);
@@ -46,4 +46,7 @@ test('only safe action names appear in the queue, with zero earnings assertions'
  assert.equal(x.metrics.verifiedRevenue,null);
  assert.equal(x.metrics.acceptedAffiliatePrograms,0);
  assert.equal(x.metrics.approvedClaims,0);
+ assert.equal(x.metrics.preparedEvidencePackets,6);
+ assert.equal(x.metrics.editorialReviewsPending,6);
+ assert.equal(x.automatic.filter(t=>t.action==='draft-evidence-review').length,0);
 });
