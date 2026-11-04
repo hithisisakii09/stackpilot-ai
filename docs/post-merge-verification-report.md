@@ -1,10 +1,10 @@
 # StackPilot AI — Post-Merge Verification & Release Readiness Report
 
-**Generated:** 2026-11-04 (Asia/Kolkata)  
+**Generated:** 2026-11-04 (Asia/Kolkata) · **Last Revised:** 2026-11-04T20:17 IST (evidence-integrity corrections)  
 **Repository:** `hithisisakii09/stackpilot-ai` (Private)  
 **Primary Review Target:** `main` at commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`  
 **Active Documentation PR:** [PR #7 (Draft)](https://github.com/hithisisakii09/stackpilot-ai/pull/7) on branch `docs/post-merge-operational-state`  
-**Latest Documentation Commit:** `412744ea0740d2912db16745af17e3995397311e`  
+**Latest Documentation Commit:** `111b291cd5c95bed62657f7588db888401297f01` (branch head; `412744ea0740d2912db16745af17e3995397311e` is a previous commit on the same branch)  
 **Active Netlify Deploy Preview:** [`https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/`](https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/)
 
 ---
@@ -21,7 +21,7 @@
 | **Dependency Security Audit** | ✅ PASS | `npm audit` | **0 vulnerabilities** (0 low, 0 moderate, 0 high, 0 critical) |
 | **Main CI Build Workflow** | ✅ PASS | GitHub Actions Run `41806714878` | "Validate and build" on `main@c9b9a13` completed with SUCCESS |
 | **Main Browser QA Workflow** | ✅ PASS | GitHub Actions Run `41843736149` | "Browser acceptance (Chromium)" on `main@c9b9a13` dispatched via `workflow_dispatch` — SUCCESS (25 desktop + 25 mobile + axe scans passed) |
-| **PR #7 CI Workflows (Current Head)** | ✅ PASS | GitHub Actions Runs `41847146728`, `41847146784`, `41847146787` | All 3 workflows on `docs/post-merge-operational-state@412744e` completed with SUCCESS |
+| **PR #7 CI Workflows (Current Head `111b291`)** | ✅ PASS | GitHub Actions Runs `41848797010`, `41848797022`, `41848796827` | All 3 workflows on `docs/post-merge-operational-state@111b291` completed with SUCCESS |
 | **Netlify Deploy Preview 7** | ✅ PASS | Netlify Commit Status / Canary | Netlify status: SUCCESS ("Deploy Preview ready!"). Canary: HTTP 401 on `/` and `/preview-build/` |
 | **Netlify Production State** | ✅ VERIFIED | Owner dashboard (2026-11-04) | Serves `c8fadcb`; Auto Publishing is **Locked** (merge did NOT auto-promote) |
 | **Netlify Site Visibility** | ✅ VERIFIED | Owner dashboard & live canary | Confirmed **Private**; anonymous probe returns HTTP 401 on Production & Deploy Preview 7 |
@@ -44,8 +44,9 @@
 | Merge Parents | `c8fadcbf799e45ec41db2278aa7f84bb48c99895` + `f17d1438ff664f30fc3d081a61fb6bd5c2c11bad` | `git show --format=fuller c9b9a13` |
 | Historical Feature Branch | `feature/phase-1-1-recommendation-engine` | Merged via PR #1; now historical |
 | Active Working Branch | `docs/post-merge-operational-state` | Local git tracking branch |
-| Latest Branch Commit | `412744ea0740d2912db16745af17e3995397311e` | `git rev-parse HEAD` / GitHub REST API |
-| Draft Pull Request | **PR #7** (`docs/post-merge-operational-state` → `main`) | GitHub REST API (`draft: true`, `state: "open"`, `merged: false`) |
+| Latest Branch Commit (Current PR Head) | `111b291cd5c95bed62657f7588db888401297f01` | `git rev-parse HEAD` / GitHub REST API (`pulls/7` → `head.sha`) |
+| Previous Branch Commit (historical) | `412744ea0740d2912db16745af17e3995397311e` | Historical commit on the same branch |
+| Draft Pull Request | **PR #7** (`docs/post-merge-operational-state` → `main`) | GitHub REST API (`draft: true`, `state: "open"`, `merged: false`, `mergeable_state: "clean"`) |
 | Working Tree | Clean | `git status -sb` |
 
 ---
@@ -67,13 +68,14 @@ Result: **466 passing tests**, 0 failures, 0 skipped, 0 cancelled (clean rerun d
 - `tests/recommendation-engine.test.mjs`: Deterministic scoring, category filtering, neutral weighting, edge-case handling.
 - `tests/research-claims.test.mjs`: Candidate evidence intake ledger and source URL validation.
 
-### 3.2 Test Reconciliation: Investigation of Initial Exit Code 1
-During testing of the 60 test suites using the Windows PowerShell terminal, an intermediate invocation of `node --test tests/*.test.mjs` exited with code 1. A rigorous investigation confirmed:
-1. **Root Cause (Subprocess Concurrency on Windows):** The Node.js native test runner (`node:test`) spawns worker threads or child processes concurrently for all 60 test files matched by the glob. Over a dozen test files (`operating-backlog-cli.test.mjs`, `publisher-readiness.test.mjs`, `research-claims-cli.test.mjs`, `seo-audit-scope-csv.test.mjs`, etc.) invoke child processes (`node scripts/ops-report.mjs`, `node scripts/validate.mjs`). Under unconstrained concurrency on Windows PowerShell, simultaneous process spawning caused pipe/buffer congestion and V8 stack address traces (`# 18: 00007FFA0B8DEE4C`, `# 10: 00007FF7B2C196FD`).
-2. **Isolation Verification:** Each subtest file that showed a transient failure was immediately rerun individually and passed with 100% green assertions (e.g., `tests/operating-backlog-cli.test.mjs` passed 5/5 in 551ms; `tests/hosting-handoff.test.mjs` passed 6/6 in 126ms).
-3. **Clean Suite Rerun:** Running the full test suite without terminal pipe saturation verified:
+### 3.2 Test Reconciliation: Windows Parallel Run — Observed Exit Code 1
+During an earlier invocation of `node --test tests/*.test.mjs` (without concurrency limits) in the Windows PowerShell terminal, the runner exited with code 1. The following observations were made — note that the precise root cause was not independently reproduced and should be treated as a suspected explanation, not a confirmed finding:
+
+1. **Suspected Contributing Factor (Subprocess Concurrency on Windows):** The Node.js native test runner spawns worker threads or child processes concurrently for all 60 test files matched by the glob. Over a dozen test files (e.g. `operating-backlog-cli.test.mjs`, `publisher-readiness.test.mjs`, `research-claims-cli.test.mjs`) invoke child processes (`node scripts/ops-report.mjs`, `node scripts/validate.mjs`). It is suspected that under unconstrained concurrency on Windows PowerShell, simultaneous process spawning contributed to the failure. Stack address traces (`# 18: 00007FFA0B8DEE4C`, `# 10: 00007FF7B2C196FD`) were observed in the terminal output.
+2. **Individual File Reruns:** Each suspect test file was rerun individually and passed (e.g., `tests/operating-backlog-cli.test.mjs` passed 5/5 in 551ms; `tests/hosting-handoff.test.mjs` passed 6/6 in 126ms). This is consistent with the concurrency hypothesis but does not constitute definitive proof.
+3. **Serial Suite Reruns (Used for Evidence):** Running the full test suite with `--test-concurrency=1` produced the following result on two separate reruns (exit code 0 in both):
    `# tests 466 | # pass 466 | # fail 0 | # cancelled 0 | # skipped 0 | # todo 0`
-   Exit code: 0. There are zero functional or logic defects in the application or test code.
+   All test logic and assertions functioned correctly under serial execution. No application or test logic defects were identified, though the parallel failure itself was not conclusively isolated to a specific cause.
 
 ### 3.3 Catalog & Partner Integrity
 Command: `node scripts/validate.mjs`  
@@ -107,9 +109,12 @@ Result: **0 vulnerabilities** found.
 |---|---|---|---|---|---|---|
 | **41843736149** | Browser acceptance (Chromium) | `main@c9b9a13` | `workflow_dispatch` | completed | **success** | [Run 41843736149](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41843736149) |
 | **41806714878** | Validate and build | `main@c9b9a13` | `push` | completed | **success** | [Run 41806714878](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41806714878) |
-| **41847146728** | Browser acceptance (Chromium) | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146728](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146728) |
-| **41847146784** | Validate and build | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146784](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146784) |
-| **41847146787** | StackPilot safety and ops report | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146787](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146787) |
+| **41848797010** | Browser acceptance (Chromium) | `docs/post-merge-operational-state@111b291` | `pull_request` (PR #7) | completed | **success** | [Run 41848797010](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41848797010) |
+| **41848797022** | Validate and build | `docs/post-merge-operational-state@111b291` | `pull_request` (PR #7) | completed | **success** | [Run 41848797022](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41848797022) |
+| **41848796827** | StackPilot safety and ops report | `docs/post-merge-operational-state@111b291` | `pull_request` (PR #7) | completed | **success** | [Run 41848796827](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41848796827) |
+| *41847146728 (historical)* | Browser acceptance (Chromium) | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146728](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146728) |
+| *41847146784 (historical)* | Validate and build | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146784](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146784) |
+| *41847146787 (historical)* | StackPilot safety and ops report | `docs/post-merge-operational-state@412744e` | `pull_request` (PR #7) | completed | **success** | [Run 41847146787](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41847146787) |
 | *41845144137 (historical)* | Browser acceptance (Chromium) | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144137](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144137) |
 | *41845144404 (historical)* | Validate and build | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144404](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144404) |
 | *41845144122 (historical)* | StackPilot safety and ops report | `docs/post-merge-operational-state@e3db0f0` | `pull_request` (PR #7) | completed | **success** | [Run 41845144122](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/41845144122) |
@@ -161,7 +166,7 @@ Result: **0 vulnerabilities** found.
 ## 7. Concise 25-Route Owner UAT Checklist
 
 > [!NOTE]
-> All 25 routes have passed headless Chromium and mobile automated sweeps in CI Run `41843736149` (on `main`) and Run `41845144137` (on PR #7).
+> All 25 routes have passed automated headless Chromium (desktop) and mobile-emulation sweeps in CI Run `41843736149` (on `main@c9b9a13`) and Run `41848797010` (on PR #7 head `111b291`). These are automated checks only — they do not constitute authenticated human browser UAT.
 > This checklist is for the authorized owner to perform physical-browser acceptance on [`Deploy Preview 7`](https://deploy-preview-7--inspiring-chaja-cfb85f.netlify.app/) while authenticated.
 
 | # | Route Path | Name / Purpose | Key Element to Verify | Owner UAT Status |
@@ -172,7 +177,7 @@ Result: **0 vulnerabilities** found.
 | 4 | `/privacy/` | Privacy Notice | Netlify Analytics disclosure, zero cookie statement | ⬜ UNTESTED |
 | 5 | `/disclosure/` | Affiliate Disclosure | ₹0 revenue statement, null affiliate URL guarantee | ⬜ UNTESTED |
 | 6 | `/research/` | Research Workbench | Unapproved status badges (0/6 approved) | ⬜ UNTESTED |
-| 7 | `/preview-build/` | Build Identity Page | Commit SHA matches `412744e` on preview, PR: 7 | ⬜ UNTESTED |
+| 7 | `/preview-build/` | Build Identity Page | Commit SHA displayed should match PR #7 head `111b291cd5c95bed62657f7588db888401297f01` (shown by Netlify's `COMMIT_REF` env var at build time) | ⬜ UNTESTED |
 | 8 | `/tools/requirements-checklist/` | Buyer Requirements Worksheet | Interactive checklist items, local state | ⬜ UNTESTED |
 | 9 | `/tools/software-cost-calculator/` | SaaS Cost Calculator | Currency dropdown, local browser calculations | ⬜ UNTESTED |
 | 10 | `/tools/crm-seat-audit/` | CRM Paid-Seat Audit | Input sliders, formula-injection safe CSV export | ⬜ UNTESTED |
@@ -212,10 +217,16 @@ Result: **0 vulnerabilities** found.
 
 ## 9. PR #7 Review Recommendation & Decision Gates
 
-- **PR #7 Status:** Open, Draft, pointing to head SHA `412744ea0740d2912db16745af17e3995397311e`.
+- **PR #7 Status:** Open, Draft, pointing to current head SHA `111b291cd5c95bed62657f7588db888401297f01` (previous commit `412744ea0740d2912db16745af17e3995397311e` is historical on the same branch).
 - **Review Recommendation:**
   - **Keep PR #7 in Draft:** It cleanly reconciles operational handoffs, dates, and test counts.
   - **Do NOT merge PR #7 yet:** Wait until owner completes manual DevTools header verification and UAT checklist on Deploy Preview 7.
+
+### Known Technical Note: `/preview-build/` Page and PR Number
+
+> [!NOTE]
+> `src/lib/preview-build-identity.mjs` contains a hardcoded check `meta.REVIEW_ID === '1'`. Netlify sets `REVIEW_ID` to the actual PR number (e.g. `'7'` for PR #7). As a result, the `/preview-build/` route will display `UNVERIFIED_CONTEXT` and show no SHA on Deploy Preview 7 — not because the deployment is misconfigured, but because the library was written for PR #1. The deployed Netlify commit is still correct; only the diagnostic display is affected. This is a cosmetic diagnostic limitation, not a security or data issue. A future code change to generalize the REVIEW_ID check would be needed to make this page functional for any PR other than #1. That change requires owner authorization and test suite updates.
+
 - **Launch Blockers (All Remain Fail-Closed):**
   1. Authenticated host UAT across 25 routes.
   2. Live DevTools response header inspection on Netlify edge.
@@ -228,6 +239,6 @@ Result: **0 vulnerabilities** found.
 
 ## 10. Conclusion & Final Verdict
 
-**OVERALL: APPLICATION MERGE VERIFIED · CI RUNS 100% GREEN ON MAIN & PR #7 · ZERO DEFECTS FOUND · PUBLIC RELEASE NO-GO**
+**OVERALL: APPLICATION MERGE VERIFIED · CI RUNS GREEN ON MAIN & PR #7 HEAD · NO TEST FAILURES OBSERVED · PUBLIC RELEASE NO-GO**
 
-The codebase at `main@c9b9a1345e99ad97dc84376a20527305d9bb0d7c` and documentation branch `docs/post-merge-operational-state@412744e` are completely verified, synchronized, and defect-free. All technical gates are green. All operational, financial, and publishing safeguards remain strictly active.
+The codebase at `main@c9b9a1345e99ad97dc84376a20527305d9bb0d7c` and documentation branch `docs/post-merge-operational-state@111b291cd5c95bed62657f7588db888401297f01` have passed all automated checks (466/466 tests, build, link audit, dependency audit, CI on exact current head SHA). No application logic or test failures were observed. All operational, financial, and publishing safeguards remain strictly active. Owner-facing manual checks (authenticated 25-route UAT, live DevTools header inspection, editorial approvals, publisher legal identity, affiliate applications, and public launch authorization) remain outstanding and are detailed in Sections 6 and 7 above.
