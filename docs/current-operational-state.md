@@ -1,6 +1,18 @@
 # StackPilot AI — Current operational state and safe next actions
 
-> **POST-MERGE UPDATE (2026-11-04):** GitHub draft PR #1 was merged into `main` by the owner on 2026-11-04. The merged `main` SHA is `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`. All 466 tests pass on `main`. The feature branch `feature/phase-1-1-recommendation-engine` is now a historical/inactive branch. The historical record of when draft PR #1 was **unmerged** is preserved below for provenance; do not merge any subsequent PR to `main` without fresh explicit owner authorization.
+> **POST-MERGE & OWNER ACCEPTANCE UPDATE (2026-11-04):** 
+> 1. GitHub draft PR #1 was merged into `main` by the owner on 2026-11-04 (merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`).
+> 2. Follow-up documentation and preview-identity branch `docs/post-merge-operational-state` (PR #7) was fully verified at commit `f3c87ec56dd1588abf9298c325c12c82fe94e1a4`.
+> 3. **Owner Acceptance Completed on 2026-11-04:** The authorized repository owner logged into private Netlify Deploy Preview 7 and confirmed all 8 manual acceptance checks passed:
+>    - PASS — Logged into private Netlify preview (HTTP 401 canary confirmed)
+>    - PASS — Verified PR #7 and exact commit SHA on `/preview-build/`
+>    - PASS — Tested homepage and navigation
+>    - PASS — Tested comparison and research pages
+>    - PASS — Tested all interactive tools
+>    - PASS — Tested all six software profile pages
+>    - PASS — Checked mobile layout
+>    - PASS — Inspected live security response headers in DevTools
+> 4. **Verdict on PR #7:** **READY FOR OWNER MERGE APPROVAL**. Do not merge without explicit owner authorization. Public commercial release remains a separate NO-GO gate.
 
 **Snapshot date:** 2026-11-04 (Asia/Kolkata). **Type:** dated development handoff, not a live Netlify account-state guarantee or public-release approval. Before consequential actions, fetch the current [merged PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1) (now closed), exact head SHA, matching GitHub Actions runs, and Netlify commit status. This snapshot records the last verified application-code and readiness audit checkpoint.
 
@@ -10,7 +22,7 @@
 | --- | --- | --- |
 | GitHub draft PR #1 | Branch `feature/phase-1-1-recommendation-engine` **merged** into `main` on 2026-11-04 by owner authorization; merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`. Historical baseline: draft PR #1 was open and **unmerged** at `c6e72f294f55b6a80863d7c5f396333d3a44171d`; `main` previously at `c8fadcbf799e45ec41db2278aa7f84bb48c99895`. A documentation correction branch `docs/post-merge-operational-state` is open as a new draft PR; that PR must remain draft and unmerged until explicit owner authorization. | No subsequent PR may merge to `main` without fresh explicit owner authorization |
 | GitHub Actions CI on `main` | **Owner verified 2026-11-04:** all CI jobs green for merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c` (build run `41806714878`). Chromium browser-qa dispatched via `workflow_dispatch` on `main` (run `41843736149`) — **SUCCESS** (25 desktop + 25 mobile + axe scans passed). | Remote protected preview UAT is separately reported. |
-| Validate/build CI | **SUCCESS**; **466/466 tests** (expanded with WCAG 2.1 AA accessibility landmarks, skip-link navigation, CWE-1236 CSV spreadsheet formula injection hardening, and core engine edge-case stress suites), 25 generated HTML routes, 226 internal links, 10 HTML asset references, `npm audit` 0 vulnerabilities | Exact-SHA CI evidence; does not prove hosted access or vendor claim accuracy |
+| Validate/build CI | **SUCCESS**; **468/468 tests** (expanded with preview-build identity generalisation, WCAG 2.1 AA accessibility landmarks, skip-link navigation, CWE-1236 CSV spreadsheet formula injection hardening, and core engine edge-case stress suites), 25 generated HTML routes, 226 internal links, 10 HTML asset references, `npm audit` 0 vulnerabilities | Exact-SHA CI evidence; does not prove hosted access or vendor claim accuracy |
 | Safety/operations CI | **SUCCESS**; private preview package: 25 pages / 40 files / 257,462 bytes (CI/Linux); anonymous CI canary returned HTTP 401 on two fixed routes | Two fixed-path probes are not exhaustive anonymous-access or authentication verification |
 | Chromium browser CI | **SUCCESS**; 25/25 desktop and 25/25 mobile accessibility sweeps; axe WCAG 2.1 A/AA checks passed; browser acceptance passed for all three advisor scenarios, six software profiles, comparisons, and buyer tools | Headless Chromium in Linux container against built assets, not authenticated physical device testing of remote preview (not authenticated testing of the remote Netlify preview) |
 | Netlify Deploy Preview | Historical PR #1 preview. Anonymous probe: HTTP 401 ✅. **Owner dashboard verified 2026-11-04:** Auto Publishing **Locked** — production did **not** auto-promote after merge; production still serves `c8fadcbf799e45ec41db2278aa7f84bb48c99895`. Site visibility confirmed **Private**. | Provider build status does not prove authenticated route UAT, live headers, or all-route anonymous-denial check. |
