@@ -1,0 +1,153 @@
+---
+import {OWNER_UAT_CHECKS} from '../../../lib/owner-uat-worksheet.mjs';
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Private browser-only owner review checklist for Netlify preview SHA, live privacy, security and billing observations.">
+<title>Private owner UAT evidence worksheet | StackPilot AI</title>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark;background:#0b1220;color:#eef5ff}
+*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:980px;margin:auto;padding:24px}
+nav{display:flex;flex-wrap:wrap;gap:16px}a{color:#7ce8c6}h1{font-size:clamp(30px,5vw,50px)}
+p,li{color:#c8d9eb;line-height:1.6}
+.panel{background:#152138;border:1px solid #405675;border-radius:15px;padding:22px;margin:20px 0;min-width:0}
+label{display:block;font-weight:650;line-height:1.45;margin:10px 0 8px}
+input,select,textarea{width:100%;font:inherit;background:#0b1220;color:#eef5ff;border:1px solid #91abc9;border-radius:8px;padding:12px;min-width:0}
+code{overflow-wrap:anywhere}textarea{min-height:300px;resize:vertical;overflow-wrap:anywhere}
+.inputs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.field{padding:12px 0;border-bottom:1px solid #405675}.field:last-child{border:0}
+fieldset{border:0;padding:0;margin:0}legend{font-weight:750;font-size:1.15rem}
+button{font:inherit;background:#7ce8c6;color:#06231d;border:0;border-radius:8px;padding:12px 17px;font-weight:750;cursor:pointer}
+button.secondary{color:#eef5ff;background:#293d58;border:1px solid #91abc9}
+button:disabled{opacity:.48;cursor:not-allowed}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+:focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+#owner-uat-status{min-height:1.5em;color:#ffe2a6}
+footer{border-top:1px solid #405675}
+@media(max-width:650px){header,main,footer{padding:16px}.panel{padding:16px}.inputs{grid-template-columns:1fr}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<header><nav aria-label="Site navigation">
+<a href="/">← StackPilot AI</a><a href="/preview-build/">Preview build identity</a><a href="/privacy/">Privacy</a><a href="/methodology/">Methodology</a>
+</nav></header>
+<main id="main">
+<p>Private browser-only owner review · ₹0 budget</p>
+<h1>Private owner UAT evidence worksheet</h1>
+<p>This worksheet records <strong>your self-reported checks</strong> after you personally open StackPilot's protected Netlify Deploy Preview. It <strong>does not test the hosted site for you</strong>, authenticate anyone, validate access restrictions, change provider settings or grant publication permission.</p>
+<p><strong>Privacy:</strong> Enter only public-style 40-character Git commit hashes and fixed status choices. Do not enter passwords, cookies, account numbers, identifying personal information, customer data or payment details. The form never transmits selections. Netlify Web Analytics is documented as enabled for page visits; it is separate from this browser-only form.</p>
+<p>Before using this worksheet, open <a href="/preview-build/">the authenticated build identity page</a> and <a href="https://github.com/hithisisakii09/stackpilot-ai/pull/1" rel="noopener noreferrer" target="_blank">the current draft GitHub PR #1</a> in separate authorized browser tabs. Compare the full 40-character SHA, not just the prefix. If either page is inaccessible, or the build reports UNKNOWN, record that as an outstanding blocker rather than assuming it passed.</p>
+<form id="owner-uat-form" novalidate>
+<section class="panel" aria-labelledby="uat-hash-heading">
+<h2 id="uat-hash-heading">1. Compare source commits manually</h2>
+<div class="inputs">
+<div>
+<label for="owner-uat-expectedSha">Expected PR #1 HEAD SHA (40 lowercase hex characters)</label>
+<input type="text" id="owner-uat-expectedSha" name="expectedSha" required maxlength="40" autocomplete="off" spellcheck="false" placeholder="Copy the current PR HEAD SHA">
+</div>
+<div>
+<label for="owner-uat-observedSha">Observed authenticated Netlify build SHA (40 lowercase hex characters)</label>
+<input type="text" id="owner-uat-observedSha" name="observedSha" required maxlength="40" autocomplete="off" spellcheck="false" placeholder="Enter SHA seen on protected page">
+</div>
+</div>
+<p>The fields are deliberately never prefilled. A matching user-entered string alone cannot prove what Netlify actually served.</p>
+</section>
+<fieldset class="panel">
+<legend>2. Record six independent owner checks</legend>
+{OWNER_UAT_CHECKS.map(check=><div class="field">
+<label for={'owner-uat-'+check.id}>{check.label}</label>
+<p>{check.hint}</p>
+<select id={'owner-uat-'+check.id} name={check.id}>
+<option value="not-checked">Not checked — default</option>
+<option value="pass">Pass — I observed this myself</option>
+<option value="fail">Fail — an observed defect</option>
+<option value="blocked">Blocked — evidence unavailable</option>
+</select>
+</div>)}
+</fieldset>
+<div class="actions">
+<button type="submit">Prepare self-reported evidence summary</button>
+<button type="reset" class="secondary">Clear worksheet</button>
+</div>
+</form>
+<p id="owner-uat-status" role="status" aria-live="polite"></p>
+<section class="panel" aria-labelledby="owner-uat-report-title">
+<h2 id="owner-uat-report-title">Offline review summary — not release approval</h2>
+<label for="owner-uat-report">Read the evidence summary before sharing it with your authorized reviewer</label>
+<textarea readonly id="owner-uat-report" placeholder="No review recorded yet."></textarea>
+<div class="actions">
+<button type="button" id="owner-uat-copy" class="secondary" disabled>Copy summary</button>
+<button type="button" id="owner-uat-download" class="secondary" disabled>Download offline CSV</button>
+</div>
+<p>Even six self-attested Pass selections and matching hashes produce <strong>OWNER_SELF_REPORTED_ONLY</strong> — never independently verified UAT or approval to merge, publish, index, change access permissions, activate affiliates, accept contracts or spend.</p>
+</section>
+<section class="panel">
+<h2>What else does the owner need?</h2>
+<p>The separately generated <a href="https://github.com/hithisisakii09/stackpilot-ai/actions/workflows/agent-ops.yml" rel="noopener noreferrer" target="_blank">private CI UAT packet</a> lists all emitted pages to inspect. Test each route while authenticated; confirm separate anonymous denial and live security headers; inspect Netlify's real Private/Locked, Free plan, analytics and credit usage settings; keep evidence in your authorized local system. All product claims and legal/editorial signoffs remain independently gated.</p>
+</section>
+</main>
+<footer><a href="/disclosure/">Disclosures</a> · <a href="/privacy/">Privacy notes</a> · StackPilot AI private development</footer>
+<script>
+import {OWNER_UAT_CHECKS,assessOwnerUatEvidence,formatOwnerUatReport,formatOwnerUatCsv} from '../../../lib/owner-uat-worksheet.mjs';
+const fields=['expectedSha','observedSha',...OWNER_UAT_CHECKS.map(x=>x.id)];
+const form=document.querySelector('#owner-uat-form');
+const status=document.querySelector('#owner-uat-status');
+const output=document.querySelector('#owner-uat-report');
+const copy=document.querySelector('#owner-uat-copy');
+const download=document.querySelector('#owner-uat-download');
+let current=null;
+function invalidate(){
+ current=null;output.value='';copy.disabled=true;download.disabled=true;
+}
+form.addEventListener('input',()=>{
+ invalidate();status.textContent='Inputs changed. Reassess before exporting.';
+});
+form.addEventListener('change',()=>{
+ invalidate();status.textContent='Inputs changed. Reassess before exporting.';
+});
+form.addEventListener('submit',event=>{
+ event.preventDefault();
+ try{
+  const input=Object.fromEntries(fields.map(k=>[k,form.elements.namedItem(k).value]));
+  const result=assessOwnerUatEvidence(input);
+  output.value=formatOwnerUatReport(result);
+  current=result;copy.disabled=false;download.disabled=false;
+  status.textContent=result.status==='BLOCKED_UNVERIFIED'
+   ?'BLOCKED_UNVERIFIED — source SHA mismatch or one or more owner checks remain incomplete.'
+   :'OWNER_SELF_REPORTED_ONLY — NOT independently verified or approved for public release.';
+ }catch(error){
+  invalidate();status.textContent=error instanceof Error?error.message:'Invalid owner UAT fields.';
+ }
+});
+form.addEventListener('reset',()=>{
+ invalidate();status.textContent='Worksheet cleared. No information was submitted.';
+});
+copy.addEventListener('click',async()=>{
+ if(!current||!output.value||copy.disabled)return;
+ try{await navigator.clipboard.writeText(output.value);status.textContent='Summary copied locally.';}
+ catch{output.focus();output.select();status.textContent='Clipboard unavailable. Select and copy manually.';}
+});
+download.addEventListener('click',()=>{
+ if(!current||!output.value||download.disabled)return;
+ try{
+  const csv=formatOwnerUatCsv(current);
+  const file=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(file);
+  const anchor=document.createElement('a');
+  anchor.href=url;
+  anchor.download='stackpilot-owner-uat-evidence.csv';
+  document.body.append(anchor);anchor.click();anchor.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status.textContent='Offline self-reported CSV saved. No data was submitted.';
+ }catch{
+  invalidate();status.textContent='CSV export unavailable. Reassess the worksheet.';
+ }
+});
+</script>
+</body>
+</html>

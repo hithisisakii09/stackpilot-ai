@@ -1,0 +1,140 @@
+---
+import { HOSTING_GATE_DEFINITIONS } from '../../../lib/hosting-cutover-assessment.mjs';
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex, nofollow"/>
+<meta name="description" content="Private, vendor-neutral hosting cutover preparation and NO-GO checklist."/>
+<title>Hosting cutover gate assessor | StackPilot AI</title>
+<style>
+:root{font-family:system-ui,sans-serif;background:#0b1220;color:#edf5ff;color-scheme:dark}
+*{box-sizing:border-box}body{margin:0}
+header,main,footer{max-width:970px;margin:auto;padding:24px}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+a{color:#7ce8c6}h1{font-size:clamp(31px,5vw,54px)}
+p,li{line-height:1.6;color:#c8d9ed}
+.panel{min-width:0;background:#152138;border:1px solid #405675;border-radius:16px;padding:23px;margin:20px 0}
+.gate-row{padding:12px 0;border-bottom:1px solid #405675}
+.gate-row:last-child{border-bottom:0}
+label{display:block;font-weight:650;line-height:1.4;margin-bottom:8px}
+select,textarea{width:100%;background:#0b1220;color:#edf5ff;border:1px solid #8ca4c1;border-radius:8px;padding:12px;font:inherit}
+select{max-width:440px}
+textarea{min-height:320px;resize:vertical;overflow-wrap:anywhere}
+button{border:0;border-radius:8px;background:#7ce8c6;color:#06231d;padding:12px 18px;font-weight:750;cursor:pointer}
+button.secondary{background:#293d58;color:#edf5ff;border:1px solid #91abc9}
+button:disabled{opacity:.5;cursor:not-allowed}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+:focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+#gate-status{color:#ffe2a6;min-height:1.5em}
+footer{border-top:1px solid #405675;margin-top:20px}
+@media(max-width:650px){header,main,footer{padding:17px}.panel{padding:16px}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<header><nav aria-label="Primary navigation">
+<a href="/">← StackPilot AI</a><a href="/guides/hosting-migration-checklist/">Hosting migration guide</a><a href="/tools/requirements-checklist/">Requirements checklist</a><a href="/methodology/">Methodology</a>
+</nav></header>
+<main id="main">
+<p>Private browser-only preparation tool</p>
+<h1>Hosting cutover gate assessor</h1>
+<p>Use five checkpoints to identify missing cutover evidence before asking your authorized owner to review a hosting migration. This tool is <strong>not an authorization</strong> to switch traffic, change DNS, spend money, stop an old server, or move customer data.</p>
+<p>Choose only the evidence status you have personally checked. A Pass is <strong>user-entered, not independently verified</strong>. Any Fail or Not assessed gives NO_GO. Five Pass entries produce only READY_FOR_HUMAN_REVIEW, not GO.</p>
+<form id="gate-form" novalidate>
+<fieldset class="panel">
+<legend>Five cutover evidence checkpoints</legend>
+{HOSTING_GATE_DEFINITIONS.map(g=>
+<div class="gate-row">
+<label for={'gate-'+g.id}>{g.label}</label>
+<p>{g.hint}</p>
+<select id={'gate-'+g.id} name={g.id}>
+<option value="not-assessed">Not assessed</option>
+<option value="pass">Pass — self-attested</option>
+<option value="fail">Fail — unresolved blocker</option>
+</select>
+</div>
+)}
+</fieldset>
+<div class="actions"><button type="submit">Assess planning gates</button><button type="reset" class="secondary">Clear assessment</button></div>
+</form>
+<p id="gate-status" role="status" aria-live="polite"></p>
+<section class="panel" aria-labelledby="gate-output-title">
+<h2 id="gate-output-title">Private human-review preparation report</h2>
+<label for="gate-report">Read the report before copying or sharing</label>
+<textarea id="gate-report" readonly placeholder="Select evidence statuses and generate an assessment."></textarea>
+<div class="actions"><button type="button" id="gate-copy" class="secondary" disabled>Copy report</button><button type="button" id="gate-download" class="secondary" disabled>Download offline CSV</button></div>
+<p>CSV entries are self-attested status labels only; the file cannot document approvals, verify backups or authorize a cutover. Keep actual evidence in your own authorized system.</p>
+</section>
+<section class="panel">
+<h2>Who should make the decision?</h2>
+<p>Your designated DNS, infrastructure, data/compliance and incident owners must review real evidence and approve a separate controlled migration runbook. This worksheet is useful even when the result is NO_GO. Do not paste passwords, client information, domain account identifiers or customer data here.</p>
+</section>
+<p><strong>Privacy:</strong> The selections are processed in this tab, and your CSV is created on your device. They are not submitted to StackPilot. Netlify Web Analytics is documented as enabled at the hosting layer and may record page visits; it does not receive these selections from this browser-only tool. See <a href="/privacy/">privacy notes</a>.</p>
+</main>
+<footer><a href="/privacy/">Privacy notes</a> · <a href="/disclosure/">Affiliate disclosure</a> · StackPilot AI (working name)</footer>
+<script>
+import {HOSTING_GATE_DEFINITIONS,assessHostingCutover,formatHostingCutoverReport,formatHostingCutoverCsv} from '../../../lib/hosting-cutover-assessment.mjs';
+const form=document.querySelector('#gate-form');
+const status=document.querySelector('#gate-status');
+const output=document.querySelector('#gate-report');
+const copy=document.querySelector('#gate-copy');
+const download=document.querySelector('#gate-download');
+let result=null;
+function invalidate(){
+ result=null;
+ output.value='';
+ copy.disabled=true;
+ download.disabled=true;
+}
+form.addEventListener('change',()=>{
+ invalidate();
+ status.textContent='Selections changed. Reassess before copying or downloading.';
+});
+form.addEventListener('submit',event=>{
+ event.preventDefault();
+ try{
+  const input=Object.fromEntries(HOSTING_GATE_DEFINITIONS.map(g=>[g.id,form.elements.namedItem(g.id).value]));
+  const current=assessHostingCutover(input);
+  output.value=formatHostingCutoverReport(current);
+  result=current;
+  copy.disabled=false;
+  download.disabled=false;
+  status.textContent=current.status==='NO_GO'
+   ? 'NO_GO — one or more cutover evidence gates remain failed or unassessed.'
+   : 'READY_FOR_HUMAN_REVIEW — this is not authorization for a hosting cutover.';
+ }catch(error){
+  invalidate();
+  status.textContent=error instanceof Error?error.message:'Invalid assessment.';
+ }
+});
+form.addEventListener('reset',()=>{invalidate();status.textContent='Assessment cleared.';});
+copy.addEventListener('click',async()=>{
+ if(!result||!output.value)return;
+ try{await navigator.clipboard.writeText(output.value);status.textContent='Report copied locally.';}
+ catch{output.focus();output.select();status.textContent='Clipboard unavailable. Select and copy text manually.';}
+});
+download.addEventListener('click',()=>{
+ if(!result||!output.value||download.disabled)return;
+ try{
+  const csv=formatHostingCutoverCsv(result);
+  const file=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(file);
+  const anchor=document.createElement('a');
+  anchor.href=url;
+  anchor.download='stackpilot-hosting-cutover-gates.csv';
+  document.body.append(anchor);
+  anchor.click();
+  anchor.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+  status.textContent='Offline CSV saved on your device; no assessment was submitted.';
+ }catch{
+  invalidate();
+  status.textContent='CSV export unavailable; reassess the checkpoints.';
+ }
+});
+</script>
+</body></html>

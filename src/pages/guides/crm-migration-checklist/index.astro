@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="description" content="Independent CRM migration planning checklist for teams evaluating data export, import, security, and switching costs." />
+<title>CRM migration checklist | StackPilot AI</title>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark;background:#0b1220;color:#e9f1ff}
+*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:950px;margin:auto;padding:24px}
+a{color:#7ce8c6}h1{font-size:clamp(32px,5vw,54px)}p,li{line-height:1.7;color:#c9d9ec}
+section{border:1px solid #405675;border-radius:14px;background:#152138;padding:20px;margin:22px 0}
+nav{display:flex;gap:16px;flex-wrap:wrap}:focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+footer{border-top:1px solid #405675}
+@media(max-width:600px){header,main,footer{padding:16px}section{padding:16px}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<header><nav aria-label="Site navigation"><a href="/">StackPilot AI</a><a href="/tools/requirements-checklist/">Requirements checklist</a><a href="/tools/software-cost-calculator/">Cost calculator</a><a href="/methodology/">Methodology</a></nav></header>
+<main id="main">
+<p>Independent buyer education · private draft</p>
+<h1>CRM migration checklist: plan a safer software switch</h1>
+<p>This checklist is a planning framework, not a verified feature comparison. It does not assert that any particular CRM supports the exports, permissions, or integrations described. Confirm current vendor documentation, your contract, and your security policies before moving real records.</p>
+<section><h2>1. Inventory what must move</h2><ul>
+<li>List contacts, organizations, deals, pipeline stages, owners, custom fields, notes, attachments, and activity history.</li>
+<li>Determine what must be archived for retention or legal requirements, and who is authorized to access each dataset.</li>
+<li>Make an inventory of integrations, automations, email links, and reports that might break during cutover.</li>
+</ul></section>
+<section><h2>2. Review export and security permissions</h2><ul>
+<li>Identify required export permissions and obtain authorized access; never share account passwords or export private customer data to testing tools.</li>
+<li>Check the exported file's encoding (including UTF-8), dates, time zones, delimiters, record identifiers, and attachments.</li>
+<li>Store extracts with restricted access, encryption where appropriate, an expiry date, and an approved deletion plan.</li>
+</ul></section>
+<section><h2>3. Map and test before bulk import</h2><p><a href="/examples/crm-field-mapping-synthetic.csv" download>Download the fictional CRM field mapping CSV</a> to practice identifier and role mapping with synthetic data only. It contains no real customer data and does not claim compatibility with any particular CRM.</p><ul>
+<li>Map each source field to a target field, especially custom fields, relationships, picklists, and record ownership.</li>
+<li>Document normalization and deduplication rules, including which duplicate record is retained.</li>
+<li>Run a sample import with synthetic or otherwise approved test records, then validate counts, permissions, associations, and activity history.</li>
+<li>Record discrepancies and do not move production data until a designated human has approved the results.</li>
+</ul></section>
+<section><h2>4. Prepare a reversible cutover</h2><p>Use the <a href="/tools/crm-migration-readiness/">browser-only CRM migration readiness worksheet</a> to compare authorized sample import counts and measured rollback timing before human GO/NO-GO review. Its self-reported assessment cannot authorize a real migration.</p><ul>
+<li>Agree on a freeze window and communicate responsibilities, acceptance criteria, and escalation contacts.</li>
+<li>Keep an authorized backup and a rollback plan; test restoration in an approved environment rather than assuming exported records can be re-imported intact.</li>
+<li>Check that active integrations, automations, reports, and user permissions work before retiring the old system.</li>
+</ul></section>
+<section><h2>5. Estimate switching effort and cost</h2><ul>
+<li>Estimate staff hours for audit, field mapping, cleanup, testing, training, and post-cutover support.</li>
+<li>Include overlapping subscription periods, potential migration services, taxes, and contractual termination charges where applicable.</li>
+<li>Use the <a href="/tools/software-cost-calculator/">subscription cost calculator</a> with your own figures; it does not calculate staff-hours expenses automatically.</li>
+<li>Use the <a href="/tools/requirements-checklist/">requirements checklist</a> to collect written answers from potential providers.</li>
+</ul></section>
+<section><h2>6. Evidence and release decision</h2><p>For each disputed provider capability, preserve the official source URL, capture date, exact plan, geography, administrative role, restrictions, and open questions. Treat a vendor statement as unverified until independently reviewed. Assign a named approver for migration readiness, privacy, and data retention. Record a GO or NO-GO only after the actual checks have been completed.</p><p>See the <a href="/methodology/">research methodology</a>. No product recommendation, migration outcome, affiliate earning, or vendor feature guarantee is implied.</p></section>
+<section aria-labelledby="migration-acceptance"><h2 id="migration-acceptance">7. Synthetic-data acceptance matrix</h2>
+<p>Before authorizing a real cutover, record a Pass or fail decision for each check using synthetic sample records and no real customer data. Adapt the thresholds with your own approved team requirements; an example target is not evidence that a vendor meets it.</p>
+<div role="region" aria-label="Migration acceptance table, scroll horizontally to view all columns" tabindex="0" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;min-width:620px">
+<caption style="text-align:left;padding:8px 0">Fill this matrix in your own controlled testing document; StackPilot does not receive submissions.</caption>
+<thead><tr><th scope="col">Check</th><th scope="col">Source count</th><th scope="col">Target count</th><th scope="col">Pass or fail and evidence</th></tr></thead>
+<tbody>
+<tr><th scope="row">Records and required fields</th><td>Record count before export</td><td>Count after import</td><td>Compare counts and sample values</td></tr>
+<tr><th scope="row">Owner or role mapping</th><td>Original assigned users</td><td>Mapped user accounts</td><td>Verify least-privilege access</td></tr>
+<tr><th scope="row">Association integrity</th><td>Related record links</td><td>Recreated links</td><td>Check parent-child references</td></tr>
+<tr><th scope="row">Attachments and activities</th><td>Expected accessible items</td><td>Accessible imported items</td><td>Document omitted formats</td></tr>
+</tbody></table></div>
+<p><strong>Cutover approval:</strong> Record a named authorized reviewer, review date, unresolved discrepancies, approved rollback procedure, and final GO/NO-GO in your own system. Do not upload private exports or client records to StackPilot.</p></section>
+</main>
+<footer><a href="/privacy/">Privacy</a> · <a href="/disclosure/">Disclosures</a> · StackPilot AI private preview</footer>
+</body></html>

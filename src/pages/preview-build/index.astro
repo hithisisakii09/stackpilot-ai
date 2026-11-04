@@ -1,0 +1,66 @@
+---
+import {buildPreviewBuildIdentity} from '../../lib/preview-build-identity.mjs';
+// These are Netlify's documented, read-only *build* metadata values.
+// Never mirror process.env wholesale or use GitHub's PR-merge SHA as deployed SHA.
+const identity=buildPreviewBuildIdentity({
+ NETLIFY:process.env.NETLIFY,
+ CONTEXT:process.env.CONTEXT,
+ PULL_REQUEST:process.env.PULL_REQUEST,
+ REVIEW_ID:process.env.REVIEW_ID,
+ COMMIT_REF:process.env.COMMIT_REF
+});
+const known=identity.status==='PREVIEW_COMMIT_REPORTED';
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Private Netlify deploy-preview build identity for owner source SHA comparison.">
+<title>Preview build identity | StackPilot AI</title>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark;background:#0b1220;color:#eef5ff}
+*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:880px;margin:auto;padding:24px}
+nav{display:flex;gap:18px;flex-wrap:wrap}a{color:#7ce8c6}
+h1{font-size:clamp(30px,5vw,50px)}
+p,li{color:#c8d9eb;line-height:1.65}
+.panel{background:#152138;border:1px solid #485e79;border-radius:16px;padding:24px;margin:22px 0}
+code{display:block;overflow-wrap:anywhere;word-break:break-word;background:#0b1220;border:1px solid #405675;border-radius:8px;padding:14px;color:#b6f3da}
+strong{color:#f4f9ff}:focus-visible{outline:3px solid #7ce8c6;outline-offset:4px}
+footer{border-top:1px solid #405675}
+@media(max-width:600px){header,main,footer{padding:16px}.panel{padding:16px}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<header><nav aria-label="Site navigation"><a href="/">← StackPilot AI</a><a href="/privacy/">Privacy</a><a href="/methodology/">Methodology</a></nav></header>
+<main id="main">
+<p>Private reviewer utility · no user submission</p>
+<h1>Preview build identity</h1>
+<p>This page shows limited <strong>build-time metadata</strong> from the protected Netlify PR preview. It is intended for an authorized reviewer to compare the displayed Git commit with draft PR #1 while signed in. No private account credentials or user information are read here.</p>
+<section class="panel" aria-labelledby="build-status-label">
+<h2 id="build-status-label">Reported build status</h2>
+<p><strong>{known?'Netlify Deploy Preview commit reported':'Unavailable — cannot confirm served commit'}</strong></p>
+<p>{known?'Netlify build context identified the PR #1 Git commit shown below.':'This was not identified as Netlify Deploy Preview for PR #1 with valid Git commit metadata. Do not infer the deployed source version from this page.'}</p>
+<p>Full source commit (from Netlify build variables, if available):</p>
+<code>{identity.sourceCommit??'UNKNOWN — no reliable preview commit available'}</code>
+<p>Expected preview PR: {identity.prNumber??'unknown'}</p>
+</section>
+<section class="panel">
+<h2>How to verify the candidate</h2>
+<ol>
+<li>Open this page inside your legitimately <strong>authenticated</strong> Netlify Deploy Preview, not just the GitHub static-build artifact.</li>
+<li>Open <a href="https://github.com/hithisisakii09/stackpilot-ai/pull/1" rel="noopener noreferrer" target="_blank">draft PR #1</a> separately and copy its current full HEAD commit SHA.</li>
+<li>Compare all 40 characters with the SHA displayed above. If anything differs, says UNKNOWN, or the page does not load, record <strong>FAIL or BLOCKED</strong> instead of PASS.</li>
+<li>Repeat actual route and UI checks, anonymous denial, security response headers and provider-account checks separately. Record only redacted results in your controlled UAT worksheet.</li>
+</ol>
+<p><strong>Limits:</strong> A matching build-time value is <strong>not proof</strong> of cryptographic provenance, authenticated hosted UAT, protection of every route, account billing, publication approval or actual Netlify build ownership. It only helps locate a potential mismatch for human investigation.</p>
+<p>No release, affiliate activation, account-setting change, DNS switch or spending is authorized by this page.</p>
+<p>After the comparison, you can record your own check results in the <a href="/tools/private-uat-worksheet/">private owner UAT evidence worksheet</a>. It creates only a local, self-reported CSV and cannot verify the actual host or approve release.</p>
+</section>
+</main>
+<footer><a href="/disclosure/">Disclosures</a> · <a href="/privacy/">Privacy notes</a> · StackPilot AI private development preview</footer>
+</body>
+</html>

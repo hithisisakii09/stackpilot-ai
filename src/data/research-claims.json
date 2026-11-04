@@ -1,0 +1,74 @@
+[
+  {
+    "id": "hubspot-doc-claim-1",
+    "productId": "hubspot",
+    "sourceUrl": "https://knowledge.hubspot.com/import-and-export/export-records",
+    "statement": "HubSpot documentation says exporting CRM records requires export permissions and can include current record properties and associations.",
+    "caveat": "Activities and subscription-specific export limits require separate account-level verification.",
+    "recordedOn": "2026-10-31",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "pipedrive-doc-claim-1",
+    "productId": "pipedrive",
+    "sourceUrl": "https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets",
+    "statement": "Pipedrive documents spreadsheet imports using XLS, XLSX and CSV files and notes that appropriate import permissions are required.",
+    "caveat": "Confirm account permissions, supported record types, mandatory fields and current upload limits.",
+    "recordedOn": "2026-10-31",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "ahrefs-doc-claim-1",
+    "productId": "ahrefs",
+    "sourceUrl": "https://help.ahrefs.com/en/articles/3119402-how-are-crawl-credits-in-site-audit-spent",
+    "statement": "Ahrefs documentation says internal HTML pages returning HTTP 200 consume Site Audit crawl credits, while certain redirects and assets do not.",
+    "caveat": "Credit allowances and verified-site entitlements depend on plan and may change over time.",
+    "recordedOn": "2026-10-31",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "semrush-doc-claim-1",
+    "productId": "semrush",
+    "sourceUrl": "https://www.semrush.com/kb/539-configuring-site-audit",
+    "statement": "Semrush documentation describes configurable Site Audit page limits and options for restricting crawl scope to subdomains or subfolders.",
+    "caveat": "Per-audit and monthly allowances depend on the current subscription plan and must be checked.",
+    "recordedOn": "2026-10-31",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "kinsta-doc-claim-1",
+    "productId": "kinsta",
+    "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/",
+    "statement": "Kinsta states that WordPress hosting plans include usage allowances and exceeding some limits can result in overage charges.",
+    "caveat": "Confirm the current WordPress plan, measurement rules, notifications, taxes and overage rates.",
+    "recordedOn": "2026-10-31",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedAt": null
+  },
+  {
+    "id": "cloudways-doc-claim-1",
+    "productId": "cloudways",
+    "sourceUrl": "https://support.cloudways.com/en/articles/5119648-charges-for-off-site-backups",
+    "statement": "Cloudways documentation describes separately billed off-site backups for Flexible hosting and backups included for Autonomous hosting.",
+    "caveat": "The distinction applies to specific hosting families; independently verify charges and retention.",
+    "recordedOn": "2026-10-31",
+    "status": "candidate",
+    "approved": false,
+    "reviewer": null,
+    "reviewedAt": null
+  }
+]

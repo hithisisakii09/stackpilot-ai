@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<meta name="description" content="Vendor-neutral hosting migration checklist for small teams covering DNS, email records, backups, rollback, testing and total switching cost." />
+<title>Hosting migration checklist | StackPilot AI</title>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark;background:#0b1220;color:#edf5ff}
+*{box-sizing:border-box}body{margin:0}
+header,main,footer{max-width:960px;margin:auto;padding:24px}
+nav{display:flex;gap:16px;flex-wrap:wrap}
+a{color:#7ce8c6}
+h1{font-size:clamp(32px,5vw,55px);line-height:1.12}
+h2{font-size:clamp(21px,3vw,27px)}
+p,li{color:#c9d9ed;line-height:1.72}
+section{border:1px solid #405675;border-radius:15px;background:#152138;padding:20px;margin:22px 0}
+li{margin:7px 0}
+th,td{padding:12px;border:1px solid #546b8b;text-align:left;vertical-align:top}
+th{background:#1c304a}
+table{border-collapse:collapse;min-width:680px;width:100%}
+caption{padding:9px 0;text-align:left;color:#c9d9ed}
+:focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+footer{border-top:1px solid #405675}
+@media(max-width:600px){header,main,footer{padding:16px}section{padding:16px}}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<header><nav aria-label="Site navigation"><a href="/">StackPilot AI</a><a href="/tools/requirements-checklist/">Requirements checklist</a><a href="/tools/software-cost-calculator/">Cost calculator</a><a href="/methodology/">Methodology</a></nav></header>
+<main id="main">
+<p>Hosting buyer education · private prelaunch draft</p>
+<h1>Hosting migration checklist: reduce avoidable cutover risks</h1>
+<p>A hosting move is not just a change of subscription. DNS records, mail delivery, certificates, backups, background jobs and third-party integrations can fail even if the new website loads correctly. This is a planning guide, <strong>not a vendor endorsement</strong>. Following a checklist does <strong>not guarantee uninterrupted service</strong>. Use authorized staging and backups, and consult your technical operator for production changes.</p>
+<section><h2>1. Inventory the complete service</h2>
+<ul>
+<li>List website domains and subdomains, origin hosts, CDN configuration, registrar access, DNS providers, and all current A, AAAA, CNAME and TXT records.</li>
+<li>Record email routing and authentication DNS: MX, SPF, DKIM and DMARC. Confirm who owns changes to each record. A web migration must not accidentally interrupt email.</li>
+<li>Inventory databases, file uploads, media storage, secrets, scheduled jobs, webhooks, queues, logs and third-party dependencies.</li>
+<li>Document current traffic peaks and the actual business hours in every relevant region before choosing a cutover window.</li>
+</ul></section>
+<section><h2>2. Check contracts, access and cost exposure</h2>
+<ul>
+<li>Confirm who can authorize the move, which accounts are required, and whether access will be revoked after cutover. Never share passwords in a migration worksheet.</li>
+<li>Compare your own quoted base fees, storage, bandwidth, backup retention, data transfer, support, tax, cancellation and overlap costs. Published fee examples are not proof of any provider's present rates.</li>
+<li>Estimate these components with the <a href="/tools/hosting-hidden-costs/">offline hosting hidden-cost worksheet</a>. It uses only your input, not live provider quotes, and separately budgets the old-host overlap period.</li>
+<li>Include staff time, specialist migration work and a contingency allowance. The <a href="/tools/software-cost-calculator/">subscription cost calculator</a> accepts your own figures but does not automatically calculate labor hours.</li>
+<li>Record data location, data retention and deletion requirements for your applicable jurisdiction and customer contracts.</li>
+</ul></section>
+<section><h2>3. Prepare recoverable backups</h2><p>For user-entered RTO/RPO thresholds and measured drill timings, try the <a href="/tools/backup-restore-drill/">private backup restore drill planner</a>. It cannot perform a backup or approve a cutover.</p>
+<ul>
+<li>Make authorized backups of the database, uploaded assets, application configuration and critical DNS settings before changing production.</li>
+<li>Verify the backup can be restored in a controlled test environment. A successful download is not evidence of recoverability.</li>
+<li>Record restore time, missing dependencies, encryption-key ownership and the last known good production state.</li>
+<li>Agree who can activate the rollback and what would make rollback unsafe, especially once writes begin on the new system.</li>
+</ul></section>
+<section><h2>4. Test the destination before switching traffic</h2>
+<ul>
+<li>Validate the application in staging using synthetic data. Test logins, permissions, forms, TLS certificate issuance, image assets, API dependencies, redirects and error pages.</li>
+<li>Check background jobs and outbound email separately. Avoid sending real customer email or payment events from staging.</li>
+<li>Verify mobile layout, keyboard accessibility, response times at representative load, and observability for failed requests.</li>
+<li>Prepare an authorized DNS cutover procedure. When supported by the DNS provider, plan TTL changes ahead of the move, but do not assume every resolver updates instantly.</li>
+</ul></section>
+<section><h2>5. Switch with explicit checkpoints</h2>
+<ul>
+<li>Record the approved freeze or synchronization strategy for new database writes and files. Keep an incident contact channel available.</li>
+<li>Change only the DNS and routing entries approved in the runbook; preserve MX and other non-web records unless those services are deliberately being migrated.</li>
+<li>Check website routes, certificates, redirects, API callbacks, mail delivery and monitoring from multiple relevant locations after the change.</li>
+<li>Keep the old system recoverable for the agreed validation window and do not terminate old hosting merely because one homepage request succeeded.</li>
+</ul></section>
+<section><h2>6. Document rollback and operational ownership</h2>
+<ul>
+<li>Define measurable rollback triggers, such as missing records, broken checkout/login, unacceptable error rates or failed recovery checks, before cutover.</li>
+<li>Assign a named decision-maker for rollback and a clear handoff for post-migration support, alerts and billing ownership.</li>
+<li>Verify post-cutover backups, recovery access, data retention and decommissioning approvals before deleting anything.</li>
+<li>Record any regional policy, contractual or data-processing uncertainty as an unresolved blocker rather than inventing a passing result.</li>
+</ul></section>
+<section aria-labelledby="cutover-gates"><h2 id="cutover-gates">7. Hosting cutover GO/NO-GO gates</h2>
+<p>For an interactive, local-only, downloadable version, open the <a href="/tools/hosting-cutover-gates/">hosting cutover gate assessor</a>. Its results never authorize a cutover; even five self-attested passes mean only readiness for a human review.</p>
+<p>Copy this checklist into your own controlled project runbook. Mark each row Pass, Fail or Not assessed; record the evidence and accountable owner. Never enter real credentials, customer records or payment details into StackPilot.</p>
+<div role="region" aria-label="Hosting cutover checkpoints, scroll horizontally for all columns" tabindex="0" style="overflow-x:auto">
+<table>
+<caption>Private planning matrix; these are example criteria, not a completed hosting assessment.</caption>
+<thead><tr><th scope="col">Gate</th><th scope="col">Example evidence to collect</th><th scope="col">Responsible owner</th><th scope="col">GO/NO-GO decision</th></tr></thead>
+<tbody>
+<tr><th scope="row">DNS and email inventory</th><td>Saved DNS snapshot including MX, SPF, DKIM and DMARC</td><td>DNS administrator</td><td>Not assessed</td></tr>
+<tr><th scope="row">Backups and restore</th><td>Authorized restore rehearsal and measured recovery time</td><td>Operations owner</td><td>Not assessed</td></tr>
+<tr><th scope="row">TLS, redirects and dependencies</th><td>Staging test record and working callback paths</td><td>Application owner</td><td>Not assessed</td></tr>
+<tr><th scope="row">Rollback authority</th><td>Written trigger, decision-maker and accessible old system</td><td>Incident lead</td><td>Not assessed</td></tr>
+<tr><th scope="row">Data retention and billing</th><td>Approved lifecycle and overlap-cost estimate</td><td>Contract or compliance owner</td><td>Not assessed</td></tr>
+</tbody>
+</table></div>
+<p><strong>Stop condition:</strong> Any critical gate marked Fail or Not assessed keeps the migration at NO-GO until the appropriate human reviews the evidence. A staged successful test does not authorize a live DNS change.</p>
+</section>
+<p>For purchase requirements, use the <a href="/tools/requirements-checklist/">software requirements worksheet</a>. For the distinction between documentation and independently tested vendor claims, read our <a href="/methodology/">methodology</a>. This guide contains no provider guarantee, pricing quote, affiliate promotion or actual migration outcome.</p>
+</main>
+<footer><a href="/privacy/">Privacy notes</a> · <a href="/disclosure/">Affiliate disclosure</a> · StackPilot AI private preview</footer>
+</body>
+</html>

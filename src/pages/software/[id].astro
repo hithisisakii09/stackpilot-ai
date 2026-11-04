@@ -1,0 +1,53 @@
+---
+import products from '../../data/products.json';
+export function getStaticPaths() {
+  return products.map((product) => ({ params: { id: product.id }, props: { product } }));
+}
+const { product } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content={`Introductory profile for ${product.name}. Research and pricing verification pending.`} /><meta name="robots" content="noindex, nofollow" />
+<title>{product.name} | StackPilot AI software profile</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#e9f1ff;background:#0b1220}*{box-sizing:border-box}
+body{margin:0}main,header,footer{max-width:840px;padding:24px;margin:auto}a{color:#7ce8c6}
+section{background:#152138;border:1px solid #30405b;border-radius:16px;padding:24px;margin:24px 0}
+p,li{color:#c5d1e4;line-height:1.7}.alert{border-left:4px solid #f5c36b;padding-left:16px}
+h1{font-size:clamp(32px,6vw,56px)}.links{display:flex;gap:20px;flex-wrap:wrap}
+.skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
+</style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<header class="links"><nav aria-label="Site navigation"><a href="/">← StackPilot AI</a><a href="/compare/">Compare categories</a><a href="/methodology/">Methodology</a></nav></header>
+<main id="main">
+<p>Independent introductory software profile</p>
+<h1>{product.name}</h1>
+<p>{product.description}</p>
+<section aria-labelledby="overview">
+<h2 id="overview">Overview</h2>
+<p><strong>Category:</strong> {product.category}</p>
+<p><strong>Research state:</strong> {product.researchStatus === 'verified' ? 'Editorially reviewed' : 'Research and editorial review pending'}</p>
+<p><strong>Potential use-case category:</strong> {product.bestFor.join(', ')}</p>
+<p class="alert">This listing is informational. Feature claims, pricing, team suitability, and service limitations have not been independently confirmed.</p>
+</section>
+<section aria-labelledby="fit">
+<h2 id="fit">Fit and pricing</h2>
+<p>Team-size suitability: {product.supportedTeams.length ? product.supportedTeams.join(', ') : 'Not yet verified'}</p>
+<p>Budget compatibility: {product.budgetTiers.length ? product.budgetTiers.join(', ') : 'Not yet verified'}</p>
+<p>Pricing: Consult the provider for current plans, currency, taxes, and limits. StackPilot AI has not verified pricing.</p>
+</section>
+<section aria-labelledby="sources">
+<h2 id="sources">Research transparency</h2>
+<p class="alert">The links below are <strong>unreviewed research leads</strong>. Their presence is not independent evidence of a verified feature, price, or product claim. The displayed date is when each source was logged for review, not a completed editorial approval.</p>
+{product.sources.length ? <ul>{product.sources.map(source => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.claim}</a> — candidate source logged {source.checkedAt} (not reviewed)</li>)}</ul> : <p>No approved research sources have been recorded yet.</p>}
+<p>No affiliate tracking links are active. The link below opens the vendor's official site.</p>
+<a href={product.website} target="_blank" rel="noopener noreferrer">Visit official website ↗</a>
+</section>
+</main>
+<footer>© {new Date().getFullYear()} StackPilot AI. Recommendations are independent editorial starting points, not paid placements. <a href="/disclosure/">Disclosure</a> · <a href="/privacy/">Privacy</a></footer>
+</body></html>

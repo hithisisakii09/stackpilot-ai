@@ -1,0 +1,237 @@
+---
+import products from '../../data/products.json';
+import { comparisonCategories, categoryComparisonRows } from '../../lib/comparison.mjs';
+const categories = comparisonCategories(products);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Compare SaaS research candidates by category, known information and evidence gaps." />
+  <title>Compare software candidates | StackPilot AI</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; background: #0b1220; color: #e9f1ff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    header, main, footer { max-width: 1080px; margin: auto; padding: 24px; }
+    a { color: #7ce8c6; }
+    p, li { color: #c6d5e8; line-height: 1.7; }
+    section { margin: 38px 0; }
+    .table-scroll { overflow-x: auto; border: 1px solid #34455f; border-radius: 12px; }
+    table { width: 100%; border-collapse: collapse; background: #152138; min-width: 640px; }
+    th, td { text-align: left; padding: 16px; border-bottom: 1px solid #34455f; vertical-align: top; }
+    thead th { background: #253652; }
+    .notice { background: #152138; border-left: 4px solid #edc777; padding: 16px; }
+    .links { display: flex; flex-wrap: wrap; gap: 18px; }
+    .compare-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0; }
+    .compare-controls label { display: block; font-weight: 650; }
+    .compare-controls select { width: 100%; display: block; margin-top: 7px; padding: 12px; background: #0b1220; color: #e9f1ff; border: 1px solid #6a819e; border-radius: 8px; }
+    button { background: #7ce8c6; color: #06231d; border: 0; border-radius: 8px; padding: 12px 20px; font-weight: 700; cursor: pointer; }
+    :focus-visible { outline: 3px solid #7ce8c6; outline-offset: 3px; }
+    #comparison-result { margin: 22px 0; }
+    :global(#comparison-result a) { color: #7ce8c6; }
+    :global(#comparison-result a:focus-visible) { outline: 3px solid #7ce8c6; outline-offset: 3px; }
+    .helper { font-size: .95rem; }
+    #comparison-error { color: #ffe2ae; }
+    @media (max-width: 700px) { .compare-controls { grid-template-columns: 1fr; } }
+    .skip-link { position: absolute; top: -100px; left: 16px; background: #7ce8c6; color: #06231d; padding: 10px 16px; font-weight: 700; border-radius: 6px; z-index: 1000; text-decoration: none; }
+    .skip-link:focus { top: 16px; outline: 3px solid #fff; }
+
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="links"><nav aria-label="Site navigation"><a href="/">← StackPilot AI</a><a href="/methodology/">Research methodology</a><a href="/disclosure/">Affiliate disclosure</a></nav></header>
+  <main id="main">
+    <h1>Compare software candidates</h1>
+    <p>Compare preliminary entries <strong>within the same category</strong>. These tables show catalog descriptions, not tested feature parity or verified buyer suitability.</p>
+    <p class="notice">All product claims, team fit, and current pricing remain unverified. These products are not ranked or endorsed, and there are no affiliate links.</p>
+    <section aria-labelledby="compare-title">
+      <h2 id="compare-title">Choose two tools to compare</h2>
+      <p>This browser-only comparison displays the same information for both tools. It does not calculate a winner, compare live prices, or send your selections to a server.</p>
+      <form id="compare-form">
+        <div class="compare-controls">
+          <label for="compare-category">Category
+            <select id="compare-category" name="category">
+              {categories.map(category => <option value={category}>{category}</option>)}
+            </select>
+          </label>
+          <label for="compare-first">First tool
+            <select id="compare-first" name="first" required></select>
+          </label>
+          <label for="compare-second">Second tool
+            <select id="compare-second" name="second" required></select>
+          </label>
+        </div>
+        <button type="submit">Compare selected tools</button>
+        <p id="comparison-error" role="alert"></p>
+      </form>
+      <noscript><p>Enable JavaScript to use the interactive comparison, or review the category tables below.</p></noscript>
+      <div id="comparison-result" aria-live="polite" aria-atomic="true"></div>
+      <p class="helper">After comparing two candidates, download neutral questions to ask each vendor. Answers start unverified; evidence stays on your device.</p>
+      <button id="download-comparison-csv" type="button" disabled>Download vendor questions (CSV)</button>
+      <p id="comparison-download-status" role="status" aria-live="polite"></p>
+      <p class="helper">“Vendor sources identified” measures links collected for research, not verified claims or product quality.</p>
+    </section>
+    {categories.map((category) => (
+      <section aria-label={`${category} candidates`}>
+        <h2>{category}</h2>
+        <div class="table-scroll" role="region" aria-label={`${category} comparison table, scroll horizontally for all columns`} tabindex="0">
+          <table>
+            <caption>{category}: preliminary research candidates</caption>
+            <thead><tr><th scope="col">Software</th><th scope="col">Product overview</th><th scope="col">Team fit</th><th scope="col">Pricing</th><th scope="col">Research status</th></tr></thead>
+            <tbody>
+              {categoryComparisonRows(products, category).map(p => (
+                <tr>
+                  <th scope="row"><a href={`/software/${p.id}/`}>{p.name}</a></th>
+                  <td>{p.description}</td>
+                  <td>{p.teamFit}</td>
+                  <td>{p.pricing}</td>
+                  <td>{p.editorialStatus}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    ))}
+    <p>Product pages include links to official documentation for independent follow-up. A deeper feature-by-feature comparison will require approved claim-level evidence.</p>
+  </main>
+  <footer>StackPilot AI · <a href="/privacy/">Privacy notes</a> · <a href="/methodology/">Methodology</a> · <a href="/disclosure/">Affiliate disclosure</a></footer>
+<script>
+import products from '../../data/products.json';
+import { categoryCandidates, compareCandidates } from '../../lib/comparison.mjs';
+import { buildVendorQuestionsCsv, listVendorQuestions } from '../../lib/vendor-questions.mjs';
+
+const form = document.querySelector('#compare-form');
+const category = document.querySelector('#compare-category');
+const first = document.querySelector('#compare-first');
+const second = document.querySelector('#compare-second');
+const result = document.querySelector('#comparison-result');
+const error = document.querySelector('#comparison-error');
+const download = document.querySelector('#download-comparison-csv');
+const downloadStatus = document.querySelector('#comparison-download-status');
+let latestCsv = null;
+
+function invalidateComparison() {
+  latestCsv = null;
+  download.disabled = true;
+  downloadStatus.textContent = '';
+  result.replaceChildren();
+  error.textContent = '';
+}
+
+function updateSelections() {
+  const candidates = categoryCandidates(products, category.value);
+  for (const [select, index] of [[first, 0], [second, 1]]) {
+    select.replaceChildren();
+    candidates.forEach(product => {
+      const option = document.createElement('option');
+      option.value = product.id;
+      option.textContent = product.name;
+      select.append(option);
+    });
+    select.selectedIndex = Math.min(index, candidates.length - 1);
+  }
+  invalidateComparison();
+}
+function cell(tag, value) {
+  const node = document.createElement(tag);
+  node.textContent = String(value);
+  return node;
+}
+category.addEventListener('change', updateSelections);
+first.addEventListener('change', invalidateComparison);
+second.addEventListener('change', invalidateComparison);
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  invalidateComparison();
+  let model;
+  try {
+    model = compareCandidates(products, category.value, first.value, second.value);
+  } catch (e) {
+    error.textContent = e instanceof Error ? e.message : 'Unable to compare selections';
+    return;
+  }
+  const title = cell('h3', model.products.map(p => p.name).join(' vs '));
+  const note = cell('p', 'Research candidates only. Unknown or unapproved information is labeled unverified; no recommendation winner is determined.');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'table-scroll';
+  wrapper.setAttribute('role', 'region');
+  wrapper.setAttribute('tabindex', '0');
+  wrapper.setAttribute('aria-label', model.category + ' comparison table, scroll horizontally for all columns');
+  const table = document.createElement('table');
+  table.id = 'comparison-table';
+  table.append(cell('caption', model.category + ': same-category evidence comparison'));
+  const head = document.createElement('thead');
+  const headings = document.createElement('tr');
+  headings.append(cell('th', 'Criterion'));
+  for (const product of model.products) {
+    const th = cell('th', product.name);
+    th.scope = 'col';
+    headings.append(th);
+  }
+  head.append(headings);
+  table.append(head);
+  const body = document.createElement('tbody');
+  for (const row of model.rows) {
+    const tr = document.createElement('tr');
+    const heading = cell('th', row.label);
+    heading.scope = 'row';
+    tr.append(heading);
+    for (const product of model.products) tr.append(cell('td', product[row.key]));
+    body.append(tr);
+  }
+  const links = document.createElement('tr');
+  const linkHeader = cell('th', 'Further reading');
+  linkHeader.scope = 'row';
+  links.append(linkHeader);
+  for (const product of model.products) {
+    const td = document.createElement('td');
+    const anchor = document.createElement('a');
+    anchor.href = product.profileUrl;
+    anchor.textContent = 'View ' + product.name + ' research profile';
+    td.append(anchor);
+    links.append(td);
+  }
+  body.append(links);
+  table.append(body);
+  wrapper.append(table);
+  const questionsHeading=cell('h4','Questions to ask both vendors');
+  const questionList=document.createElement('ol');
+  questionList.id='vendor-questions-preview';
+  for (const {criterion,question} of listVendorQuestions(model)) {
+    const item=document.createElement('li');
+    const emphasis=document.createElement('strong');
+    emphasis.textContent=criterion+': ';
+    item.append(emphasis,document.createTextNode(question));
+    questionList.append(item);
+  }
+  const questionNotice=cell('p','These are questions for your own due diligence. Neither vendor has verified responses; the download starts with all answers unverified.');
+  result.append(title, note, wrapper, questionsHeading, questionList, questionNotice);
+  latestCsv = buildVendorQuestionsCsv(model);
+  download.disabled = false;
+});
+download.addEventListener('click', () => {
+  if (!latestCsv) return;
+  try {
+    const blob = new Blob([latestCsv], {type:'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = 'stackpilot-vendor-questions-' + category.value.toLowerCase() + '.csv';
+    document.body.append(anchor);
+    anchor.click();
+    anchor.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    downloadStatus.textContent = 'CSV saved on your device. No answers were sent to StackPilot.';
+  } catch {
+    downloadStatus.textContent = 'Unable to start CSV download. Try again.';
+  }
+});
+updateSelections();
+</script>
+</body>
+</html>

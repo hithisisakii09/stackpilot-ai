@@ -1,5 +1,15 @@
 import { readFileSync } from 'node:fs';
-const products=JSON.parse(readFileSync(new URL('../src/data/products.json',import.meta.url),'utf8'));
-const ids=new Set();
-for(const p of products){if(!p.id||!p.name||!p.description||!Array.isArray(p.bestFor)||ids.has(p.id))throw Error('Invalid or duplicate product '+p.id);ids.add(p.id);if(new URL(p.website).protocol!=='https:')throw Error('Non-HTTPS URL');if(p.affiliateUrl!==null)throw Error('Affiliate URLs require approval');}
-console.log(`Validated ${products.length} products`);
+import { validateCatalog } from '../src/lib/catalog-validation.mjs';
+import { validateEvidenceLeads } from '../src/lib/evidence-ledger.mjs';
+import { validateAffiliateCandidates } from '../src/lib/affiliate-readiness.mjs';
+import { validateResearchClaims } from '../src/lib/research-claims.mjs';
+
+const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
+const count = validateCatalog(products);
+console.log(`Validated ${count} products; unapproved affiliate links remain prohibited`);
+const leads = JSON.parse(readFileSync(new URL('../src/data/evidence-leads.json', import.meta.url), 'utf8'));
+console.log(`Validated ${validateEvidenceLeads(leads, products)} unreviewed source leads; approval remains disabled`);
+const programs = JSON.parse(readFileSync(new URL('../src/data/affiliate-programs.json', import.meta.url), 'utf8'));
+console.log(`Validated ${validateAffiliateCandidates(programs, products)} candidate partner records; no applications or tracking authorized`);
+const claimCandidates = JSON.parse(readFileSync(new URL('../src/data/research-claims.json', import.meta.url), 'utf8'));
+console.log(`Validated ${validateResearchClaims(claimCandidates, products)} vendor-source statements as unapproved research candidates`);

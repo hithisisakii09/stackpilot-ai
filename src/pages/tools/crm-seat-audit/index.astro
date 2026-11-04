@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+ <meta charset="utf-8"/>
+ <meta name="viewport" content="width=device-width, initial-scale=1"/>
+ <meta name="robots" content="noindex, nofollow"/>
+ <meta name="description" content="Private buyer-entered CRM seat utilization and renewal audit."/>
+ <title>CRM paid-seat audit | StackPilot AI</title>
+ <style>
+  :root{font-family:system-ui,sans-serif;background:#0b1220;color:#edf5ff;color-scheme:dark}
+  *{box-sizing:border-box}body{margin:0}
+  header,main,footer{max-width:920px;margin:auto;padding:24px}
+  nav{display:flex;gap:16px;flex-wrap:wrap}a{color:#7ce8c6}
+  h1{font-size:clamp(30px,5vw,52px)}
+  p{color:#c8d9ed;line-height:1.6}
+  .panel{min-width:0;overflow-wrap:anywhere;background:#152138;border:1px solid #3d5776;padding:22px;border-radius:16px;margin:20px 0}
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  label{display:block;margin:10px 0;line-height:1.4;font-weight:600}
+  input[type=text],textarea{display:block;width:100%;min-width:0;margin-top:7px;background:#0b1220;border:1px solid #91a5c0;border-radius:8px;color:#fff;padding:11px;font:inherit}
+  textarea{min-height:300px;resize:vertical}
+  fieldset{min-width:0}.check{display:flex;align-items:flex-start;gap:10px;font-weight:500}
+  .check input{margin-top:4px;accent-color:#7ce8c6;width:18px;height:18px;flex:none}
+  button{background:#7ce8c6;color:#06231d;border:0;border-radius:9px;padding:12px 18px;font-weight:750;cursor:pointer}
+  button.secondary{background:#293d58;color:#edf5ff;border:1px solid #7f95b2}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:15px}
+  :focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
+  #seat-status{min-height:1.5em;color:#ffe2a6}
+  footer{border-top:1px solid #374c67;margin-top:30px}
+  @media(max-width:650px){.grid{grid-template-columns:1fr}header,main,footer{padding:18px}.panel{padding:16px}}
+  .skip-link{position:absolute;top:-100px;left:16px;background:#7ce8c6;color:#06231d;padding:10px 16px;font-weight:700;border-radius:6px;z-index:1000;text-decoration:none}.skip-link:focus{top:16px;outline:3px solid #fff}
+ </style>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<header><nav aria-label="Primary navigation">
+ <a href="/">← StackPilot AI</a>
+ <a href="/tools/software-cost-calculator/">Cost calculator</a>
+ <a href="/tools/requirements-checklist/">Requirements checklist</a>
+ <a href="/methodology/">Methodology</a>
+</nav></header>
+<main id="main">
+ <p>Private browser-only worksheet</p>
+ <h1>CRM paid-seat audit</h1>
+ <p>Compare billed seat capacity with paid-seat occupancy using counts from your own invoice and admin panel. <strong>Vacant seats do not automatically mean refunds or savings.</strong> Free or view-only users may not occupy a billed seat, depending on the plan.</p>
+ <p>No vendor prices, rankings, affiliate links, account signups or form submissions. Enter counts only—not names, invoices or account identifiers. Your inputs are calculated in this tab and are not submitted to StackPilot.</p>
+ <form id="seat-form" novalidate>
+  <section class="panel" aria-label="Buyer-entered seat counts">
+   <div class="grid">
+    <label for="seat-billedSeats">Paid seats on the current invoice<input type="text" id="seat-billedSeats" name="billedSeats" inputmode="numeric" autocomplete="off" value="0" required/></label>
+    <label for="seat-occupiedPaidSeats">Occupied paid seats in the admin panel<input type="text" id="seat-occupiedPaidSeats" name="occupiedPaidSeats" inputmode="numeric" autocomplete="off" value="0" required/></label>
+    <label for="seat-activeUsers">Active users (including free or view-only users)<input type="text" id="seat-activeUsers" name="activeUsers" inputmode="numeric" autocomplete="off" value="0" required/></label>
+    <label for="seat-invitedUsers">Invited users (context only)<input type="text" id="seat-invitedUsers" name="invitedUsers" inputmode="numeric" autocomplete="off" value="0" required/></label>
+    <label for="seat-deactivatedUsers">Deactivated users (context only)<input type="text" id="seat-deactivatedUsers" name="deactivatedUsers" inputmode="numeric" autocomplete="off" value="0" required/></label>
+   </div>
+  </section>
+  <fieldset class="panel">
+   <legend>Provider/account-specific checks</legend>
+   <label class="check" for="seat-accountModelConfirmed"><input type="checkbox" id="seat-accountModelConfirmed" name="accountModelConfirmed"/><span>I checked my exact plan and account billing model</span></label>
+   <label class="check" for="seat-roleRequirementsConfirmed"><input type="checkbox" id="seat-roleRequirementsConfirmed" name="roleRequirementsConfirmed"/><span>I checked the required editing, viewing and admin roles</span></label>
+   <label class="check" for="seat-billingChangeDateConfirmed"><input type="checkbox" id="seat-billingChangeDateConfirmed" name="billingChangeDateConfirmed"/><span>I checked when seat reductions would affect my bill</span></label>
+  </fieldset>
+  <div class="actions"><button type="submit">Audit my entered seats</button><button type="reset" class="secondary">Clear worksheet</button></div>
+ </form>
+ <p id="seat-status" role="status" aria-live="polite"></p>
+ <section class="panel" aria-labelledby="seat-report-title">
+  <h2 id="seat-report-title">Private seat-audit report</h2>
+  <label for="seat-report">Copyable report with unresolved checks shown</label>
+  <textarea id="seat-report" readonly placeholder="Enter your counts and generate an audit."></textarea>
+  <div class="actions"><button type="button" id="seat-copy" class="secondary" disabled>Copy report</button></div>
+ </section>
+ <p><strong>Important:</strong> User deactivation is not proof that a paid seat was removed from a contract. Billing adjustments depend on plan, renewal date, permissions and commitments. Even a completed worksheet is ready only for human review, not an approved saving estimate. Verify directly with your provider.</p>
+</main>
+<footer><a href="/privacy/">Privacy notes</a> · <a href="/disclosure/">Affiliate disclosure</a> · © StackPilot AI (working name)</footer>
+<script>
+ import {auditCrmSeats,formatSeatAuditReport} from '../../../lib/crm-seat-audit.mjs';
+ const form=document.querySelector('#seat-form');
+ const report=document.querySelector('#seat-report');
+ const status=document.querySelector('#seat-status');
+ const copy=document.querySelector('#seat-copy');
+ const counts=['billedSeats','occupiedPaidSeats','activeUsers','invitedUsers','deactivatedUsers'];
+ const checks=['accountModelConfirmed','roleRequirementsConfirmed','billingChangeDateConfirmed'];
+ function invalidate(){report.value='';copy.disabled=true;}
+ form.addEventListener('input',()=>{invalidate();status.textContent='Inputs changed. Generate a new report.';});
+ form.addEventListener('change',()=>{invalidate();status.textContent='Checks changed. Generate a new report.';});
+ form.addEventListener('submit',event=>{
+  event.preventDefault();
+  try{
+   const input=Object.fromEntries([
+    ...counts.map(key=>[key,form.elements.namedItem(key).value]),
+    ...checks.map(key=>[key,form.elements.namedItem(key).checked])
+   ]);
+   const result=auditCrmSeats(input);
+   report.value=formatSeatAuditReport(result);
+   copy.disabled=false;
+   status.textContent=result.status==='INCOMPLETE'
+     ?'Audit generated locally; account checks are incomplete.'
+     :'Audit generated locally; ready for human review, not a verified billing conclusion.';
+  }catch(error){
+   invalidate();status.textContent=error instanceof Error?error.message:'Check seat counts.';
+  }
+ });
+ form.addEventListener('reset',()=>{invalidate();status.textContent='Worksheet cleared.';});
+ copy.addEventListener('click',async()=>{
+  if(!report.value)return;
+  try{await navigator.clipboard.writeText(report.value);status.textContent='Report copied.';}
+  catch{report.focus();report.select();status.textContent='Clipboard unavailable. Select and copy manually.';}
+ });
+</script>
+</body>
+</html>

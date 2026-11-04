@@ -1,0 +1,5 @@
+source_field,target_field,sample_value,validation_note
+legacy_contact_id,external_reference,SYNTHETIC_CONTACT_001,Preserve stable identifier for reconciliation
+legacy_company_id,organization_reference,SYNTHETIC_ORG_001,Validate organization relationship after import
+legacy_owner_id,assigned_role,SYNTHETIC_ROLE_EDITOR,Check least privilege against authorized role mapping
+legacy_deal_stage,pipeline_stage,SYNTHETIC_STAGE_NEW,Map enumerated values and count exceptions

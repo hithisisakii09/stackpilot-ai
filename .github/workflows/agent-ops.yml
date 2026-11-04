@@ -1,0 +1,65 @@
+name: StackPilot safety and operations report
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: stackpilot-ops-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  operations:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.23.4'
+          package-manager-cache: false
+      - run: npm ci
+      - name: Validate and build before reporting
+        run: npm test
+      - name: Produce fail-closed operations report
+        run: |
+          mkdir -p artifacts/ops
+          npm run --silent ops:report -- --json --ci-passed > artifacts/ops/report.json
+          node -e "const r=require('./artifacts/ops/report.json'); if(r.canPublish || r.canMonetize || r.canSpend) process.exit(1);"
+      - name: Build bounded research backlog without publishing
+        run: |
+          node scripts/operating-backlog.mjs --json > artifacts/ops/backlog.json
+          node -e "const q=require('./artifacts/ops/backlog.json'); if(q.canPublish || q.canMonetize || q.canSpend || q.execution !== 'advisory-only') process.exit(1);"
+      - name: Probe two anonymous preview routes without credentials
+        env:
+          PREVIEW_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node scripts/anonymous-preview-probe.mjs
+      - name: Archive short-lived, non-sensitive report
+        uses: actions/upload-artifact@v4
+        with:
+          name: stackpilot-operations-report
+          path: artifacts/ops/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Validate preview bundle, without publishing anywhere
+        env:
+          PREVIEW_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          node scripts/create-private-preview-package.mjs
+          tar -czf artifacts/private-preview/stackpilot-static-dist.tar.gz -C dist .
+      - name: Save temporary private preview package for manual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: stackpilot-private-preview-package
+          path: artifacts/private-preview/
+          if-no-files-found: error
+          retention-days: 3
+      - name: Block operations success on any anonymous 2xx (after saving evidence)
+        run: |
+          node --input-type=module -e "import {readFileSync} from 'node:fs'; const r=JSON.parse(readFileSync('artifacts/ops/anonymous-preview-probe.json','utf8')); if(r.overallStatus==='POTENTIAL_ANONYMOUS_RESPONSE'){console.error('Private preview returned an anonymous 2xx. Human review required; release remains NO-GO.');process.exit(1)}"

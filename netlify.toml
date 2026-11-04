@@ -1,0 +1,11 @@
+# StackPilot AI — private development deployment configuration.
+# Primary private development preview: Netlify Deploy Preview (visitor visibility Private).
+# Older Netlify production build remains privately visible with Auto Publishing Locked.
+# Do not merge main, unlock production, change visibility, enable indexing/affiliates, or incur charges without separate owner approval.
+# Static Astro output only. Netlify Free is a commercial-eligible $0 hosting candidate, with a 300-credit monthly hard cap; verify account-specific plan and usage in provider UI.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.23.4"
