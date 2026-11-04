@@ -31,6 +31,13 @@ function task(productId, action, priority, reason, sourceIds=[]) {
   return {id: action + ':' + productId,productId,priority,action,reason,
     autonomy:'automatic',approvalRequired:false,claimsApproved:false,sourceIds};
 }
+function reviewIsDue(lastReviewedOn,today,staleAfterDays) {
+  if(!dateValid(lastReviewedOn)) return true;
+  const ageDays=Math.floor(
+    (Date.parse(today+'T00:00:00.000Z')-Date.parse(lastReviewedOn+'T00:00:00.000Z'))/86400000
+  );
+  return ageDays>staleAfterDays;
+}
 function validateEditorialPackets(packets,evidence,today) {
   if (!Array.isArray(packets)) throw new Error('Invalid editorial packet ledger');
   const expectedByProduct=new Map(evidence.map(entry=>[
@@ -131,14 +138,23 @@ export function buildOperatingBacklog({
   for(const partner of affiliates) {
     if(partner.researchStatus==='program-discovery-needed') {
       automatic.push(task(partner.productId,'locate-official-program',40,
-        'Find a current first-party program source or record that no qualifying program was found.'));
-    } else {
+        'Find a current first-party program source or record that no qualifying public program was found.'));
+    } else if(partner.researchStatus==='no-public-program-found') {
+      if(reviewIsDue(partner.lastReviewedOn,today,staleAfterDays)) {
+        automatic.push(task(partner.productId,'recheck-program-status',60,
+          'Recheck first-party sources after the review window; no public program was found at the previous review.'));
+      }
+    } else if(partner.researchStatus==='candidate' &&
+              reviewIsDue(partner.lastReviewedOn,today,staleAfterDays)) {
       automatic.push(task(partner.productId,'recheck-program-eligibility',50,
         'Recheck current official eligibility and geography; do not apply, accept terms or generate tracked links.'));
     }
   }
   automatic.sort((a,b) => a.priority-b.priority ||
     a.productId.localeCompare(b.productId,'en') || a.action.localeCompare(b.action,'en'));
+  const affiliateActionSet=new Set([
+    'locate-official-program','recheck-program-eligibility','recheck-program-status'
+  ]);
   return {
     asOf:today,
     mode:'prelaunch',
@@ -153,6 +169,8 @@ export function buildOperatingBacklog({
       editorialReviewsPending:packetByProduct.size,
       programCandidates:affiliates.filter(a=>a.researchStatus==='candidate').length,
       programDiscoveryGaps:affiliates.filter(a=>a.researchStatus==='program-discovery-needed').length,
+      programsWithoutPublicAffiliateProgram:affiliates.filter(a=>a.researchStatus==='no-public-program-found').length,
+      affiliateReviewsDue:automatic.filter(item=>affiliateActionSet.has(item.action)).length,
       approvedClaims:0,
       acceptedAffiliatePrograms:0,
       verifiedRevenue:null
