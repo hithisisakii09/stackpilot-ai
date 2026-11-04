@@ -6,7 +6,9 @@ const run = script => JSON.parse(execFileSync(process.execPath,[script,'--json']
 test('affiliate queue represents all catalog products without invented partners', () => {
  const result=run('scripts/affiliate-readiness-report.mjs');
  assert.equal(result.reviewedPrograms,6);
- assert.equal(result.awaitingOfficialProgramDiscovery,1);
+ assert.equal(result.awaitingOfficialProgramDiscovery,0);
+ assert.equal(result.queue.find(x=>x.productId==='ahrefs').researchStatus,'no-public-program-found');
+ assert.equal(result.queue.find(x=>x.productId==='ahrefs').nextAction,'recheck-program-status');
  assert.deepEqual(result.queue.map(x=>x.productId), ['ahrefs','cloudways','hubspot','kinsta','pipedrive','semrush']);
  assert.ok(result.queue.every(x=>!x.affiliateReady && x.applicationStatus==='not-applied'));
 });
@@ -22,7 +24,9 @@ test('partner research reporting does not imply earnings, approvals or tracked l
 test('autonomous ops report includes partner research yet keeps all launch gates closed', () => {
  const x=run('scripts/ops-report.mjs');
  assert.equal(x.affiliatePreparation.candidatePrograms,5);
- assert.equal(x.affiliatePreparation.discoveryGaps,1);
+ assert.equal(x.affiliatePreparation.discoveryGaps,0);
+ assert.equal(x.affiliatePreparation.programsWithoutPublicAffiliateProgram,1);
+ assert.equal(x.affiliatePreparation.reviewsDue,0);
  assert.equal(x.affiliatePreparation.applicationsSubmitted,0);
  assert.equal(x.affiliatePreparation.programsAccepted,0);
  assert.equal(x.affiliatePreparation.trackingLinksEnabled,0);

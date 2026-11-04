@@ -7,7 +7,7 @@
 | Source | Evidence at verified commit `c6e72f294f55b6a80863d7c5f396333d3a44171d` | Limit |
 | --- | --- | --- |
 | GitHub draft PR #1 | Branch `feature/phase-1-1-recommendation-engine`, open, **draft and unmerged**; `main` remains at `c8fadcbf799e45ec41db2278aa7f84bb48c99895` | PR #1 must remain draft and unmerged until explicit owner authorization |
-| Validate/build CI | **SUCCESS**; **454/454 tests** (expanded with WCAG 2.1 AA accessibility landmarks, skip-link navigation, CWE-1236 CSV spreadsheet formula injection hardening, and core engine edge-case stress suites), 25 generated HTML routes, 226 internal links, 10 HTML asset references, `npm audit` 0 vulnerabilities | Exact-SHA CI evidence; does not prove hosted access or vendor claim accuracy |
+| Validate/build CI | **SUCCESS**; **466/466 tests** (expanded with WCAG 2.1 AA accessibility landmarks, skip-link navigation, CWE-1236 CSV spreadsheet formula injection hardening, and core engine edge-case stress suites), 25 generated HTML routes, 226 internal links, 10 HTML asset references, `npm audit` 0 vulnerabilities | Exact-SHA CI evidence; does not prove hosted access or vendor claim accuracy |
 | Safety/operations CI | **SUCCESS**; private preview package: 25 pages / 40 files / 257,462 bytes (CI/Linux); anonymous CI canary returned HTTP 401 on two fixed routes | Two fixed-path probes are not exhaustive anonymous-access or authentication verification |
 | Chromium browser CI | **SUCCESS**; 25/25 desktop and 25/25 mobile accessibility sweeps; axe WCAG 2.1 A/AA checks passed; browser acceptance passed for all three advisor scenarios, six software profiles, comparisons, and buyer tools | Headless Chromium in Linux container against built assets, not authenticated physical device testing of remote preview (not authenticated testing of the remote Netlify preview) |
 | Netlify Deploy Preview | Commit status **SUCCESS** for the same SHA: [private preview](https://deploy-preview-1--inspiring-chaja-cfb85f.netlify.app/) | Provider build status does not prove authenticated route UAT, anonymous denial, current visibility settings, or live headers |
@@ -62,6 +62,17 @@
 
 - [Private draft PR #1](https://github.com/hithisisakii09/stackpilot-ai/pull/1)
 - [Phase 3 Quality, Security, and Trust Audit](publisher-readiness/2026-11-03-phase-3-quality-security-and-trust-audit.md)
+
+- [Privacy inventory and data flows](privacy-inventory-and-data-flows.md)
+- [Mobile manual testing guide](mobile-manual-testing-guide.md)
+- [Security monitoring and incident playbook](security-monitoring-and-incident-playbook.md)
+- [Phase 4 brand and domain clearance](phase-4-launch-preparation/brand-and-domain-clearance.md)
+- [Phase 4 public release checklist](phase-4-launch-preparation/public-release-checklist.md)
+- [Phase 4 indexing and SEO launch plan](phase-4-launch-preparation/indexing-and-seo-launch-plan.md)
+- [Phase 4 hosting cost comparison](phase-4-launch-preparation/hosting-cost-comparison.md)
+- [Phase 4 rollback and incident playbook](phase-4-launch-preparation/rollback-and-incident-playbook.md)
+- [Phase 4 launch risk register](phase-4-launch-preparation/launch-risk-register.md)
+
 - [Source-bound human UAT packet and approval decision](publisher-readiness/2026-11-01-private-preview-uat-release-decision.md)
 - [October historical operational snapshot](history/2026-10-31-operational-state-snapshot.md)
 - [Owner release checks, issue #2](https://github.com/hithisisakii09/stackpilot-ai/issues/2) and [commercial decisions, issue #3](https://github.com/hithisisakii09/stackpilot-ai/issues/3)

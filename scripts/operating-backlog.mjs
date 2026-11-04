@@ -9,12 +9,14 @@ import { validateCatalog } from '../src/lib/catalog-validation.mjs';
 const load = name=>JSON.parse(readFileSync(new URL('../'+name,import.meta.url),'utf8'));
 const products=load('src/data/products.json');
 validateCatalog(products);
+const editorialPackets=load('src/data/editorial-packet-ledger.json');
 const dateArg=process.argv.find(arg=>arg.startsWith('--as-of='));
 const ageArg=process.argv.find(arg=>arg.startsWith('--stale-after='));
 const options={
   products,
   evidenceLeads:load('src/data/evidence-leads.json'),
   affiliateCandidates:load('src/data/affiliate-programs.json'),
+  editorialPackets,
   policy:load('config/operating-policy.json')
 };
 if(dateArg) options.today=dateArg.slice('--as-of='.length);
@@ -23,6 +25,12 @@ if(ageArg) {
   options.staleAfterDays=/^[1-9]\d*$/.test(raw)?Number(raw):NaN;
 }
 const result=buildOperatingBacklog(options);
+for(const packet of editorialPackets) {
+  const note=readFileSync(new URL('../'+packet.documentPath,import.meta.url),'utf8');
+  if(!note.includes('Approved claims: 0') || !note.includes('human editorial review')) {
+    throw new Error('Editorial packet document is missing its explicit unapproved review boundary');
+  }
+}
 if(process.argv.includes('--json')) {
   process.stdout.write(JSON.stringify(result,null,2)+'\n');
 }else{
