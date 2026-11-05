@@ -1,5 +1,7 @@
 ---
 import products from '../../data/products.json';
+import evidenceLedger from '../../data/comparison-evidence.json';
+import {validateComparisonEvidence} from '../../lib/comparison-evidence.mjs';
 import { getAllComparisonPairs, getComparisonPair, generatePairVendorQuestionsCsv } from '../../lib/comparison-pairs.mjs';
 import { buildFAQSchema, buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
 
@@ -10,6 +12,8 @@ export function getStaticPaths() {
   }));
 }
 
+// Build fails closed if a comparison claim lacks an unapproved evidence record.
+validateComparisonEvidence(evidenceLedger, getAllComparisonPairs(), products);
 const { pair } = Astro.props;
 const pairData = getComparisonPair(pair.slug, products);
 const { first, second, matrix } = pairData;
