@@ -109,3 +109,12 @@ test('no ambiguous paths, duplicates or malformed source inventory',()=>{
  assert.throws(()=>auditEditorialRuntimeSurface({paths:null,astroConfig:astro,netlifyConfig:netlify}),/paths/i);
  assert.throws(()=>auditEditorialRuntimeSurface({paths,astroConfig:null,netlifyConfig:netlify}),/config/i);
 });
+
+test('checked-out repository has no hidden server-capable editorial source entrypoints',async()=>{
+ const {auditCurrentEditorialRuntimeSurface}=await import('../scripts/editorial-runtime-source.mjs');
+ const report=auditCurrentEditorialRuntimeSurface();
+ assert.equal(report.status,'STATIC-ONLY-LOCKED');
+ assert.ok(report.checkedPaths>40);
+ assert.deepEqual(report.violations,[]);
+ assert.equal(report.reviewerApiEnabled,false);
+});
