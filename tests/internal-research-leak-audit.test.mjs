@@ -120,3 +120,13 @@ test('raw manual research excerpts are blocked even without a JSON field name',(
  assert.throws(()=>auditInternalResearchLeaks(safe,pairs,null),/captures/i);
  assert.throws(()=>auditInternalResearchLeaks(safe,pairs,[{captureId:'x',excerpt:null}]),/excerpt|capture/i);
 });
+
+test('exported private evidence worklists are forbidden build artifacts even when blank',()=>{
+ for(const path of [
+  'comparison-gap-worklist.csv','exports/comparison-gap-worklist.csv',
+  'assets/comparison-gap-worklist.json'
+ ]){
+  const report=scan([{path,content:'Claim ID,Vendor,Dimension\r\n'}]);
+  assert.ok(report.violations.some(x=>x.includes('Private research data asset')),path);
+ }
+});
