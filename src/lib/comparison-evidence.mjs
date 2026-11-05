@@ -42,3 +42,31 @@ export function buildComparisonEvidenceIndex(entries,pairs,products,options={}){
  validateComparisonEvidence(entries,pairs,products,options);
  return new Map(entries.map(e=>[e.claimId+'\u0000'+e.productId,{...e}]));
 }
+
+/**
+ * Read-only editorial triage. No review action, approval or network calls.
+ * All output is a neutral question until an authenticated human workflow exists.
+ */
+export function buildComparisonReviewQueue(entries,pairs,products,options={}){
+ const index=buildComparisonEvidenceIndex(entries,pairs,products,options);
+ const result=[];
+ for(const pair of pairs){
+  pair.matrix.forEach((row,i)=>{
+   const claimId=`comparison-${pair.slug}-${String(i+1).padStart(2,'0')}`;
+   for(const productId of [pair.firstId,pair.secondId]){
+    const key=claimId+'\u0000'+productId;
+    const entry=index.get(key);
+    if(!entry)throw new Error('Missing evidence record');
+    result.push({
+     key:claimId+':'+productId,
+     claimId,productId,
+     dimension:row.dimension,
+     status:'needs-evidence',approved:false,
+     sourceId:null,sourceUrl:null,checkedAt:null,expiresAt:null,
+     reviewQuestion:'Verify current '+row.dimension.toLowerCase()+' with '+products.find(p=>p.id===productId).name+' for the intended plan and region.'
+    });
+   }
+  });
+ }
+ return result.sort((a,b)=>a.key.localeCompare(b.key,'en'));
+}
