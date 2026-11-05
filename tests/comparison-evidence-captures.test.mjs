@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
 import {
  hashEvidenceExcerpt, validateComparisonEvidenceCaptures,
@@ -27,6 +28,7 @@ const sample={
  claimId:proposal.claimId,productId:proposal.productId,
  researchLeadId:proposal.researchLeadId,
  sourceUrl:researchClaims.find(x=>x.id===proposal.researchLeadId).sourceUrl,
+ claimSha256:createHash('sha256').update(COMPARISON_PAIRS[0].matrix[0].firstValue,'utf8').digest('hex'),
  capturedOn:'2026-11-05',planScope:null,regionScope:null,
  excerpt,excerptSha256:null,
  captureMethod:'manual',status:'candidate',approved:false
@@ -99,6 +101,7 @@ test('tampered excerpts, forged URL, mismatched scope and bad dates fail closed'
  const record=captured();
  const bad=[
   {...record,excerpt:'An altered excerpt without a new digest.'},
+  {...record,claimSha256:'f'.repeat(64)},
   {...record,excerptSha256:'f'.repeat(64)},
   {...record,excerptSha256:'BAD'},
   {...record,sourceUrl:'https://example.com/fake'},
@@ -120,6 +123,17 @@ test('tampered excerpts, forged URL, mismatched scope and bad dates fail closed'
  ];
  for(const entry of bad)assert.throws(()=>validateComparisonEvidenceCaptures({...base,captures:[entry],proposals:[proposal]}));
  assert.throws(()=>validateComparisonEvidenceCaptures({...base,captures:[record],proposals:[proposal],today:'2026-02-30'}),/date/i);
+});
+
+test('capture digest is bound to its exact current private candidate assertion',()=>{
+ const record=captured();
+ const modifiedPairs=COMPARISON_PAIRS.map(pair=>({
+  ...pair,matrix:pair.matrix.map((row,index)=>({...row,
+   firstValue:pair.slug==='hubspot-vs-pipedrive'&&index===0?
+    row.firstValue+' (internal candidate revised)':row.firstValue
+  }))
+ }));
+ assert.throws(()=>validateComparisonEvidenceCaptures({...base,pairs:modifiedPairs,captures:[record],proposals:[proposal]}),/claim|digest|sha/i);
 });
 
 test('duplicate IDs and same-day claim/source captures reject ambiguity',()=>{
