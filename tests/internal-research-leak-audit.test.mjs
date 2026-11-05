@@ -139,3 +139,21 @@ test('private per-claim starter JSON must never appear in browser-served assets'
   assert.ok(report.violations.some(v=>v.includes(path)&&v.includes('Private research data asset')),path);
  }
 });
+
+test('offline manual snapshot copies and check reports are not browser-delivered',()=>{
+ for(const path of [
+  'source-snapshot-check.json','private/source-snapshot-check.json',
+  'vendor-source-snapshot.json','private/vendor-source-snapshot.json'
+ ]){
+  const audit=scan([{path,content:'{}'}]);
+  assert.ok(audit.violations.some(v=>v.includes('Private research data asset')),path);
+ }
+ for(const content of [
+  '{"snapshotText":"private vendor content"}',
+  '{"localSnapshotSha256":"ff"}',
+  '{"exactExcerptFound":true}'
+ ]){
+  const audit=scan([{path:'_astro/client.js',content}]);
+  assert.ok(audit.violations.some(v=>v.includes('Internal review metadata')));
+ }
+});
