@@ -196,8 +196,8 @@ export function getComparisonPair(slug, products) {
     firstId: pair.firstId,
     secondId: pair.secondId,
     metaDescription: 'Unverified research questions for '+pair.title+'. Verify current features, pricing and contract terms directly with both vendors.',
-    relatedTools: pair.relatedTools.map(tool=>({...tool})),
-    relatedGuides: pair.relatedGuides.map(guide=>({...guide}))
+    relatedTools: pair.relatedTools.map(({title,href})=>({title,href})),
+    relatedGuides: pair.relatedGuides.map(({title,href})=>({title,href}))
   };
   return {
     pair: publicPair,
