@@ -177,3 +177,12 @@ test('private four-predicate HubSpot CSV worksheet is prohibited in browser-deli
   assert.ok(result.violations.some(x=>x.includes('Private research data asset')),path);
  }
 });
+
+test('private local worksheet validator JSON report never becomes a built website asset',()=>{
+ for(const path of [
+  'hubspot-manual-worksheet-check.json','reports/hubspot-manual-worksheet-check.json'
+ ]){
+  const report=scan([{path,content:'{"status":"PRIVATE-MANUAL-WORKSHEET-UNVERIFIED"}'}]);
+  assert.ok(report.violations.some(x=>x.includes('Private research data asset')),path);
+ }
+});

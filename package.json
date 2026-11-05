@@ -30,7 +30,8 @@
     "research:claim-starter": "node scripts/claim-research-starter.mjs",
     "research:snapshot-check": "node scripts/offline-snapshot-consistency.mjs",
     "research:material-guard": "node scripts/private-research-material-guard.mjs",
-    "research:hubspot-export-checklist": "node scripts/hubspot-export-evidence-assessment.mjs"
+    "research:hubspot-export-checklist": "node scripts/hubspot-export-evidence-assessment.mjs",
+    "research:hubspot-worksheet-check": "node scripts/hubspot-manual-worksheet-check.mjs"
   },
   "dependencies": {
     "astro": "^7.4.4"

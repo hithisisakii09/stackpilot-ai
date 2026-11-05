@@ -13,7 +13,7 @@ export const PROTECTED_PRIVATE_RESEARCH_FILES=Object.freeze([
  'proposal-input.json','capture-input.json','snapshot-metadata.json',
  'private-snapshot-check.json','manual-source-check.json',
  'comparison-gap-worklist.csv','comparison-gap-worklist.json',
- 'claim-research-starter.json','hubspot-export-evidence-assessment.json','hubspot-export-evidence-assessment.csv'
+ 'claim-research-starter.json','hubspot-export-evidence-assessment.json','hubspot-export-evidence-assessment.csv','hubspot-manual-worksheet-check.json'
 ]);
 
 const exactPath=path=>typeof path==='string'&&path.length>0&&path.length<=4096&&

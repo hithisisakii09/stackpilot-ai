@@ -102,3 +102,20 @@ The CSV has **four rows**: `deals-csv-export`, `contacts-csv-export`, `companies
 A human inspector should fill only what an actual official source demonstrates, distinguish a page's silence from a contradiction, and check export permissions and account/plan/region restrictions separately. **API endpoint availability does not demonstrate continuous or bidirectional data sync.** Do not copy source text from this repo's unsourced candidate assertions into the excerpt cells. The worksheet is a temporary research aid, *not* an approval record or validated evidence-import format. It contains formula-neutralization safeguards for spreadsheets, but still should be kept local and private.
 
 The file name is protected by `.gitignore`, the forced-add Git index guard and the static-build research leakage guard. Store it **outside the project** anyway, including outside `dist/`. Later, use the existing `research:intake` proposal/capture validation only for a genuinely inspected, claim-specific source. Every existing publication, reviewer and owner release gate stays disabled; four completed worksheet cells would not by themselves prove the combined assertion.
+
+## Offline validation of manually filled four-part CSV — no source approvals
+
+After the user genuinely inspects a vendor's source and fills the previously blank fields in a private worksheet, run:
+
+```bash
+# The input must be the original canonical 4-row, 12-column CSV. Do not upload it.
+npm run research:hubspot-worksheet-check < /absolute/private/hubspot-export-evidence-assessment.csv
+```
+
+The command is **read-only** and performs no web requests. It checks the four exact predicate IDs, original research questions and unchanged `NEEDS-EVIDENCE` labels, permits correctly quoted commas/quotes, and rejects unquoted/altered/multiline CSV, malformed dates, future dates, unsafe control characters, formulas and approval-looking dispositions. A source URL must use HTTPS at `hubspot.com` or its subdomains; this is **URL syntax checking, not vendor provenance**. A short excerpt must meet the existing private capture shape rules, and copying the original unverified candidate assertion as if it were a vendor quotation is forbidden.
+
+Manual `Research disposition` entries are restricted to blank, `NEEDS-EVIDENCE`, `OBSERVED-UNVERIFIED`, or `CONTRADICTION-REPORTED-UNVERIFIED`. To be counted as a *human-claimed* observation or contradiction, **all seven** source fields must contain plausible, non-`unknown` text: HTTPS URL, actual inspection date, plan, region, permission scope, short excerpt and limitations. Partial notes remain gaps. Even completed entries are **untrusted self-reports**: the command never authenticates the vendor's content or a reviewer, cannot mark any predicate verified, and cannot approve, merge, publish or change the evidence ledger.
+
+The JSON result includes only counts, predicate IDs, missing-field codes and whether the user-entered URL matches an existing **unverified** source lead or proposed claim source. It deliberately **does not echo** raw URLs, excerpts, notes, candidate assertions or account data. A matching source lead does not establish relevance to the predicate. The exported report file name `hubspot-manual-worksheet-check.json` is blocked by Git ignore/index and website-build privacy guards. Keep all input and output files outside this repository anyway.
+
+When the worksheet identifies a genuine promising source, continue via the existing **separate** `research:intake -- --proposal` workflow for claim-specific unapproved evidence. No CSV-import shortcut exists; independent authenticated human source and predicate review remains the only possible future path to approval, and that authority is not implemented. All 36 claims remain unverified and production stays **NO-GO**.
