@@ -101,3 +101,18 @@ Run `npm run research:evidence-captures -- --json` **only in trusted private dev
 `npm run release:readiness` now exposes `manualEvidenceCaptures` counts and keeps a `source-excerpt-verification` **BLOCKED** gate; even a well-formed manual record is `independentlyVerified:false`, `supportsClaimVerified:false`, `eligibleForPublication:false`, and never changes the 36 comparison rows' `sourceId:null` or `approved:false`. `npm run release:preflight` blocks the private capture JSON filename and excerpt/capture metadata from browser-delivered text assets.
 
 **Owner-gated next step:** independently collect and inspect first-party vendor content, verify the exact plan/region/claim meaning with an authenticated and independently authorized reviewer, preserve genuine source provenance and expiration, anchor the review audit outside untrusted repository files, then require separate owner approval before any public claim or production release. None of those approval authorities exists or is enabled in this increment.
+
+## Private evidence-gap worklist — next manual action per claim
+
+Run `npm run research:gap-worklist` in private development for a **redaction-friendly summary** of all 36 claim/vendor research tasks. It lists identifiers, research stages, and next actions **without printing raw candidate assertions**. Use `npm run research:gap-worklist -- --csv` to emit an offline **PRIVATE** CSV worksheet to standard output, or `--json` to emit the structured internal worklist. These two explicit formats include raw, **unverified** candidate assertions. Do not upload, publish, commit, send to vendors, or place the outputs in `dist/` or public artifacts.
+
+The worklist is derived from the already validated research proposals, manually recorded excerpts, source age/revocations, and negative-only triage. It distinguishes:
+- `needs-source-proposal` — identify a relevant official vendor source for the exact vendor and claim;
+- `needs-manual-capture` — manually inspect a proposed source and capture a short dated excerpt with plan/region;
+- `needs-independent-verification` — local excerpts exist, but **no reviewer** has independently authenticated the source or the assertion;
+- `source-refresh-needed` — some proposed documentation is stale or flagged as revoked; do not promote it;
+- `rejected-needs-reassessment` — a negative editorial disposition remains effective, never approval.
+
+The CSV contains an explicit unverified assertion column and blank fields for the source URL, plan, region, checked date, exact short excerpt, and research notes. **Blank cells are intentional**: this command has no web access or authority to invent research evidence. All fields are double-quoted and leading spreadsheet-formula triggers, including whitespace/zero-width prefixes, are escaped. The CSV is a *worksheet*, **not an import path or approval ledger**. To preserve provenance, review the current official vendor page yourself and enter only genuinely inspected, short non-personal text through the existing `comparison-source-proposals.json` and `comparison-evidence-captures.json` validation process; never copy worksheet cells directly into approved public claims.
+
+The build preflight rejects accidental `comparison-gap-worklist.csv` or `.json` exports and continues to block private raw comparison statements and manually captured excerpts in browser assets. The existing release-readiness audit remains **NO-GO**, with all 36 claims unapproved and every editorial authorization denied. Repository CI cannot establish live vendor accuracy, reviewer identity, hosted private-preview acceptance, or owner permission to release.
