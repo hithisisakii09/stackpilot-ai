@@ -10,10 +10,11 @@ const claims=read('../src/data/research-claims.json');
 const revocations=read('../src/data/research-source-revocations.json');
 const triage=read('../src/data/editorial-triage.json');
 const proposals=read('../src/data/comparison-source-proposals.json');
+const captures=read('../src/data/comparison-evidence-captures.json');
 const trustAnchors=read('../src/data/editorial-review-trust-anchors.json');
 const receipts=read('../src/data/editorial-review-receipts.json');
 const reviewHistory=read('../src/data/editorial-review-history.json');
-const readyInputs={policy,products,ledger,claims,revocations,triage,proposals,trustAnchors,receipts,reviewHistory,today:'2026-11-05'};
+const readyInputs={policy,products,ledger,claims,revocations,triage,proposals,captures,trustAnchors,receipts,reviewHistory,today:'2026-11-05'};
 
 test('production report remains NO-GO with all 36 comparison claims unapproved',()=>{
  const report=buildProductionReadinessReport(readyInputs);
@@ -136,4 +137,39 @@ test('production readiness explicitly denies every editorial action without a tr
  assert.ok(report.blockers.some(x=>x.id==='reviewer-authorization-service'&&x.status==='BLOCKED'));
  assert.equal(report.status,'NO-GO');
  assert.equal(report.comparisonClaimsApproved,0);
+});
+
+test('claim-specific manual captures cannot unlock release or authenticate sources',async()=>{
+ const {hashEvidenceExcerpt}=await import('../src/lib/comparison-evidence-captures.mjs');
+ const report=buildProductionReadinessReport(readyInputs);
+ assert.deepEqual(report.manualEvidenceCaptures,{
+  total:0,claimsWithExcerpts:0,claimsWithoutExcerpts:36,
+  approved:0,independentlyVerified:0
+ });
+ assert.ok(report.blockers.some(x=>x.id==='source-excerpt-verification'&&x.status==='BLOCKED'));
+ const excerpt='TEST FIXTURE: a manually copied snippet, not independently retrieved or proven by the system.';
+ const candidate={
+  claimId:'comparison-hubspot-vs-pipedrive-01',productId:'hubspot',
+  researchLeadId:'hubspot-doc-claim-1',proposedOn:'2026-11-05',
+  relevanceNote:'This vendor-source proposal is synthetic for offline validation testing only.',
+  planScope:null,regionScope:null,status:'candidate',approved:false
+ };
+ const {COMPARISON_PAIRS}=await import('../src/lib/comparison-pairs.mjs');
+ const {createHash}=await import('node:crypto');
+ const capture={
+  captureId:'excerpt-capture-0001',claimId:candidate.claimId,
+  productId:candidate.productId,researchLeadId:candidate.researchLeadId,
+  sourceUrl:claims.find(x=>x.id===candidate.researchLeadId).sourceUrl,
+  claimSha256:createHash('sha256').update(COMPARISON_PAIRS[0].matrix[0].firstValue).digest('hex'),
+  capturedOn:'2026-11-05',planScope:null,regionScope:null,
+  excerpt,excerptSha256:hashEvidenceExcerpt(excerpt),captureMethod:'manual',status:'candidate',approved:false
+ };
+ const withCapture=buildProductionReadinessReport({...readyInputs,proposals:[candidate],captures:[capture]});
+ assert.equal(withCapture.manualEvidenceCaptures.total,1);
+ assert.equal(withCapture.manualEvidenceCaptures.independentlyVerified,0);
+ assert.equal(withCapture.status,'NO-GO');
+ assert.equal(withCapture.canPublish,false);
+ assert.equal(withCapture.comparisonClaimsApproved,0);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,proposals:[candidate],captures:[{...capture,approved:true}]}),/approval/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,captures:undefined}),/array/i);
 });
