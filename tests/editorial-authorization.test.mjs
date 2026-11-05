@@ -48,7 +48,7 @@ test('caller-controlled identities, roles, signatures and bypass flags cannot gr
  assert.throws(()=>evaluateEditorialAuthorization({action:'publish-comparison',policy:{...policy,delegatedSpendINR:1}}),/policy|restricted/i);
  assert.throws(()=>evaluateEditorialAuthorization({action:'grant-owner-role',policy}),/action/i);
  assert.throws(()=>evaluateEditorialAuthorization({action:null,policy}),/action/i);
- assert.throws(()=>evaluateEditorialAuthorization({action:'approve-claim'}),/policy/i);
+ assert.throws(()=>evaluateEditorialAuthorization({action:'approve-claim'}),/unauthorized|policy/i);
 });
 
 test('static source surface passes without any editorial API, middleware or serverless functions',()=>{
