@@ -73,7 +73,7 @@ function validDay(value){
 function plain(value,max){
  return typeof value==='string'&&value.length<=max&&value.trim()===value&&
   !/[<>\x00-\x1f\x7f]/.test(value)&&!invisibleFormatting.test(value)&&
-  !formulaStart.test(value);
+  (!formulaStart.test(value)||value==='-');
 }
 function vendorUrl(value){
  if(value.length>400||!plain(value,400))throw error();
