@@ -84,3 +84,21 @@ The current code's candidate source proposals and excerpt captures are associate
 There is **no automated step** from a matching excerpt to `supportsPredicateVerified:true`, a signed human approval, or a publishable comparison. The CLI is **read-only** and its private `--json` output must not be committed, placed in `dist/`, emailed to vendors, or published. Both the Git material guard and static build preflight reject the conventional `hubspot-export-evidence-assessment.json` export filename as defense in depth.
 
 **Expected pilot result before manual research:** 4/4 predicates **NEEDS-EVIDENCE**, 0 independent verifications, 0 authenticated approvals, 0 candidate claim updates. Do not call the pilot complete until genuine vendor evidence has been collected and separately reviewed. Release remains **NO-GO**.
+
+## Four-row private CSV worksheet — manual evidence collection handoff
+
+To prepare an **offline, fill-in research worksheet** without inventing facts, use:
+
+```bash
+# Default stdout contains four research questions, no raw vendor assertion:
+npm run research:hubspot-export-checklist
+
+# Optional PRIVATE CSV worksheet; store outside this Git checkout:
+npm run research:hubspot-export-checklist -- --csv > /absolute/private/hubspot-export-evidence-assessment.csv
+```
+
+The CSV has **four rows**: `deals-csv-export`, `contacts-csv-export`, `companies-csv-export`, `api-data-sync`. Each includes its own independent research questions and `NEEDS-EVIDENCE` status. The following eight fields are **intentionally empty for every row**: official source URL, inspection date, plan, region, account/permission scope, exact short supporting excerpt, limitations/contradictions, and human research disposition. An existing unverified vendor documentation lead or combined-claim excerpt **never automatically fills any of these fields**.
+
+A human inspector should fill only what an actual official source demonstrates, distinguish a page's silence from a contradiction, and check export permissions and account/plan/region restrictions separately. **API endpoint availability does not demonstrate continuous or bidirectional data sync.** Do not copy source text from this repo's unsourced candidate assertions into the excerpt cells. The worksheet is a temporary research aid, *not* an approval record or validated evidence-import format. It contains formula-neutralization safeguards for spreadsheets, but still should be kept local and private.
+
+The file name is protected by `.gitignore`, the forced-add Git index guard and the static-build research leakage guard. Store it **outside the project** anyway, including outside `dist/`. Later, use the existing `research:intake` proposal/capture validation only for a genuinely inspected, claim-specific source. Every existing publication, reviewer and owner release gate stays disabled; four completed worksheet cells would not by themselves prove the combined assertion.
