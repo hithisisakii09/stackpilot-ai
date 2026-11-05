@@ -55,7 +55,8 @@ test('private editorial and research data files never appear in dist',()=>{
   'assets/editorial-review-receipts.json',
   'research-claims.json',
   'comparison-evidence.json',
-  'editorial-review-trust-anchors.json'
+  'editorial-review-trust-anchors.json',
+  'assets/editorial-review-history.json'
  ]){
   const report=scan([{path,content:'[]'}]);
   assert.ok(report.violations.some(x=>x.includes('Private research data asset')),path);
@@ -68,7 +69,8 @@ test('serialized reviewer-only fields cannot be embedded in browser assets',()=>
   'const record={triageReason:"internal only"};',
   '{"publicKeySpkiBase64":"NOT A KEY"}',
   'const x={sourceSnapshotSha256:"deadbeef"};',
-  'const item={relevanceNote:"internal candidate"};'
+  'const item={relevanceNote:"internal candidate"};',
+  '{"previousDigest":"private-untrusted-history"}'
  ]){
   assert.ok(scan([{path:'_astro/app.js',content}]).violations.some(x=>x.includes('Internal review metadata')));
  }
