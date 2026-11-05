@@ -129,3 +129,9 @@ Use a **trusted text editor** to review a manually obtained CSV before importing
 Research placeholders `unknown`, `N/A`, `TBD`, `pending`, `not checked`, `not documented`, `not verified`, `unspecified`, `none`, `?` and `-` now count as **missing evidence**, not a completed plan/region/permission/limitation field. The CLI preserves explicit `missingFields` codes and will not count a row with placeholders as even a *self-reported* observation. A row with all fields filled is still an untrusted human claim, **not independently verified vendor evidence**, authentication, or approval.
 
 The manual workflow and release restrictions are unchanged. No vendor facts were obtained by this change.
+
+## Historical-source crosswalk — avoid mistaking archived notes for current proof
+
+A dated, private reconciliation of the existing 2026-11-02/03 HubSpot research notes against **each of the four unresolved predicates** is available in [2026-11-05-hubspot-historical-source-crosswalk.md](2026-11-05-hubspot-historical-source-crosswalk.md). It identifies the already-reported generic export, association, permission and separate activity/API context but records **zero fresh source inspections, zero vendor quotes and zero authenticated approvals**. Every predicate remains **NEEDS-EVIDENCE**.
+
+Use this crosswalk for *where to look next*, not for filling inspection dates or exact quotation cells. The human must reopen the vendor's live documentation and record their own short permitted quotations. No source/capture intake was performed during the crosswalk update.
