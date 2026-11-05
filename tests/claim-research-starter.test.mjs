@@ -110,7 +110,7 @@ test('unknown vendor, mismatched claim, and malformed research fail closed',()=>
  for(const value of [
   {claimId:'comparison-not-a-claim-01'},
   {productId:'wrong-vendor'},
-  {productId:'pipedrive'},
+  {productId:'ahrefs'},
   {claimId:null},
   {claimId:'comparison-hubspot-vs-pipedrive-01',productId:null},
   {proposals:[{...proposed,approved:true}]},
