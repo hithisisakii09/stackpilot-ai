@@ -9,6 +9,8 @@ import { COMPARISON_PAIRS } from '../src/lib/comparison-pairs.mjs';
 import { validateComparisonSourceProposals } from '../src/lib/comparison-review-packets.mjs';
 import { assertEditorialReceiptsLocked } from '../src/lib/editorial-receipt-integrity.mjs';
 import { validateEditorialReviewHistory } from '../src/lib/editorial-review-history.mjs';
+import { auditCurrentEditorialRuntimeSurface } from './editorial-runtime-source.mjs';
+import { EDITORIAL_ACTIONS,evaluateEditorialAuthorization } from '../src/lib/editorial-authorization.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const count = validateCatalog(products);
@@ -39,3 +41,14 @@ console.log(`Locked editorial signing: ${signing.trustedKeys} trusted keys, ${si
 const reviewHistory=JSON.parse(readFileSync(new URL('../src/data/editorial-review-history.json',import.meta.url),'utf8'));
 const localHistory=validateEditorialReviewHistory({history:reviewHistory,ledger:comparisons,pairs:COMPARISON_PAIRS,products});
 console.log(`Validated ${localHistory.events} local negative-only editorial history events; externally anchored: ${localHistory.externallyAnchored}; reviewer authenticated: ${localHistory.reviewerAuthenticated}`);
+
+const runtimeSurface=auditCurrentEditorialRuntimeSurface();
+if(runtimeSurface.violations.length){
+ for(const issue of runtimeSurface.violations)console.error('Editorial runtime blocker:',issue);
+ throw new Error('Static-only editorial source authorization boundary violated');
+}
+for(const action of EDITORIAL_ACTIONS){
+ if(evaluateEditorialAuthorization({action,policy:JSON.parse(readFileSync(new URL('../config/operating-policy.json',import.meta.url),'utf8'))}).decision!=='DENY')
+  throw new Error('Unsafe editorial authorization: '+action);
+}
+console.log(`Validated static-only source: ${runtimeSurface.checkedPaths} paths; ${EDITORIAL_ACTIONS.length} editorial actions denied; no reviewer API or publisher`);
