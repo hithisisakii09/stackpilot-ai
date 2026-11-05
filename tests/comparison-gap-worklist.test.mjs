@@ -130,7 +130,7 @@ test('private CSV provides a complete, stable, unapproved manual worksheet',()=>
  assert.equal(csv.split('\r\n').filter(Boolean).length,37);
  assert.match(csv,/^"Claim ID","Vendor","Dimension","UNVERIFIED candidate assertion/);
  assert.ok(csv.includes('"comparison-hubspot-vs-pipedrive-01"'));
- assert.ok(csv.includes('"hubspot"'));
+ assert.ok(csv.includes('"HubSpot"'));
  assert.ok(csv.includes('"needs-source-proposal"'));
  assert.doesNotMatch(csv,/,"approved",/i);
  assert.equal(serializeComparisonGapCsv(report),csv);
