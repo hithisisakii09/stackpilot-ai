@@ -65,3 +65,11 @@ Before an actual approval capability is designed or enabled, require: verified o
 This guard runs after Astro build in the existing `npm test` pipeline and through the operations preflight; any violation causes a nonzero exit. The neutral, buyer-facing comparison pages must continue to render only the unverified verification-question text. Internal packets from `npm run research:review-packets` must never be copied into `dist/`, client code, public artifacts, or live pages.
 
 **Limit:** string-based scanning is defense in depth, not a formal guarantee against intentionally obfuscated or compressed leaks. The site must remain private, and reviewer records/signing keys must remain outside browser-delivered artifacts. No access policy, identity, editorial approval, or production release is inferred from a green scan.
+
+## Negative-only local review-history integrity
+
+`src/data/editorial-review-history.json` starts as an **empty array**. The offline validator in `src/lib/editorial-review-history.mjs` accepts strictly ordered, negative-only events (`needs-evidence` and `rejected`) tied to a valid claim/product combination. Each event records a bounded plain-text reason, date, unique ID, sequence, previous SHA-256 digest, and its own domain-separated SHA-256 digest. Invalid fields, unknown claims, duplicate IDs, future or out-of-order dates, broken digest links, and any approval action fail closed.
+
+Run `npm run research:review-history -- --json` for a **local structural consistency** report. `npm run check:data` validates the event file, and `npm run release:readiness` keeps an `independent-review-audit` blocker permanently active. This is not a reviewer session, signature authority, proof of independent human inspection, or a publishing capability.
+
+**Critical limitation:** hashes alone do not create an immutable, authenticated audit log. A repository editor can rewrite every event and recompute all hashes. The output therefore explicitly reports `externallyAnchored:false`, `reviewerAuthenticated:false`, `authenticatedApprovals:0`, and `canPublish:false` even when `localChainConsistent:true`. Never call the event file a trusted approval history. Future independently managed storage, signed checkpoints and authorization are required before any approval functionality is considered.
