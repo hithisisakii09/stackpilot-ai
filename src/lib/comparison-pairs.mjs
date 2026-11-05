@@ -187,8 +187,20 @@ export function getComparisonPair(slug, products) {
   if (!first || !second) {
     throw new Error(`Product not found for comparison pair: ${slug}`);
   }
+  // Never return the private candidate pair object to public page consumers:
+  // it contains raw unsourced vendor assertions and unreviewed SEO metadata.
+  const publicPair = {
+    slug: pair.slug,
+    category: pair.category,
+    title: pair.title,
+    firstId: pair.firstId,
+    secondId: pair.secondId,
+    metaDescription: 'Unverified research questions for '+pair.title+'. Verify current features, pricing and contract terms directly with both vendors.',
+    relatedTools: pair.relatedTools.map(tool=>({...tool})),
+    relatedGuides: pair.relatedGuides.map(guide=>({...guide}))
+  };
   return {
-    pair,
+    pair: publicPair,
     first,
     second,
     // The static matrices contain research leads, NOT authenticated vendor facts.
