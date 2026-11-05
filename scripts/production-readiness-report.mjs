@@ -10,6 +10,7 @@ const report=buildProductionReadinessReport({
  triage:read('../src/data/editorial-triage.json'),
  proposals:read('../src/data/comparison-source-proposals.json'),
  trustAnchors:read('../src/data/editorial-review-trust-anchors.json'),
- receipts:read('../src/data/editorial-review-receipts.json')
+ receipts:read('../src/data/editorial-review-receipts.json'),
+ reviewHistory:read('../src/data/editorial-review-history.json')
 });
 console.log(JSON.stringify(report,null,2));
