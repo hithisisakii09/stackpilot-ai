@@ -18,7 +18,8 @@
     "research:claims": "node scripts/research-claims-report.mjs",
     "publisher:readiness": "node scripts/publisher-readiness-report.mjs",
     "release:preflight": "node scripts/release-preflight.mjs",
-    "research:comparisons": "node scripts/comparison-evidence-report.mjs"
+    "research:comparisons": "node scripts/comparison-evidence-report.mjs",
+    "release:readiness": "node scripts/production-readiness-report.mjs"
   },
   "dependencies": {
     "astro": "^7.4.4"
