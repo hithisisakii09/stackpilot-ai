@@ -90,3 +90,12 @@ test('unrecognized binary assets are not read as text, but filename remains guar
  assert.equal(report.checkedFiles,0);
  assert.deepEqual(report.violations,[]);
 });
+
+test('unreviewed original SEO comparison metadata is private research, not public page copy',()=>{
+ const pairsWithPrivateDescription=pairs.map(p=>({...p,
+  metaDescription:'UNREVIEWED SOURCE CLAIM: Cloud stack A provides faster hosting than Cloud stack B.'}));
+ const text=pairsWithPrivateDescription[0].metaDescription;
+ const report=auditInternalResearchLeaks([{path:'index.html',content:'<meta name="description" content="'+text+'">'}],pairsWithPrivateDescription);
+ assert.ok(report.violations.some(v=>v.includes('Unreviewed comparison description')));
+ assert.ok(report.violations.every(v=>!v.includes(text)));
+});
