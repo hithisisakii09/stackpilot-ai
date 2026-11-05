@@ -31,7 +31,7 @@ test('private file input rejects relative paths, directories, invalid names and 
    fileURLToPath(new URL('../src/data/research-claims.json',import.meta.url)),
    '',null,42,dir+'\n/'+ 'snapshot.txt'
   ]){
-   assert.throws(()=>readPrivateSourceTextFile(path),/private source file|path|snapshot/i);
+   assert.throws(()=>readPrivateSourceTextFile(path),/private source (?:text )?file|path|snapshot/i);
   }
  });
 });
