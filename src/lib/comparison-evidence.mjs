@@ -34,6 +34,7 @@ export function validateComparisonEvidence(entries,pairs,products,{today=new Dat
   if(typeof e.sourceId!=='string'||!sources.has(e.sourceId)||sources.get(e.sourceId).productId!==e.productId)throw new Error('Invalid or mismatched candidate source');
   if(e.status!=='candidate'||e.approved!==false||e.checkedAt!==null||e.expiresAt!==null)throw new Error('Evidence must remain unapproved candidate');
  }
+ if(seen.size!==allowed.size)throw new Error('Incomplete comparison evidence coverage');
  return entries.length;
 }
 
