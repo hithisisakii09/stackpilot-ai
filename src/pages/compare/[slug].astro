@@ -7,16 +7,14 @@ import { buildFAQSchema, buildBreadcrumbSchema, serializeJsonLd } from '../../li
 
 export function getStaticPaths() {
   return getAllComparisonPairs().map(pair => ({
-    params: { slug: pair.slug },
-    props: { pair }
+    params: { slug: pair.slug }
   }));
 }
 
 // Build fails closed if a comparison claim lacks an unapproved evidence record.
 validateComparisonEvidence(evidenceLedger, getAllComparisonPairs(), products);
-const { pair } = Astro.props;
-const pairData = getComparisonPair(pair.slug, products);
-const { first, second, matrix } = pairData;
+const pairData = getComparisonPair(Astro.params.slug, products);
+const { pair, first, second, matrix } = pairData;
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
