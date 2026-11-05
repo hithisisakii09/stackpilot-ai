@@ -7,6 +7,7 @@ const report=buildProductionReadinessReport({
  ledger:read('../src/data/comparison-evidence.json'),
  claims:read('../src/data/research-claims.json'),
  revocations:read('../src/data/research-source-revocations.json'),
- triage:read('../src/data/editorial-triage.json')
+ triage:read('../src/data/editorial-triage.json'),
+ proposals:read('../src/data/comparison-source-proposals.json')
 });
 console.log(JSON.stringify(report,null,2));
