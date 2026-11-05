@@ -57,3 +57,30 @@ Also record applicable permissions, plan, region, date, record/property/associat
 Do not add raw full vendor documents, personal/customer data, screenshots with credentials, or local draft JSON to Git. Keep the scratch files **outside this project**; `.gitignore` and `npm run research:material-guard` provide only defense-in-depth.
 
 No independent human reviewer authentication, external audit anchor, claim-specific signoff, production consent, commercial hosting authorization, payment, affiliate activation or merge has been granted. The 36 comparison claims remain **unverified**. This is a handoff for **real manual work**, not a research-completion certificate.
+
+## Structured atomic evidence assessment — private checklist only
+
+The `research:hubspot-export-checklist` command now converts the compound *private candidate* into **four independent human research questions**, without pretending the existing source lead answers them:
+
+```bash
+# Human-readable questions, no raw candidate assertion in stdout
+npm run research:hubspot-export-checklist
+
+# PRIVATE JSON containing the unverified original candidate and exact question IDs
+npm run research:hubspot-export-checklist -- --json
+```
+
+| Atomic predicate ID | What a human must independently check | Baseline |
+| --- | --- | --- |
+| `deals-csv-export` | Current official documentation explicitly supports CSV export of **deals**, with applicable permissions, account and plan, region and any limits | **NEEDS-EVIDENCE** |
+| `contacts-csv-export` | Separately document CSV export of **contacts**, including contact properties and associations | **NEEDS-EVIDENCE** |
+| `companies-csv-export` | Separately document CSV export of **companies**, with its own field/association and account constraints | **NEEDS-EVIDENCE** |
+| `api-data-sync` | Find distinct official documentation explaining **data sync behavior**, direction, authorization, rate limits and timing; the existence of an API read/export endpoint alone is insufficient | **NEEDS-EVIDENCE** |
+
+For **each** predicate, a real reviewer should record a source URL, inspection date, short permitted supporting excerpt, source scope (plan, permissions, region, account), what the source does **not** prove, and any unresolved limitations, all in **private notes outside Git**. Do not fill in a date or quotation that was not obtained through actual inspection. Start with the existing HubSpot export research lead, but do **not** assume that one vendor documentation page addresses all four predicates.
+
+The current code's candidate source proposals and excerpt captures are associated with the **combined** comparison claim, not automatically with one of these four predicates. The checklist deliberately leaves `manuallySelectedSourceId:null` and `manuallyAssignedCaptureId:null` on every subclaim—even if an existing combined-claim proposal or excerpt exists. Source leads appear as **unassigned, unverified** research options, not factual support.
+
+There is **no automated step** from a matching excerpt to `supportsPredicateVerified:true`, a signed human approval, or a publishable comparison. The CLI is **read-only** and its private `--json` output must not be committed, placed in `dist/`, emailed to vendors, or published. Both the Git material guard and static build preflight reject the conventional `hubspot-export-evidence-assessment.json` export filename as defense in depth.
+
+**Expected pilot result before manual research:** 4/4 predicates **NEEDS-EVIDENCE**, 0 independent verifications, 0 authenticated approvals, 0 candidate claim updates. Do not call the pilot complete until genuine vendor evidence has been collected and separately reviewed. Release remains **NO-GO**.
