@@ -6,6 +6,7 @@ import { validateResearchClaims } from '../src/lib/research-claims.mjs';
 import { buildCandidateSourceRiskReport } from '../src/lib/candidate-source-risk.mjs';
 import { validateEditorialTriage } from '../src/lib/editorial-triage.mjs';
 import { COMPARISON_PAIRS } from '../src/lib/comparison-pairs.mjs';
+import { validateComparisonSourceProposals } from '../src/lib/comparison-review-packets.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const count = validateCatalog(products);
@@ -24,3 +25,6 @@ console.log(`Validated ${risk.totalSources} unapproved research sources; ${risk.
 const comparisons=JSON.parse(readFileSync(new URL('../src/data/comparison-evidence.json',import.meta.url),'utf8'));
 const triage=JSON.parse(readFileSync(new URL('../src/data/editorial-triage.json',import.meta.url),'utf8'));
 console.log(`Validated ${validateEditorialTriage(triage,comparisons,COMPARISON_PAIRS,products)} negative-only editorial triage records; approval disabled`);
+
+const proposals=JSON.parse(readFileSync(new URL('../src/data/comparison-source-proposals.json',import.meta.url),'utf8'));
+console.log(`Validated ${validateComparisonSourceProposals({proposals,ledger:comparisons,triage,researchClaims:claimCandidates,revocations,products,pairs:COMPARISON_PAIRS})} unapproved source-specific comparison research proposals`);
