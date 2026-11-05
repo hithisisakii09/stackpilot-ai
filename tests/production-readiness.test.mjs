@@ -9,7 +9,8 @@ const ledger=read('../src/data/comparison-evidence.json');
 const claims=read('../src/data/research-claims.json');
 const revocations=read('../src/data/research-source-revocations.json');
 const triage=read('../src/data/editorial-triage.json');
-const readyInputs={policy,products,ledger,claims,revocations,triage,today:'2026-11-05'};
+const proposals=read('../src/data/comparison-source-proposals.json');
+const readyInputs={policy,products,ledger,claims,revocations,triage,proposals,today:'2026-11-05'};
 
 test('production report remains NO-GO with all 36 comparison claims unapproved',()=>{
  const report=buildProductionReadinessReport(readyInputs);
@@ -64,4 +65,22 @@ test('production readiness includes only unapproved editorial dispositions',()=>
  assert.equal(withReject.canPublish,false);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,triage:[{...reject,decision:'approved'}]}),/unapproved|negative/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,triage:undefined}),/triage/i);
+});
+
+test('source-specific candidate research proposals cannot unlock the production gate',()=>{
+ const report=buildProductionReadinessReport(readyInputs);
+ assert.deepEqual(report.sourceProposals,{unreviewed:0,claimsWithoutProposals:36,authenticatedApprovals:0});
+ assert.ok(report.blockers.some(x=>x.id==='source-specific-review'&&x.status==='BLOCKED'));
+ const proposal={
+  claimId:'comparison-hubspot-vs-pipedrive-01',productId:'hubspot',
+  researchLeadId:'hubspot-doc-claim-1',proposedOn:'2026-11-05',
+  relevanceNote:'Unreviewed vendor page may relate to this dimension; scope not verified.',
+  planScope:null,regionScope:null,status:'candidate',approved:false
+ };
+ const withLead=buildProductionReadinessReport({...readyInputs,proposals:[proposal]});
+ assert.deepEqual(withLead.sourceProposals,{unreviewed:1,claimsWithoutProposals:35,authenticatedApprovals:0});
+ assert.equal(withLead.canPublish,false);
+ assert.equal(withLead.comparisonClaimsApproved,0);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,proposals:[{...proposal,approved:true}]}),/approval/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,proposals:undefined}),/array/i);
 });
