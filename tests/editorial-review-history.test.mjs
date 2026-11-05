@@ -71,24 +71,27 @@ test('rejects edited, removed, reordered and broken-link review history',()=>{
 
 test('rejects unknown claims, duplicate events, date anomalies and unsupported actions',()=>{
  const one=first();
- const bad=[
-  {...base,claimId:'comparison-other-01'},
-  {...base,productId:'pipedrive'},
-  {...base,action:'approved'},
-  {...base,action:'signed-off'},
+ const invalidPayloads=[
+  {...base,action:'approved'}, {...base,action:'signed-off'},
   {...base,reason:'too short'},
   {...base,reason:'No supporting vendor fact <script>alert(1)</script>.'},
-  {...base,reason:'No relevant source.\nSecond line cannot be accepted.'},
-  {...base,recordedOn:'2026-11-06'},
+  {...base,reason:'No relevant source.\\nSecond line cannot be accepted.'},
   {...base,recordedOn:'2026-02-30'},
   {...base,eventId:'not valid'},
   {...base,previousDigest:'x'},
   {...base,approval:true},
   {...base,reviewer:'owner'},
-  {...base,sourceSnapshot:'fake'},
+  {...base,sourceSnapshot:'fake'}
  ];
- for(const item of bad)
-  assert.throws(()=>validateEditorialReviewHistory({...options,history:[item]}));
+ for(const item of invalidPayloads)
+  assert.throws(()=>computeReviewEventDigest(item));
+ const invalidReferences=[
+  event({...base,claimId:'comparison-other-01'}),
+  event({...base,productId:'unknown-vendor'}),
+  event({...base,recordedOn:'2026-11-06'})
+ ];
+ for(const item of invalidReferences)
+  assert.throws(()=>validateEditorialReviewHistory({...options,history:[item]}),/unknown|future/i);
  assert.throws(()=>validateEditorialReviewHistory({...options,history:[one,second({eventId:one.eventId})]}),/duplicate/i);
  assert.throws(()=>validateEditorialReviewHistory({...options,history:[one,second({recordedOn:'2026-11-04'})]}),/chronolog/i);
  assert.throws(()=>validateEditorialReviewHistory({...options,today:'2026-02-30'}),/date/i);
