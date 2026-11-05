@@ -3,6 +3,7 @@ import {validateComparisonEvidence} from './comparison-evidence.mjs';
 import {buildCandidateSourceRiskReport} from './candidate-source-risk.mjs';
 import {buildEditorialTriageQueue} from './editorial-triage.mjs';
 import {buildComparisonReviewPackets} from './comparison-review-packets.mjs';
+import {buildComparisonEvidenceCaptureReport} from './comparison-evidence-captures.mjs';
 import {assertEditorialReceiptsLocked} from './editorial-receipt-integrity.mjs';
 import {validateEditorialReviewHistory} from './editorial-review-history.mjs';
 import {evaluateEditorialAuthorization} from './editorial-authorization.mjs';
@@ -11,7 +12,7 @@ import {evaluateEditorialAuthorization} from './editorial-authorization.mjs';
  * Repository-only prelaunch inventory. Never grants production authorization.
  * Remote account controls, legal review and owner consent are outside CI.
  */
-export function buildProductionReadinessReport({policy,products,ledger,claims,revocations,triage,proposals,trustAnchors,receipts,reviewHistory,today=new Date().toISOString().slice(0,10)}={}){
+export function buildProductionReadinessReport({policy,products,ledger,claims,revocations,triage,proposals,captures,trustAnchors,receipts,reviewHistory,today=new Date().toISOString().slice(0,10)}={}){
  const expected={
   policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,
   hostingCandidate:'netlify-free',commercialHostingApproved:false,
@@ -32,6 +33,8 @@ export function buildProductionReadinessReport({policy,products,ledger,claims,re
  const editorialTriage={records:triage.length,rejected,needsEvidence:dispositions.length-rejected,authenticatedApprovals:0};
  const reviewPackets=buildComparisonReviewPackets({proposals,ledger,triage,researchClaims:claims,revocations,products,pairs:COMPARISON_PAIRS,today});
  const sourceProposals={unreviewed:reviewPackets.proposedSources,claimsWithoutProposals:reviewPackets.claimsWithoutProposals,authenticatedApprovals:0};
+ const captureReport=buildComparisonEvidenceCaptureReport({captures,proposals,ledger,triage,researchClaims:claims,revocations,products,pairs:COMPARISON_PAIRS,today});
+ const manualEvidenceCaptures={total:captureReport.totalCaptures,claimsWithExcerpts:captureReport.claimsWithExcerpts,claimsWithoutExcerpts:captureReport.claimsWithoutExcerpts,approved:0,independentlyVerified:0};
  const editorialSignatureLock=assertEditorialReceiptsLocked(trustAnchors,receipts);
  const historyStatus=validateEditorialReviewHistory({history:reviewHistory,ledger,pairs:COMPARISON_PAIRS,products,today});
  const editorialAuthorization=evaluateEditorialAuthorization({action:'approve-claim',policy});
@@ -42,6 +45,7 @@ export function buildProductionReadinessReport({policy,products,ledger,claims,re
   ['independent-review-audit','Local negative-only review chain is untrusted: no authenticated reviewer or independently anchored append-only history'],
   ['editorial-triage','Offline dispositions are unauthenticated and cannot approve or publish vendor assertions'],
   ['source-specific-review','Research proposals, even when scoped to a claim, are not verified evidence or authenticated human approval'],
+  ['source-excerpt-verification','Manually captured excerpts require independent vendor/source and scope verification; text hashes alone are not evidence approval'],
   ['candidate-source-review',
    sourceRisk.total+' vendor documentation leads need editorial review: '+
    sourceRisk.unreviewed+' unreviewed, '+sourceRisk.stale+' stale, '+sourceRisk.revoked+' revoked'],
@@ -56,7 +60,7 @@ export function buildProductionReadinessReport({policy,products,ledger,claims,re
   canPublish:false,canSpend:false,canActivateAffiliates:false,
   comparisonClaimsTotal:total,comparisonClaimsApproved:0,
   comparisonClaimsNeedingEvidence:total,
-  sourceRisk,editorialTriage,sourceProposals,editorialSignatureLock,reviewHistory:historyStatus,editorialAuthorization,
+  sourceRisk,editorialTriage,sourceProposals,manualEvidenceCaptures,editorialSignatureLock,reviewHistory:historyStatus,editorialAuthorization,
   remoteHostedApproval:'UNVERIFIED',
   blockers
  };
