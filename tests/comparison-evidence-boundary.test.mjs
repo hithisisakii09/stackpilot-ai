@@ -33,3 +33,10 @@ test('comparison rows are isolated from mutable catalog and never carry affiliat
   result.matrix[0].firstValue='tampered';
   assert.notEqual(getComparisonPair('hubspot-vs-pipedrive',products).matrix[0].firstValue,'tampered');
 });
+
+test('comparison page visibly exposes evidence status and identifiers',()=>{
+ const page=readFileSync(new URL('../src/pages/compare/[slug].astro',import.meta.url),'utf8');
+ assert.match(page,/row\.evidenceStatus/);
+ assert.match(page,/row\.claimId/);
+ assert.match(page,/No editorial approval/);
+});
