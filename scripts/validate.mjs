@@ -11,6 +11,7 @@ import { validateComparisonEvidenceCaptures } from '../src/lib/comparison-eviden
 import { assertEditorialReceiptsLocked } from '../src/lib/editorial-receipt-integrity.mjs';
 import { validateEditorialReviewHistory } from '../src/lib/editorial-review-history.mjs';
 import { auditCurrentEditorialRuntimeSurface } from './editorial-runtime-source.mjs';
+import { auditCurrentPrivateResearchMaterials } from './private-research-material-guard.mjs';
 import { EDITORIAL_ACTIONS,evaluateEditorialAuthorization } from '../src/lib/editorial-authorization.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
@@ -56,3 +57,6 @@ for(const action of EDITORIAL_ACTIONS){
   throw new Error('Unsafe editorial authorization: '+action);
 }
 console.log(`Validated static-only source: ${runtimeSurface.checkedPaths} paths; ${EDITORIAL_ACTIONS.length} editorial actions denied; no reviewer API or publisher`);
+
+const privateGitMaterials=auditCurrentPrivateResearchMaterials();
+console.log(`Validated private research Git materials: ${privateGitMaterials.checkedPaths} tracked paths, ${privateGitMaterials.protectedIgnorePatterns} protected ignore patterns; no local source copies in Git`);
