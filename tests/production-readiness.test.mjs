@@ -12,7 +12,8 @@ const triage=read('../src/data/editorial-triage.json');
 const proposals=read('../src/data/comparison-source-proposals.json');
 const trustAnchors=read('../src/data/editorial-review-trust-anchors.json');
 const receipts=read('../src/data/editorial-review-receipts.json');
-const readyInputs={policy,products,ledger,claims,revocations,triage,proposals,trustAnchors,receipts,today:'2026-11-05'};
+const reviewHistory=read('../src/data/editorial-review-history.json');
+const readyInputs={policy,products,ledger,claims,revocations,triage,proposals,trustAnchors,receipts,reviewHistory,today:'2026-11-05'};
 
 test('production report remains NO-GO with all 36 comparison claims unapproved',()=>{
  const report=buildProductionReadinessReport(readyInputs);
@@ -95,4 +96,30 @@ test('owner-controlled signing anchors and editorial receipts cannot activate vi
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,receipts:[{fake:'receipt'}]}),/locked/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,trustAnchors:undefined}),/locked/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,receipts:undefined}),/locked/i);
+});
+
+test('local history integrity remains a blocked, unauthenticated release gate',async()=>{
+ const {computeReviewEventDigest}=await import('../src/lib/editorial-review-history.mjs');
+ const report=buildProductionReadinessReport(readyInputs);
+ assert.equal(report.reviewHistory.events,0);
+ assert.equal(report.reviewHistory.localChainConsistent,true);
+ assert.equal(report.reviewHistory.externallyAnchored,false);
+ assert.equal(report.reviewHistory.reviewerAuthenticated,false);
+ assert.equal(report.reviewHistory.authenticatedApprovals,0);
+ assert.equal(report.reviewHistory.canPublish,false);
+ assert.ok(report.blockers.some(b=>b.id==='independent-review-audit'&&b.status==='BLOCKED'));
+ const payload={
+  sequence:1,eventId:'local-review-0001',
+  claimId:'comparison-hubspot-vs-pipedrive-01',productId:'hubspot',
+  action:'needs-evidence',
+  reason:'Vendor-specific supporting evidence has not yet been independently inspected.',
+  recordedOn:'2026-11-05',previousDigest:'0'.repeat(64)
+ };
+ const event={...payload,digest:computeReviewEventDigest(payload)};
+ const withHistory=buildProductionReadinessReport({...readyInputs,reviewHistory:[event]});
+ assert.equal(withHistory.reviewHistory.events,1);
+ assert.equal(withHistory.canPublish,false);
+ assert.equal(withHistory.status,'NO-GO');
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,reviewHistory:[{...event,approved:true}]}),/field|unauthorized/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,reviewHistory:undefined}),/array/i);
 });
