@@ -10,7 +10,9 @@ const claims=read('../src/data/research-claims.json');
 const revocations=read('../src/data/research-source-revocations.json');
 const triage=read('../src/data/editorial-triage.json');
 const proposals=read('../src/data/comparison-source-proposals.json');
-const readyInputs={policy,products,ledger,claims,revocations,triage,proposals,today:'2026-11-05'};
+const trustAnchors=read('../src/data/editorial-review-trust-anchors.json');
+const receipts=read('../src/data/editorial-review-receipts.json');
+const readyInputs={policy,products,ledger,claims,revocations,triage,proposals,trustAnchors,receipts,today:'2026-11-05'};
 
 test('production report remains NO-GO with all 36 comparison claims unapproved',()=>{
  const report=buildProductionReadinessReport(readyInputs);
@@ -83,4 +85,14 @@ test('source-specific candidate research proposals cannot unlock the production 
  assert.equal(withLead.comparisonClaimsApproved,0);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,proposals:[{...proposal,approved:true}]}),/approval/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,proposals:undefined}),/array/i);
+});
+
+test('owner-controlled signing anchors and editorial receipts cannot activate via repository changes',()=>{
+ const report=buildProductionReadinessReport(readyInputs);
+ assert.deepEqual(report.editorialSignatureLock,{trustedKeys:0,acceptedReceipts:0,authenticatedApprovals:0,canPublish:false});
+ assert.ok(report.blockers.some(x=>x.id==='authenticated-editorial-signoff'&&x.status==='BLOCKED'));
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,trustAnchors:[{fake:'key'}]}),/locked/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,receipts:[{fake:'receipt'}]}),/locked/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,trustAnchors:undefined}),/locked/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,receipts:undefined}),/locked/i);
 });
