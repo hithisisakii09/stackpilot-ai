@@ -6,9 +6,12 @@ const read=path=>JSON.parse(readFileSync(new URL(path,import.meta.url),'utf8'));
 const policy=read('../config/operating-policy.json');
 const products=read('../src/data/products.json');
 const ledger=read('../src/data/comparison-evidence.json');
+const claims=read('../src/data/research-claims.json');
+const revocations=read('../src/data/research-source-revocations.json');
+const readyInputs={policy,products,ledger,claims,revocations,today:'2026-11-05'};
 
 test('production report remains NO-GO with all 36 comparison claims unapproved',()=>{
- const report=buildProductionReadinessReport({policy,products,ledger});
+ const report=buildProductionReadinessReport(readyInputs);
  assert.equal(report.status,'NO-GO');
  assert.equal(report.canPublish,false);
  assert.equal(report.canSpend,false);
@@ -24,7 +27,27 @@ test('production report remains NO-GO with all 36 comparison claims unapproved',
 });
 
 test('readiness report rejects tampered policy and unapproved evidence masquerading as verified',()=>{
- assert.throws(()=>buildProductionReadinessReport({policy:{...policy,productionLaunchApproved:true},products,ledger}),/policy|approval|restrictive/i);
- assert.throws(()=>buildProductionReadinessReport({policy,products,ledger:ledger.map((r,i)=>i===0?{...r,approved:true}:r)}),/unapproved/i);
- assert.throws(()=>buildProductionReadinessReport({policy,products,ledger:ledger.slice(1)}),/incomplete/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,policy:{...policy,productionLaunchApproved:true}}),/policy|approval|restrictive/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,ledger:ledger.map((r,i)=>i===0?{...r,approved:true}:r)}),/unapproved/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,ledger:ledger.slice(1)}),/incomplete/i);
+});
+
+test('production inventory shows candidate source freshness and revocation blockers',()=>{
+ const report=buildProductionReadinessReport(readyInputs);
+ assert.deepEqual(report.sourceRisk,{total:6,approved:0,unreviewed:6,stale:0,revoked:0});
+ assert.ok(report.blockers.some(x=>x.id==='candidate-source-review'&&x.status==='BLOCKED'));
+ const stale=buildProductionReadinessReport({...readyInputs,today:'2027-03-15'});
+ assert.equal(stale.sourceRisk.stale,6);
+ assert.equal(stale.sourceRisk.unreviewed,0);
+ assert.equal(stale.status,'NO-GO');
+ const item={sourceId:'hubspot-doc-claim-1',revokedOn:'2026-11-04',reason:'Vendor statement withdrawn pending documented independent review.'};
+ const revoked=buildProductionReadinessReport({...readyInputs,revocations:[item]});
+ assert.equal(revoked.sourceRisk.revoked,1);
+ assert.equal(revoked.canPublish,false);
+});
+
+test('readiness rejects missing source inventory, invalid revocation and forged research approvals',()=>{
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,claims:undefined}),/claims|array|research/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,revocations:undefined}),/revocation/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,claims:claims.map((x,i)=>i===0?{...x,approved:true}:x)}),/approved/i);
 });
