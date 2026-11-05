@@ -3,6 +3,7 @@ import { validateCatalog } from '../src/lib/catalog-validation.mjs';
 import { validateEvidenceLeads } from '../src/lib/evidence-ledger.mjs';
 import { validateAffiliateCandidates } from '../src/lib/affiliate-readiness.mjs';
 import { validateResearchClaims } from '../src/lib/research-claims.mjs';
+import { buildCandidateSourceRiskReport } from '../src/lib/candidate-source-risk.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const count = validateCatalog(products);
@@ -13,3 +14,7 @@ const programs = JSON.parse(readFileSync(new URL('../src/data/affiliate-programs
 console.log(`Validated ${validateAffiliateCandidates(programs, products)} candidate partner records; no applications or tracking authorized`);
 const claimCandidates = JSON.parse(readFileSync(new URL('../src/data/research-claims.json', import.meta.url), 'utf8'));
 console.log(`Validated ${validateResearchClaims(claimCandidates, products)} vendor-source statements as unapproved research candidates`);
+
+const revocations = JSON.parse(readFileSync(new URL('../src/data/research-source-revocations.json', import.meta.url), 'utf8'));
+const risk = buildCandidateSourceRiskReport({ claims: claimCandidates, products, revocations });
+console.log(`Validated ${risk.totalSources} unapproved research sources; ${risk.staleSources} stale; ${risk.revokedSources} revoked`);
