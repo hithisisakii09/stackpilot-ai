@@ -75,7 +75,7 @@ test('rejects unknown claims, duplicate events, date anomalies and unsupported a
   {...base,action:'approved'}, {...base,action:'signed-off'},
   {...base,reason:'too short'},
   {...base,reason:'No supporting vendor fact <script>alert(1)</script>.'},
-  {...base,reason:'No relevant source.\\nSecond line cannot be accepted.'},
+  {...base,reason:'No relevant source.\nSecond line cannot be accepted.'},
   {...base,recordedOn:'2026-02-30'},
   {...base,eventId:'not valid'},
   {...base,previousDigest:'x'},
