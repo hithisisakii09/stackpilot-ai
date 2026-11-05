@@ -21,7 +21,8 @@
     "research:comparisons": "node scripts/comparison-evidence-report.mjs",
     "release:readiness": "node scripts/production-readiness-report.mjs",
     "research:source-risk": "node scripts/candidate-source-risk-report.mjs",
-    "research:review-packets": "node scripts/comparison-review-packets.mjs"
+    "research:review-packets": "node scripts/comparison-review-packets.mjs",
+    "research:review-history": "node scripts/editorial-review-history-report.mjs"
   },
   "dependencies": {
     "astro": "^7.4.4"
