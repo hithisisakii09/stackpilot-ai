@@ -5,6 +5,7 @@
  */
 const textAsset=/\.(?:html?|[cm]?js|json|css|txt|xml|svg|map|md|csv)$/i;
 const privateData=/(?:^|\/)(?:editorial-triage|comparison-source-proposals|editorial-review-receipts|editorial-review-trust-anchors|research-claims|research-source-revocations|comparison-evidence|editorial-review-history|comparison-evidence-captures)\.json$/i;
+const privateExport=/(?:^|\/)(?:comparison-gap-worklist)\.(?:csv|json)$/i;
 const privateField=/\b(?:candidateAssertion|triageReason|relevanceNote|publicKeySpkiBase64|sourceSnapshotSha256|previousDigest|excerptSha256|captureId)\b\s*["']?\s*:/i;
 const validPath=/^(?:[a-zA-Z0-9_.-]+\/)*[a-zA-Z0-9_.-]+$/;
 
@@ -59,7 +60,7 @@ export function auditInternalResearchLeaks(files,pairs,captures=[]){
    throw new Error('Invalid built asset path');
   if(seen.has(path))throw new Error('Duplicate built asset path');
   seen.add(path);
-  if(privateData.test(path))
+  if(privateData.test(path)||privateExport.test(path))
    violations.push(path+': Private research data asset present in public build');
   if(!textAsset.test(path))continue;
   if(typeof file.content!=='string')throw new Error('Missing text asset content: '+path);
