@@ -199,7 +199,7 @@ test('spreadsheet CSV cells escape formulas, commas, quotes and zero-width prefi
   {...p,label:dangerous,questions:['\u200B+SUM(1,1)',...p.questions.slice(1)]}:p)};
  const csv=serializeHubspotExportWorksheetCsv(changed);
  assert.ok(csv.includes('"\''+'=HYPERLINK(""https://invalid.example"",""open"")"'));
- assert.ok(csv.includes('"\''+'\u200B+SUM(1,1)"'));
+ assert.ok(csv.includes('"\''+'\u200B+SUM(1,1) | '));
  assert.ok(csv.includes('"deals-csv-export"'));
  assert.ok(csv.includes('"api-data-sync"'));
 });
