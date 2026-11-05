@@ -157,3 +157,13 @@ test('offline manual snapshot copies and check reports are not browser-delivered
   assert.ok(audit.violations.some(v=>v.includes('Internal review metadata')));
  }
 });
+
+test('HubSpot atomic private research checklist export is forbidden in static web assets',()=>{
+ for(const path of [
+  'hubspot-export-evidence-assessment.json',
+  'reports/hubspot-export-evidence-assessment.json'
+ ]){
+  const report=scan([{path,content:'{}'}]);
+  assert.ok(report.violations.some(v=>v.includes('Private research data asset')),path);
+ }
+});
