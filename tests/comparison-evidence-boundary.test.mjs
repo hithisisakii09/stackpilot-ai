@@ -40,3 +40,37 @@ test('comparison page visibly exposes evidence status and identifiers',()=>{
  assert.match(page,/row\.claimId/);
  assert.match(page,/No editorial approval/);
 });
+
+test('public comparison metadata is neutral, detached and contains no private raw research matrix',()=>{
+ for(const candidate of COMPARISON_PAIRS){
+  const data=getComparisonPair(candidate.slug,products);
+  assert.notStrictEqual(data.pair,candidate);
+  assert.equal(Object.hasOwn(data.pair,'matrix'),false);
+  assert.equal(Object.hasOwn(data.pair,'buyerContext'),false);
+  assert.notEqual(data.pair.metaDescription,candidate.metaDescription);
+  assert.match(data.pair.metaDescription,/unverified|verify/i);
+  assert.ok(data.pair.metaDescription.includes(candidate.title));
+  const serialized=JSON.stringify(data);
+  assert.equal(serialized.includes(candidate.metaDescription),false);
+  for(const originalRow of candidate.matrix){
+   for(const value of [originalRow.firstValue,originalRow.secondValue,originalRow.buyerContext]){
+    assert.equal(serialized.includes(value),false,'Raw candidate research may not cross the public view-model boundary');
+   }
+  }
+  const originalTool=candidate.relatedTools[0].title;
+  data.pair.relatedTools[0].title='Changed display title';
+  assert.equal(candidate.relatedTools[0].title,originalTool);
+  const originalGuide=candidate.relatedGuides[0].title;
+  data.pair.relatedGuides[0].title='Changed guide title';
+  assert.equal(candidate.relatedGuides[0].title,originalGuide);
+ }
+});
+
+test('Astro compare routes accept only a slug, never private comparison records as route props',()=>{
+ const page=readFileSync(new URL('../src/pages/compare/[slug].astro',import.meta.url),'utf8');
+ assert.match(page,/params:\s*\{\s*slug:\s*pair\.slug\s*\}/);
+ assert.doesNotMatch(page,/props:\s*\{\s*pair\s*\}/);
+ assert.doesNotMatch(page,/const\s+\{\s*pair\s*\}\s*=\s*Astro\.props/);
+ assert.match(page,/getComparisonPair\(Astro\.params\.slug,\s*products\)/);
+ assert.match(page,/metaDescription/);
+});
