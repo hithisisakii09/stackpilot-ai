@@ -172,3 +172,16 @@ The tool validates the claim, exact vendor, original candidate-assertion digest,
 **A matching excerpt in an editable local file does not prove vendor provenance.** The file might be fabricated, stale, extracted incorrectly, or irrelevant to the intended assertion. The tool always returns `localCopyAuthenticated:false`, `remoteVendorSourceVerified:false`, `relevanceToClaimVerified:false`, `reviewerAuthenticated:false`, `approved:false`, and `canPublish:false`. It never writes to the repo, downloads a page, provisions credentials, signs a review or activates publishing. Source claims remain unverified until independent authenticated human verification and separately authorized release gates.
 
 Do not put private snapshot files, `source-snapshot-check.json` exports, or local source text in `dist/`, repository fixtures or public artifacts. The preflight rejects named snapshot exports and internal inspection metadata from browser assets; this is defense-in-depth, not a guarantee against obfuscated content. All 36 comparison claims and commercial release remain **NO-GO**.
+
+## Read-only local source TEXT FILE mode
+
+For a real claim-specific manual source inspection, keep the **plain UTF-8 source text file outside the repository**, `dist/`, website uploads and Git history. Once the unapproved source proposal is actually recorded and a valid candidate capture has been prepared, the existing snapshot checker can read the local source file directly:
+
+```bash
+# On your own local computer, with the source file stored OUTSIDE the project:
+npm run research:snapshot-check -- --text-file /absolute/private/vendor-document.txt < /absolute/private/snapshot-metadata.json
+```
+
+The metadata JSON must have exactly `capture` (a **validated candidate-only** capture object) and `snapshot`, whose only keys are `sourceUrl` and `snapshotOn`. Both values must match the candidate source URL/date. Unlike the original embedded-text mode, **do not put `text` in this JSON**; the CLI reads text from `--text-file` instead. The original embedded-text input mode remains available without flags. The local source file must be a regular, non-symlink UTF-8 file given by an absolute path, outside the repository, 40 bytes–256 KiB, without NUL or unsafe control bytes. The metadata input is limited to 8 KiB in file mode. This prevents accidental reuse of tracked/public files and avoids duplicating the entire source text inside JSON.
+
+Never save personal data, credentials, full copyrighted material without rights, or raw vendor research within public assets. The tool opens the file **read-only**, never contacts the vendor, and reports only a digest and exact local text match or mismatch. Even a matching text copy might be fabricated; the output always denies source authentication, independent editorial approval, and publication. A genuinely inspected source and an authenticated human reviewer are still required, followed by a separately owner-authorized release review. All 36 claims remain unapproved and production stays **NO-GO**.
