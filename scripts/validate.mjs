@@ -4,6 +4,8 @@ import { validateEvidenceLeads } from '../src/lib/evidence-ledger.mjs';
 import { validateAffiliateCandidates } from '../src/lib/affiliate-readiness.mjs';
 import { validateResearchClaims } from '../src/lib/research-claims.mjs';
 import { buildCandidateSourceRiskReport } from '../src/lib/candidate-source-risk.mjs';
+import { validateEditorialTriage } from '../src/lib/editorial-triage.mjs';
+import { COMPARISON_PAIRS } from '../src/lib/comparison-pairs.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const count = validateCatalog(products);
