@@ -18,3 +18,7 @@ console.log(`Validated ${validateResearchClaims(claimCandidates, products)} vend
 const revocations = JSON.parse(readFileSync(new URL('../src/data/research-source-revocations.json', import.meta.url), 'utf8'));
 const risk = buildCandidateSourceRiskReport({ claims: claimCandidates, products, revocations });
 console.log(`Validated ${risk.totalSources} unapproved research sources; ${risk.staleSources} stale; ${risk.revokedSources} revoked`);
+
+const comparisons=JSON.parse(readFileSync(new URL('../src/data/comparison-evidence.json',import.meta.url),'utf8'));
+const triage=JSON.parse(readFileSync(new URL('../src/data/editorial-triage.json',import.meta.url),'utf8'));
+console.log(`Validated ${validateEditorialTriage(triage,comparisons,COMPARISON_PAIRS,products)} negative-only editorial triage records; approval disabled`);
