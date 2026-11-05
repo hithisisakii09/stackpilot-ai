@@ -6,7 +6,7 @@
 import {buildPrivateReviewPacketBundle} from './private-review-packet-bundle.mjs';
 
 const ACTIONS={
- 'needs-source-proposal':'Identify relevant official vendor documentation and propose a claim-specific research lead; verify plan and region.',
+ 'needs-source-proposal':'Identify relevant official vendor source documentation and propose a claim-specific research lead; verify plan and region.',
  'needs-manual-capture':'Inspect the proposed vendor source manually and record a short exact excerpt with date, plan and region in the private capture register.',
  'needs-independent-verification':'Obtain independent source and plan/region verification; local excerpt hashes do not establish vendor truth or approval.',
  'source-refresh-needed':'Recheck stale or revoked research sources before making any independent evidence assessment.',
