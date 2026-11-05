@@ -3,7 +3,7 @@
 
 > **PHASE 2 OWNER ACCEPTANCE UPDATE (2026-11-04):**
 > 1. GitHub draft PR #8 (`feature/phase-2-product-readiness`) passed all CI checks at head SHA `dd80aee1c090e7cda8de29b82eb24c8d55056a61`.
-> 2. **Owner Acceptance Completed on 2026-11-04 (~23:03–23:05 IST):** The authorized repository owner logged into private Netlify Deploy Preview 8 and confirmed all 12 manual acceptance checks passed:
+> 2. **Owner Acceptance (self-reported, 2026-11-04 ~23:03–23:05 IST):** The authorized repository owner self-reported having logged into private Netlify Deploy Preview 8 at implementation SHA `dd80aee` and confirmed all 12 manual acceptance checks passed. Evidence is owner text in chat; no independent screenshot artifact or cryptographic session token is on record. The docs-update commit `289d1b6` was not separately UAT'd by the owner.
 >    - PASS — HTTP 401 canary — private preview blocks anonymous access
 >    - PASS — `/preview-build/` shows PR #8 and SHA `dd80aee`
 >    - PASS — Homepage and discovery flow
@@ -36,17 +36,18 @@
 
 ## Last verified application-code and readiness audit checkpoint
 
-**Phase 2 checkpoint (PR #8 at `dd80aee1c090e7cda8de29b82eb24c8d55056a61`):**
+**Phase 2 checkpoint — implementation commit `dd80aee1c090e7cda8de29b82eb24c8d55056a61`, docs-update commit `289d1b6d05bc1ead2ee81e424d4d8ae72d45cf85` (current PR #8 HEAD):**
 
-| Source | Evidence at verified commit `dd80aee1c090e7cda8de29b82eb24c8d55056a61` (feature/phase-2-product-readiness, PR #8) | Limit |
+| Source | Evidence | Limit |
 | --- | --- | --- |
-| GitHub draft PR #8 | Branch `feature/phase-2-product-readiness` open as **Draft PR #8**; head `dd80aee1c090e7cda8de29b82eb24c8d55056a61`; base `main@1672461bea5fa09e01965c5e8bdd4819852b06fd`. Do not merge without fresh explicit owner authorization. | No PR may merge to `main` without fresh explicit owner authorization |
-| GitHub Actions CI on PR #8 | All three CI workflows **SUCCESS** at `dd80aee`: "Validate and build" (run 41872545266), "Safety and operations" (run 41872545310), "Browser acceptance (Chromium)" (run 41872545274) — 28 desktop + 28 mobile + axe scans. | Exact-SHA CI evidence; does not prove hosted access or vendor claim accuracy |
-| Validate/build CI | **SUCCESS**; **481/481 tests** (Phase 2: added explainability engine, pairwise comparison matrix, Schema.org structured-data builders and their test suites), **28 generated HTML routes**, **339 internal links**, `npm audit` 0 vulnerabilities | Exact-SHA CI evidence |
+| GitHub draft PR #8 | Branch `feature/phase-2-product-readiness` open as **Draft PR #8**; current head `289d1b6d05bc1ead2ee81e424d4d8ae72d45cf85`; implementation SHA `dd80aee1c090e7cda8de29b82eb24c8d55056a61`; base `main@1672461bea5fa09e01965c5e8bdd4819852b06fd`. Do not merge without fresh explicit owner authorization. | No PR may merge to `main` without fresh explicit owner authorization |
+| GitHub Actions CI on `289d1b6` (docs-update HEAD) | All three CI workflows **SUCCESS** at `289d1b6`: "Validate and build" (run 41880028013), "Browser acceptance (Chromium)" (run 41880027538), "Safety and operations" (run 41880027211) — 28 desktop + 28 mobile + axe scans. Netlify checks: Header rules ✅ SUCCESS, Redirect rules ⚪ NEUTRAL (no rules defined), Pages changed ⚪ NEUTRAL (non-blocking diff). | Exact-SHA CI evidence; does not prove hosted access or vendor claim accuracy |
+| GitHub Actions CI on `dd80aee` (implementation SHA) | All three CI workflows **SUCCESS**: "Validate and build" (run 41872545266), "Safety and operations" (run 41872545310), "Browser acceptance (Chromium)" (run 41872545274) — 28 desktop + 28 mobile + axe scans. | Exact-SHA CI evidence |
+| Validate/build CI | **SUCCESS** at `289d1b6`; **481/481 tests**, **28 generated HTML routes**, **339 internal links**, `npm audit` 0 vulnerabilities | Exact current counts; Phase 1 historical values (468 tests, 25 routes, 226 links) are separately recorded below |
 | Safety/operations CI | **SUCCESS**; private preview package: 28 pages; anonymous CI canary returned HTTP 401 on two fixed routes | Two fixed-path probes are not exhaustive anonymous-access verification |
 | Chromium browser CI | **SUCCESS**; 28/28 desktop and 28/28 mobile accessibility sweeps; axe WCAG 2.1 A/AA checks passed; all three pairwise comparison pages, all six profiles, all buyer tools | Headless Chromium in Linux container against built assets, not authenticated physical device testing of remote preview |
-| Netlify Deploy Preview 8 | Active for draft PR #8 at `deploy-preview-8--inspiring-chaja-cfb85f.netlify.app`. Anonymous probe: HTTP 401 ✅. Owner confirmed READY. | Provider build status does not prove authenticated route UAT, live headers, or all-route anonymous-denial check. |
-| Owner Phase 2 acceptance | Owner confirmed **all 12 manual acceptance checks PASSED** on Deploy Preview 8 at ~2026-11-04T23:03 IST. See banner above for full list. | Manual human UAT; not automated regression coverage |
+| Netlify Deploy Preview 8 | Active for draft PR #8 at `deploy-preview-8--inspiring-chaja-cfb85f.netlify.app`. Anonymous CI canary: HTTP 401 ✅. | Provider build status does not prove authenticated route UAT, live headers, or all-route anonymous-denial check. |
+| Owner Phase 2 manual acceptance | Owner self-reported **all 12 manual acceptance checks PASSED** on Deploy Preview 8 at `dd80aee` (~2026-11-04T23:03 IST). Evidence is owner self-report in chat; no screenshot artifact, cryptographic token, or independent audit is on record. The documentation update commit `289d1b6` was pushed **after** the owner acceptance session and has not received a separate manual owner UAT. Outstanding: owner should confirm `289d1b6` deploy preview identity (`/preview-build/` page) if a re-verification pass is required before merge. | Owner self-report accepted for now; treat as pending independent corroboration until owner confirms |
 
 **Phase 1 checkpoint (post-merge `main` at `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`):**
 
@@ -67,7 +68,7 @@
 
 **Phase 4 Launch Preparation:** Architectural and risk planning documents prepared in `docs/phase-4-launch-preparation/` covering brand/domain clearance, public release checklist, indexing/SEO plan, zero-cost hosting comparison, rollback playbook, and launch risk register. These represent readiness frameworks only—**not an authorization to launch**.
 
-**Phase 2 Product Readiness (PR #8):** Complete. Added dedicated pairwise comparison routing (3 new comparison pages), recommendation explainability engine (`src/lib/recommend-explainability.mjs`), pairwise comparison matrix with CWE-1236 CSV formula protection (`src/lib/comparison-pairs.mjs`), Schema.org JSON-LD structured data builders (`src/lib/structured-data.mjs`), cross-linking from software profiles to comparisons and decision tools, and 13 new tests (481/481). All 12 owner acceptance checks passed on Deploy Preview 8.
+**Phase 2 Product Readiness (PR #8):** Complete. Added dedicated pairwise comparison routing (3 new comparison pages), recommendation explainability engine (`src/lib/recommend-explainability.mjs`), pairwise comparison matrix with CWE-1236 CSV formula protection (`src/lib/comparison-pairs.mjs`), Schema.org JSON-LD structured data builders (`src/lib/structured-data.mjs`), cross-linking from software profiles to comparisons and decision tools, and 13 new tests (481/481 total). Implementation SHA `dd80aee1c090e7cda8de29b82eb24c8d55056a61`. Docs-update SHA `289d1b6d05bc1ead2ee81e424d4d8ae72d45cf85` (current PR #8 HEAD). Owner self-reported 12 manual acceptance checks PASSED on Deploy Preview 8 at implementation SHA `dd80aee` (~2026-11-04T23:03 IST).
 
 **Analytics/privacy note:** Netlify Web Analytics is enabled at the hosting layer. The prototype privacy page distinguishes the absence of client-side analytics scripts/tracking cookies from Netlify's aggregated CDN-log analytics and possible provider network/access logs. Hosting analytics, log retention, and final privacy/legal disclosures still require owner review.
 
@@ -135,4 +136,4 @@
 - [Organic growth research roadmap](growth/2026-10-31-zero-budget-organic-acquisition-pipeline.md)
 - `docs/roadmap-to-launch.md`, `docs/zero-budget-hosting.md` and `AGENTS.md`.
 
-**Overall verdict: PR #1 AND PR #7 MERGED TO MAIN — PHASE 2 ENGINEERING CHECKPOINT PASSED (PR #8 OWNER ACCEPTANCE ALL 12 PASS) — PUBLIC RELEASE NO-GO.** Neither this dated checkpoint nor subsequent independent CI successes can bypass owner-only gates.
+**Overall verdict: PR #1 AND PR #7 MERGED TO MAIN — PHASE 2 ENGINEERING CHECKPOINT PASSED at `dd80aee` (implementation) / `289d1b6` (docs update, current PR #8 HEAD) — 481/481 TESTS, 28 ROUTES, 339 LINKS — OWNER SELF-REPORTED ACCEPTANCE AT `dd80aee` — PUBLIC RELEASE NO-GO.** Neither this dated checkpoint nor subsequent independent CI successes can bypass owner-only gates.

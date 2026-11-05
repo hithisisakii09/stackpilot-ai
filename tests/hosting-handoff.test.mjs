@@ -12,9 +12,17 @@ test('single current handoff labels verified checkpoint versus unverified hosted
  const s=read(state);
  assert.match(s,/Snapshot date:.*(2026-11-02|2026-11-03|2026-11-04)/);
  assert.match(s,/\b(last\s+)?verified application-code.*checkpoint/i);
- assert.match(s,/(430|431|432|438|446|454|466|468|481)\/\1 tests/);
- assert.match(s,/(25|28) generated HTML routes/);
- assert.match(s,/(226|339) internal links/);
+ // Phase 2 exact current counts — do not weaken to allow Phase 1 values here
+ assert.match(s,/481\/481 tests/);
+ assert.match(s,/28 generated HTML routes/);
+ assert.match(s,/339 internal links/);
+ // Phase 2 exact SHAs
+ assert.ok(s.includes('dd80aee1c090e7cda8de29b82eb24c8d55056a61'),'Phase 2 implementation SHA dd80aee missing');
+ assert.ok(s.includes('289d1b6d05bc1ead2ee81e424d4d8ae72d45cf85'),'Phase 2 docs-update SHA 289d1b6 missing');
+ // Phase 1 historical values must be separately preserved
+ assert.match(s,/468\/468 tests/);
+ assert.match(s,/25 generated HTML routes/);
+ assert.match(s,/226 internal links/);
  assert.match(s,/GitHub draft PR #1/);
  assert.match(s,/Netlify Deploy Preview/i);
  assert.match(s,/Auto Publishing.*Locked/);
