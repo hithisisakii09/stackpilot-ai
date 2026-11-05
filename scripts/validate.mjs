@@ -7,6 +7,7 @@ import { buildCandidateSourceRiskReport } from '../src/lib/candidate-source-risk
 import { validateEditorialTriage } from '../src/lib/editorial-triage.mjs';
 import { COMPARISON_PAIRS } from '../src/lib/comparison-pairs.mjs';
 import { validateComparisonSourceProposals } from '../src/lib/comparison-review-packets.mjs';
+import { assertEditorialReceiptsLocked } from '../src/lib/editorial-receipt-integrity.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const count = validateCatalog(products);
@@ -28,3 +29,8 @@ console.log(`Validated ${validateEditorialTriage(triage,comparisons,COMPARISON_P
 
 const proposals=JSON.parse(readFileSync(new URL('../src/data/comparison-source-proposals.json',import.meta.url),'utf8'));
 console.log(`Validated ${validateComparisonSourceProposals({proposals,ledger:comparisons,triage,researchClaims:claimCandidates,revocations,products,pairs:COMPARISON_PAIRS})} unapproved source-specific comparison research proposals`);
+
+const trustAnchors=JSON.parse(readFileSync(new URL('../src/data/editorial-review-trust-anchors.json',import.meta.url),'utf8'));
+const reviewReceipts=JSON.parse(readFileSync(new URL('../src/data/editorial-review-receipts.json',import.meta.url),'utf8'));
+const signing=assertEditorialReceiptsLocked(trustAnchors,reviewReceipts);
+console.log(`Locked editorial signing: ${signing.trustedKeys} trusted keys, ${signing.acceptedReceipts} signed receipts, ${signing.authenticatedApprovals} authenticated approvals`);
