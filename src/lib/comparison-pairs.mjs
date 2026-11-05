@@ -191,7 +191,19 @@ export function getComparisonPair(slug, products) {
     pair,
     first,
     second,
-    matrix: [...pair.matrix]
+    // The static matrices contain research leads, NOT authenticated vendor facts.
+    // Never expose raw candidate values as authoritative comparison results.
+    matrix: pair.matrix.map((row,index)=>({
+      dimension: row.dimension,
+      claimId: `comparison-${pair.slug}-${String(index+1).padStart(2,'0')}`,
+      evidenceStatus: 'unverified',
+      approved: false,
+      sourceId: null,
+      checkedAt: null,
+      firstValue: 'Unverified — ask '+first.name+' to confirm this dimension for your plan.',
+      secondValue: 'Unverified — ask '+second.name+' to confirm this dimension for your plan.',
+      buyerContext: 'Verify the current plan, region and contract terms with both vendors before deciding.'
+    }))
   };
 }
 
