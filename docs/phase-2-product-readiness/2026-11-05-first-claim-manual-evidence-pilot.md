@@ -119,3 +119,13 @@ Manual `Research disposition` entries are restricted to blank, `NEEDS-EVIDENCE`,
 The JSON result includes only counts, predicate IDs, missing-field codes and whether the user-entered URL matches an existing **unverified** source lead or proposed claim source. It deliberately **does not echo** raw URLs, excerpts, notes, candidate assertions or account data. A matching source lead does not establish relevance to the predicate. The exported report file name `hubspot-manual-worksheet-check.json` is blocked by Git ignore/index and website-build privacy guards. Keep all input and output files outside this repository anyway.
 
 When the worksheet identifies a genuine promising source, continue via the existing **separate** `research:intake -- --proposal` workflow for claim-specific unapproved evidence. No CSV-import shortcut exists; independent authenticated human source and predicate review remains the only possible future path to approval, and that authority is not implemented. All 36 claims remain unverified and production stays **NO-GO**.
+
+## Hardened CSV editing and unresolved-scope safeguards
+
+The local worksheet checker now rejects **formula-prefixed excerpt cells** (even when a dangerous prefix is preceded by whitespace or invisible text), bidirectional/zero-width formatting controls in researcher fields, and unapproved output labels. The source URL, plan, region, permissions, excerpt and caveat fields must not carry visually deceptive hidden Unicode controls. The validator never echoes rejected source text or URLs in diagnostics.
+
+Use a **trusted text editor** to review a manually obtained CSV before importing/opening it with spreadsheet software. An untrusted filled CSV can trigger formulas **when opened**, before any later check is run; validating afterward does not reverse that risk. If a genuinely quoted vendor excerpt starts with a formula trigger such as `=`, `+`, `-` or `@`, **do not alter the quotation just to pass this CSV check**. Keep the verbatim excerpt in a permitted private source note and leave the worksheet excerpt unresolved pending safe review.
+
+Research placeholders `unknown`, `N/A`, `TBD`, `pending`, `not checked`, `not documented`, `not verified`, `unspecified`, `none`, `?` and `-` now count as **missing evidence**, not a completed plan/region/permission/limitation field. The CLI preserves explicit `missingFields` codes and will not count a row with placeholders as even a *self-reported* observation. A row with all fields filled is still an untrusted human claim, **not independently verified vendor evidence**, authentication, or approval.
+
+The manual workflow and release restrictions are unchanged. No vendor facts were obtained by this change.
