@@ -150,3 +150,22 @@ test('private captures must never be used as public comparison data or pages',()
  const script=readFileSync(new URL('../src/pages/compare/index.astro',import.meta.url),'utf8');
  assert.doesNotMatch(script,/comparison-evidence-captures|capturedExcerpts/);
 });
+test('private review packets show only manually captured UNVERIFIED excerpts',async()=>{
+ const {buildPrivateReviewPacketBundle}=await import('../src/lib/private-review-packet-bundle.mjs');
+ const record=captured();
+ const report=buildPrivateReviewPacketBundle({...base,captures:[record],proposals:[proposal]});
+ assert.equal(report.totalClaims,36);
+ assert.equal(report.manualCaptures.total,1);
+ assert.equal(report.manualCaptures.claimsWithoutExcerpts,35);
+ assert.equal(report.authenticatedApprovals,0);
+ assert.equal(report.publicationAllowed,false);
+ const packet=report.packets.find(x=>x.claimId===record.claimId&&x.productId===record.productId);
+ assert.equal(packet.capturedExcerpts.length,1);
+ assert.equal(packet.capturedExcerpts[0].excerptSha256,record.excerptSha256);
+ assert.equal(packet.capturedExcerpts[0].excerpt,record.excerpt);
+ assert.equal(packet.capturedExcerpts[0].sourceReviewedForThisClaim,false);
+ assert.equal(packet.capturedExcerpts[0].eligibleForPublication,false);
+ assert.equal(packet.approved,false);
+ assert.equal(packet.canPublish,false);
+ assert.ok(report.packets.filter(x=>x.capturedExcerpts.length===0).length===35);
+});
