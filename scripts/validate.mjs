@@ -7,6 +7,7 @@ import { buildCandidateSourceRiskReport } from '../src/lib/candidate-source-risk
 import { validateEditorialTriage } from '../src/lib/editorial-triage.mjs';
 import { COMPARISON_PAIRS } from '../src/lib/comparison-pairs.mjs';
 import { validateComparisonSourceProposals } from '../src/lib/comparison-review-packets.mjs';
+import { validateComparisonEvidenceCaptures } from '../src/lib/comparison-evidence-captures.mjs';
 import { assertEditorialReceiptsLocked } from '../src/lib/editorial-receipt-integrity.mjs';
 import { validateEditorialReviewHistory } from '../src/lib/editorial-review-history.mjs';
 import { auditCurrentEditorialRuntimeSurface } from './editorial-runtime-source.mjs';
@@ -32,6 +33,9 @@ console.log(`Validated ${validateEditorialTriage(triage,comparisons,COMPARISON_P
 
 const proposals=JSON.parse(readFileSync(new URL('../src/data/comparison-source-proposals.json',import.meta.url),'utf8'));
 console.log(`Validated ${validateComparisonSourceProposals({proposals,ledger:comparisons,triage,researchClaims:claimCandidates,revocations,products,pairs:COMPARISON_PAIRS})} unapproved source-specific comparison research proposals`);
+
+const manualCaptures=JSON.parse(readFileSync(new URL('../src/data/comparison-evidence-captures.json',import.meta.url),'utf8'));
+console.log(`Validated ${validateComparisonEvidenceCaptures({captures:manualCaptures,proposals,ledger:comparisons,triage,researchClaims:claimCandidates,revocations,products,pairs:COMPARISON_PAIRS})} unverified manual evidence excerpts; source authentication and approval disabled`);
 
 const trustAnchors=JSON.parse(readFileSync(new URL('../src/data/editorial-review-trust-anchors.json',import.meta.url),'utf8'));
 const reviewReceipts=JSON.parse(readFileSync(new URL('../src/data/editorial-review-receipts.json',import.meta.url),'utf8'));
