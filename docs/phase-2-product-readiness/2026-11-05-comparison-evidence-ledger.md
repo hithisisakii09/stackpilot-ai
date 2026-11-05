@@ -116,3 +116,25 @@ The worklist is derived from the already validated research proposals, manually 
 The CSV contains an explicit unverified assertion column and blank fields for the source URL, plan, region, checked date, exact short excerpt, and research notes. **Blank cells are intentional**: this command has no web access or authority to invent research evidence. All fields are double-quoted and leading spreadsheet-formula triggers, including whitespace/zero-width prefixes, are escaped. The CSV is a *worksheet*, **not an import path or approval ledger**. To preserve provenance, review the current official vendor page yourself and enter only genuinely inspected, short non-personal text through the existing `comparison-source-proposals.json` and `comparison-evidence-captures.json` validation process; never copy worksheet cells directly into approved public claims.
 
 The build preflight rejects accidental `comparison-gap-worklist.csv` or `.json` exports and continues to block private raw comparison statements and manually captured excerpts in browser assets. The existing release-readiness audit remains **NO-GO**, with all 36 claims unapproved and every editorial authorization denied. Repository CI cannot establish live vendor accuracy, reviewer identity, hosted private-preview acceptance, or owner permission to release.
+
+## Offline manual source intake — preparation without auto-approval
+
+Two new local commands format *human-supplied, unverified* research into a strict, candidate-only JSON record. **They never fetch a vendor page or write to the repository**:
+
+```bash
+# After manually examining a real official vendor source,
+# create a PRIVATE JSON input file outside the repository:
+npm run research:intake -- --proposal < /path/to/private/proposal-input.json
+
+# Only after independently deciding the proposal is a relevant lead
+# and manually recording its candidate record in the private register:
+npm run research:intake -- --capture < /path/to/private/capture-input.json
+```
+
+The **proposal input** must contain exactly `claimId`, `productId`, `researchLeadId`, `proposedOn` (YYYY-MM-DD), `relevanceNote` (your own meaningful explanation, at least 30 characters), `planScope` and `regionScope` (strings or explicit `null` when scope is unknown). Choose a real claim/vendor from `npm run research:gap-worklist` and a source candidate from `npm run research:source-risk -- --json`. The formatter copies the existing exact official-vendor URL for reference, validates date and product association, prevents duplicates, and outputs `record` with `status:"candidate"`, `approved:false`, `sourceInspected:false`, and `sourceVerified:false`. **An official-vendor URL is only an initial research lead; it is not proof that a page is currently accessible or supports the assertion.**
+
+The **capture input** must contain exactly `captureId` (e.g. `excerpt-capture-0001`), `claimId`, `productId`, `researchLeadId`, `capturedOn` (YYYY-MM-DD), and `excerpt` (your manually inspected exact 40–1000 character, single-line source snippet). A matching proposal must **already exist** in the private `comparison-source-proposals.json` register. The formatter derives the exact source URL and proposal scope, computes the original private candidate-assertion SHA-256 and excerpt SHA-256, validates duplicates and date constraints, and emits `record` with `captureMethod:"manual"`, `status:"candidate"` and `approved:false`. It does **not** assess factual support, independently inspect the page or authenticate a reviewer.
+
+Each command prints only a draft result to **private stdout**. A researcher must manually inspect the generated `record` and decide whether to add it to the corresponding private `src/data/*.json` register. Then run `npm run check:data` and `npm test`. Do **not** copy the outer informational wrapper into the register. Do not paste fabricated placeholder text, credentials, customer data, full copyrighted documents, or unsupported marketing claims. Keep stdin input files and resulting JSON/CSV outside the public build; do not post any result to public issues or artifacts.
+
+A matching digest validates consistency of local text, **not** remote provenance. Both the source and its relevance to the exact plan/region require later independent review by properly authorized humans. Review approvals, trust anchors, authenticated reviewer roles and public release remain disabled. This work adds no new source records, paid services, contacts or deploy permissions.
