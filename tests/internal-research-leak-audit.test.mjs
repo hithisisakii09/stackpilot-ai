@@ -130,3 +130,12 @@ test('exported private evidence worklists are forbidden build artifacts even whe
   assert.ok(report.violations.some(x=>x.includes('Private research data asset')),path);
  }
 });
+
+test('private per-claim starter JSON must never appear in browser-served assets',()=>{
+ for(const path of [
+  'claim-research-starter.json','private/claim-research-starter.json'
+ ]){
+  const report=scan([{path,content:'{"status":"PRIVATE-UNVERIFIED-STARTER"}'}]);
+  assert.ok(report.violations.some(v=>v.includes(path)&&v.includes('Private research data asset')),path);
+ }
+});
