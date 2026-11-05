@@ -5,6 +5,7 @@ import {buildEditorialTriageQueue} from './editorial-triage.mjs';
 import {buildComparisonReviewPackets} from './comparison-review-packets.mjs';
 import {assertEditorialReceiptsLocked} from './editorial-receipt-integrity.mjs';
 import {validateEditorialReviewHistory} from './editorial-review-history.mjs';
+import {evaluateEditorialAuthorization} from './editorial-authorization.mjs';
 
 /**
  * Repository-only prelaunch inventory. Never grants production authorization.
@@ -33,9 +34,11 @@ export function buildProductionReadinessReport({policy,products,ledger,claims,re
  const sourceProposals={unreviewed:reviewPackets.proposedSources,claimsWithoutProposals:reviewPackets.claimsWithoutProposals,authenticatedApprovals:0};
  const editorialSignatureLock=assertEditorialReceiptsLocked(trustAnchors,receipts);
  const historyStatus=validateEditorialReviewHistory({history:reviewHistory,ledger,pairs:COMPARISON_PAIRS,products,today});
+ const editorialAuthorization=evaluateEditorialAuthorization({action:'approve-claim',policy});
  const blockers=[
   ['editorial-evidence','All comparison dimensions lack source-specific human-approved evidence'],
   ['authenticated-editorial-signoff','No owner-pinned signing keys, authenticated reviewer session, or trusted approval audit trail has been provisioned'],
+  ['reviewer-authorization-service','All editorial actions are denied until independently authenticated identity, role authority and source validation are separately provisioned'],
   ['independent-review-audit','Local negative-only review chain is untrusted: no authenticated reviewer or independently anchored append-only history'],
   ['editorial-triage','Offline dispositions are unauthenticated and cannot approve or publish vendor assertions'],
   ['source-specific-review','Research proposals, even when scoped to a claim, are not verified evidence or authenticated human approval'],
@@ -53,7 +56,7 @@ export function buildProductionReadinessReport({policy,products,ledger,claims,re
   canPublish:false,canSpend:false,canActivateAffiliates:false,
   comparisonClaimsTotal:total,comparisonClaimsApproved:0,
   comparisonClaimsNeedingEvidence:total,
-  sourceRisk,editorialTriage,sourceProposals,editorialSignatureLock,reviewHistory:historyStatus,
+  sourceRisk,editorialTriage,sourceProposals,editorialSignatureLock,reviewHistory:historyStatus,editorialAuthorization,
   remoteHostedApproval:'UNVERIFIED',
   blockers
  };
