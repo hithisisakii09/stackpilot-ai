@@ -8,6 +8,7 @@ import { validateEditorialTriage } from '../src/lib/editorial-triage.mjs';
 import { COMPARISON_PAIRS } from '../src/lib/comparison-pairs.mjs';
 import { validateComparisonSourceProposals } from '../src/lib/comparison-review-packets.mjs';
 import { assertEditorialReceiptsLocked } from '../src/lib/editorial-receipt-integrity.mjs';
+import { validateEditorialReviewHistory } from '../src/lib/editorial-review-history.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const count = validateCatalog(products);
@@ -34,3 +35,7 @@ const trustAnchors=JSON.parse(readFileSync(new URL('../src/data/editorial-review
 const reviewReceipts=JSON.parse(readFileSync(new URL('../src/data/editorial-review-receipts.json',import.meta.url),'utf8'));
 const signing=assertEditorialReceiptsLocked(trustAnchors,reviewReceipts);
 console.log(`Locked editorial signing: ${signing.trustedKeys} trusted keys, ${signing.acceptedReceipts} signed receipts, ${signing.authenticatedApprovals} authenticated approvals`);
+
+const reviewHistory=JSON.parse(readFileSync(new URL('../src/data/editorial-review-history.json',import.meta.url),'utf8'));
+const localHistory=validateEditorialReviewHistory({history:reviewHistory,ledger:comparisons,pairs:COMPARISON_PAIRS,products});
+console.log(`Validated ${localHistory.events} local negative-only editorial history events; externally anchored: ${localHistory.externallyAnchored}; reviewer authenticated: ${localHistory.reviewerAuthenticated}`);
