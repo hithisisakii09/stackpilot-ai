@@ -5,12 +5,12 @@
  */
 import {readFileSync} from 'node:fs';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
-import {buildHubspotExportAssessment} from '../src/lib/hubspot-export-evidence-assessment.mjs';
+import {buildHubspotExportAssessment,serializeHubspotExportWorksheetCsv} from '../src/lib/hubspot-export-evidence-assessment.mjs';
 
 const load=path=>JSON.parse(readFileSync(new URL(path,import.meta.url),'utf8'));
 const args=process.argv.slice(2);
-if(args.length>1||(args.length===1&&args[0]!=='--json')){
- console.error('Usage: npm run research:hubspot-export-checklist -- [--json]');
+if(args.length>1||(args.length===1&&!['--json','--csv'].includes(args[0]))){
+ console.error('Usage: npm run research:hubspot-export-checklist -- [--json|--csv]');
  process.exitCode=1;
 }else{
  try{
@@ -28,6 +28,8 @@ if(args.length>1||(args.length===1&&args[0]!=='--json')){
   });
   if(args[0]==='--json'){
    process.stdout.write(JSON.stringify(report,null,2)+'\n');
+  }else if(args[0]==='--csv'){
+   process.stdout.write(serializeHubspotExportWorksheetCsv(report));
   }else{
    console.log('PRIVATE HUBSPOT EXPORT RESEARCH — UNVERIFIED, NO EDITORIAL APPROVAL');
    console.log('Claim:',report.claimId,'| research stage:',report.stage);
