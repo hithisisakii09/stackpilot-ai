@@ -204,3 +204,62 @@ test('manual assessor is not imported by browser comparison pages',()=>{
   assert.doesNotMatch(page,/hubspot-manual-worksheet-check|assessManuallyCompletedHubspotWorksheet/);
  }
 });
+
+test('worksheet refuses spreadsheet formulas and invisible Unicode controls in manual fields',()=>{
+ const unsafeExcerpts=[
+  '=HYPERLINK("https://unsafe.example","click")',
+  '+HYPERLINK("https://unsafe.example","click")',
+  '-HYPERLINK("https://unsafe.example","click")',
+  '@HYPERLINK("https://unsafe.example","click")',
+  '\u200B=HYPERLINK("https://unsafe.example","click")',
+  '\u2060=HYPERLINK("https://unsafe.example","click")',
+  'A \u202E reversed invisible control inside manual excerpt that is longer than the minimum.',
+  'A \u200D zero-width joiner inserted into private manually copied excerpt text.',
+  'A \u2066 isolate text with invisible ordering control within the manual excerpt.'
+ ];
+ for(const value of unsafeExcerpts){
+  assert.ok(value.length>=40,'Adversarial excerpts must pass length checks');
+  const fields=[...full];fields[5]=value;
+  assert.throws(()=>assess(edit(blank,0,fields)),/private|worksheet|entry/i);
+ }
+ for(const [index,value] of [
+  [0,'https://knowledge.hubspot.com/help\u202Eexport'],
+  [2,'Synthetic plan with \u200B invisible metadata'],
+  [3,'Synthetic region with \u200C invisible metadata'],
+  [4,'Synthetic permission \u2060 with invisible control'],
+  [6,'Synthetic caveat \u202E with deceptive directionality']
+ ]){
+  const fields=[...full];fields[index]=value;
+  assert.throws(()=>assess(edit(blank,0,fields)),/private|worksheet|entry/i);
+ }
+});
+
+test('placeholder plan, region, permissions, and caveat text never complete a research observation',()=>{
+ const placeholders=['unknown','n/a','N/A','TBD','pending','not checked','not documented','not verified','unspecified','none','?','-'];
+ for(const index of [2,3,4,6]){
+  const key={2:'plan',3:'region',4:'permissionScope',6:'limitations'}[index];
+  for(const placeholder of placeholders){
+   const fields=[...full];fields[index]=placeholder;
+   const assessed=assess(edit(blank,0,fields));
+   assert.equal(assessed.reportedObservations,0);
+   assert.equal(assessed.rowsWithoutHumanObservations,4);
+   assert.equal(assessed.rows[0].recordingState,'PARTIAL-LOCAL-NOTES');
+   assert.ok(assessed.rows[0].missingFields.includes(key),key+' placeholder '+placeholder);
+   assert.equal(assessed.canPublish,false);
+   assert.equal(assessed.rows[0].independentlyVerified,false);
+  }
+ }
+});
+
+test('formula-looking excerpt is rejected by stdin CLI without leaking private contents',()=>{
+ const payload='=HYPERLINK("https://invalid.example","Confidential source excerpt")';
+ const fields=[...full];fields[5]=payload;
+ const script=new URL('../scripts/hubspot-manual-worksheet-check.mjs',import.meta.url).pathname;
+ const result=spawnSync(process.execPath,[script],{
+  encoding:'utf8',input:edit(blank,0,fields)
+ });
+ assert.notEqual(result.status,0);
+ assert.equal(result.stdout.includes(payload),false);
+ assert.equal(result.stderr.includes(payload),false);
+ assert.equal(result.stdout.includes(full[0]),false);
+});
