@@ -23,7 +23,8 @@
     "research:source-risk": "node scripts/candidate-source-risk-report.mjs",
     "research:review-packets": "node scripts/comparison-review-packets.mjs",
     "research:review-history": "node scripts/editorial-review-history-report.mjs",
-    "editorial:authorization": "node scripts/editorial-authorization-report.mjs"
+    "editorial:authorization": "node scripts/editorial-authorization-report.mjs",
+    "research:evidence-captures": "node scripts/comparison-evidence-captures-report.mjs"
   },
   "dependencies": {
     "astro": "^7.4.4"
