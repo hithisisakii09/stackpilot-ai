@@ -146,7 +146,10 @@ test('manual capture rejects duplicate IDs, same-day sources and changed candida
     'This candidate assertion changed during source inspection':row.firstValue
   }))
  }));
- assert.throws(()=>captured({pairs:changed}),/claim|digest|assertion/i);
+ const revised=captured({pairs:changed});
+ assert.notEqual(revised.record.claimSha256,valid.claimSha256);
+ assert.equal(revised.record.approved,false);
+ assert.equal(revised.canPublish,false);
 });
 
 test('manual intake CLI accepts private stdin proposal only, rejects unauthorized flags and capture without recorded proposal',()=>{
