@@ -1,0 +1,650 @@
+[
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-01",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-01",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-02",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-02",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-03",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-03",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-04",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-04",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-05",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-05",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-06",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-06",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-07",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-07",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-08",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-08",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-09",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-09",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-10",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-10",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-11",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-11",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-12",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-12",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-13",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-13",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-14",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-14",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-15",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-15",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-16",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-16",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-17",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-17",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-18",
+    "productId": "hubspot",
+    "sourceId": "hubspot-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-hubspot-vs-pipedrive-18",
+    "productId": "pipedrive",
+    "sourceId": "pipedrive-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-01",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-01",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-02",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-02",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-03",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-03",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-04",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-04",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-05",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-05",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-06",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-06",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-07",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-07",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-08",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-08",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-09",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-09",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-10",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-10",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-11",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-11",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-12",
+    "productId": "semrush",
+    "sourceId": "semrush-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-semrush-vs-ahrefs-12",
+    "productId": "ahrefs",
+    "sourceId": "ahrefs-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-01",
+    "productId": "kinsta",
+    "sourceId": "kinsta-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-01",
+    "productId": "cloudways",
+    "sourceId": "cloudways-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-02",
+    "productId": "kinsta",
+    "sourceId": "kinsta-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-02",
+    "productId": "cloudways",
+    "sourceId": "cloudways-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-03",
+    "productId": "kinsta",
+    "sourceId": "kinsta-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-03",
+    "productId": "cloudways",
+    "sourceId": "cloudways-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-04",
+    "productId": "kinsta",
+    "sourceId": "kinsta-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-04",
+    "productId": "cloudways",
+    "sourceId": "cloudways-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-05",
+    "productId": "kinsta",
+    "sourceId": "kinsta-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-05",
+    "productId": "cloudways",
+    "sourceId": "cloudways-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-06",
+    "productId": "kinsta",
+    "sourceId": "kinsta-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  },
+  {
+    "claimId": "comparison-kinsta-vs-cloudways-06",
+    "productId": "cloudways",
+    "sourceId": "cloudways-doc-claim-1",
+    "status": "candidate",
+    "approved": false,
+    "checkedAt": null,
+    "expiresAt": null
+  }
+]
