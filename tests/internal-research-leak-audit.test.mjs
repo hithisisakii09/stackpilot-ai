@@ -102,3 +102,21 @@ test('unreviewed original SEO comparison metadata is private research, not publi
  assert.ok(report.violations.some(v=>v.includes('Unreviewed comparison description')));
  assert.ok(report.violations.every(v=>!v.includes(text)));
 });
+
+test('raw manual research excerpts are blocked even without a JSON field name',()=>{
+ const excerpt='PRIVATE MANUAL TEST EXCERPT: the vendor page may describe X & Y in some regions, unverified.';
+ const records=[{captureId:'excerpt-capture-0001',excerpt}];
+ for(const [path,content] of [
+  ['compare/example/index.html','<p>'+excerpt+'</p>'],
+  ['_astro/app.js','const x='+JSON.stringify(excerpt)],
+  ['data/neutral.json',JSON.stringify([excerpt])],
+  ['styles/site.css','/* '+excerpt.replaceAll('&','&amp;')+' */'],
+ ]){
+  const result=auditInternalResearchLeaks([{path,content}],pairs,records);
+  assert.ok(result.violations.some(x=>x.includes('Manual research excerpt exposed')),path);
+  assert.ok(result.violations.every(x=>!x.includes(excerpt)), 'Leak scanner must not echo private excerpt text');
+ }
+ assert.deepEqual(auditInternalResearchLeaks(safe,pairs,records).violations,[]);
+ assert.throws(()=>auditInternalResearchLeaks(safe,pairs,null),/captures/i);
+ assert.throws(()=>auditInternalResearchLeaks(safe,pairs,[{captureId:'x',excerpt:null}]),/excerpt|capture/i);
+});
