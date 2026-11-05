@@ -8,6 +8,15 @@ import {hashEvidenceExcerpt} from './comparison-evidence-captures.mjs';
 
 const MAX_BYTES=32768;
 const formulaStart=/^[\s\uFEFF\u200B-\u200D\u2060]*[=+\-@]/u;
+const invisibleFormatting=/[\u200B-\u200F\u202A-\u202E\u2060-\u2069\uFEFF]/u;
+// Unverified researcher placeholders cannot establish a plan, region,
+// permission or limitation, even if the rest of a row looks complete.
+const unfilledLabels=new Set([
+ 'unknown','n/a','not applicable','tbd','pending','not checked',
+ 'not documented','not verified','unspecified','none','?','-',
+ 'unconfirmed','no evidence','not evaluated'
+]);
+const unfilled=value=>!value||unfilledLabels.has(value.trim().toLowerCase().replace(/\s+/g,' '));
 const fields=['sourceUrl','inspectionDate','plan','region','permissionScope','excerpt','limitations'];
 const allowedDisposition=new Set([
  '','NEEDS-EVIDENCE','OBSERVED-UNVERIFIED','CONTRADICTION-REPORTED-UNVERIFIED'
@@ -63,7 +72,8 @@ function validDay(value){
 }
 function plain(value,max){
  return typeof value==='string'&&value.length<=max&&value.trim()===value&&
-  !/[<>\x00-\x1f\x7f]/.test(value)&&!formulaStart.test(value);
+  !/[<>\x00-\x1f\x7f]/.test(value)&&!invisibleFormatting.test(value)&&
+  !formulaStart.test(value);
 }
 function vendorUrl(value){
  if(value.length>400||!plain(value,400))throw error();
@@ -105,13 +115,16 @@ export function assessManuallyCompletedHubspotWorksheet(input={}){
   if(values.inspectionDate&&(!validDay(values.inspectionDate)||values.inspectionDate>today))
    throw error();
   if(values.excerpt){
+   // Vendor text in an editable CSV is untrusted; reject formula-like and
+   // visually deceptive bytes before counting a self-reported observation.
+   if(formulaStart.test(values.excerpt)||invisibleFormatting.test(values.excerpt))throw error();
    try{hashEvidenceExcerpt(values.excerpt);}catch{throw error();}
    if(values.excerpt.includes(assessment.candidateAssertion))
     throw error();
   }
   const missing=fields.filter(key=>{
    const value=values[key];
-   return !value||value.toLowerCase()==='unknown';
+   return unfilled(value);
   });
   if(!disposition&&manual.some(Boolean))missing.push('disposition');
   const complete=missing.length===0;
