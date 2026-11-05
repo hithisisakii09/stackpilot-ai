@@ -36,11 +36,12 @@ try {
   assets=auditStaticAssetReferences(pages,allFiles,stylesheets);
   // Scan every generated text asset, not just pages on a known route list.
   // Binary assets are inspected by path only; no private candidate content is logged.
+  const manualCaptures=JSON.parse(read(new URL('src/data/comparison-evidence-captures.json',root)));
   internalResearch=auditInternalResearchLeaks(allFiles.map(path=>({
     path,
     content:/\.(?:html?|[cm]?js|json|css|txt|xml|svg|map|md|csv)$/i.test(path)
       ?readFileSync(join(distPath,path),'utf8'):null
-  })),COMPARISON_PAIRS);
+  })),COMPARISON_PAIRS,manualCaptures);
   routes=auditStaticRoutes(pages);
   deploy=auditDeploymentConstraints({
     policy:JSON.parse(read(new URL('config/operating-policy.json',root))),
