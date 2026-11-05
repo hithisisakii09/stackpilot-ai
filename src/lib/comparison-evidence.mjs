@@ -3,7 +3,7 @@
  * A source reference is a research lead, NOT proof of a matrix assertion.
  * No approval transition is exposed by this module.
  */
-import researchClaims from '../data/research-claims.json' with { type: 'json' };
+
 
 const keys=['claimId','productId','sourceId','status','approved','checkedAt','expiresAt'];
 const record=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
@@ -23,7 +23,6 @@ export function validateComparisonEvidence(entries,pairs,products,{today=new Dat
    allowed.add(id+'\u0000'+pair.secondId);
   });
  }
- const sources=new Map(researchClaims.map(c=>[c.id,c]));
  const seen=new Set();
  for(const e of entries){
   if(!record(e)||Object.keys(e).length!==keys.length||keys.some(k=>!Object.hasOwn(e,k)))throw new Error('Invalid evidence fields');
@@ -31,7 +30,8 @@ export function validateComparisonEvidence(entries,pairs,products,{today=new Dat
   if(!allowed.has(key))throw new Error('Unknown claim or product reference');
   if(seen.has(key))throw new Error('Duplicate evidence claim reference');
   seen.add(key);
-  if(typeof e.sourceId!=='string'||!sources.has(e.sourceId)||sources.get(e.sourceId).productId!==e.productId)throw new Error('Invalid or mismatched candidate source');
+  // A source is not evidence for a particular matrix dimension until reviewed.
+  if(e.sourceId!==null)throw new Error('Unreviewed source mapping must remain null');
   if(e.status!=='candidate'||e.approved!==false||e.checkedAt!==null||e.expiresAt!==null)throw new Error('Evidence must remain unapproved candidate');
  }
  if(seen.size!==allowed.size)throw new Error('Incomplete comparison evidence coverage');
