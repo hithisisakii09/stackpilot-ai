@@ -41,6 +41,7 @@ Prepare one original, source-anchored buyer guide that helps a small business id
 1. Use current first-party vendor documentation for Microsoft 365 for business, Atlassian Cloud and Zoom direct subscriptions.
 2. Preserve plan, billing-experience, geography and purchase-channel qualifications. Never combine separate products or billing models into one universal timeline.
 3. Treat vendor marketing pages for Zylo, Vendr and Tropic as self-described competitor positioning, not independent product testing or savings evidence.
+   Vendr's official renewal page returned HTTP 403 when opened directly; only its indexed search-result excerpt was available. Keep the claim narrow and recheck in a real browser before relying on specific workflow details.
 4. Exclude Google Workspace cancellation claims from the article because the official help URL redirected to a new Knowledge site that this research session could not retrieve; community answers are not a substitute.
 5. Record source access date and any visible update date. Mark any unavailable date or regional/account-specific detail UNKNOWN.
 6. Distinguish contract notice deadline, renewal date, billing date, cancellation-effective date, access cutoff and data-deletion date.
