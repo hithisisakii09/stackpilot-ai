@@ -26,8 +26,9 @@ function normalized(input){
 /**
  * @param {Array<{path:string, content:string|null}>} files generated dist
  * @param {Array<{slug:string,matrix:Array<{firstValue:string,secondValue:string}>}>} pairs
+ * @param {Array<{captureId:string,excerpt:string}>} captures private manual excerpts
  */
-export function auditInternalResearchLeaks(files,pairs){
+export function auditInternalResearchLeaks(files,pairs,captures=[]){
  if(!Array.isArray(files)||!files.length)throw new Error('Missing built asset files');
  if(!Array.isArray(pairs)||!pairs.length||
     pairs.some(pair=>!pair||typeof pair.slug!=='string'||!Array.isArray(pair.matrix)||
@@ -35,6 +36,10 @@ export function auditInternalResearchLeaks(files,pairs){
        typeof row.firstValue!=='string'||typeof row.secondValue!=='string'||
        row.firstValue.length<20||row.secondValue.length<20)))
   throw new Error('Invalid comparison pairs or matrix candidates');
+ if(!Array.isArray(captures)||captures.some(c=>!c||typeof c.captureId!=='string'||
+   !/^excerpt-capture-\d{4,}$/.test(c.captureId)||typeof c.excerpt!=='string'||c.excerpt.length<40))
+  throw new Error('Invalid private captures or excerpt strings for built-asset scan');
+ const privateExcerpts=captures.map(c=>({id:c.captureId,value:normalized(c.excerpt)}));
  const assertions=pairs.flatMap(pair=>pair.matrix.flatMap((row,i)=>[
   {id:pair.slug+'-'+(i+1)+'-first',value:normalized(row.firstValue)},
   {id:pair.slug+'-'+(i+1)+'-second',value:normalized(row.secondValue)}
@@ -65,6 +70,10 @@ export function auditInternalResearchLeaks(files,pairs){
   for(const assertion of assertions){
    if(text.includes(assertion.value))
     violations.push(path+': Unreviewed comparison assertion exposed ('+assertion.id+')');
+  }
+  for(const capture of privateExcerpts){
+   if(text.includes(capture.value))
+    violations.push(path+': Manual research excerpt exposed ('+capture.id+')');
   }
   for(const description of descriptions){
    if(text.includes(description.value))
