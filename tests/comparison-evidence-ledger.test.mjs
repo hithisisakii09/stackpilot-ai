@@ -55,3 +55,26 @@ test('missing, duplicate, or injected ledger records fail closed',()=>{
  assert.throws(()=>validateComparisonEvidence(ledger.map((r,i)=>i===0?{...r,approved:true}:r),COMPARISON_PAIRS,products,{today}),/unapproved/i);
  assert.throws(()=>validateComparisonEvidence(ledger,COMPARISON_PAIRS,products,{today:'2026-02-30'}),/date/i);
 });
+
+test('review queue is complete, deterministic, and never claims approval',async()=>{
+ const {buildComparisonReviewQueue}=await import('../src/lib/comparison-evidence.mjs');
+ const queue=buildComparisonReviewQueue(ledger,COMPARISON_PAIRS,products,{today});
+ assert.equal(queue.length,ledger.length);
+ assert.deepEqual(queue.map(x=>x.key),[...queue.map(x=>x.key)].sort());
+ for(const item of queue){
+  assert.equal(item.status,'needs-evidence');
+  assert.equal(item.approved,false);
+  assert.equal(item.sourceId,null);
+  assert.equal(item.sourceUrl,null);
+  assert.equal(item.checkedAt,null);
+  assert.equal(item.expiresAt,null);
+  assert.match(item.reviewQuestion,/verify|confirm/i);
+ }
+ assert.deepEqual(queue,buildComparisonReviewQueue(ledger,COMPARISON_PAIRS,products,{today}));
+});
+
+test('review queue cannot silently include invalid or incomplete evidence',async()=>{
+ const {buildComparisonReviewQueue}=await import('../src/lib/comparison-evidence.mjs');
+ assert.throws(()=>buildComparisonReviewQueue(ledger.slice(1),COMPARISON_PAIRS,products,{today}),/incomplete/i);
+ assert.throws(()=>buildComparisonReviewQueue(ledger.map((x,i)=>i===0?{...x,approved:true}:x),COMPARISON_PAIRS,products,{today}),/unapproved/i);
+});
