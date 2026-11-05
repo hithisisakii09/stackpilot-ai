@@ -105,6 +105,7 @@ const csvData = generatePairVendorQuestionsCsv(pairData);
                   <strong>{row.dimension}</strong>
                   <br />
                   <small style="color: #9ab0cf;">{row.buyerContext}</small>
+                  <small style="display: block; color: #edc777;">Evidence: {row.evidenceStatus} · Claim ID: {row.claimId} · No editorial approval</small>
                 </th>
                 <td>{row.firstValue}</td>
                 <td>{row.secondValue}</td>
