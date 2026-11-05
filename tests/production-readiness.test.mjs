@@ -123,3 +123,17 @@ test('local history integrity remains a blocked, unauthenticated release gate',a
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,reviewHistory:[{...event,approved:true}]}),/field|unauthorized/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,reviewHistory:undefined}),/array/i);
 });
+
+test('production readiness explicitly denies every editorial action without a trusted reviewer service',()=>{
+ const report=buildProductionReadinessReport(readyInputs);
+ assert.deepEqual(report.editorialAuthorization,{
+  action:'approve-claim',decision:'DENY',
+  reviewerAuthenticated:false,verifiedReviewerRole:false,
+  trustedSigningAuthority:false,independentAuditAvailable:false,
+  sourceVerified:false,canPublish:false,
+  reason:'No independently authenticated reviewer or approval authority is configured'
+ });
+ assert.ok(report.blockers.some(x=>x.id==='reviewer-authorization-service'&&x.status==='BLOCKED'));
+ assert.equal(report.status,'NO-GO');
+ assert.equal(report.comparisonClaimsApproved,0);
+});
