@@ -2,12 +2,13 @@ import {COMPARISON_PAIRS} from './comparison-pairs.mjs';
 import {validateComparisonEvidence} from './comparison-evidence.mjs';
 import {buildCandidateSourceRiskReport} from './candidate-source-risk.mjs';
 import {buildEditorialTriageQueue} from './editorial-triage.mjs';
+import {buildComparisonReviewPackets} from './comparison-review-packets.mjs';
 
 /**
  * Repository-only prelaunch inventory. Never grants production authorization.
  * Remote account controls, legal review and owner consent are outside CI.
  */
-export function buildProductionReadinessReport({policy,products,ledger,claims,revocations,triage,today=new Date().toISOString().slice(0,10)}={}){
+export function buildProductionReadinessReport({policy,products,ledger,claims,revocations,triage,proposals,today=new Date().toISOString().slice(0,10)}={}){
  const expected={
   policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,
   hostingCandidate:'netlify-free',commercialHostingApproved:false,
@@ -26,9 +27,12 @@ export function buildProductionReadinessReport({policy,products,ledger,claims,re
  const dispositions=buildEditorialTriageQueue(triage,ledger,COMPARISON_PAIRS,products,{today});
  const rejected=dispositions.filter(x=>x.triageDecision==='rejected').length;
  const editorialTriage={records:triage.length,rejected,needsEvidence:dispositions.length-rejected,authenticatedApprovals:0};
+ const reviewPackets=buildComparisonReviewPackets({proposals,ledger,triage,researchClaims:claims,revocations,products,pairs:COMPARISON_PAIRS,today});
+ const sourceProposals={unreviewed:reviewPackets.proposedSources,claimsWithoutProposals:reviewPackets.claimsWithoutProposals,authenticatedApprovals:0};
  const blockers=[
   ['editorial-evidence','All comparison dimensions lack source-specific human-approved evidence'],
   ['editorial-triage','Offline dispositions are unauthenticated and cannot approve or publish vendor assertions'],
+  ['source-specific-review','Research proposals, even when scoped to a claim, are not verified evidence or authenticated human approval'],
   ['candidate-source-review',
    sourceRisk.total+' vendor documentation leads need editorial review: '+
    sourceRisk.unreviewed+' unreviewed, '+sourceRisk.stale+' stale, '+sourceRisk.revoked+' revoked'],
@@ -43,7 +47,7 @@ export function buildProductionReadinessReport({policy,products,ledger,claims,re
   canPublish:false,canSpend:false,canActivateAffiliates:false,
   comparisonClaimsTotal:total,comparisonClaimsApproved:0,
   comparisonClaimsNeedingEvidence:total,
-  sourceRisk,editorialTriage,
+  sourceRisk,editorialTriage,sourceProposals,
   remoteHostedApproval:'UNVERIFIED',
   blockers
  };
