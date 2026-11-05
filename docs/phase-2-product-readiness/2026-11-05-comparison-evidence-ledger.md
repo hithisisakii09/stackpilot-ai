@@ -138,3 +138,21 @@ The **capture input** must contain exactly `captureId` (e.g. `excerpt-capture-00
 Each command prints only a draft result to **private stdout**. A researcher must manually inspect the generated `record` and decide whether to add it to the corresponding private `src/data/*.json` register. Then run `npm run check:data` and `npm test`. Do **not** copy the outer informational wrapper into the register. Do not paste fabricated placeholder text, credentials, customer data, full copyrighted documents, or unsupported marketing claims. Keep stdin input files and resulting JSON/CSV outside the public build; do not post any result to public issues or artifacts.
 
 A matching digest validates consistency of local text, **not** remote provenance. Both the source and its relevance to the exact plan/region require later independent review by properly authorized humans. Review approvals, trust anchors, authenticated reviewer roles and public release remain disabled. This work adds no new source records, paid services, contacts or deploy permissions.
+
+## Private claim-specific research starter — manual source selection
+
+For a given vendor/claim on the internal 36-item worklist, run:
+
+```bash
+# Default view: no raw candidate assertion
+npm run research:claim-starter -- --claim comparison-hubspot-vs-pipedrive-01 --vendor hubspot
+
+# PRIVATE ONLY: original unverified assertion, lead options and blank input templates
+npm run research:claim-starter -- --claim comparison-hubspot-vs-pipedrive-01 --vendor hubspot --json
+```
+
+The command checks the exact claim/vendor pairing and the already validated data registers. It shows existing **vendor-matched** official-document *research leads* and their date/risks (unreviewed/stale/revoked), whether they were already proposed for **that exact claim**, existing manual-capture IDs, the unresolved research stage, and the precise human research question. It never interprets the stored vendor-document URL as proof that it is live, relevant to the particular assertion, correctly scoped, or approved. Options are **not automatically mapped** to a claim.
+
+The JSON response contains a `proposalTemplate` whose `researchLeadId`, `proposedOn`, and `relevanceNote` are deliberately **null**. This is not a valid proposal; the human researcher must choose a genuinely relevant documented lead after inspecting it, enter the real inspection date and meaningful note, then use `npm run research:intake -- --proposal < private-input.json` to validate an explicitly unapproved draft. For each **already recorded** proposal with a non-stale, non-revoked lead, the starter also supplies a `captureTemplates` entry with `captureId`, `capturedOn`, and `excerpt` all **null**. No excerpt or date is guessed. Fill these from genuine manual inspection, then use `npm run research:intake -- --capture < private-input.json`. The output record still requires manual review before being added to the private candidate register.
+
+Only the explicit `--json` command prints the raw, unsourced candidate assertion; it is **not public copy**. Keep private JSON and any saved output outside `dist/`, public pages, assets and external communications. The static build leakage audit rejects `claim-research-starter.json` exports if they appear in browser-delivered assets. Do not use this to activate editorial authorization, publication, pricing claims, affiliate tracking or external vendor outreach. All 36 comparison claims continue to require independent authenticated evidence verification and separate owner release consent.
