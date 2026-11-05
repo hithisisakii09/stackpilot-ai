@@ -167,3 +167,13 @@ test('HubSpot atomic private research checklist export is forbidden in static we
   assert.ok(report.violations.some(v=>v.includes('Private research data asset')),path);
  }
 });
+
+test('private four-predicate HubSpot CSV worksheet is prohibited in browser-delivered assets',()=>{
+ for(const path of [
+  'hubspot-export-evidence-assessment.csv',
+  'research/hubspot-export-evidence-assessment.csv'
+ ]){
+  const result=scan([{path,content:'"Predicate ID (PRIVATE)","Status"\r\n'}]);
+  assert.ok(result.violations.some(x=>x.includes('Private research data asset')),path);
+ }
+});
