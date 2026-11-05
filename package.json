@@ -27,7 +27,8 @@
     "research:evidence-captures": "node scripts/comparison-evidence-captures-report.mjs",
     "research:gap-worklist": "node scripts/comparison-gap-worklist.mjs",
     "research:intake": "node scripts/manual-research-intake.mjs",
-    "research:claim-starter": "node scripts/claim-research-starter.mjs"
+    "research:claim-starter": "node scripts/claim-research-starter.mjs",
+    "research:snapshot-check": "node scripts/offline-snapshot-consistency.mjs"
   },
   "dependencies": {
     "astro": "^7.4.4"
