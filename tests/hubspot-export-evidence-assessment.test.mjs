@@ -5,7 +5,7 @@ import {spawnSync} from 'node:child_process';
 import {readFileSync} from 'node:fs';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
 import {hashEvidenceExcerpt} from '../src/lib/comparison-evidence-captures.mjs';
-import {buildHubspotExportAssessment} from '../src/lib/hubspot-export-evidence-assessment.mjs';
+import {buildHubspotExportAssessment,serializeHubspotExportWorksheetCsv} from '../src/lib/hubspot-export-evidence-assessment.mjs';
 
 const read=path=>JSON.parse(readFileSync(new URL(path,import.meta.url),'utf8'));
 const researchClaims=read('../src/data/research-claims.json');
@@ -164,5 +164,79 @@ test('the source and CLI are never imported by public pages',()=>{
  for(const path of ['../src/pages/compare/index.astro','../src/pages/compare/[slug].astro']){
   const code=readFileSync(new URL(path,import.meta.url),'utf8');
   assert.doesNotMatch(code,/hubspot-export-evidence-assessment|buildHubspotExportAssessment/);
+ }
+});
+
+test('unapproved four-predicate CSV contains separate research questions and intentionally blank evidence cells',()=>{
+ const report=build();
+ const csv=serializeHubspotExportWorksheetCsv(report);
+ assert.equal(csv.split('\r\n').filter(Boolean).length,5);
+ assert.ok(csv.endsWith('\r\n'));
+ assert.ok(csv.startsWith('"Predicate ID (PRIVATE)","Atomic research requirement (UNVERIFIED)"'));
+ assert.ok(csv.includes('"Official source URL (manual entry)"'));
+ assert.ok(csv.includes('"Exact short excerpt (manual entry)"'));
+ const rows=csv.split('\r\n').filter(Boolean).slice(1);
+ assert.equal(rows.length,4);
+ for(const [index,row] of rows.entries()){
+  const predicate=report.predicates[index];
+  assert.ok(row.includes('"'+predicate.predicateId+'"'));
+  assert.ok(row.includes('"NEEDS-EVIDENCE"'));
+  assert.ok(row.includes('"'+predicate.label.replaceAll('"','""')+'"'));
+  assert.ok(row.includes(predicate.questions[0]));
+  assert.ok(row.endsWith(Array(8).fill('""').join(',')),predicate.predicateId+' manual evidence fields must stay empty');
+ }
+ assert.equal(csv.includes(report.candidateAssertion),false);
+ assert.equal(csv.includes(report.vendorLeads[0].sourceUrl),false);
+ assert.equal(csv.includes('2026-11-05'),false);
+ assert.equal(csv.includes(excerpt),false);
+ assert.deepEqual(serializeHubspotExportWorksheetCsv(report),csv);
+});
+
+test('spreadsheet CSV cells escape formulas, commas, quotes and zero-width prefixes',()=>{
+ const report=build();
+ const dangerous='=HYPERLINK("https://invalid.example","open")';
+ const changed={...report,predicates:report.predicates.map((p,i)=>i===0?
+  {...p,label:dangerous,questions:['\u200B+SUM(1,1)',...p.questions.slice(1)]}:p)};
+ const csv=serializeHubspotExportWorksheetCsv(changed);
+ assert.ok(csv.includes('"\''+'=HYPERLINK(""https://invalid.example"",""open"")"'));
+ assert.ok(csv.includes('"\''+'\u200B+SUM(1,1)"'));
+ assert.ok(csv.includes('"deals-csv-export"'));
+ assert.ok(csv.includes('"api-data-sync"'));
+});
+
+test('CSV export rejects forged approval, attached evidence, altered predicates and incomplete reports',()=>{
+ const report=build();
+ const mutate=update=>({...report,predicates:report.predicates.map((p,i)=>i===0?{...p,...update}:p)});
+ for(const invalid of [
+  {...report,approved:true},
+  {...report,canPublish:true},
+  {...report,authenticatedApprovals:1},
+  {...report,independentlyVerifiedPredicates:1},
+  {...report,status:'VERIFIED'},
+  {...report,predicates:report.predicates.slice(0,3)},
+  {...report,predicateIds:['deals-csv-export','deals-csv-export','companies-csv-export','api-data-sync']},
+  mutate({status:'SUPPORTED'}),
+  mutate({independentlyVerified:true}),
+  mutate({eligibleForPublication:true}),
+  mutate({manuallySelectedSourceId:'hubspot-doc-claim-1'}),
+  mutate({manuallyAssignedCaptureId:'excerpt-capture-0001'}),
+  mutate({questions:[]})
+ ]){
+  assert.throws(()=>serializeHubspotExportWorksheetCsv(invalid),/worksheet|research|unverified|predicate|approval/i);
+ }
+});
+
+test('CLI --csv emits private blank evidence worksheet without vendor data or approvals',()=>{
+ const path=new URL('../scripts/hubspot-export-evidence-assessment.mjs',import.meta.url).pathname;
+ const run=(...args)=>spawnSync(process.execPath,[path,...args],{encoding:'utf8'});
+ const result=run('--csv');
+ assert.equal(result.status,0,result.stderr);
+ assert.equal(result.stdout,serializeHubspotExportWorksheetCsv(build()));
+ assert.equal(result.stdout.includes(expectedAssertion),false);
+ assert.equal(result.stdout.includes(researchClaims[0].sourceUrl),false);
+ for(const flags of [['--csv','--json'],['--csv','--csv'],['--csv','--approve']]){
+  const invalid=run(...flags);
+  assert.notEqual(invalid.status,0);
+  assert.equal(invalid.stdout.includes(expectedAssertion),false);
  }
 });
