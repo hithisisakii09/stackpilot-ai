@@ -5,7 +5,7 @@
  */
 const textAsset=/\.(?:html?|[cm]?js|json|css|txt|xml|svg|map|md|csv)$/i;
 const privateData=/(?:^|\/)(?:editorial-triage|comparison-source-proposals|editorial-review-receipts|editorial-review-trust-anchors|research-claims|research-source-revocations|comparison-evidence)\.json$/i;
-const privateField=/\b(?:candidateAssertion|triageReason|relevanceNote|publicKeySpkiBase64|sourceSnapshotSha256)\s*:/i;
+const privateField=/\b(?:candidateAssertion|triageReason|relevanceNote|publicKeySpkiBase64|sourceSnapshotSha256)\b\s*["']?\s*:/i;
 const validPath=/^(?:[a-zA-Z0-9_.-]+\/)*[a-zA-Z0-9_.-]+$/;
 
 function normalized(input){
