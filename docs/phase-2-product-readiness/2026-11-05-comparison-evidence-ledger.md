@@ -21,3 +21,11 @@ The queue intentionally provides no source URL or evidence approval. Reviewers m
 Run `npm run release:readiness` to generate a read-only JSON **NO-GO** report. It checks restrictive operating policy, unverified catalog, inactive affiliate links and complete unapproved comparison evidence. It lists owner/editorial/hosted-UAT/legal/security release blockers.
 
 The command is intentionally incapable of changing any release gate. A green CI build does not establish a production approval, hosted privacy, legal sign-off, or reviewed vendor evidence.
+
+## Candidate research-source lifecycle (offline)
+
+`npm run research:source-risk -- --json` reports all six vendor-document research candidates as **unverified**. The report records intake age using UTC dates. Items older than 90 days are tagged `stale`, but recently recorded candidates are merely `unreviewed`—not independently checked or approved.
+
+`src/data/research-source-revocations.json` starts empty. An explicit revocation record may include only `sourceId`, `revokedOn` (on/after the original collection date, not in the future), and a plain-text `reason`. Duplicate, unknown, malformed and future-dated entries fail data validation. A revoked candidate stays unapproved and cannot be published. Records are a manually maintained internal warning, **not** evidence that an actual vendor page was withdrawn.
+
+`npm run release:readiness` now includes counts of unreviewed, stale, and revoked candidate documents as additional blockers. Neither report fetches vendor websites, validates commercial terms, enables approval, contacts third parties or alters production. No source is linked to an approved comparison claim.
