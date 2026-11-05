@@ -8,7 +8,8 @@ const products=read('../src/data/products.json');
 const ledger=read('../src/data/comparison-evidence.json');
 const claims=read('../src/data/research-claims.json');
 const revocations=read('../src/data/research-source-revocations.json');
-const readyInputs={policy,products,ledger,claims,revocations,today:'2026-11-05'};
+const triage=read('../src/data/editorial-triage.json');
+const readyInputs={policy,products,ledger,claims,revocations,triage,today:'2026-11-05'};
 
 test('production report remains NO-GO with all 36 comparison claims unapproved',()=>{
  const report=buildProductionReadinessReport(readyInputs);
@@ -50,4 +51,17 @@ test('readiness rejects missing source inventory, invalid revocation and forged 
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,claims:undefined}),/claims|array|research/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,revocations:undefined}),/revocation/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,claims:claims.map((x,i)=>i===0?{...x,approved:true}:x)}),/approved/i);
+});
+
+test('production readiness includes only unapproved editorial dispositions',()=>{
+ const report=buildProductionReadinessReport(readyInputs);
+ assert.deepEqual(report.editorialTriage,{records:0,rejected:0,needsEvidence:36,authenticatedApprovals:0});
+ assert.ok(report.blockers.some(x=>x.id==='editorial-triage'&&x.status==='BLOCKED'));
+ const reject={claimId:'comparison-hubspot-vs-pipedrive-01',productId:'hubspot',decision:'rejected',reason:'The research record does not support this plan and region.',recordedOn:'2026-11-05'};
+ const withReject=buildProductionReadinessReport({...readyInputs,triage:[reject]});
+ assert.deepEqual(withReject.editorialTriage,{records:1,rejected:1,needsEvidence:35,authenticatedApprovals:0});
+ assert.equal(withReject.status,'NO-GO');
+ assert.equal(withReject.canPublish,false);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,triage:[{...reject,decision:'approved'}]}),/unapproved|negative/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,triage:undefined}),/triage/i);
 });
