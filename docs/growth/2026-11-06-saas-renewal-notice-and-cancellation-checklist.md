@@ -51,7 +51,7 @@ No keyword-volume, difficulty, CPC, ranking or conversion data was available. Th
 
 ## 3. Competitor and alternative-content scan
 
-Public product pages were checked on 2026-11-06. This is qualitative positioning research, not a traffic, ranking, pricing, feature-availability or independent product-quality audit. Statements below are the vendors' own positioning.
+Public product pages and indexed result excerpts were checked on 2026-11-06. This is qualitative positioning research, not a traffic, ranking, pricing, feature-availability or independent product-quality audit. Statements below are the vendors' own positioning. The Vendr renewal page returned HTTP 403 when opened directly in this research session; only its official search-result excerpt was available, so recheck the page in a real browser before relying on specific workflow details.
 
 | Product | Public positioning observed | Implication for StackPilot |
 |---|---|---|
