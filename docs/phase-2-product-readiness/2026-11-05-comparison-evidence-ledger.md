@@ -15,3 +15,9 @@ Owner gates remain: ₹0 spending, private Netlify preview, production auto-publ
 Run `npm run research:comparisons -- --json` to generate the deterministic, read-only list of 36 vendor-dimension research questions. The command performs no network calls and does not modify files, approve evidence, rank vendors, publish pages or activate affiliates.
 
 The queue intentionally provides no source URL or evidence approval. Reviewers must first collect source-specific evidence independently; this command cannot turn candidate assertions into verified claims.
+
+## Production readiness inventory
+
+Run `npm run release:readiness` to generate a read-only JSON **NO-GO** report. It checks restrictive operating policy, unverified catalog, inactive affiliate links and complete unapproved comparison evidence. It lists owner/editorial/hosted-UAT/legal/security release blockers.
+
+The command is intentionally incapable of changing any release gate. A green CI build does not establish a production approval, hosted privacy, legal sign-off, or reviewed vendor evidence.
