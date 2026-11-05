@@ -39,6 +39,11 @@ export function auditInternalResearchLeaks(files,pairs){
   {id:pair.slug+'-'+(i+1)+'-first',value:normalized(row.firstValue)},
   {id:pair.slug+'-'+(i+1)+'-second',value:normalized(row.secondValue)}
  ]));
+ // Original SEO descriptions are unreviewed candidate narrative too.
+ // Public pages must use the detached neutral description in getComparisonPair.
+ const descriptions=pairs.filter(pair=>
+   typeof pair.metaDescription==='string'&&pair.metaDescription.length>=20
+ ).map(pair=>({id:pair.slug,value:normalized(pair.metaDescription)}));
  const violations=[];
  const seen=new Set();
  let checkedFiles=0;
@@ -60,6 +65,10 @@ export function auditInternalResearchLeaks(files,pairs){
   for(const assertion of assertions){
    if(text.includes(assertion.value))
     violations.push(path+': Unreviewed comparison assertion exposed ('+assertion.id+')');
+  }
+  for(const description of descriptions){
+   if(text.includes(description.value))
+    violations.push(path+': Unreviewed comparison description exposed ('+description.id+')');
   }
  }
  return {checkedFiles,violations};
