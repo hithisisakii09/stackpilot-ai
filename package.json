@@ -28,7 +28,8 @@
     "research:gap-worklist": "node scripts/comparison-gap-worklist.mjs",
     "research:intake": "node scripts/manual-research-intake.mjs",
     "research:claim-starter": "node scripts/claim-research-starter.mjs",
-    "research:snapshot-check": "node scripts/offline-snapshot-consistency.mjs"
+    "research:snapshot-check": "node scripts/offline-snapshot-consistency.mjs",
+    "research:material-guard": "node scripts/private-research-material-guard.mjs"
   },
   "dependencies": {
     "astro": "^7.4.4"
