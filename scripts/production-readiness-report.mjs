@@ -9,6 +9,7 @@ const report=buildProductionReadinessReport({
  revocations:read('../src/data/research-source-revocations.json'),
  triage:read('../src/data/editorial-triage.json'),
  proposals:read('../src/data/comparison-source-proposals.json'),
+ captures:read('../src/data/comparison-evidence-captures.json'),
  trustAnchors:read('../src/data/editorial-review-trust-anchors.json'),
  receipts:read('../src/data/editorial-review-receipts.json'),
  reviewHistory:read('../src/data/editorial-review-history.json')
