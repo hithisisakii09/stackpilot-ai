@@ -26,7 +26,7 @@ const breadcrumbJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
 const faqs = [
   {
     question: `How does StackPilot AI compare ${first.name} and ${second.name}?`,
-    answer: `StackPilot AI compares ${first.name} and ${second.name} neutrally on architectural model, seat commitments, data mobility, and verification status without commercial scoring or affiliate rankings.`
+    answer: `StackPilot AI provides unverified research prompts about architectural model, seat commitments, data mobility, and verification status for ${first.name} and ${second.name}. It does not establish feature parity, buyer suitability, or a preferred vendor.`
   },
   {
     question: `Are the pricing and feature claims for ${pair.title} verified?`,
@@ -83,15 +83,15 @@ const csvData = generatePairVendorQuestionsCsv(pairData);
     </nav>
   </header>
   <main id="main">
-    <p>Independent side-by-side comparison</p>
+    <p>Unverified buyer research worksheet</p>
     <h1>{pair.title}</h1>
     <p class="notice">
-      <strong>Neutral Evaluation Boundary:</strong> This comparison is unranked, independent, and free from affiliate links or commissions. Feature claims, pricing, and resource quotas are unverified candidate notes. Verify all specifications directly with vendors before signing contracts.
+      <strong>Research-only boundary:</strong> This is not a verified feature comparison. The matrix contains unverified prompts rather than authenticated vendor specifications. It does not establish a better vendor, fit, or savings. No affiliate links or commercial rankings are active. Confirm all material details directly with each vendor before signing contracts.
     </p>
 
     <section aria-labelledby="side-by-side">
-      <h2 id="side-by-side">Side-by-side comparison matrix</h2>
-      <div class="table-scroll" role="region" tabindex="0" aria-label="Side-by-side comparison matrix, scroll horizontally for all columns">
+      <h2 id="side-by-side">Questions to verify with each vendor</h2>
+      <div class="table-scroll" role="region" tabindex="0" aria-label="Unverified vendor research questions, scroll horizontally for all columns">
         <table>
           <thead>
             <tr>
