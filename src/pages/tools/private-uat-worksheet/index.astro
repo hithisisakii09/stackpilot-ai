@@ -1,5 +1,25 @@
 ---
 import {OWNER_UAT_CHECKS} from '../../../lib/owner-uat-worksheet.mjs';
+import {buildPreviewBuildIdentity} from '../../../lib/preview-build-identity.mjs';
+// Only whitelisted Netlify BUILD metadata; no runtime authentication secrets.
+const previewIdentity=buildPreviewBuildIdentity({
+ NETLIFY:process.env.NETLIFY,
+ CONTEXT:process.env.CONTEXT,
+ PULL_REQUEST:process.env.PULL_REQUEST,
+ REVIEW_ID:process.env.REVIEW_ID,
+ COMMIT_REF:process.env.COMMIT_REF
+});
+const previewPrKnown=previewIdentity.status==='PREVIEW_COMMIT_REPORTED';
+const previewPr=previewPrKnown?previewIdentity.prNumber:null;
+const githubPrHref=previewPrKnown
+ ? `https://github.com/hithisisakii09/stackpilot-ai/pull/${previewPr}`
+ : 'https://github.com/hithisisakii09/stackpilot-ai/pulls';
+const githubPrLabel=previewPrKnown
+ ? `the current draft GitHub PR #${previewPr}`
+ : 'the GitHub pull-request list (preview identity unavailable)';
+const expectedPrShaLabel=previewPrKnown
+ ? `Expected PR #${previewPr} HEAD SHA (40 lowercase hex characters)`
+ : 'Expected current draft PR HEAD SHA (40 lowercase hex characters)';
 ---
 <!doctype html>
 <html lang="en">
@@ -41,13 +61,16 @@ footer{border-top:1px solid #405675}
 <h1>Private owner UAT evidence worksheet</h1>
 <p>This worksheet records <strong>your self-reported checks</strong> after you personally open StackPilot's protected Netlify Deploy Preview. It <strong>does not test the hosted site for you</strong>, authenticate anyone, validate access restrictions, change provider settings or grant publication permission.</p>
 <p><strong>Privacy:</strong> Enter only public-style 40-character Git commit hashes and fixed status choices. Do not enter passwords, cookies, account numbers, identifying personal information, customer data or payment details. The form never transmits selections. Netlify Web Analytics is documented as enabled for page visits; it is separate from this browser-only form.</p>
-<p>Before using this worksheet, open <a href="/preview-build/">the authenticated build identity page</a> and <a href="https://github.com/hithisisakii09/stackpilot-ai/pull/1" rel="noopener noreferrer" target="_blank">the current draft GitHub PR #1</a> in separate authorized browser tabs. Compare the full 40-character SHA, not just the prefix. If either page is inaccessible, or the build reports UNKNOWN, record that as an outstanding blocker rather than assuming it passed.</p>
+<p id="owner-uat-pr-context" role="note">{previewPrKnown
+ ? `Netlify build metadata identifies preview PR #${previewPr}. This is a build-time hint, not independently verified hosted access or review authority.`
+ : 'BLOCKED — preview PR identity unavailable in this build context. Inspect the actual authenticated Netlify Deploy Preview before reporting an identity match.'}</p>
+<p>Before using this worksheet, open <a href="/preview-build/">the authenticated build identity page</a> and <a id="owner-uat-github-pr" href={githubPrHref} rel="noopener noreferrer" target="_blank">{githubPrLabel}</a> in separate authorized browser tabs. Compare the full 40-character SHA, not just the prefix, and confirm the preview PR number matches the actual Netlify deployment. If the PR identity is unavailable, either page is inaccessible, or the build reports UNKNOWN, record that as an outstanding blocker rather than assuming it passed.</p>
 <form id="owner-uat-form" novalidate>
 <section class="panel" aria-labelledby="uat-hash-heading">
 <h2 id="uat-hash-heading">1. Compare source commits manually</h2>
 <div class="inputs">
 <div>
-<label for="owner-uat-expectedSha">Expected PR #1 HEAD SHA (40 lowercase hex characters)</label>
+<label for="owner-uat-expectedSha">{expectedPrShaLabel}</label>
 <input type="text" id="owner-uat-expectedSha" name="expectedSha" required maxlength="40" autocomplete="off" spellcheck="false" placeholder="Copy the current PR HEAD SHA">
 </div>
 <div>
