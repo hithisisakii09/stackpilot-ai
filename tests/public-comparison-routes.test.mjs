@@ -42,6 +42,6 @@ test('homepage advisor exposes only public-safe profile and canonical comparison
  assert.match(page,/getPublicComparisonRoute\(product\.id\)/);
  assert.match(page,/\/software\/\$\{product\.id\}\//);
  assert.match(page,/View (?:candidate )?profile|View product profile|Product profile/);
- assert.match(page,/Compare with category peer|Peer comparison/);
+ assert.match(page,/Review questions for category peer/);
  assert.doesNotMatch(page,/import .*recommend-explainability|import .*comparison-pairs/);
 });
