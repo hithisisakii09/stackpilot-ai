@@ -5,7 +5,8 @@
  */
 export const PROTECTED_PRIVATE_RESEARCH_DIRS=Object.freeze([
  'private-research','local-research','research-local','vendor-snapshots',
- 'source-snapshots','private-inputs','research-inputs','source-copies'
+ 'source-snapshots','private-inputs','research-inputs','source-copies',
+ 'client-research','prospect-research','lead-research'
 ]);
 export const PROTECTED_PRIVATE_RESEARCH_FILES=Object.freeze([
  'vendor-document.txt','source-snapshot-check.json',
@@ -15,6 +16,14 @@ export const PROTECTED_PRIVATE_RESEARCH_FILES=Object.freeze([
  'comparison-gap-worklist.csv','comparison-gap-worklist.json',
  'claim-research-starter.json','hubspot-export-evidence-assessment.json','hubspot-export-evidence-assessment.csv','hubspot-manual-worksheet-check.json'
 ]);
+
+// Versioned private research workbooks may eventually contain prospect contact data.
+// Protect the exact family, not all spreadsheet files in the repository.
+export const PROTECTED_PRIVATE_RESEARCH_WORKBOOK_GLOBS=Object.freeze([
+ 'StackPilot_Client_Research_Architecture*.xlsx',
+ 'stackpilot_client_research_architecture*.xlsx'
+]);
+const privateWorkbook=name=>/^stackpilot_client_research_architecture(?:_v[0-9]+)?\.xlsx$/i.test(name);
 
 const exactPath=path=>typeof path==='string'&&path.length>0&&path.length<=4096&&
  !path.startsWith('/')&&!/[\\\x00-\x1f\x7f]/.test(path)&&
@@ -34,7 +43,7 @@ export function auditTrackedPrivateResearchPaths(paths){
   seen.add(canonical);
   const parts=canonical.split('/');
   if(parts.slice(0,-1).some(part=>folderNames.has(part))||
-     filenames.has(parts.at(-1))){
+     (filenames.has(parts.at(-1))||privateWorkbook(parts.at(-1)))){
    // Do not echo potentially sensitive path, source text, or vendor detail.
    violations.push('Tracked item #'+(i+1)+': prohibited private research material path');
   }
@@ -51,7 +60,8 @@ export function validatePrivateResearchIgnorePolicy(contents){
   .filter(line=>line&&!line.startsWith('#')));
  const required=[
   ...PROTECTED_PRIVATE_RESEARCH_DIRS.map(name=>name+'/'),
-  ...PROTECTED_PRIVATE_RESEARCH_FILES
+  ...PROTECTED_PRIVATE_RESEARCH_FILES,
+  ...PROTECTED_PRIVATE_RESEARCH_WORKBOOK_GLOBS
  ];
  if(required.some(rule=>!lines.has(rule)))
   throw new Error('Missing required private research .gitignore pattern');
