@@ -318,3 +318,30 @@ test('cosmetically changed unverified candidate assertion cannot masquerade as a
   assert.throws(()=>assess(edit(blank,0,fields)),/private|worksheet|entry/i);
  }
 });
+
+test('scope-prefixed placeholders are missing evidence, but substantive caveats remain notes',()=>{
+ const cases=[
+  [2,'plan unknown','plan'],
+  [2,'Plan: TBD','plan'],
+  [3,'region pending','region'],
+  [3,'Region is not checked','region'],
+  [4,'permissions unspecified','permissionScope'],
+  [4,'Permission: not verified','permissionScope'],
+  [6,'limitations unknown','limitations'],
+  [6,'Limitations: not documented','limitations']
+ ];
+ for(const [index,value,key] of cases){
+  const fields=[...full];fields[index]=value;
+  const output=assess(edit(blank,0,fields));
+  assert.equal(output.reportedObservations,0);
+  assert.equal(output.rows[0].recordingState,'PARTIAL-LOCAL-NOTES');
+  assert.ok(output.rows[0].missingFields.includes(key),key+' '+value);
+  assert.equal(output.canPublish,false);
+ }
+ const substantive=[...full];
+ substantive[6]='Limits not documented in this excerpt; a separate documentation page must be inspected.';
+ const output=assess(edit(blank,0,substantive));
+ assert.equal(output.reportedObservations,1);
+ assert.equal(output.independentlyVerifiedPredicates,0);
+ assert.equal(output.canPublish,false);
+});
