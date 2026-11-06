@@ -17,6 +17,8 @@ const unfilledLabels=new Set([
  'unconfirmed','no evidence','not evaluated'
 ]);
 const unfilled=value=>!value||unfilledLabels.has(value.trim().toLowerCase().replace(/\s+/g,' '));
+// Normalization is comparison-only. Never rewrite a purported vendor quote.
+const comparableExcerpt=value=>value.normalize('NFKC').replace(/\s+/gu,' ').trim().toLocaleLowerCase('en-US');
 const fields=['sourceUrl','inspectionDate','plan','region','permissionScope','excerpt','limitations'];
 const allowedDisposition=new Set([
  '','NEEDS-EVIDENCE','OBSERVED-UNVERIFIED','CONTRADICTION-REPORTED-UNVERIFIED'
@@ -119,7 +121,7 @@ export function assessManuallyCompletedHubspotWorksheet(input={}){
    // visually deceptive bytes before counting a self-reported observation.
    if(formulaStart.test(values.excerpt)||invisibleFormatting.test(values.excerpt))throw error();
    try{hashEvidenceExcerpt(values.excerpt);}catch{throw error();}
-   if(values.excerpt.includes(assessment.candidateAssertion))
+   if(comparableExcerpt(values.excerpt).includes(comparableExcerpt(assessment.candidateAssertion)))
     throw error();
   }
   const missing=fields.filter(key=>{
@@ -153,7 +155,7 @@ export function assessManuallyCompletedHubspotWorksheet(input={}){
  const excerptRows=new Map();
  // Normalize only for duplicate detection: do not modify, display or store
  // the genuine human-entered excerpt or pretend this proves source validity.
- const duplicateKey=value=>value.normalize('NFKC').replace(/\s+/gu,' ').trim().toLocaleLowerCase('en-US');
+ const duplicateKey=comparableExcerpt;
  for(let i=1;i<rows.length;i++){
   const excerpt=rows[i][9];
   if(!excerpt)continue;
