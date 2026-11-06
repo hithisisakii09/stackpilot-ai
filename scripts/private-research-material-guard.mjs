@@ -9,7 +9,8 @@ import {fileURLToPath} from 'node:url';
 import {resolve} from 'node:path';
 import {
  auditTrackedPrivateResearchPaths,validatePrivateResearchIgnorePolicy,
- PROTECTED_PRIVATE_RESEARCH_DIRS,PROTECTED_PRIVATE_RESEARCH_FILES
+ PROTECTED_PRIVATE_RESEARCH_DIRS,PROTECTED_PRIVATE_RESEARCH_FILES,
+ PROTECTED_PRIVATE_RESEARCH_WORKBOOK_GLOBS
 } from '../src/lib/private-research-material-guard.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
@@ -32,6 +33,9 @@ export function auditCurrentPrivateResearchMaterials(){
   ]),
   ...PROTECTED_PRIVATE_RESEARCH_FILES.flatMap(name=>[
    name,'docs/manual/'+name
+  ]),
+  ...PROTECTED_PRIVATE_RESEARCH_WORKBOOK_GLOBS.flatMap(glob=>[
+   glob.replace('*',''),'docs/manual/'+glob.replace('*','_v4')
   ])
  ];
  // --no-index is critical: check-ignore must test patterns even on tracked files.
