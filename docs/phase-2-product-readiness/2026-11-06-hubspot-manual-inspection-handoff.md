@@ -52,3 +52,9 @@ The combined private candidate says `CSV export for deals, contacts, companies; 
 - Branch only; keep Draft PR #8 open and unmerged, `main` unchanged, preview private/noindex, no affiliate activation, no editorial auto-approval, no production launch.
 
 The **next external dependency** is a genuine human browser inspection of the live vendor sources. No automated step should manufacture its output.
+
+## Offline repeated-excerpt safeguard (2026-11-06)
+
+The private four-row worksheet checker now marks **every row that reuses an identical nonempty excerpt across two or more distinct predicates** as `PARTIAL-LOCAL-NOTES`, adds `distinctPredicateExcerpt` to that row's `missingFields`, and excludes those rows from reported observation/contradiction counts. A single official documentation page may still serve multiple object-specific questions when genuinely **different** excerpts are recorded. This is a syntactic anti-copy/paste safeguard, **not** a test of source authenticity or whether distinct paraphrases truly substantiate the claims. The output still does not reveal the excerpt.
+
+The regression test uses synthetic words only; no new vendor page inspection or human authorization was performed. Until the exact-head CI checks have run, do not assert that the full test suite has passed. All four predicates stay `NEEDS-EVIDENCE`, and publication is prohibited.
