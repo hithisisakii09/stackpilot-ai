@@ -151,12 +151,15 @@ export function assessManuallyCompletedHubspotWorksheet(input={}){
  // multiple predicates. Downgrade *all* duplicate rows, without disclosing
  // the excerpt or URL in the returned report.
  const excerptRows=new Map();
+ // Normalize only for duplicate detection: do not modify, display or store
+ // the genuine human-entered excerpt or pretend this proves source validity.
+ const duplicateKey=value=>value.normalize('NFKC').replace(/\\s+/gu,' ').trim().toLocaleLowerCase('en-US');
  for(let i=1;i<rows.length;i++){
   const excerpt=rows[i][9];
   if(!excerpt)continue;
-  const matches=excerptRows.get(excerpt)||[];
+  const matches=excerptRows.get(duplicateKey(excerpt))||[];
   matches.push(i-1);
-  excerptRows.set(excerpt,matches);
+  excerptRows.set(duplicateKey(excerpt),matches);
  }
  for(const indices of excerptRows.values()){
   if(indices.length<2)continue;
