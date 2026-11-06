@@ -152,6 +152,6 @@ test('owner UAT form resolves PR from valid Netlify preview metadata, never hard
  assert.match(page,/href=\{githubPrHref\}[^>]*>\{githubPrLabel\}/);
  assert.match(page,/>\{expectedPrShaLabel\}<\/label>/);
  assert.match(page,/fields are deliberately never prefilled/);
- assert.match(page,/Owner.*self-reported|self-reported.*owner/i);
+ assert.match(page,/your self-reported checks/i);
  assert.doesNotMatch(page,/process\.env\.[A-Z_]+.*\bscript\b/i);
 });
