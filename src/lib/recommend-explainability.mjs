@@ -3,6 +3,7 @@
  * Strictly alphabetical and neutral; never influenced by commercial or affiliate status.
  */
 import { GOALS, TEAM_SIZES, BUDGETS } from './recommend.mjs';
+import {getPublicComparisonRoute} from './public-comparison-routes.mjs';
 
 const PRODUCT_WORKFLOW_PROFILES = Object.freeze({
   hubspot: {
@@ -121,11 +122,6 @@ const CATEGORY_DIMENSIONS = Object.freeze({
   ]
 });
 
-function getComparisonSlug(id, peerId) {
-  const ids = [id, peerId].sort((a, b) => a.localeCompare(b));
-  return `${ids[0]}-vs-${ids[1]}`;
-}
-
 export function explainRecommendation(product, options = {}) {
   if (!product || typeof product !== 'object' || typeof product.id !== 'string') {
     throw new Error('Invalid product input');
@@ -145,8 +141,7 @@ export function explainRecommendation(product, options = {}) {
     peerId: null
   };
 
-  const compareSlug = profile.peerId ? getComparisonSlug(product.id, profile.peerId) : null;
-  const comparePeerUrl = compareSlug ? `/compare/${compareSlug}/` : '/compare/';
+  const comparePeerUrl = getPublicComparisonRoute(product.id,profile.peerId ?? undefined) ?? '/compare/';
 
   const verificationTier = product.verified === true 
     ? 'Tier 2: Verified Claim' 
