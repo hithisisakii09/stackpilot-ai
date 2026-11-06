@@ -134,3 +134,24 @@ test('homepage, source identity, UAT packet and actual Chromium QA link to works
  assert.match(qa,/stackpilot-owner-uat-evidence\.csv/);
  assert.match(qa,/#owner-uat-report/);
 });
+
+
+test('owner UAT form resolves PR from valid Netlify preview metadata, never hardcodes historical PR #1',()=>{
+ const page=readFileSync('src/pages/tools/private-uat-worksheet/index.astro','utf8');
+ const guide=OWNER_UAT_CHECKS.find(check=>check.id==='previewSha');
+ assert.ok(guide);
+ assert.doesNotMatch(guide.hint,/\bPR\s*#1\b/i);
+ assert.doesNotMatch(page,/\/pull\/1(?:\b|["'])|\bPR\s*#1\b/i);
+ assert.match(page,/buildPreviewBuildIdentity/);
+ for(const key of ['NETLIFY','CONTEXT','PULL_REQUEST','REVIEW_ID','COMMIT_REF'])
+  assert.match(page,new RegExp('process\\.env\\.'+key+'\\b'),key);
+ assert.match(page,/PREVIEW_COMMIT_REPORTED/);
+ assert.match(page,/id="owner-uat-pr-context"/);
+ assert.match(page,/BLOCKED.*(?:unknown|unavailable)|(?:unknown|unavailable).*BLOCKED/i);
+ assert.match(page,/href=\{githubPrHref\}/);
+ assert.match(page,/href=\{githubPrHref\}[^>]*>\{githubPrLabel\}/);
+ assert.match(page,/>\{expectedPrShaLabel\}<\/label>/);
+ assert.match(page,/fields are deliberately never prefilled/);
+ assert.match(page,/Owner.*self-reported|self-reported.*owner/i);
+ assert.doesNotMatch(page,/process\.env\.[A-Z_]+.*\bscript\b/i);
+});
