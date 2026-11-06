@@ -99,7 +99,7 @@ try {
     assert.match(result, /No affiliate links are active/);
     // Three public-safe categories must link to real static comparison routes
     // and profiles without exposing unreviewed vendor matrix assertions.
-    const peerLinks = await page.locator('#result a').filter({hasText:'Compare with category peer'}).all();
+    const peerLinks = await page.locator('#result a').filter({hasText:'Review questions for category peer'}).all();
     assert.equal(peerLinks.length,2,'Exactly two neutral category-peer links');
     for (const peerLink of peerLinks){
       assert.equal(await peerLink.getAttribute('href'),'/compare/'+item.peerSlug+'/');
