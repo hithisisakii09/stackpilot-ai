@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {
  auditTrackedPrivateResearchPaths,validatePrivateResearchIgnorePolicy,
- PROTECTED_PRIVATE_RESEARCH_DIRS,PROTECTED_PRIVATE_RESEARCH_FILES
+ PROTECTED_PRIVATE_RESEARCH_DIRS,PROTECTED_PRIVATE_RESEARCH_FILES,
+ PROTECTED_PRIVATE_RESEARCH_WORKBOOK_GLOBS
 } from '../src/lib/private-research-material-guard.mjs';
 import {auditCurrentPrivateResearchMaterials} from '../scripts/private-research-material-guard.mjs';
 
@@ -63,7 +64,8 @@ test('path audit rejects missing, invalid, traversing and duplicate path invento
 test('ignore policy requires every protected directory and filename with no silent exemptions',()=>{
  const ignored=readFileSync(new URL('../.gitignore',import.meta.url),'utf8');
  assert.equal(validatePrivateResearchIgnorePolicy(ignored).protectedPatterns,
-  PROTECTED_PRIVATE_RESEARCH_DIRS.length+PROTECTED_PRIVATE_RESEARCH_FILES.length);
+  PROTECTED_PRIVATE_RESEARCH_DIRS.length+PROTECTED_PRIVATE_RESEARCH_FILES.length+
+  PROTECTED_PRIVATE_RESEARCH_WORKBOOK_GLOBS.length);
  for(const rule of [
   PROTECTED_PRIVATE_RESEARCH_DIRS[0]+'/',
   PROTECTED_PRIVATE_RESEARCH_FILES[0]
