@@ -16,7 +16,14 @@ const unfilledLabels=new Set([
  'not documented','not verified','unspecified','none','?','-',
  'unconfirmed','no evidence','not evaluated'
 ]);
-const unfilled=value=>!value||unfilledLabels.has(value.trim().toLowerCase().replace(/\s+/g,' '));
+const unfilled=value=>{
+ if(!value)return true;
+ const normalized=value.normalize('NFKC').trim().toLowerCase().replace(/\s+/gu,' ');
+ if(unfilledLabels.has(normalized))return true;
+ // A label plus a placeholder is still only a placeholder, not evidence.
+ // Avoid classifying longer, substantive caveats as empty by accident.
+ return /^(?:plan|region|permissions?|permission scope|limitations?)\s*(?::\s*|\s+is\s+|\s+)(?:unknown|tbd|pending|not checked|not verified|not documented|unspecified)$/.test(normalized);
+};
 // Normalization is comparison-only. Never rewrite a purported vendor quote.
 const comparableExcerpt=value=>value.normalize('NFKC').replace(/\s+/gu,' ').trim().toLocaleLowerCase('en-US');
 const fields=['sourceUrl','inspectionDate','plan','region','permissionScope','excerpt','limitations'];
