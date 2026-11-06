@@ -147,6 +147,26 @@ export function assessManuallyCompletedHubspotWorksheet(input={}){
    ...NO_AUTH
   });
  }
+ // One copy-pasted excerpt is not independent object-specific evidence for
+ // multiple predicates. Downgrade *all* duplicate rows, without disclosing
+ // the excerpt or URL in the returned report.
+ const excerptRows=new Map();
+ for(let i=1;i<rows.length;i++){
+  const excerpt=rows[i][9];
+  if(!excerpt)continue;
+  const matches=excerptRows.get(excerpt)||[];
+  matches.push(i-1);
+  excerptRows.set(excerpt,matches);
+ }
+ for(const indices of excerptRows.values()){
+  if(indices.length<2)continue;
+  for(const index of indices){
+   const row=results[index];
+   if(!row.missingFields.includes('distinctPredicateExcerpt'))
+    row.missingFields.push('distinctPredicateExcerpt');
+   row.recordingState='PARTIAL-LOCAL-NOTES';
+  }
+ }
  const reportedObservations=results.filter(row=>row.recordingState==='HUMAN-OBSERVATION-CLAIMED-UNVERIFIED').length;
  const reportedContradictions=results.filter(row=>row.recordingState==='HUMAN-CONTRADICTION-CLAIMED-UNVERIFIED').length;
  return {
