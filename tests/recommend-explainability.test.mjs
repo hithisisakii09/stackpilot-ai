@@ -53,3 +53,26 @@ test('rejects invalid inputs fail-closed', () => {
   assert.throws(() => explainRecommendation(products[0], { goal: 'invalid' }), /invalid/i);
   assert.throws(() => getWorkflowEvaluationDimensions('UnknownCategory'), /unknown/i);
 });
+
+
+test('all six explanation peer links resolve to declared static comparison pages',()=>{
+ const optionsByCategory={
+  CRM:{goal:'sales',team:'Solo',budget:'Minimal'},
+  SEO:{goal:'seo',team:'Solo',budget:'Minimal'},
+  Hosting:{goal:'hosting',team:'Solo',budget:'Minimal'}
+ };
+ const expectations={
+  hubspot:'/compare/hubspot-vs-pipedrive/',
+  pipedrive:'/compare/hubspot-vs-pipedrive/',
+  semrush:'/compare/semrush-vs-ahrefs/',
+  ahrefs:'/compare/semrush-vs-ahrefs/',
+  kinsta:'/compare/kinsta-vs-cloudways/',
+  cloudways:'/compare/kinsta-vs-cloudways/'
+ };
+ for(const product of products){
+  const result=explainRecommendation(product,optionsByCategory[product.category]);
+  assert.equal(result.comparePeerUrl,expectations[product.id],product.id);
+  assert.match(result.verificationTier,/Unverified|Unreviewed/);
+  assert.match(result.suitabilityExplanation,/unverified/i);
+ }
+});
