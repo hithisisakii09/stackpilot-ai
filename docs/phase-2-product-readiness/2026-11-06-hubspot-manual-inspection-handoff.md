@@ -70,3 +70,9 @@ The private checker now uses an in-memory, **comparison-only** normalized excerp
 The offline CSV validator now rejects researcher-entered excerpts that contain the project's own **unverified combined candidate assertion**, including case, repeated-space and Unicode NFKC whitespace variants. The check uses a comparison-only normalized string and does not modify the purported source quote. This prevents direct copy/paste of a claim under research from counting as a vendor quotation. Synthetic regression cases cover those variants; no vendor source was visited or approved.
 
 This check is deliberately narrow. Paraphrases and misleading but distinct text may still pass syntactic validation, so independent human verification is indispensable. Do not infer vendor feature support or publication authorization from a passing private worksheet.
+
+## Scope-qualified placeholder safeguard
+
+The offline worksheet checker treats a **field label followed only by an unresolved placeholder** (for example `Plan: TBD`, `region pending`, `permissions unspecified`, or `Limitations: not documented`) as missing research evidence. These rows remain `PARTIAL-LOCAL-NOTES` and cannot increase the self-reported observation count. It does not discard longer, substantive caveats merely because they discuss a limitation that is not documented in the inspected excerpt. This only assesses form completeness, not whether plan eligibility, region or permissions are actually substantiated by vendor evidence.
+
+Synthetic test cases were committed before the validator implementation; exact-head CI must confirm the increment. No genuine source was re-inspected and nothing was approved, merged or published.
