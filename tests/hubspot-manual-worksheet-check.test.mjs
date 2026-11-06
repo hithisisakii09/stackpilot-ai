@@ -305,3 +305,16 @@ test('whitespace and casing changes cannot launder a reused source excerpt into 
   assert.equal(output.canPublish,false);
  }
 });
+
+test('cosmetically changed unverified candidate assertion cannot masquerade as a vendor quotation',()=>{
+ const variants=[
+  report.candidateAssertion.toUpperCase(),
+  report.candidateAssertion.replaceAll(' ','   '),
+  report.candidateAssertion.replaceAll(' ','\u00a0'),
+  'Unverified preface: '+report.candidateAssertion.toLowerCase()+' (not a source quote).'
+ ];
+ for(const excerpt of variants){
+  const fields=[...full];fields[5]=excerpt;
+  assert.throws(()=>assess(edit(blank,0,fields)),/private|worksheet|entry/i);
+ }
+});
