@@ -263,3 +263,24 @@ test('formula-looking excerpt is rejected by stdin CLI without leaking private c
  assert.equal(result.stderr.includes(payload),false);
  assert.equal(result.stdout.includes(full[0]),false);
 });
+
+test('reused identical source excerpt cannot count as independent observations for different predicates',()=>{
+ const twice=edit(edit(blank,0,full),1,full);
+ const output=assess(twice);
+ assert.equal(output.reportedObservations,0);
+ assert.equal(output.rowsWithoutHumanObservations,4);
+ for(const row of output.rows.slice(0,2)){
+  assert.equal(row.status,'NEEDS-EVIDENCE');
+  assert.equal(row.recordingState,'PARTIAL-LOCAL-NOTES');
+  assert.ok(row.missingFields.includes('distinctPredicateExcerpt'));
+  assert.equal(row.supportsPredicateVerified,false);
+ }
+ assert.equal(output.canPublish,false);
+ // One official source may legitimately provide separate object-specific excerpts.
+ const distinct=[...full];
+ distinct[5]='SYNTHETIC TEST SENTENCE for the second object, distinct from the first and never authentic vendor evidence.';
+ const separate=assess(edit(edit(blank,0,full),1,distinct));
+ assert.equal(separate.reportedObservations,2);
+ assert.equal(separate.independentlyVerifiedPredicates,0);
+ assert.equal(separate.canPublish,false);
+});
