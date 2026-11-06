@@ -186,3 +186,28 @@ test('private local worksheet validator JSON report never becomes a built websit
   assert.ok(report.violations.some(x=>x.includes('Private research data asset')),path);
  }
 });
+
+test('client prospect workbooks never enter browser-delivered assets, including binary copies',()=>{
+ for(const path of [
+  'StackPilot_Client_Research_Architecture.xlsx',
+  'assets/StackPilot_Client_Research_Architecture_v4.xlsx',
+  'reports/stackpilot_client_research_architecture_v27.xlsx',
+  'client-research/private.csv',
+  'assets/prospect-research/records.json',
+  'lead-research/contact-list.xlsx'
+ ]){
+  const content=/\.(?:csv|json)$/i.test(path)?'synthetic,fictional':'';
+  const result=scan([...safe,{path,content:/\.xlsx$/i.test(path)?null:content}]);
+  assert.ok(result.violations.some(v=>v.includes('Private client research artifact')),path);
+  assert.ok(result.violations.every(v=>!v.includes(path)), 'Never print prospect data filename');
+ }
+});
+
+test('neutral public research guidance and generic downloadable spreadsheets remain allowed',()=>{
+ const report=scan([
+  ...safe,
+  {path:'guides/client-research-checklist/index.html',content:'<h1>General public methodology</h1>'},
+  {path:'assets/blank-budget-worksheet.xlsx',content:null}
+ ]);
+ assert.deepEqual(report.violations,[]);
+});
