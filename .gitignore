@@ -35,3 +35,11 @@ claim-research-starter.json
 hubspot-export-evidence-assessment.json
 hubspot-export-evidence-assessment.csv
 hubspot-manual-worksheet-check.json
+
+# Owner-only prospect research. May later contain personally identifiable contacts.
+# Never add client/prospect lists or the local research workbook to Git.
+client-research/
+prospect-research/
+lead-research/
+StackPilot_Client_Research_Architecture*.xlsx
+stackpilot_client_research_architecture*.xlsx
