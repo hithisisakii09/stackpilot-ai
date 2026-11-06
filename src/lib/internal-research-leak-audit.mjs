@@ -6,7 +6,10 @@
 const textAsset=/\.(?:html?|[cm]?js|json|css|txt|xml|svg|map|md|csv)$/i;
 const privateData=/(?:^|\/)(?:editorial-triage|comparison-source-proposals|editorial-review-receipts|editorial-review-trust-anchors|research-claims|research-source-revocations|comparison-evidence|editorial-review-history|comparison-evidence-captures)\.json$/i;
 const privateExport=/(?:^|\/)(?:comparison-gap-worklist|claim-research-starter|source-snapshot-check|vendor-source-snapshot|hubspot-export-evidence-assessment|hubspot-manual-worksheet-check)\.(?:csv|json)$/i;
-// Guard the owner-only prospect workbook independently of the Git index:\n// generated build assets can leak untracked local files, including binary XLSX.\nconst privateClientResearch=/(?:^|\\/)(?:client-research|prospect-research|lead-research)(?:\\/|$)|(?:^|\\/)stackpilot_client_research_architecture(?:_v[0-9]+)?\\.xlsx$/i;\nconst privateField=/\b(?:candidateAssertion|triageReason|relevanceNote|publicKeySpkiBase64|sourceSnapshotSha256|previousDigest|excerptSha256|captureId|snapshotText|localSnapshotSha256|exactExcerptFound)\b\s*["']?\s*:/i;
+// Guard the owner-only prospect workbook independently of the Git index:
+// Generated build assets can leak untracked local files, including binary XLSX.
+const privateClientResearch=/(?:^|\/)(?:client-research|prospect-research|lead-research)(?:\/|$)|(?:^|\/)stackpilot_client_research_architecture(?:_v[0-9]+)?\.xlsx$/i;
+const privateField=/\b(?:candidateAssertion|triageReason|relevanceNote|publicKeySpkiBase64|sourceSnapshotSha256|previousDigest|excerptSha256|captureId|snapshotText|localSnapshotSha256|exactExcerptFound)\b\s*["']?\s*:/i;
 const validPath=/^(?:[a-zA-Z0-9_.-]+\/)*[a-zA-Z0-9_.-]+$/;
 
 function normalized(input){
