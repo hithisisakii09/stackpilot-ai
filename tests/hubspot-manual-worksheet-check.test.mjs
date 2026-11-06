@@ -284,3 +284,24 @@ test('reused identical source excerpt cannot count as independent observations f
  assert.equal(separate.independentlyVerifiedPredicates,0);
  assert.equal(separate.canPublish,false);
 });
+
+test('whitespace and casing changes cannot launder a reused source excerpt into independent observations',()=>{
+ const cases=[
+  sample.toUpperCase(),
+  sample.replace(' this was never','   this   was    never'),
+  sample.replace(' this was never','\u00a0this was never')
+ ];
+ for(const excerpt of cases){
+  const other=[...full];other[5]=excerpt;
+  const output=assess(edit(edit(blank,0,full),1,other));
+  assert.equal(output.reportedObservations,0);
+  assert.equal(output.rowsWithoutHumanObservations,4);
+  for(const row of output.rows.slice(0,2)){
+   assert.equal(row.recordingState,'PARTIAL-LOCAL-NOTES');
+   assert.ok(row.missingFields.includes('distinctPredicateExcerpt'));
+   assert.equal(row.supportsPredicateVerified,false);
+  }
+  assert.equal(output.approved,false);
+  assert.equal(output.canPublish,false);
+ }
+});
