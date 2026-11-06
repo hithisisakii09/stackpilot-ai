@@ -530,6 +530,18 @@ try {
   page.on('request',trackUatRequest);
   await page.goto(base+'/tools/private-uat-worksheet/',{waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(),/Private owner UAT evidence worksheet/);
+  const ownerPrContext=await page.locator('#owner-uat-pr-context').innerText();
+  const ownerPrLink=await page.locator('#owner-uat-github-pr').getAttribute('href');
+  const ownerExpectedLabel=await page.locator('label[for="owner-uat-expectedSha"]').innerText();
+  if(/identity unavailable/i.test(ownerPrContext)){
+    assert.match(ownerPrContext,/BLOCKED/i,'Unknown local preview context must be visibly blocked');
+    assert.match(ownerPrLink,/\/pulls$/,'Unknown build must not link a stale fixed PR');
+    assert.match(ownerExpectedLabel,/current draft PR HEAD SHA/);
+  }else{
+    assert.match(ownerPrContext,/Netlify build metadata identifies preview PR #\d+/);
+    assert.match(ownerPrLink,/\/pull\/\d+$/);
+    assert.match(ownerExpectedLabel,/Expected PR #\d+ HEAD SHA/);
+  }
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
   assert.equal(await page.locator('#owner-uat-form select').count(),6);
   assert.ok(await page.locator('#owner-uat-download').isDisabled());
