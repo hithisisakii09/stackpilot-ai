@@ -153,7 +153,7 @@ export function assessManuallyCompletedHubspotWorksheet(input={}){
  const excerptRows=new Map();
  // Normalize only for duplicate detection: do not modify, display or store
  // the genuine human-entered excerpt or pretend this proves source validity.
- const duplicateKey=value=>value.normalize('NFKC').replace(/\\s+/gu,' ').trim().toLocaleLowerCase('en-US');
+ const duplicateKey=value=>value.normalize('NFKC').replace(/\s+/gu,' ').trim().toLocaleLowerCase('en-US');
  for(let i=1;i<rows.length;i++){
   const excerpt=rows[i][9];
   if(!excerpt)continue;
