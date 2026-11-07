@@ -68,7 +68,7 @@ export function auditEditorialRuntimeSurface({paths,astroConfig,netlifyConfig}={
    /^(?:netlify\/(?:functions|edge-functions)|\.netlify\/functions|functions|api|server|supabase\/functions|cloudflare\/functions)(?:\/|\.)/.test(lower);
   if(forbidden)violations.push(path+': Unapproved server/editorial runtime entrypoint');
  }
- const staticAstro=/^\s*import\s*\{\s*defineConfig\s*\}\s*from\s*['"]astro\/config['"]\s*;?\s*export\s+default\s+defineConfig\(\s*\{\s*output\s*:\s*['"]static['"]\s*,?\s*\}\s*\)\s*;?\s*$/;
+ const staticAstro=/^\s*import\s*\{\s*defineConfig\s*\}\s*from\s*['"]astro\/config['"]\s*;?\s*export\s+default\s+defineConfig\(\s*\{\s*output\s*:\s*['"]static['"]\s*(?:,\s*vite\s*:\s*\{\s*build\s*:\s*\{\s*assetsInlineLimit\s*:\s*0\s*,?\s*\}\s*,?\s*\})?\s*,?\s*\}\s*\)\s*;?\s*$/;
  if(!staticAstro.test(astroConfig))
   violations.push('astro.config.mjs: Static-only Astro build invariant not met');
  const sections=[...netlifyConfig.matchAll(/^\s*(\[\[?[^\]\r\n]+\]\]?)\s*$/gm)].map(x=>x[1]);
