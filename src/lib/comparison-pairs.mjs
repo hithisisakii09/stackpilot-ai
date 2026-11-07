@@ -238,50 +238,30 @@ export function generatePairVendorQuestionsCsv(pairData) {
     throw new Error('Invalid pairData for CSV generation');
   }
   const header = ['Question ID', 'Category', 'Software Target', 'Question', 'Verification Priority'];
-  const rows = [
-    [
-      'Q-01',
-      pairData.pair.category,
-      pairData.first.name,
-      'What are the exact monthly seat and feature add-on costs for our team size in local currency?',
-      'High'
-    ],
-    [
-      'Q-02',
-      pairData.pair.category,
-      pairData.second.name,
-      'What are the exact monthly seat and feature add-on costs for our team size in local currency?',
-      'High'
-    ],
-    [
-      'Q-03',
-      pairData.pair.category,
-      pairData.first.name,
-      'What are the overage charges if our usage (contacts, visits, or crawl credits) spikes during peak months?',
-      'Medium'
-    ],
-    [
-      'Q-04',
-      pairData.pair.category,
-      pairData.second.name,
-      'What are the overage charges if our usage (contacts, visits, or crawl credits) spikes during peak months?',
-      'Medium'
-    ],
-    [
-      'Q-05',
-      pairData.pair.category,
-      pairData.first.name,
-      'Can all custom fields, raw logs, and historical data be exported via automated API or flat files upon cancellation?',
-      'Critical'
-    ],
-    [
-      'Q-06',
-      pairData.pair.category,
-      pairData.second.name,
-      'Can all custom fields, raw logs, and historical data be exported via automated API or flat files upon cancellation?',
-      'Critical'
-    ]
+  const { pair, first, second } = pairData;
+  const isCrm = pair.category === 'CRM';
+  const questions = [
+    ['What are the exact monthly seat and feature add-on costs for our team size in local currency?', 'High'],
+    [isCrm
+      ? 'Which usage limits apply to our CRM plan, and what fees or upgrades apply if we exceed them?'
+      : 'What are the overage charges if our usage (contacts, visits, or crawl credits) spikes during peak months?', 'Medium'],
+    ...(isCrm ? [
+      ['Which CRM records, custom fields, and associations can we export to CSV on our plan and in our region? What permissions and limits apply?', 'Critical'],
+      ['Which CRM records can we sync through the API on our plan, in which direction, and with what permissions and rate limits?', 'Critical'],
+      ['How long can we access CRM exports or the API after cancellation, and what data should we retrieve before access ends?', 'Critical']
+    ] : [
+      ['Can all custom fields, raw logs, and historical data be exported via automated API or flat files upon cancellation?', 'Critical']
+    ])
   ];
+  const rows = questions.flatMap(([question, priority], index) =>
+    [first, second].map((vendor, vendorIndex) => [
+      `Q-${String(index * 2 + vendorIndex + 1).padStart(2, '0')}`,
+      pair.category,
+      vendor.name,
+      question,
+      priority
+    ])
+  );
 
   const lines = [
     header.map(escapeCsvField).join(','),
