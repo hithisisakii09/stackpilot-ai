@@ -16,17 +16,7 @@ export function buildSoftwareApplicationSchema(product) {
     applicationCategory: product.category || 'BusinessApplication',
     operatingSystem: 'Cloud-based',
     description: product.description || `${product.name} software candidate profile.`,
-    url: `https://stackpilot.invalid/software/${product.id}/`,
-    offers: {
-      '@type': 'Offer',
-      price: '0.00',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      priceSpecification: {
-        '@type': 'PriceSpecification',
-        description: 'Pricing unverified — consult official provider'
-      }
-    }
+    url: `https://stackpilot.invalid/software/${product.id}/`
   };
 }
 

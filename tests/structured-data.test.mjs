@@ -20,9 +20,12 @@ test('buildSoftwareApplicationSchema produces valid Schema.org SoftwareApplicati
   assert.equal(schema.applicationCategory, 'CRM');
   assert.equal(schema.operatingSystem, 'Cloud-based');
   assert.ok(schema.description);
-  assert.equal(schema.offers['@type'], 'Offer');
-  assert.equal(schema.offers.priceSpecification['@type'], 'PriceSpecification');
-  assert.equal(schema.offers.priceSpecification.description, 'Pricing unverified — consult official provider');
+  for (const product of products) {
+    const candidate = buildSoftwareApplicationSchema(product);
+    for (const field of ['offers', 'price', 'availability', 'aggregateRating', 'review']) {
+      assert.equal(Object.hasOwn(candidate, field), false, `${product.id}: ${field}`);
+    }
+  }
 });
 
 test('buildFAQSchema produces valid Schema.org FAQPage', () => {
