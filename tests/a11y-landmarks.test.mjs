@@ -18,8 +18,8 @@ function findAstroFiles(dir) {
 
 const astroFiles = findAstroFiles('src/pages');
 
-test('all 20 page templates contain semantic landmarks, skip-link, and accessible viewport', () => {
-  assert.equal(astroFiles.length, 20, 'Expected exactly 20 Astro page templates');
+test('all page templates contain semantic landmarks, skip-link, and accessible viewport', () => {
+  assert.equal(astroFiles.length, 21, 'Expected exactly 21 Astro page templates');
 
   for (const file of astroFiles) {
     const html = readFileSync(file, 'utf8');
@@ -47,6 +47,7 @@ test('all 20 page templates contain semantic landmarks, skip-link, and accessibl
 test('table scrollers have role="region", tabindex="0", and accessible labels across all routes', () => {
   const tablePages = [
     'src/pages/compare/index.astro',
+    'src/pages/compare/[slug].astro',
     'src/pages/guides/crm-migration-checklist/index.astro',
     'src/pages/guides/hosting-migration-checklist/index.astro',
     'src/pages/guides/saas-total-cost-of-ownership/index.astro'

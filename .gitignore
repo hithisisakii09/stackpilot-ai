@@ -8,3 +8,38 @@ dist/
 npm-debug.log*
 artifacts/
 .agents/
+
+# Local manually inspected vendor material must stay OUTSIDE this repository.
+# Defense-in-depth only: forced Git adds are separately rejected by CI.
+private-research/
+local-research/
+research-local/
+vendor-snapshots/
+source-snapshots/
+private-inputs/
+research-inputs/
+source-copies/
+vendor-document.txt
+source-snapshot-check.json
+vendor-source-snapshot.json
+private-proposal.json
+private-capture.json
+proposal-input.json
+capture-input.json
+snapshot-metadata.json
+private-snapshot-check.json
+manual-source-check.json
+comparison-gap-worklist.csv
+comparison-gap-worklist.json
+claim-research-starter.json
+hubspot-export-evidence-assessment.json
+hubspot-export-evidence-assessment.csv
+hubspot-manual-worksheet-check.json
+
+# Owner-only prospect research. May later contain personally identifiable contacts.
+# Never add client/prospect lists or the local research workbook to Git.
+client-research/
+prospect-research/
+lead-research/
+StackPilot_Client_Research_Architecture*.xlsx
+stackpilot_client_research_architecture*.xlsx

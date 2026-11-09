@@ -82,9 +82,9 @@ try {
   await checkAccessibility(page, 'homepage desktop');
 
   const scenarios = [
-    { goal: 'sales', expected: ['HubSpot', 'Pipedrive'] },
-    { goal: 'seo', expected: ['Ahrefs', 'Semrush'] },
-    { goal: 'hosting', expected: ['Cloudways', 'Kinsta'] }
+    { goal: 'sales', expected: ['HubSpot', 'Pipedrive'], peerSlug: 'hubspot-vs-pipedrive', productIds: ['hubspot','pipedrive'] },
+    { goal: 'seo', expected: ['Ahrefs', 'Semrush'], peerSlug: 'semrush-vs-ahrefs', productIds: ['ahrefs','semrush'] },
+    { goal: 'hosting', expected: ['Cloudways', 'Kinsta'], peerSlug: 'kinsta-vs-cloudways', productIds: ['cloudways','kinsta'] }
   ];
   for (const item of scenarios) {
     await page.locator('#goal').selectOption(item.goal);
@@ -97,13 +97,27 @@ try {
     assert.match(result, /Team-size suitability has not been verified/);
     assert.match(result, /Current pricing and budget suitability are not verified/);
     assert.match(result, /No affiliate links are active/);
-    for (const link of await page.locator('#result a').all()) {
+    // Three public-safe categories must link to real static comparison routes
+    // and profiles without exposing unreviewed vendor matrix assertions.
+    const peerLinks = await page.locator('#result a').filter({hasText:'Review questions for category peer'}).all();
+    assert.equal(peerLinks.length,2,'Exactly two neutral category-peer links');
+    for (const peerLink of peerLinks){
+      assert.equal(await peerLink.getAttribute('href'),'/compare/'+item.peerSlug+'/');
+      assert.equal(await peerLink.getAttribute('target'),null,'Internal links remain first-party');
+    }
+    assert.equal((await page.request.get(base+'/compare/'+item.peerSlug+'/')).status(),200,
+      'Canonical peer route must exist for '+item.goal);
+    const profileLinks = await page.locator('#result a').filter({hasText:'View product profile'}).all();
+    assert.equal(profileLinks.length,2,'Exactly two individual profile links');
+    const profileHrefs = await Promise.all(profileLinks.map(link=>link.getAttribute('href')));
+    assert.deepEqual(profileHrefs.sort(),item.productIds.map(id=>'/software/'+id+'/').sort());
+    for (const link of await page.locator('#result a[target="_blank"]').all()) {
       const href = await link.getAttribute('href');
       assert.ok(href?.startsWith('https://'), 'Outbound link must be HTTPS');
       assert.ok(!/[?&](ref|aff|utm_)/i.test(href), 'Unexpected tracking parameter');
-      assert.equal(await link.getAttribute('target'), '_blank');
       assert.match(await link.getAttribute('rel'), /noopener noreferrer/);
     }
+    assert.equal(await page.locator('#result a[target="_blank"]').count(),2);
   }
 
   // All priority/team/budget combinations must behave honestly in the rendered browser.
@@ -530,6 +544,18 @@ try {
   page.on('request',trackUatRequest);
   await page.goto(base+'/tools/private-uat-worksheet/',{waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(),/Private owner UAT evidence worksheet/);
+  const ownerPrContext=await page.locator('#owner-uat-pr-context').innerText();
+  const ownerPrLink=await page.locator('#owner-uat-github-pr').getAttribute('href');
+  const ownerExpectedLabel=await page.locator('label[for="owner-uat-expectedSha"]').innerText();
+  if(/identity unavailable/i.test(ownerPrContext)){
+    assert.match(ownerPrContext,/BLOCKED/i,'Unknown local preview context must be visibly blocked');
+    assert.match(ownerPrLink,/\/pulls$/,'Unknown build must not link a stale fixed PR');
+    assert.match(ownerExpectedLabel,/current draft PR HEAD SHA/);
+  }else{
+    assert.match(ownerPrContext,/Netlify build metadata identifies preview PR #\d+/);
+    assert.match(ownerPrLink,/\/pull\/\d+$/);
+    assert.match(ownerExpectedLabel,/Expected PR #\d+ HEAD SHA/);
+  }
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
   assert.equal(await page.locator('#owner-uat-form select').count(),6);
   assert.ok(await page.locator('#owner-uat-download').isDisabled());

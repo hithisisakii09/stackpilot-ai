@@ -1,7 +1,14 @@
 ---
 import products from '../../data/products.json';
 import { comparisonCategories, categoryComparisonRows } from '../../lib/comparison.mjs';
+import { buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
+
 const categories = comparisonCategories(products);
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Compare', url: '/compare/' }
+];
+const breadcrumbJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
 ---
 <!doctype html>
 <html lang="en">
@@ -11,6 +18,7 @@ const categories = comparisonCategories(products);
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="Compare SaaS research candidates by category, known information and evidence gaps." />
   <title>Compare software candidates | StackPilot AI</title>
+  <script type="application/ld+json" set:html={breadcrumbJson}></script>
   <style>
     :root { font-family: system-ui, sans-serif; background: #0b1220; color: #e9f1ff; }
     * { box-sizing: border-box; }
@@ -38,7 +46,6 @@ const categories = comparisonCategories(products);
     @media (max-width: 700px) { .compare-controls { grid-template-columns: 1fr; } }
     .skip-link { position: absolute; top: -100px; left: 16px; background: #7ce8c6; color: #06231d; padding: 10px 16px; font-weight: 700; border-radius: 6px; z-index: 1000; text-decoration: none; }
     .skip-link:focus { top: 16px; outline: 3px solid #fff; }
-
   </style>
 </head>
 <body>
@@ -48,6 +55,17 @@ const categories = comparisonCategories(products);
     <h1>Compare software candidates</h1>
     <p>Compare preliminary entries <strong>within the same category</strong>. These tables show catalog descriptions, not tested feature parity or verified buyer suitability.</p>
     <p class="notice">All product claims, team fit, and current pricing remain unverified. These products are not ranked or endorsed, and there are no affiliate links.</p>
+
+    <section aria-labelledby="featured-comparisons">
+      <h2 id="featured-comparisons">Direct head-to-head comparisons</h2>
+      <p>Explore dedicated, side-by-side matrices comparing common alternatives within each category:</p>
+      <ul>
+        <li><a href="/compare/hubspot-vs-pipedrive/">HubSpot vs Pipedrive</a> — CRM &amp; Sales workflow comparison</li>
+        <li><a href="/compare/semrush-vs-ahrefs/">Semrush vs Ahrefs</a> — Search marketing &amp; backlink index comparison</li>
+        <li><a href="/compare/kinsta-vs-cloudways/">Kinsta vs Cloudways</a> — Managed WordPress vs Cloud VPS comparison</li>
+      </ul>
+    </section>
+
     <section aria-labelledby="compare-title">
       <h2 id="compare-title">Choose two tools to compare</h2>
       <p>This browser-only comparison displays the same information for both tools. It does not calculate a winner, compare live prices, or send your selections to a server.</p>

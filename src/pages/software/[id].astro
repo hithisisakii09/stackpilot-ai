@@ -1,17 +1,61 @@
 ---
 import products from '../../data/products.json';
+import { buildSoftwareApplicationSchema, buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
+
 export function getStaticPaths() {
   return products.map((product) => ({ params: { id: product.id }, props: { product } }));
 }
 const { product } = Astro.props;
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Software', url: '/#tools' },
+  { name: product.name, url: `/software/${product.id}/` }
+];
+const softwareSchemaJson = serializeJsonLd(buildSoftwareApplicationSchema(product));
+const breadcrumbSchemaJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
+
+const categoryComparisons = {
+  CRM: { label: 'HubSpot vs Pipedrive', href: '/compare/hubspot-vs-pipedrive/' },
+  SEO: { label: 'Semrush vs Ahrefs', href: '/compare/semrush-vs-ahrefs/' },
+  Hosting: { label: 'Kinsta vs Cloudways', href: '/compare/kinsta-vs-cloudways/' }
+};
+const comparison = categoryComparisons[product.category];
+
+const categoryTools = {
+  CRM: [
+    { title: 'CRM Paid-Seat Audit', href: '/tools/crm-seat-audit/', desc: 'Audit active vs unused user licenses before renewal.' },
+    { title: 'CRM Migration Readiness', href: '/tools/crm-migration-readiness/', desc: 'Assess data hygiene and schema mapping complexity.' }
+  ],
+  SEO: [
+    { title: 'SEO Audit Scope Planner', href: '/tools/seo-audit-scope/', desc: 'Estimate crawl credits and audit duration.' },
+    { title: 'Software Cost Calculator', href: '/tools/software-cost-calculator/', desc: 'Calculate multi-year team licensing costs.' }
+  ],
+  Hosting: [
+    { title: 'Hosting Cutover Gate Assessor', href: '/tools/hosting-cutover-gates/', desc: 'Review DNS and SSL cutover readiness gates.' },
+    { title: 'Hosting Hidden-Cost Worksheet', href: '/tools/hosting-hidden-costs/', desc: 'Model bandwidth and backup overages.' },
+    { title: 'Backup Restore Drill Assessor', href: '/tools/backup-restore-drill/', desc: 'Validate recovery point and time objectives.' }
+  ]
+};
+const tools = categoryTools[product.category] || [];
+
+const categoryGuides = {
+  CRM: { title: 'CRM Migration Checklist', href: '/guides/crm-migration-checklist/' },
+  SEO: { title: 'SaaS Total Cost of Ownership Guide', href: '/guides/saas-total-cost-of-ownership/' },
+  Hosting: { title: 'Hosting Migration Checklist', href: '/guides/hosting-migration-checklist/' }
+};
+const guide = categoryGuides[product.category];
 ---
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="description" content={`Introductory profile for ${product.name}. Research and pricing verification pending.`} /><meta name="robots" content="noindex, nofollow" />
+<meta name="description" content={`Introductory profile for ${product.name}. Research and pricing verification pending.`} />
+<meta name="robots" content="noindex, nofollow" />
 <title>{product.name} | StackPilot AI software profile</title>
+<script type="application/ld+json" set:html={softwareSchemaJson}></script>
+<script type="application/ld+json" set:html={breadcrumbSchemaJson}></script>
 <style>
 :root{font-family:system-ui,sans-serif;color:#e9f1ff;background:#0b1220}*{box-sizing:border-box}
 body{margin:0}main,header,footer{max-width:840px;padding:24px;margin:auto}a{color:#7ce8c6}
@@ -23,7 +67,14 @@ h1{font-size:clamp(32px,6vw,56px)}.links{display:flex;gap:20px;flex-wrap:wrap}
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to main content</a>
-<header class="links"><nav aria-label="Site navigation"><a href="/">← StackPilot AI</a><a href="/compare/">Compare categories</a><a href="/methodology/">Methodology</a></nav></header>
+<header class="links">
+  <nav aria-label="Site navigation">
+    <a href="/">← StackPilot AI</a>
+    <a href="/compare/">Compare categories</a>
+    {comparison && <a href={comparison.href}>{comparison.label}</a>}
+    <a href="/methodology/">Methodology</a>
+  </nav>
+</header>
 <main id="main">
 <p>Independent introductory software profile</p>
 <h1>{product.name}</h1>
@@ -41,6 +92,28 @@ h1{font-size:clamp(32px,6vw,56px)}.links{display:flex;gap:20px;flex-wrap:wrap}
 <p>Budget compatibility: {product.budgetTiers.length ? product.budgetTiers.join(', ') : 'Not yet verified'}</p>
 <p>Pricing: Consult the provider for current plans, currency, taxes, and limits. StackPilot AI has not verified pricing.</p>
 </section>
+
+{comparison && (
+  <section aria-labelledby="comparison-links">
+    <h2 id="comparison-links">Direct head-to-head comparison</h2>
+    <p>Compare {product.name} directly against its primary category peer:</p>
+    <p>👉 <a href={comparison.href}><strong>{comparison.label} Comparison Matrix</strong></a> — Side-by-side workflow breakdown and downloadable vendor due diligence questions.</p>
+  </section>
+)}
+
+<section aria-labelledby="decision-tools">
+  <h2 id="decision-tools">Related decision tools & guides</h2>
+  <p>Run client-side modeling and plan migrations without server tracking:</p>
+  <ul>
+    {tools.map(tool => (
+      <li><a href={tool.href}>{tool.title}</a> — {tool.desc}</li>
+    ))}
+    {guide && (
+      <li><a href={guide.href}>{guide.title}</a> — Step-by-step buyer operational guide.</li>
+    )}
+  </ul>
+</section>
+
 <section aria-labelledby="sources">
 <h2 id="sources">Research transparency</h2>
 <p class="alert">The links below are <strong>unreviewed research leads</strong>. Their presence is not independent evidence of a verified feature, price, or product claim. The displayed date is when each source was logged for review, not a completed editorial approval.</p>
