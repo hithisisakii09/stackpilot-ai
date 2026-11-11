@@ -1,6 +1,6 @@
 # StackPilot AI — CRM exit evidence and ethical organic distribution
 **Research date:** 2026-11-02 (Asia/Kolkata) · **PRIVATE DRAFT / NOT EDITORIALLY APPROVED / NOT PUBLISHED**
-**Work queue:** `draft-evidence-review:hubspot` and `draft-evidence-review:pipedrive` (automatic/advisory, priority 30 in exact-head operations artifact); issue #4 historical editorial backlog, issue #6 current unapproved source spot-check, issue #5 release NO-GO.
+**Work queue:** the HubSpot/Pipedrive P30 entries are historical research leads. The latest exact-head `ops:backlog` artifact (2026-11-11) reports `automatic: []`, `sourcesNeedingRefresh: 0`, six prepared evidence packets and six editorial reviews pending; issue #4 is the closed historical editorial backlog, issue #6 is the current open source-review coordination thread, and issue #5 remains the release NO-GO record.
 **Source classification:** Read-only first-party documentation, **not** a vendor account test, purchased plan, verified feature, regional eligibility determination, affiliate approval, traffic proof or independent benchmark.
 
 ## Why this adds value rather than another generic comparison
@@ -25,6 +25,23 @@ These are editorial **intent hypotheses**, not measured rankings, search volume,
 **Pipedrive:** [Exporting data from Pipedrive](https://support.pipedrive.com/en/article/exporting-data-from-pipedrive), vendor page last updated **2026-09-03**. The guide distinguishes admin-only “Export data” from permissioned list-view exports and says visibility groups/item visibility still limit what a user can export. Activities, notes and files linked to deals/contacts must be exported **separately**. It says files stored in Google Drive are **not** exported during global export; Projects availability is **Premium and higher or the Projects add-on**. Generated exports are available for **28 days**. These are vendor statements, not proof of a specific customer's accessible fields or plan.
 
 **Pipedrive import countercheck:** [Importing data with spreadsheets](https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets), vendor page last updated **2026-10-19**. It describes CSV/XLS/XLSX import, mandatory fields, mapping, duplicate handling, a maximum of **200,000 rows** and file size **under 50 MB**; it describes an admin-only revert window of **48 hours**. The import-revert feature is **not** a substitute for a verified source backup or a general migration rollback guarantee. Limits and permissions require account-level confirmation before editorial approval.
+
+### 2026-11-12 locale consistency caveat — Pipedrive spreadsheet import (candidate-only)
+
+A fresh comparison of Pipedrive's own localized help pages found a **documentation freshness mismatch**, not evidence of a regional product limit:
+
+- **English page**, last updated **2026-10-19**: permits up to **200,000 rows** and a file under **50 MB**; it requires the appropriate global import permission. The same page says only a global admin can revert an import, within 48 hours.
+  - https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets
+- **Indonesian translation**, last updated **2026-10-19**: also says **200,000 rows** and under **50 MB**.
+  - https://support.pipedrive.com/id/article/importing-data-into-pipedrive-with-spreadsheets
+- **Traditional Chinese translation**, last updated **2026-10-19**: also says **200,000 rows** and under **50 MB**; the page labels itself machine-translated and not human-edited.
+  - https://support.pipedrive.com/zh-hant/article/importing-data-into-pipedrive-with-spreadsheets
+- **Thai translation**, last updated **2026-04-27**: says **50,000 rows** and no more than **50 MB**; the page explicitly says it was machine-translated and has not been human-edited.
+  - https://support.pipedrive.com/th/article/importing-data-into-pipedrive-with-spreadsheets
+
+**Interpretation:** the older Thai translation is inconsistent with the newer English, Indonesian and Traditional Chinese pages. The evidence does **not** establish that Thailand, Thai-language accounts or any geographic region has a 50,000-row product limit. Do not publish the 50,000 figure as a regional entitlement or silently replace the current English vendor statement. For a Thai-language buyer, flag the discrepancy and obtain current vendor confirmation or account-specific evidence before relying on either limit.
+
+**Editorial handling:** retain the 200,000-row figure only as a dated vendor-documentation statement from the English page updated 2026-10-19, keep the 50 MB and permission caveats attached, and do not call this independently tested. No plan-specific or geographic exception was established by the pages reviewed. 
 
 **Plan/region questions still open:** actual user permissions and visibility groups; subscription edition and legacy models; Projects/custom-object entitlements; API authorization; activity/attachment export formats; EU/other regional processing or export conditions; account-specific file expiry and billing/renewal terms. Do not insert vendor prices, availability verdicts or comparisons into catalog data.
 
@@ -75,8 +92,8 @@ Ask the authorized CRM administrator/vendor to complete this **without sharing p
 
 **Research progress indicators (not traffic promises):** count of original briefs with an explicit buyer task; official URLs directly revisited with vendor-reported update dates; number of unresolved plan/role/region caveats; number of checklists reviewed by a real editor; actual authenticated hosted-UAT pass count. All currently require a real reviewer before becoming launch evidence.
 
-**Next automatic work:** retain this draft as a source review lead, do not re-open all six claims redundantly (issue #6 already spot-checked them); recheck only changed primary documentation and resolve real factual conflicts. **Next human-only gates:** owner validates editorial statements and publisher identity/channel, Netlify billing and Private/Locked state, then separately decides any public launch, indexing or affiliate application. No autonomous gate is checked by this document.
+**Latest queue decision (2026-11-11):** `ops:backlog -- --json` reports no due automatic tasks; do not invent queue work or execute owner gates. This dated locale discrepancy is recorded as a narrow source-quality note from the user's explicit research scope, not as a queue approval or editorial signoff. Do not re-open all six claims redundantly (issue #6 already spot-checked them); recheck only changed primary documentation and resolve real factual conflicts. **Next human-only gates:** owner validates editorial statements and publisher identity/channel, Netlify billing and Private/Locked state, then separately decides any public launch, indexing or affiliate application. No autonomous gate is checked by this document.
 
-**Hard holds:** `config/operating-policy.json` monthly and delegated spending **₹0**, Netlify production and previews **PRIVATE**, auto-publishing **LOCKED** (owner's historical screenshots; live account controls not independently verified), `main` unchanged, draft PR #1 unmerged, `robots.txt` and `noindex` intact, all `affiliateUrl:null`, no publishing, external posting, signups, paid tools or tracked links.
+**Hard holds:** `config/operating-policy.json` monthly and delegated spending **₹0**, Netlify production and previews **PRIVATE**, auto-publishing **LOCKED** (owner's historical screenshots; live account controls not independently verified), `main` is not modified by this growth work; PR #1 was owner-merged on 2026-11-04 (merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`); `robots.txt` and `noindex` remain intact, all `affiliateUrl:null`, no publishing, external posting, signups, paid tools or tracked links.
 
 **Method:** read AGENTS.md and current operational state; use gstack [engineering review/QA](https://github.com/garrytan/gstack/blob/main/docs/skills.md) and Superpowers [verification-before-completion](https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md) principles. This is **documentation-only source research**, not code behavior: no TDD RED/GREEN claim, no remote-host test or account verification. Exact-SHA CI and provider status must be rechecked after any branch commit.
