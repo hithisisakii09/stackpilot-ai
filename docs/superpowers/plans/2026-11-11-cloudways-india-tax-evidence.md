@@ -49,3 +49,10 @@ Make one narrowly scoped improvement to the existing SaaS usage-meter buyer brie
 - Search volume, rankings, visits, impressions, leads, conversions and earnings remain UNKNOWN.
 - All six vendor claim records remain candidate-only; all applications and active affiliate links remain zero.
 - Operating policy remains ₹0, noindex and privacy controls are unchanged, and the PR remains draft/unmerged.
+
+
+## 2026-11-13 follow-up — Kinsta direct-browser verification
+
+The exact public Kinsta Overages URL (https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/) was opened in a normal browser. It rendered without authentication, showed the title “Overages” and last-updated date 2026-03-09, and exposed four separate meters: visits ($0.50/1,000 after cap), server bandwidth ($0.50/GB), SSD disk ($2/GB/month prorated daily) and CDN ($0.05/GB). It also described plan alerts and non-retroactive upgrades. No canonical URL was visible in the rendered content.
+
+This is a reachability and vendor-documentation check only. It does not verify a customer's account, plan, geography, tax, usage, invoice or custom terms, and it does not approve the claim. No sign-in or account action occurred. Keep the source candidate-only.
