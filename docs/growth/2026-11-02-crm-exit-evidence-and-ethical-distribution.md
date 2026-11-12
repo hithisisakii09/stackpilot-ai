@@ -26,23 +26,32 @@ These are editorial **intent hypotheses**, not measured rankings, search volume,
 
 **Pipedrive import countercheck:** [Importing data with spreadsheets](https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets), vendor page last updated **2026-10-19**. It describes CSV/XLS/XLSX import, mandatory fields, mapping, duplicate handling, a maximum of **200,000 rows** and file size **under 50 MB**; it describes an admin-only revert window of **48 hours**. The import-revert feature is **not** a substitute for a verified source backup or a general migration rollback guarantee. Limits and permissions require account-level confirmation before editorial approval.
 
-### 2026-11-12 locale consistency caveat — Pipedrive spreadsheet import (candidate-only)
+### 2026-11-13 direct-browser locale verification — Pipedrive spreadsheet import (candidate-only)
 
-A fresh comparison of Pipedrive's own localized help pages found a **documentation freshness mismatch**, not evidence of a regional product limit:
+A direct, read-only browser review of six official Pipedrive help pages on **2026-11-13** supersedes the earlier search-index discrepancy. All six pages rendered without sign-in and showed the same current import requirements: **up to 200,000 rows** and a file **under 50 MB**, with each page displaying an update date of **19 October 2026**.
 
-- **English page**, last updated **2026-10-19**: permits up to **200,000 rows** and a file under **50 MB**; it requires the appropriate global import permission. The same page says only a global admin can revert an import, within 48 hours.
-  - https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets
-- **Indonesian translation**, last updated **2026-10-19**: also says **200,000 rows** and under **50 MB**.
-  - https://support.pipedrive.com/id/article/importing-data-into-pipedrive-with-spreadsheets
-- **Traditional Chinese translation**, last updated **2026-10-19**: also says **200,000 rows** and under **50 MB**; the page labels itself machine-translated and not human-edited.
-  - https://support.pipedrive.com/zh-hant/article/importing-data-into-pipedrive-with-spreadsheets
-- **Thai translation**, last updated **2026-04-27**: says **50,000 rows** and no more than **50 MB**; the page explicitly says it was machine-translated and has not been human-edited.
-  - https://support.pipedrive.com/th/article/importing-data-into-pipedrive-with-spreadsheets
+| Locale | Visible update date | Row limit | File limit | Translation note |
+|---|---|---:|---:|---|
+| English | 19 October 2026 | 200,000 | under 50 MB | No machine-translation notice |
+| Indonesian | 19 October 2026 | 200,000 | under 50 MB | Machine-translated from English; not human-reviewed |
+| Thai | 19 October 2026 | 200,000 | under 50 MB | Translation-software notice; not editor-verified |
+| Traditional Chinese | 19 October 2026 | 200,000 | under 50 MB | Explicit machine-translation notice |
+| Spanish | 19 October 2026 | 200,000 | under 50 MB | No machine-translation notice |
+| Portuguese | 19 October 2026 | 200,000 | under 50 MB | No machine-translation notice |
 
-**Interpretation:** the older Thai translation is inconsistent with the newer English, Indonesian and Traditional Chinese pages. The evidence does **not** establish that Thailand, Thai-language accounts or any geographic region has a 50,000-row product limit. Do not publish the 50,000 figure as a regional entitlement or silently replace the current English vendor statement. For a Thai-language buyer, flag the discrepancy and obtain current vendor confirmation or account-specific evidence before relying on either limit.
+Official pages directly visited:
+- English: https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets
+- Indonesian: https://support.pipedrive.com/id/article/importing-data-into-pipedrive-with-spreadsheets
+- Thai: https://support.pipedrive.com/th/article/importing-data-into-pipedrive-with-spreadsheets
+- Traditional Chinese: https://support.pipedrive.com/zh-hant/article/importing-data-into-pipedrive-with-spreadsheets
+- Spanish: https://support.pipedrive.com/es/article/importing-data-into-pipedrive-with-spreadsheets
+- Portuguese: https://support.pipedrive.com/pt/article/importing-data-into-pipedrive-with-spreadsheets
 
-**Editorial handling:** retain the 200,000-row figure only as a dated vendor-documentation statement from the English page updated 2026-10-19, keep the 50 MB and permission caveats attached, and do not call this independently tested. No plan-specific or geographic exception was established by the pages reviewed. 
+**Correction:** earlier search-result snippets showed 50,000 rows for Indonesian/Thai. That value was not present in the directly rendered current pages. The previous claim that the Thai page currently shows 50,000 rows is superseded and must not be repeated as a current vendor limit. Search snippets can be stale; the live page's displayed 2026-10-19 content is the evidence captured in this recheck.
 
+**Interpretation:** no current locale-specific or geographic row-limit difference was established. The three machine-translated pages still warrant a language-quality caveat, but their visible numeric requirements match English. The 200,000-row / under-50-MB limits remain vendor documentation, not an account test or guarantee for every subscription, permission set or future revision. The separate global-admin permission and 48-hour import-revert caveats remain attached. No account was accessed and no import was performed.
+
+**Editorial handling:** replace the earlier 50,000-row locale discrepancy with this direct-browser result. Keep the source attributed to Pipedrive, preserve the translation notices, and require human review before any public use.
 **Plan/region questions still open:** actual user permissions and visibility groups; subscription edition and legacy models; Projects/custom-object entitlements; API authorization; activity/attachment export formats; EU/other regional processing or export conditions; account-specific file expiry and billing/renewal terms. Do not insert vendor prices, availability verdicts or comparisons into catalog data.
 
 ## Unpublished article brief — “Before you leave a CRM: prove the export is complete”
