@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
 import {
@@ -153,7 +154,7 @@ test('manual capture rejects duplicate IDs, same-day sources and changed candida
 });
 
 test('manual intake CLI accepts private stdin proposal only, rejects unauthorized flags and capture without recorded proposal',()=>{
- const script=new URL('../scripts/manual-research-intake.mjs',import.meta.url).pathname;
+ const script=fileURLToPath(new URL('../scripts/manual-research-intake.mjs',import.meta.url));
  const run=(option,value)=>spawnSync(process.execPath,[script,option],{
   input:JSON.stringify(value),encoding:'utf8'
  });

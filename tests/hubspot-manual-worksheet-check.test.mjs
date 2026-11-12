@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
 import {
  buildHubspotExportAssessment,serializeHubspotExportWorksheetCsv
@@ -175,7 +176,7 @@ test('no input changes existing source proposal, evidence ledger or review regis
 });
 
 test('stdin-only command accepts blank and locally reported observations without leaking excerpt',()=>{
- const script=new URL('../scripts/hubspot-manual-worksheet-check.mjs',import.meta.url).pathname;
+ const script=fileURLToPath(new URL('../scripts/hubspot-manual-worksheet-check.mjs',import.meta.url));
  const execute=(data,...args)=>spawnSync(process.execPath,[script,...args],{encoding:'utf8',input:data});
  const empty=execute(blank);
  assert.equal(empty.status,0,empty.stderr);
@@ -254,7 +255,7 @@ test('placeholder plan, region, permissions, and caveat text never complete a re
 test('formula-looking excerpt is rejected by stdin CLI without leaking private contents',()=>{
  const payload='=HYPERLINK("https://invalid.example","Confidential source excerpt")';
  const fields=[...full];fields[5]=payload;
- const script=new URL('../scripts/hubspot-manual-worksheet-check.mjs',import.meta.url).pathname;
+ const script=fileURLToPath(new URL('../scripts/hubspot-manual-worksheet-check.mjs',import.meta.url));
  const result=spawnSync(process.execPath,[script],{
   encoding:'utf8',input:edit(blank,0,fields)
  });

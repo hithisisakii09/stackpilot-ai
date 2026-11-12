@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {readFileSync} from 'node:fs';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
 import {hashEvidenceExcerpt} from '../src/lib/comparison-evidence-captures.mjs';
@@ -159,7 +160,7 @@ test('private worklist is not imported or emitted by public comparison pages',()
  }
 });
 test('CLI defaults to privacy-preserving summary and exposes raw candidates only for explicit private format',()=>{
- const cli=new URL('../scripts/comparison-gap-worklist.mjs',import.meta.url).pathname;
+ const cli=fileURLToPath(new URL('../scripts/comparison-gap-worklist.mjs',import.meta.url));
  const exec=(...args)=>{
   const x=spawnSync(process.execPath,[cli,...args],{encoding:'utf8'});
   assert.equal(x.status,0,x.stderr);

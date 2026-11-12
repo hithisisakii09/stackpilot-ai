@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {mkdtempSync,rmSync,writeFileSync,symlinkSync,mkdirSync} from 'node:fs';
+import {mkdtempSync,rmSync,writeFileSync,symlinkSync,mkdirSync,lstatSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {spawnSync} from 'node:child_process';
@@ -36,18 +36,27 @@ test('private file input rejects relative paths, directories, invalid names and 
  });
 });
 
-test('private file input rejects symlinks, including symbolic ancestor folders',()=>{
+test('private file input rejects symlinks, including symbolic ancestor folders',t=>{
  temp(dir=>{
   const file=join(dir,'real.txt'),link=join(dir,'symbolic.txt');
   writeFileSync(file,sample);
-  symlinkSync(file,link);
-  assert.throws(()=>readPrivateSourceTextFile(link),/private|symlink|snapshot/i);
+  try{
+   symlinkSync(file,link,'file');
+   assert.equal(lstatSync(link).isSymbolicLink(),true);
+   assert.equal(readFileSync(link,'utf8'),sample);
+   assert.throws(()=>readPrivateSourceTextFile(link),/private|symlink|snapshot/i);
+  }catch(error){
+   if(process.platform!=='win32'||error.code!=='EPERM'||error.syscall!=='symlink')throw error;
+   t.diagnostic('Windows file-symlink privilege unavailable; exercising real junction ancestor rejection below. File-symlink assertion remains required on capable hosts including Linux CI.');
+  }
   const alias=join(dir,'alias-dir');
   const child=join(dir,'actual-dir');
   const nested=join(child,'text.txt');
   mkdirSync(child);
   writeFileSync(nested,sample);
-  symlinkSync(child,alias);
+  symlinkSync(child,alias,process.platform==='win32'?'junction':'dir');
+  assert.equal(lstatSync(alias).isSymbolicLink(),true);
+  assert.equal(readFileSync(join(alias,'text.txt'),'utf8'),sample);
   assert.throws(()=>readPrivateSourceTextFile(join(alias,'text.txt')),/private|symlink|snapshot/i);
  });
 });

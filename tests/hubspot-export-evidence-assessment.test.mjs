@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {readFileSync} from 'node:fs';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
 import {hashEvidenceExcerpt} from '../src/lib/comparison-evidence-captures.mjs';
@@ -138,7 +139,7 @@ test('wrong claim/vendor, changed raw assertion and invalid evidence registers f
 });
 
 test('CLI summary omits raw candidate research while --json outputs private assessment only',()=>{
- const path=new URL('../scripts/hubspot-export-evidence-assessment.mjs',import.meta.url).pathname;
+ const path=fileURLToPath(new URL('../scripts/hubspot-export-evidence-assessment.mjs',import.meta.url));
  const run=(...args)=>spawnSync(process.execPath,[path,...args],{encoding:'utf8'});
  const summary=run();
  assert.equal(summary.status,0,summary.stderr);
@@ -227,7 +228,7 @@ test('CSV export rejects forged approval, attached evidence, altered predicates 
 });
 
 test('CLI --csv emits private blank evidence worksheet without vendor data or approvals',()=>{
- const path=new URL('../scripts/hubspot-export-evidence-assessment.mjs',import.meta.url).pathname;
+ const path=fileURLToPath(new URL('../scripts/hubspot-export-evidence-assessment.mjs',import.meta.url));
  const run=(...args)=>spawnSync(process.execPath,[path,...args],{encoding:'utf8'});
  const result=run('--csv');
  assert.equal(result.status,0,result.stderr);

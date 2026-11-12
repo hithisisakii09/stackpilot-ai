@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
 import {buildClaimResearchStarter} from '../src/lib/claim-research-starter.mjs';
 import {validateComparisonSourceProposals} from '../src/lib/comparison-review-packets.mjs';
@@ -124,7 +125,7 @@ test('unknown vendor, mismatched claim, and malformed research fail closed',()=>
 });
 
 test('private CLI shows safe default, explicit --json full report, invalid flags denied',()=>{
- const cli=new URL('../scripts/claim-research-starter.mjs',import.meta.url).pathname;
+ const cli=fileURLToPath(new URL('../scripts/claim-research-starter.mjs',import.meta.url));
  const exec=(...args)=>spawnSync(process.execPath,[cli,...args],{encoding:'utf8'});
  const args=['--claim',id,'--vendor',vendor];
  const safe=exec(...args);

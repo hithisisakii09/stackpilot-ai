@@ -13,6 +13,18 @@ const root=fileURLToPath(new URL('../',import.meta.url));
 // A source change must be reviewed before updating its pinned digest.
 const staticCsvPath='src/pages/compare/[slug].csv.js';
 const staticCsvDigest='3dc93a848162453916c074704bff1381d860d8d345fa4bb181838f5f7fceead9';
+// Git may check out LF source as CRLF on Windows. Normalize only CRLF byte
+// pairs: every other byte (including BOM, bare CR and invalid UTF-8) remains
+// part of the pinned digest. Never normalize syntax, whitespace or comments.
+export function isReviewedStaticCsvSource(bytes){
+ if(!Buffer.isBuffer(bytes))return false;
+ const canonical=[];
+ for(let i=0;i<bytes.length;i++){
+  if(bytes[i]===13&&bytes[i+1]===10)continue;
+  canonical.push(bytes[i]);
+ }
+ return createHash('sha256').update(Buffer.from(canonical)).digest('hex')===staticCsvDigest;
+}
 const roots=['src','public','netlify','functions','api','server',
  'supabase','cloudflare','.netlify'];
 function walk(path,found){
@@ -30,7 +42,7 @@ export function auditCurrentEditorialRuntimeSurface(){
   if(existsSync(dir))walk(dir,paths);
  }
  const auditedPaths=paths.filter(path=>path!==staticCsvPath||
-  createHash('sha256').update(readFileSync(join(root,path))).digest('hex')!==staticCsvDigest);
+  !isReviewedStaticCsvSource(readFileSync(join(root,path))));
  return auditEditorialRuntimeSurface({
   paths:auditedPaths,
   astroConfig:readFileSync(join(root,'astro.config.mjs'),'utf8'),

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
 import {hashEvidenceExcerpt} from '../src/lib/comparison-evidence-captures.mjs';
 import {checkOfflineSnapshotConsistency} from '../src/lib/offline-snapshot-consistency.mjs';
@@ -126,7 +127,7 @@ test('stale/revoked source remains unapproved even if excerpt bytes match',()=>{
 });
 
 test('CLI denies invented local source checks with no matching recorded proposal',()=>{
- const cli=new URL('../scripts/offline-snapshot-consistency.mjs',import.meta.url).pathname;
+ const cli=fileURLToPath(new URL('../scripts/offline-snapshot-consistency.mjs',import.meta.url));
  const result=spawnSync(process.execPath,[cli],{encoding:'utf8',
   input:JSON.stringify({capture,snapshot})});
  assert.notEqual(result.status,0);
