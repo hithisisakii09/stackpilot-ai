@@ -1,6 +1,6 @@
-# Pipedrive Import Locale Consistency — Plan
+# Pipedrive Import Locale Consistency — Verification Plan
 
-**Date:** 2026-11-12  
+**Date:** 2026-11-13  
 **Status:** PRIVATE RESEARCH ONLY — UNAPPROVED — NOT PUBLISHED  
 **Base:** `main@1672461bea5fa09e01965c5e8bdd4819852b06fd`  
 **Branch:** `growth/pipedrive-locale-import-limit-2026-11-12`  
@@ -8,27 +8,37 @@
 
 ## Goal
 
-Improve the existing CRM exit-evidence brief with one source-quality caveat: Pipedrive's older Thai help translation shows a different spreadsheet row limit from newer English and other localized versions. Do not create another article, route or calculator.
+Correct the existing CRM exit-evidence brief using a direct-browser recheck of Pipedrive's localized spreadsheet-import documentation. The earlier search-index snapshot suggested a 50,000-row Thai/Indonesian limit; the current directly rendered pages show 200,000 rows across all six checked locales. Do not create another article, route or calculator.
 
-## Evidence reviewed
+## Evidence reviewed — direct browser, 2026-11-13
 
-1. **English Pipedrive spreadsheet-import guide**, last updated 2026-10-19: up to 200,000 rows, file under 50 MB, correct global permission required; import revert is limited to global admins and 48 hours.
-   - https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets
-2. **Indonesian translation**, last updated 2026-10-19: 200,000 rows and under 50 MB.
-   - https://support.pipedrive.com/id/article/importing-data-into-pipedrive-with-spreadsheets
-3. **Traditional Chinese translation**, last updated 2026-10-19: 200,000 rows and under 50 MB; page labels itself machine-translated and not human-edited.
-   - https://support.pipedrive.com/zh-hant/article/importing-data-into-pipedrive-with-spreadsheets
-4. **Thai translation**, last updated 2026-04-27: 50,000 rows and no more than 50 MB; page labels itself machine-translated and not human-edited.
-   - https://support.pipedrive.com/th/article/importing-data-into-pipedrive-with-spreadsheets
+All six public pages rendered without sign-in. Each displayed an update date of 19 October 2026, a maximum of 200,000 rows and a file size under 50 MB.
 
-The page discrepancy is evidence of documentation freshness/localization inconsistency. It does **not** establish a Thailand-specific or account-region-specific feature limit. No Pipedrive account was accessed and no import was performed.
+| Locale | Rows | File size | Translation notice |
+|---|---:|---:|---|
+| English | 200,000 | under 50 MB | None visible |
+| Indonesian | 200,000 | under 50 MB | Machine-translated; not human-reviewed |
+| Thai | 200,000 | under 50 MB | Translation-software notice; not editor-verified |
+| Traditional Chinese | 200,000 | under 50 MB | Machine-translated |
+| Spanish | 200,000 | under 50 MB | None visible |
+| Portuguese | 200,000 | under 50 MB | None visible |
+
+Sources:
+- https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets
+- https://support.pipedrive.com/id/article/importing-data-into-pipedrive-with-spreadsheets
+- https://support.pipedrive.com/th/article/importing-data-into-pipedrive-with-spreadsheets
+- https://support.pipedrive.com/zh-hant/article/importing-data-into-pipedrive-with-spreadsheets
+- https://support.pipedrive.com/es/article/importing-data-into-pipedrive-with-spreadsheets
+- https://support.pipedrive.com/pt/article/importing-data-into-pipedrive-with-spreadsheets
+
+The prior search snippets that showed 50,000 rows are superseded by the live browser result. Do not present 50,000 as a current Thai or Indonesian limit. This is not proof of every account's plan, role or geographic entitlement. The global permission requirement and global-admin-only 48-hour revert remain separate caveats.
 
 ## Scope
 
-- Update `docs/growth/2026-11-02-crm-exit-evidence-and-ethical-distribution.md` only with the dated locale comparison, interpretation guardrail and buyer-intent hypotheses.
-- Correct the document's stale queue snapshot and stale PR #1 merge statement.
-- Add this plan under `docs/superpowers/plans/`.
-- Coordinate the result in open issue #6 because issue #4 is closed.
+- Replace the outdated locale-discrepancy note in `docs/growth/2026-11-02-crm-exit-evidence-and-ethical-distribution.md`.
+- Preserve the existing buyer brief and qualitative keyword hypotheses; do not create locale-keyword doorway pages.
+- Record the browser recheck and the correction in this plan.
+- Coordinate through open issue #6 because issue #4 is closed.
 
 ## Buyer-intent hypotheses
 
@@ -36,15 +46,19 @@ The page discrepancy is evidence of documentation freshness/localization inconsi
 - `Pipedrive CSV import file size limit`
 - `Pipedrive import duplicates and field mapping`
 - `Pipedrive import revert 48 hours`
-- `Pipedrive Thai import row limit` (localization fact-check query only; not a regional-limit claim)
+- `Pipedrive import locale documentation consistency` (fact-check intent only; not a regional-limit claim)
 
-These are qualitative task/intent hypotheses. Search volume, difficulty, CPC, rankings, impressions, clicks and traffic are UNKNOWN. Do not create keyword-variant pages.
+Search volume, difficulty, CPC, rankings, impressions, clicks and traffic remain UNKNOWN.
 
-## Competitor and distribution scope
+## Competitor context
 
-- Reuse the existing CRM migration-tool competitor scan already recorded in issue #6 (Suprdense Switch, Sanka Migrate, Vern and Migaru); do not generate a duplicate comparison article.
-- Reuse the existing ethical zero-cost channel assessment in the CRM brief: Google Search Console and Bing Webmaster Tools only after an owner-authorized public release and verified site ownership; LinkedIn/Reddit only with authentic, relevant, rule-compliant human participation.
-- No account creation, indexing submission, public posting, external outreach or link promotion.
+Reuse the existing CRM migration competitor scan. Suprdense Switch markets CRM-to-CRM migration, object/field mapping, duplicate handling and sample migration; Sanka Migrate markets broader system migration planning, inventory, mapping, dry runs and reconciliation. These are vendor-described capabilities, not independently tested results. StackPilot's worksheet is a buyer-side requirements/preflight aid, not a migration engine. Do not claim performance superiority or create another migration comparison.
+
+## Distribution and measurement
+
+Retain the existing zero-cost channel plan: Search Console/Bing Webmaster only after owner-authorized public release and verified property ownership; LinkedIn/Reddit only through authentic, relevant, human participation consistent with current rules. No account creation, indexing submission, public posting, external outreach or link promotion.
+
+After a separately approved launch, measure page-level impressions, clicks, CTR and average position from actual first-party tools. Before then, all organic baselines remain UNKNOWN.
 
 ## Explicit non-goals
 
@@ -54,20 +68,19 @@ These are qualitative task/intent hypotheses. Search volume, difficulty, CPC, ra
 - No edits to `main`, no merge, no production promotion, noindex removal, privacy change, provider change or spending.
 - Keep all six vendor claims candidate-only, all affiliate URLs null, Netlify Private/Locked as last owner-reported, and budget ₹0.
 
-## Plan / review sequence
+## Review / verification
 
-1. **Think / inspect:** read repository instructions, operating policy, current operational state, open PRs, issue #6 and the existing CRM brief; confirm no open PR edits the target.
-2. **Source review:** compare the four official locale pages and preserve each page's own update date and translation warning.
-3. **Build:** make a narrow documentation-only update to the existing brief; do not add a second article.
-4. **gstack review:** manually apply current `/review` scope/evidence/safety checks. Upstream gstack states `/plan-eng-review` was cut on 2026-11-06; its eng-review methodology is now in `/autoplan`. This host did not expose an installed gstack command runtime, so no slash command or setup script is claimed to have run.
-5. **Superpowers verification:** this is documentation-only; no executable behavior changes, so TDD RED/GREEN is not applicable and no behavior-test claim is made. Verify the exact changed files and run the repository's full PR CI (build/tests, operations, Chromium, Netlify Deploy Preview).
-6. **Reflect:** report exact commit and check results; leave the PR draft and unmerged.
+1. Read current instructions, operating policy, current operational state, open PRs and issue #6.
+2. Directly render all six official locale pages in a public browser; record update dates, row/file limits and translation notices.
+3. Review the brief diff for stale 50,000-row claims and unsupported geographic inference.
+4. Apply current gstack review/QA principles and Superpowers verification-before-completion. No TDD RED/GREEN is claimed because only documentation changes.
+5. Recheck exact-head build, operations, Chromium and Netlify Deploy Preview statuses after the commit.
 
 ## Acceptance criteria
 
-- The English 200,000-row statement is dated and attributed to the 2026-10-19 vendor page.
-- The older Thai 50,000-row translation is accurately described as a machine-translated, older page; it is not presented as a regional limit.
-- Indonesian and Traditional Chinese pages are recorded as matching the newer English figure.
-- No catalog claim is approved; no source-intake date or reviewer field changes.
+- All six pages are accurately recorded as 200,000 rows / under 50 MB, last updated 2026-10-19.
+- Translation notices are preserved for Indonesian, Thai and Traditional Chinese.
+- The prior 50,000-row search snippet is explicitly superseded, not presented as a current product limit.
+- All product/vendor claims remain unapproved; source-intake dates and review fields are unchanged.
 - No traffic, ranking, conversion, commission or revenue metric is invented.
-- Noindex/privacy protections, affiliate prohibitions, Netlify hold and ₹0 policy are unchanged.
+- Noindex/privacy protections, affiliate prohibitions, Netlify hold and ₹0 policy remain unchanged.
