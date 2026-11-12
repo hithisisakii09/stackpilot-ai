@@ -1,6 +1,6 @@
 # SaaS Usage Meters: Buyer Brief, Evidence Ledger and Unpublished Draft
 
-**Research date:** 2026-11-04; evidence addendum **2026-11-11**  
+**Research date:** 2026-11-04; evidence addenda **2026-11-11 and 2026-11-13**  
 **Status:** PRIVATE DEVELOPMENT RESEARCH — UNAPPROVED — NOT PUBLISHED  
 **Scope:** Organic-search preparation, first-party vendor evidence, publisher-readiness recheck and one distinct buyer-guide draft.  
 **Budget:** ₹0. No applications, accounts, posts, tracking links, paid tools, provider changes or publication.
@@ -69,6 +69,14 @@ The core meter pages were reopened on 2026-11-04. The Cloudways fiscal-tax page 
 | **Semrush — [Site Audit limits](https://www.semrush.com/kb/31-site-audit)** and [configuration](https://www.semrush.com/kb/539-configuring-site-audit), retrieved 2026-11-04 | The help page distinguishes monthly page budgets from per-audit caps and concurrent audits. It maps Semrush One Starter / Pro+ / Advanced to Pro / Guru / Business SEO Toolkit. Unused monthly page budget does not roll over and resets on the first of the month. JavaScript rendering is stated as available on Guru or Business SEO Toolkit. | Current help-page figures: no SEO Toolkit 100/month and 100/audit; Pro 100,000/month and 20,000/audit; Guru 300,000/month and 20,000/audit; Business 1,000,000/month and 100,000/audit. Concurrent audits are 1/2/2/5 respectively. The pages show no on-page last-updated date; verify current product naming and checkout entitlement before publication. Default domain scope includes subdomains and subfolders unless narrowed. |
 
 ### Editorial interpretation
+
+### 2026-11-13 direct-browser reachability check — Kinsta Overages (candidate-only)
+
+The exact public URL https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/ was opened directly in a normal browser on **2026-11-13**. The page rendered fully without sign-in; visible title: **Overages**; visible last-updated date: **2026-03-09**. No canonical URL was explicitly visible in the rendered page content.
+
+The page displayed four distinct vendor-published usage meters: visits (**$0.50 per 1,000 visits** after the applicable cap), server bandwidth (**$0.50/GB**), SSD disk overage (**$2/GB/month, prorated daily**) and CDN bandwidth (**$0.05/GB**). It also described 80%/100% plan-limit alerts, an additional 10% visit-overage alert and non-retroactive plan upgrades.
+
+**Evidence boundary:** this confirms public documentation reachability and the wording visible on that page only. It does not verify any buyer's plan, region, custom terms, tax, billing cycle, usage or invoice; it is not independent testing or editorial approval. Keep the figures attributed to Kinsta and do not present them as a quote or prediction for a particular site. No Kinsta account was accessed.
 
 These examples are deliberately not presented as one comparable price table:
 
