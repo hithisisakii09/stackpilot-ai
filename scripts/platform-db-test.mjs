@@ -36,6 +36,12 @@ try {
     await admin.query('CREATE DATABASE stackpilot_test');
     await admin.query('CREATE DATABASE stackpilot_restore');
     await admin.query('CREATE DATABASE stackpilot_failure');
+    await admin.query('CREATE DATABASE stackpilot_control_test');
+    await admin.query('CREATE DATABASE stackpilot_control_failure');
+    await admin.query('CREATE DATABASE stackpilot_control_restore');
+    await admin.query('CREATE DATABASE stackpilot_control_fresh');
+    await admin.query('CREATE DATABASE stackpilot_control_acl_collision');
+    await admin.query('CREATE DATABASE stackpilot_control_owner_collision');
   } finally {
     await admin.end();
   }
@@ -45,6 +51,12 @@ try {
     stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify(config),STACKPILOT_TEST_BACKUP:join(root,'backup','database.dump'),STACKPILOT_PG_BIN:bin}
   });
   resultCode = result.status ?? 1;
+  if(resultCode===0) {
+    const control=spawnSync(process.execPath,['--test','tests/integration/platform-control-migration.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_control_test'}),STACKPILOT_TEST_BACKUP:join(root,'backup','control.dump'),STACKPILOT_PG_BIN:bin}
+    });
+    resultCode=control.status??1;
+  }
 } finally {
   let stopped = !started;
   if (started && existsSync(join(dataDirectory,'postmaster.pid'))) {
