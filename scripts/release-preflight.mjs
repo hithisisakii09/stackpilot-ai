@@ -10,6 +10,7 @@ import {auditInternalNavigation} from '../src/lib/internal-navigation-audit.mjs'
 import {auditStaticAssetReferences} from '../src/lib/static-asset-audit.mjs';
 import {auditInternalResearchLeaks} from '../src/lib/internal-research-leak-audit.mjs';
 import {COMPARISON_PAIRS} from '../src/lib/comparison-pairs.mjs';
+import {auditLocalControlPlaneExport} from '../src/lib/local-control-plane-export.mjs';
 
 const root=new URL('../',import.meta.url);
 const dist=new URL('../dist/',import.meta.url);
@@ -23,7 +24,7 @@ function walk(directory) {
     return entry.isFile()?[path]:[];
   });
 }
-let routes,deploy,navigation,assets,internalResearch;
+let routes,deploy,navigation,assets,internalResearch,controlExport;
 try {
   const allFiles=walk(distPath).map(file=>relative(distPath,file).split('\\').join('/'));
   const pages=allFiles.filter(path=>path.endsWith('.html')).map(path=>({
@@ -37,11 +38,13 @@ try {
   // Scan every generated text asset, not just pages on a known route list.
   // Binary assets are inspected by path only; no private candidate content is logged.
   const manualCaptures=JSON.parse(read(new URL('src/data/comparison-evidence-captures.json',root)));
-  internalResearch=auditInternalResearchLeaks(allFiles.map(path=>({
+  const builtFiles=allFiles.map(path=>({
     path,
     content:/\.(?:html?|[cm]?js|json|css|txt|xml|svg|map|md|csv)$/i.test(path)
       ?readFileSync(join(distPath,path),'utf8'):null
-  })),COMPARISON_PAIRS,manualCaptures);
+  }));
+  internalResearch=auditInternalResearchLeaks(builtFiles,COMPARISON_PAIRS,manualCaptures);
+  controlExport=auditLocalControlPlaneExport(builtFiles);
   routes=auditStaticRoutes(pages);
   deploy=auditDeploymentConstraints({
     policy:JSON.parse(read(new URL('config/operating-policy.json',root))),
@@ -54,8 +57,9 @@ try {
   navigation={checkedLinks:0,violations:[]};
   assets={checkedAssets:0,violations:[]};
   internalResearch={checkedFiles:0,violations:[]};
+  controlExport={checkedFiles:0,violations:[]};
 }
-const violations=[...routes.violations,...deploy.violations,...navigation.violations,...assets.violations,...internalResearch.violations];
+const violations=[...routes.violations,...deploy.violations,...navigation.violations,...assets.violations,...internalResearch.violations,...controlExport.violations];
 const output={
   check:'static-prelaunch-engineering-only',
   status:violations.length?'BLOCKED':'PASS',

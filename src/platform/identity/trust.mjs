@@ -6,7 +6,7 @@ import {readPrivateSourceTextFile} from '../../lib/private-source-text-file.mjs'
 const errorMessage='Invalid owner trust configuration';
 const deny=()=>{throw new Error(errorMessage);};
 
-function parseUnambiguousJson(content) {
+export function parseUnambiguousJson(content) {
  const value=JSON.parse(content); // Validate full JSON grammar before scanning property names.
  const tokens=content.match(/"(?:\\[\s\S]|[^"\\])*"|[{}\[\]:]/g)??[];
  const scopes=[];

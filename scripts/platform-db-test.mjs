@@ -46,6 +46,7 @@ try {
     await admin.query('CREATE DATABASE stackpilot_approval_test');
     await admin.query('CREATE DATABASE stackpilot_approval_fresh');
     await admin.query('CREATE DATABASE stackpilot_approval_failure');
+    await admin.query('CREATE DATABASE stackpilot_https_test');
   } finally {
     await admin.end();
   }
@@ -72,6 +73,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_approval_test'})}
     });
     resultCode=approval.status??1;
+  }
+  if(resultCode===0) {
+    const https=spawnSync(process.execPath,['--test','tests/integration/platform-control-plane.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_https_test'})}
+    });
+    resultCode=https.status??1;
   }
 } finally {
   let stopped = !started;

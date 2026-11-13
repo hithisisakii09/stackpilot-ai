@@ -172,6 +172,10 @@ export function createIdentityService(options) {
         if(principal.role!=='owner') throw failure();
         return principal;
       }),
+      sessionInformation:safe(async handle=>{
+        const principal=await service.requirePrincipal(handle);
+        return Object.freeze({...principal,csrfToken:handles.get(handle).csrfToken});
+      }),
       verifyCsrf:safe(async(handle,csrfToken)=>{
         decode(csrfToken,32);
         await service.requirePrincipal(handle);

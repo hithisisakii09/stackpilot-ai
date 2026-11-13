@@ -7,6 +7,7 @@ import {existsSync,readdirSync,readFileSync} from 'node:fs';
 import {join,relative} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {auditEditorialRuntimeSurface} from '../src/lib/editorial-authorization.mjs';
+import {isReviewedLocalControlSource,reviewedLocalControlSources} from './local-control-plane-source.mjs';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 // Only the reviewed build-time CSV endpoint may bypass the runtime-route check.
@@ -25,7 +26,7 @@ export function isReviewedStaticCsvSource(bytes){
  }
  return createHash('sha256').update(Buffer.from(canonical)).digest('hex')===staticCsvDigest;
 }
-const roots=['src','public','netlify','functions','api','server',
+const roots=['src','scripts','public','netlify','functions','api','server',
  'supabase','cloudflare','.netlify'];
 function walk(path,found){
  for(const entry of readdirSync(path,{withFileTypes:true})){
@@ -41,11 +42,14 @@ export function auditCurrentEditorialRuntimeSurface(){
   const dir=join(root,segment);
   if(existsSync(dir))walk(dir,paths);
  }
- const auditedPaths=paths.filter(path=>path!==staticCsvPath||
-  !isReviewedStaticCsvSource(readFileSync(join(root,path))));
- return auditEditorialRuntimeSurface({
+ const auditedPaths=paths.filter(path=>!(path===staticCsvPath&&isReviewedStaticCsvSource(readFileSync(join(root,path))))&&
+  !(Object.hasOwn(reviewedLocalControlSources,path)&&isReviewedLocalControlSource(path,readFileSync(join(root,path)))));
+ const result=auditEditorialRuntimeSurface({
   paths:auditedPaths,
   astroConfig:readFileSync(join(root,'astro.config.mjs'),'utf8'),
   netlifyConfig:readFileSync(join(root,'netlify.toml'),'utf8')
  });
+ for(const path of Object.keys(reviewedLocalControlSources)) if(!paths.includes(path)) result.violations.push('Missing reviewed local control-plane source');
+ if(result.violations.length) result.status='BLOCKED';
+ return result;
 }

@@ -62,6 +62,8 @@ export function auditEditorialRuntimeSurface({paths,astroConfig,netlifyConfig}={
   seen.add(path.toLowerCase());
   const lower=path.toLowerCase();
   const forbidden=
+   /^src\/control-plane(?:\/|\.)/.test(lower)||
+   /^scripts\/platform-control-plane(?:[./-]|$)/.test(lower)||
    /^src\/pages\/(?:api|editorial|review|admin)(?:\/|\.)/.test(lower)||
    /^src\/pages\/.*\.(?:ts|tsx|js|jsx|mjs|cjs|json)$/.test(lower)||
    /^src\/(?:middleware|actions)(?:\/|\.)/.test(lower)||
