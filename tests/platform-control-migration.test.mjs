@@ -25,7 +25,7 @@ test('control migration pins canonical SQL and preserves foundation migration by
 test('migration targets and options fail before any database connection when malformed',async()=>{
  let calls=0;
  const pool={connect:async()=>{calls++;throw new Error('Database must not be contacted');}};
- for(const options of [null,[],{targetVersion:0},{targetVersion:3},{targetVersion:'2'},{targetVersion:null},{targetVersion:undefined},{targetVersion:NaN},{targetVersion:2,force:true},Object.defineProperty({},'targetVersion',{get(){throw new Error('No getter');},enumerable:true})]) {
+ for(const options of [null,[],{targetVersion:0},{targetVersion:4},{targetVersion:'2'},{targetVersion:null},{targetVersion:undefined},{targetVersion:NaN},{targetVersion:2,force:true},Object.defineProperty({},'targetVersion',{get(){throw new Error('No getter');},enumerable:true})]) {
   await assert.rejects(applyMigrations(pool,options));
  }
  assert.equal(calls,0);

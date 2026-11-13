@@ -3,6 +3,7 @@ import {fields,id} from '../contracts/validation.mjs';
 import {schema} from './schema.mjs';
 import {controlSchema} from './control-schema.mjs';
 import {assertControlAccess} from './control-access.mjs';
+import {approvalSchema} from './approval-schema.mjs';
 
 // This internal persistence scope requires trusted session binding in Phase 1C.
 export async function withTransaction(pool,context,callback) {
@@ -10,7 +11,7 @@ export async function withTransaction(pool,context,callback) {
 }
 
 export async function withControlTransaction(pool,context,callback) {
-  return guardedTransaction(pool,context,callback,'stackpilot_control',{...schema,...controlSchema});
+  return guardedTransaction(pool,context,callback,'stackpilot_control',{...schema,...controlSchema,...approvalSchema});
 }
 
 async function guardedTransaction(pool,context,callback,expectedRole,tables) {

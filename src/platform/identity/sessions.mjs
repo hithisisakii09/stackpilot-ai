@@ -7,6 +7,13 @@ import {withControlTransaction} from '../persistence/transaction.mjs';
 const failure=()=>new Error('Identity operation failed');
 const hash=value=>createHash('sha256').update(value).digest('hex');
 const recordId=prefix=>prefix+'-'+randomUUID();
+const services=new WeakMap();
+
+export async function withAuthenticatedTransaction(service,handle,ownerOnly,work) {
+  const run=services.get(service);
+  if(!run||typeof ownerOnly!=='boolean'||typeof work!=='function') throw failure();
+  return run(handle,ownerOnly,work);
+}
 
 function decode(value,bytes) {
   if(typeof value!=='string'||value.length!==Math.ceil(bytes*8/6)||!/^[A-Za-z0-9_-]+$/.test(value)) throw failure();
@@ -74,12 +81,12 @@ export function createIdentityService(options) {
       });
     }
 
-    async function sessionRow(tx,key,tokenHash) {
+    async function sessionRow(tx,key,tokenHash,lock=false) {
       const result=await tx.db.execute(sql`SELECT s.id,s.expires_at FROM auth_sessions s
         JOIN auth_challenges c ON c.organization_id=s.organization_id AND c.id=s.challenge_id
         WHERE s.organization_id=${key.organizationId} AND s.key_id=${key.keyId}
         AND s.user_id=${key.userId} AND s.key_fingerprint=${fingerprint(key)} AND s.token_hash=${tokenHash}
-        AND s.revoked_at IS NULL AND s.expires_at>clock_timestamp() AND c.origin=${origin}`);
+        AND s.revoked_at IS NULL AND s.expires_at>clock_timestamp() AND c.origin=${origin} ${lock?sql`FOR SHARE OF s`:sql``}`);
       if(result.rows.length!==1) throw failure();
       return result.rows[0];
     }
@@ -184,6 +191,20 @@ export function createIdentityService(options) {
         return true;
       })
     };
+    services.set(service,safe(async(handle,ownerOnly,work)=>{
+      const state=handles.get(handle);
+      if(!state) throw failure();
+      const key=keyFor(state.keyId);
+      if(fingerprint(key)!==state.fingerprint||ownerOnly&&key.role!=='owner') throw failure();
+      return transaction(key,async tx=>{
+        const row=await sessionRow(tx,key,state.tokenHash,true);
+        if(row.id!==state.sessionId) throw failure();
+        const principal=Object.freeze({userId:key.userId,organizationId:key.organizationId,role:key.role,keyId:key.keyId});
+        const result=await work(tx,principal);
+        await sessionRow(tx,key,state.tokenHash);
+        return result;
+      });
+    }));
     return Object.freeze(service);
   } catch {throw failure();}
 }

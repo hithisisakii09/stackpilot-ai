@@ -43,6 +43,9 @@ try {
     await admin.query('CREATE DATABASE stackpilot_control_acl_collision');
     await admin.query('CREATE DATABASE stackpilot_control_owner_collision');
     await admin.query('CREATE DATABASE stackpilot_identity_test');
+    await admin.query('CREATE DATABASE stackpilot_approval_test');
+    await admin.query('CREATE DATABASE stackpilot_approval_fresh');
+    await admin.query('CREATE DATABASE stackpilot_approval_failure');
   } finally {
     await admin.end();
   }
@@ -63,6 +66,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_identity_test'})}
     });
     resultCode=identity.status??1;
+  }
+  if(resultCode===0) {
+    const approval=spawnSync(process.execPath,['--test','tests/integration/platform-approval-service.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_approval_test'})}
+    });
+    resultCode=approval.status??1;
   }
 } finally {
   let stopped = !started;
