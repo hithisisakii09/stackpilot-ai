@@ -25,7 +25,7 @@ try {
   await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
   const port = server.address().port;
   await new Promise(resolve=>server.close(resolve));
-  appendFileSync(join(dataDirectory,'postgresql.conf'),`\nlisten_addresses = '127.0.0.1'\nport = ${port}\nunix_socket_directories = ''\nshared_buffers = '16MB'\nmax_connections = 20\nstackpilot.cluster_id = '${clusterId}'\n`);
+  appendFileSync(join(dataDirectory,'postgresql.conf'),`\nlisten_addresses = '127.0.0.1'\nport = ${port}\nunix_socket_directories = ''\nshared_buffers = '16MB'\nmax_connections = 20\nstackpilot.cluster_id = '${clusterId}'\nstackpilot.runner_fixture = '${clusterId}'\n`);
   started = true;
   run('pg_ctl',['-D',dataDirectory,'-l',join(root,'server.log'),'-w','start']);
   const admin = new pg.Client({host:'127.0.0.1',port,user:'stackpilot_local',database:'postgres',connectionTimeoutMillis:5000});
@@ -47,6 +47,7 @@ try {
     await admin.query('CREATE DATABASE stackpilot_approval_fresh');
     await admin.query('CREATE DATABASE stackpilot_approval_failure');
     await admin.query('CREATE DATABASE stackpilot_https_test');
+    await admin.query('CREATE DATABASE stackpilot_runner_test');
   } finally {
     await admin.end();
   }
@@ -79,6 +80,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_https_test'})}
     });
     resultCode=https.status??1;
+  }
+  if(resultCode===0) {
+    const runner=spawnSync(process.execPath,['--test','tests/integration/platform-runner.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_runner_test'}),STACKPILOT_RUNNER_TEST:'1'}
+    });
+    resultCode=runner.status??1;
   }
 } finally {
   let stopped = !started;
