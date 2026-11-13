@@ -1,9 +1,19 @@
 import {drizzle} from 'drizzle-orm/node-postgres';
 import {fields,id} from '../contracts/validation.mjs';
 import {schema} from './schema.mjs';
+import {controlSchema} from './control-schema.mjs';
+import {assertControlAccess} from './control-access.mjs';
 
 // This internal persistence scope requires trusted session binding in Phase 1C.
 export async function withTransaction(pool,context,callback) {
+  return guardedTransaction(pool,context,callback,'stackpilot_app',schema);
+}
+
+export async function withControlTransaction(pool,context,callback) {
+  return guardedTransaction(pool,context,callback,'stackpilot_control',{...schema,...controlSchema});
+}
+
+async function guardedTransaction(pool,context,callback,expectedRole,tables) {
   fields(context,['organizationId','actorId','requestId']);
   const scope = Object.freeze({organizationId:id(context.organizationId),actorId:id(context.actorId),requestId:id(context.requestId)});
   if (typeof callback !== 'function') throw new Error('Invalid transaction callback');
@@ -28,15 +38,20 @@ export async function withTransaction(pool,context,callback) {
     return tracked(queries,Promise.resolve(client.query(...args)));
   }};
   try {
-    const role = await client.query("SELECT current_user = 'stackpilot_app' AND NOT rolsuper AND NOT rolbypassrls AND NOT rolcreaterole AND NOT rolcreatedb AND NOT rolinherit AS restricted FROM pg_roles WHERE rolname=current_user");
-    if (role.rows[0]?.restricted !== true) throw new Error('Invalid persistence role');
+    if (expectedRole==='stackpilot_control') {
+      await assertControlAccess(client);
+    } else {
+      const role = await client.query("SELECT current_user = 'stackpilot_app' AND NOT rolsuper AND NOT rolbypassrls AND NOT rolcreaterole AND NOT rolcreatedb AND NOT rolinherit AS restricted FROM pg_roles WHERE rolname=current_user");
+      if (role.rows[0]?.restricted !== true) throw new Error('Invalid persistence role');
+    }
     await client.query('BEGIN');
     began = true;
+    if(expectedRole==='stackpilot_control') await client.query('SET LOCAL search_path = pg_catalog, public, pg_temp');
     await client.query("SET LOCAL lock_timeout = '5s'");
     await client.query("SET LOCAL statement_timeout = '10s'");
     await client.query("SELECT set_config('stackpilot.organization_id',$1,true)",[scope.organizationId]);
     active = true;
-    const result = await callback(Object.freeze({db:drizzle(guardedClient,{schema}),scope,track}));
+    const result = await callback(Object.freeze({db:drizzle(guardedClient,{schema:tables}),scope,track}));
     const unfinished = operations.size>0 || queries.size>0;
     active = false;
     await Promise.allSettled([...operations,...queries]);

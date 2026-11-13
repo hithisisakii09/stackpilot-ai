@@ -1,5 +1,6 @@
 import pg from 'pg';
 import {fields,id,integer} from '../contracts/validation.mjs';
+import {assertControlAccess} from './control-access.mjs';
 
 export function normalizeLocalConnection(value) {
   try {
@@ -14,6 +15,17 @@ export function normalizeLocalConnection(value) {
 
 export async function openLocalPool(value) {
   const config = normalizeLocalConnection(value);
+  return verifiedPool(config);
+}
+
+export async function openLocalControlPool(value) {
+  fields(value,['host','port','user','database','clusterId']);
+  if (value.user!=='stackpilot_control') throw new Error('Invalid local database configuration');
+  const base=normalizeLocalConnection({...value,user:'stackpilot_app'});
+  return verifiedPool({...base,user:'stackpilot_control'});
+}
+
+async function verifiedPool(config) {
   const pool = new pg.Pool({
     host:config.host,port:config.port,user:config.user,database:config.database,
     max:4,connectionTimeoutMillis:5000,idleTimeoutMillis:1000,
@@ -29,6 +41,7 @@ export async function openLocalPool(value) {
       const memberships = await pool.query('SELECT count(*) FROM pg_auth_members WHERE member=(SELECT oid FROM pg_roles WHERE rolname=current_user)');
       if (memberships.rows[0].count !== '0') throw new Error();
     }
+    if (config.user === 'stackpilot_control') await assertControlAccess(pool);
     return pool;
   } catch {
     await pool.end();
