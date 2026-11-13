@@ -262,17 +262,17 @@ This draft uses NIST and CISA as process references and describes a buyer method
 
 ---
 
-## 7. Zero-cost distribution preparation — no external activity
+## 10. Zero-cost distribution preparation — no external activity
 
 | Channel | Preparation that costs no money | Hold / measurement rule |
 |---|---|---|
 | On-site search intent | Prepare one substantial guide, a descriptive title/meta description, and contextual internal links to the requirements worksheet and narrower buyer guides. | Keep the route unpublished/noindex. Do not create keyword-variant pages or change robots, headers or canonical policy. |
-| Google Search Console | After an independently approved public release and verified property, use the Performance report for query/page/country impressions, clicks, CTR and position. | No account creation, property verification, sitemap submission or indexing request now. |
-| Bing Webmaster Tools | After owner-approved public release, use Search Performance for query/page clicks, impressions, CTR and average position. | No account creation, URL submission or IndexNow now. Submission is not a guarantee of indexing. |
+| Google Search Console | After an independently approved public release and verified property, use the [Search Console Performance report](https://support.google.com/webmasters/answer/10268906) for impressions, clicks, CTR and available query/page/country/position breakdowns. | No account creation, property verification, sitemap submission or indexing request now. |
+| Bing Webmaster Tools | After owner-approved public release, use [Bing Search Performance](https://www.bing.com/webmasters/help/search-performance-c680da36) for query/page clicks, impressions, CTR and average position (the help page describes up to six months of performance history). | No account creation, URL submission or IndexNow now. Submission is not a guarantee of indexing. |
 | Existing professional channel | Prepare a short educational excerpt and a plain-language checklist for a genuine owner-controlled profile, if one is later confirmed. | No post, DM, outreach, new account or claim of audience today. Owner approval and platform rules are required. |
-| Relevant communities | Keep a useful, non-promotional answer ready only if a future question genuinely calls for it. | No community posting, cross-posting, link drops or automated engagement. Follow each community's rules; Reddit prohibits repeated or unsolicited mass engagement. |
+| Relevant communities | Keep a useful, non-promotional answer ready only if a future question genuinely calls for it. | No community posting, cross-posting, link drops or automated engagement. Follow each community's rules; [Reddit's Spam policy](https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam) prohibits repeated or unsolicited mass engagement. |
 
-## 8. Measurement plan and baseline
+## 11. Measurement plan and baseline
 
 **Baseline as of 2026-11-14:**
 - Search volume / CPC / keyword difficulty: UNKNOWN.
@@ -286,7 +286,7 @@ This draft uses NIST and CISA as process references and describes a buyer method
 
 Do not report private-preview requests, CI traffic, anonymous-denial probes or local worksheet use as organic visits or conversions.
 
-**After a separately approved public release only:** establish a dated 28-day baseline in Search Console and Bing Webmaster Tools, segmented by page and query. Report actual values and the exact measurement window. Do not set arbitrary traffic targets before a baseline exists.
+**After a separately approved public release only:** establish a dated 28-day baseline in Search Console and Bing Webmaster Tools, segmented by page and query. Search Console documents impressions, clicks, CTR and query/position breakdowns where available; Bing documents clicks, impressions, CTR, average position and query/page reports. Report actual values and the exact measurement window. Do not set arbitrary traffic targets before a baseline exists.
 
 **Editorial quality gates before any publication proposal:**
 - one primary intent and one substantial article, not keyword variants;
@@ -296,7 +296,7 @@ Do not report private-preview requests, CI traffic, anonymous-denial probes or l
 - author identity, disclosure, privacy and legal wording are owner/editor reviewed;
 - the private/noindex and production lock remain unchanged until separate owner authorization.
 
-## 9. Method and repository coordination
+## 12. Method and repository coordination
 
 - The original comparison briefs remain at `docs/editorial-drafts/2026-10-31-comparison-briefs.md`.
 - The six candidate-only source packets remain at `docs/editorial-drafts/2026-10-31-vendor-claim-packets.md`.
