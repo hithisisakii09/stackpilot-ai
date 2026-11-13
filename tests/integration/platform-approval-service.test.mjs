@@ -154,10 +154,13 @@ test('independent approval service through signed identities and real restricted
   });
   await t.test('audit/outbox failure rolls decision back and leaves history unaltered',async()=>{
    const captured=await capture('request-rollback');
+   const before=(await admin.query("SELECT (SELECT count(*) FROM audit_events WHERE action LIKE 'approval-decision-%') AS audits,(SELECT count(*) FROM outbox_events WHERE kind LIKE 'approval-decision-%') AS outbox")).rows[0];
    await admin.query('REVOKE INSERT ON outbox_events FROM stackpilot_control');
    try {await denied(()=>decide(captured));}
    finally {await admin.query('GRANT INSERT ON outbox_events TO stackpilot_control');}
    assert.equal((await approvals.history(owner,{requestId:captured.requestId})).length,0);
+   const after=(await admin.query("SELECT (SELECT count(*) FROM audit_events WHERE action LIKE 'approval-decision-%') AS audits,(SELECT count(*) FROM outbox_events WHERE kind LIKE 'approval-decision-%') AS outbox")).rows[0];
+   assert.deepEqual(after,before);
    const audits=(await admin.query("SELECT count(*) FROM audit_events WHERE action='approval-decision-approved'")).rows[0].count;
    await decide(captured);
    assert.equal(Number((await admin.query("SELECT count(*) FROM audit_events WHERE action='approval-decision-approved'")).rows[0].count),Number(audits)+1);
