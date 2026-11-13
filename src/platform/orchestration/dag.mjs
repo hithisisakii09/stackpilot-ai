@@ -1,5 +1,6 @@
 import {createHash} from 'node:crypto';
 import {fields,id,dataArray,integer,choice,json} from '../contracts/validation.mjs';
+import {resolveRoleDispatch} from './role-dispatch.mjs';
 
 export function digest(value){
  const canonical=x=>Array.isArray(x)?x.map(canonical):x!==null&&typeof x==='object'?Object.fromEntries(Object.keys(x).sort().map(key=>[key,canonical(x[key])])):x;
@@ -35,16 +36,25 @@ export function parseSyntheticTaskInput(value){
  return parseInput(value,true);
 }
 function parseInput(value,allowEmpty){
- fields(value,['items','scenario','delayMs']);
+ fields(value,['items','scenario','delayMs'],['dispatch']);
  const items=Object.freeze(dataArray(value.items,100).map(n=>integer(n,-10000,10000)));
  if(!allowEmpty&&!items.length)throw new Error('Missing synthetic input');
- return Object.freeze({items,scenario:choice(value.scenario,['normal','transient-first','transient-always','permanent','invalid-output','hang']),delayMs:integer(value.delayMs,0,2000)});
+ const result={items,scenario:choice(value.scenario,['normal','transient-first','transient-always','permanent','invalid-output','hang']),delayMs:integer(value.delayMs,0,2000)};
+ if(value.dispatch!==undefined){
+  const dispatch=json(value.dispatch);
+  const expected=resolveRoleDispatch({roleId:dispatch.roleId,allowInDisposableScope:true});
+  if(digest(dispatch)!==digest(expected))throw new Error('Invalid role preparation binding');
+  result.dispatch=expected;
+ }
+ return Object.freeze(result);
 }
 export function expectedOutput(work){
- fields(work,['handler','items','dependencies','scenario','delayMs']);
+ fields(work,['handler','items','dependencies','scenario','delayMs'],['dispatch']);
  const dependencies=json(work.dependencies);
- if(!['summarize','combine'].includes(work.handler))throw new Error('Unknown handler');
+ const selected=work.dispatch?resolveRoleDispatch({roleId:work.dispatch.roleId,allowInDisposableScope:true}):null;
+ if(!['summarize','combine',...(selected?[selected.handler]:[])].includes(work.handler))throw new Error('Unknown handler');
  const items=dataArray(work.items,100).map(n=>integer(n,-10000,10000));
- const data=work.handler==='summarize'?{count:items.length,total:items.reduce((a,b)=>a+b,0)}:{parts:dependencies};
+ const data=work.handler!=='combine'?{count:items.length,total:items.reduce((a,b)=>a+b,0)}:{parts:dependencies};
+ if(selected){data.roleId=selected.roleId;data.pipeline=selected.pipeline;data.reviewState='unapproved';}
  return Object.freeze({kind:'synthetic-preparation',digest:digest(data),data:json(data)});
 }

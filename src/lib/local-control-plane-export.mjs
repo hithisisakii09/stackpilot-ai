@@ -5,8 +5,8 @@ export function auditLocalControlPlaneExport(files) {
     if(!file||typeof file.path!=='string'||!/^(?:[A-Za-z0-9_.-]+\/)*[A-Za-z0-9_.-]+$/.test(file.path)||file.path.split('/').some(part=>part==='.'||part==='..')) throw new Error('Invalid built asset');
     const privatePath=/(?:^|\/)(?:control-plane|src\/platform|platform-control-plane)(?:[/.]|$)|\.(?:pem|key|pfx|p12|crt|cer)$|(?:auth[_-](?:sessions|challenges)|approval[_-](?:requests|decisions|request[_-]bindings))\.(?:json|csv|sql)$/i;
     const marker=/createIdentityService|createApprovalService|withAuthenticatedTransaction|__Host-stackpilot_session|stackpilot-(?:auth|principal)-v1|publicKeySpkiBase64|requesterUserId|requester_user_id|deciderUserId|decider_user_id|requestDigest|request_digest|tokenHash|token_hash|nonceDigest|nonce_digest|auth_sessions|auth_challenges|approval_request_bindings|approval_requests|approval_decisions|csrfToken["']?\s*:|-----BEGIN (?:[A-Z0-9]+ )?(?:PRIVATE KEY|PUBLIC KEY|CERTIFICATE)-----/i;
-    const runnerPath=/(?:^|\/)(?:platform\/orchestration|workflow_(?:executions|definitions|versions)|task_attempts|task_dependencies)(?:[/.]|$)/i;
-    const runnerMarker=/openSyntheticRunner|synthetic-preparation-v1|synthetic-task-completed|(?:leaseUntil|lease_until|attemptId|attempt_id|execution_id)["']?\s*:/;
+    const runnerPath=/(?:^|\/)(?:platform\/orchestration|workflow_(?:executions|definitions|versions)|task_attempts|task_dependencies|scheduled_jobs|outbox_events|agent_executions)(?:[/.]|$)/i;
+    const runnerMarker=/openSyntheticRunner|openLocalScheduler|openLocalObservability|resolveRoleDispatch|evaluateDueWindow|research-intake|analysis-editorial-proposal|engineering-verification|synthetic-preparation-v1|synthetic-task-completed|(?:leaseUntil|lease_until|attemptId|attempt_id|execution_id|observed_at|observedAt|next_due_ms|nextDueMs|local_state)["']?\s*:/;
     if(privatePath.test(file.path)||runnerPath.test(file.path)||typeof file.content==='string'&&(marker.test(file.content)||runnerMarker.test(file.content))) violations.push('Local control-plane material in static output');
   }
   return {checkedFiles:files.length,violations};

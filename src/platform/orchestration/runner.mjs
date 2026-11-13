@@ -7,6 +7,9 @@ import {openLocalPool,normalizeLocalConnection} from '../persistence/connection.
 import {withTransaction} from '../persistence/transaction.mjs';
 import {fields,id,integer,json} from '../contracts/validation.mjs';
 import {preparationWorkflow,parseSyntheticInput,parseSyntheticTaskInput,digest,expectedOutput} from './dag.mjs';
+import {parseWindow,parseSchedule,evaluateDueWindow,maximumClockMs} from './schedule-policy.mjs';
+import {resolveRoleDispatch} from './role-dispatch.mjs';
+import {parseUnambiguousJson} from '../identity/trust.mjs';
 
 const uid=prefix=>prefix+'-'+randomUUID();
 const definitionJson=JSON.stringify(preparationWorkflow);
@@ -17,7 +20,7 @@ export async function openSyntheticRunner(value){
  let config;
  try {
   config=normalizeLocalConnection(value);
-  if(process.env.STACKPILOT_RUNNER_TEST!=='1'||config.database!=='stackpilot_runner_test'||config.user!=='stackpilot_local'||JSON.stringify(config)!==JSON.stringify(normalizeLocalConnection(JSON.parse(process.env.STACKPILOT_TEST_DB??'null'))))throw new Error();
+  if(process.env.STACKPILOT_RUNNER_TEST!=='1'||!['stackpilot_runner_test','stackpilot_scheduler_test'].includes(config.database)||config.user!=='stackpilot_local'||JSON.stringify(config)!==JSON.stringify(normalizeLocalConnection(JSON.parse(process.env.STACKPILOT_TEST_DB??'null'))))throw new Error();
  }catch{throw new Error('Synthetic runner unavailable');}
  const pool=await openLocalPool({...config,user:'stackpilot_app'});
  const workers=new Set();let closed=false;
@@ -58,8 +61,9 @@ export async function openSyntheticRunner(value){
    if(dependencies.length!==2)throw new Error('Invalid synthetic dependencies');
    for(const spec of preparationWorkflow.tasks){
     const task=tasks.find(t=>t.title===spec.id);
-    if(!task||task.agent_id!==null||task.max_attempts!==3||task.cost_inr!==0)throw new Error('Invalid synthetic task');
-    parseSyntheticTaskInput(task.input);
+    if(!task||task.agent_id!==null||task.cost_inr!==0)throw new Error('Invalid synthetic task');
+    const input=parseSyntheticTaskInput(task.input);
+    if(task.max_attempts!==(input.dispatch?.limits.maxAttempts??3))throw new Error('Invalid task attempt ceiling');
     const actual=dependencies.filter(d=>d.task_id===task.id).map(d=>tasks.find(t=>t.id===d.depends_on_task_id)?.title).sort();
     if(JSON.stringify(actual)!==JSON.stringify([...spec.dependencies].sort()))throw new Error('Invalid synthetic dependency');
    }
@@ -77,10 +81,10 @@ export async function openSyntheticRunner(value){
     ELSE 'FAILED' END WHERE organization_id=${organizationId} AND id=${executionId} AND status<>'CANCELLED'`);
   }
   async function recoverIn(tx,executionId){
-   const expired=(await tx.db.execute(sql`SELECT id,retries FROM tasks WHERE organization_id=${organizationId} AND execution_id=${executionId} AND status='RUNNING' AND lease_until<=clock_timestamp() AT TIME ZONE 'UTC' LIMIT 20`)).rows;
+   const expired=(await tx.db.execute(sql`SELECT id,retries,max_attempts FROM tasks WHERE organization_id=${organizationId} AND execution_id=${executionId} AND status='RUNNING' AND lease_until<=clock_timestamp() AT TIME ZONE 'UTC' LIMIT 20`)).rows;
    for(const task of expired){
     await tx.db.execute(sql`UPDATE task_attempts SET status='FAILED',output='{"code":"lease-expired"}'::jsonb WHERE organization_id=${organizationId} AND task_id=${task.id} AND attempt=${task.retries} AND status='RUNNING'`);
-    await tx.db.execute(sql`UPDATE tasks SET status=${task.retries<3?'QUEUED':'FAILED'},lease_until=NULL WHERE organization_id=${organizationId} AND id=${task.id}`);
+    await tx.db.execute(sql`UPDATE tasks SET status=${task.retries<task.max_attempts?'QUEUED':'FAILED'},lease_until=NULL WHERE organization_id=${organizationId} AND id=${task.id}`);
     await event(tx,'synthetic-lease-expired',task.id,executionId);
    }
    await settle(tx,executionId);return expired.length;
@@ -94,7 +98,9 @@ export async function openSyntheticRunner(value){
     if(parent.status!=='COMPLETED'||!result)throw new Error('Missing committed dependency');
     dependencies.push(result.result.output);
    }
-   return json({handler:spec.handler,...parseSyntheticTaskInput(task.input),dependencies});
+   const input=parseSyntheticTaskInput(task.input);
+   const handler=input.dispatch&&spec.handler==='summarize'?input.dispatch.handler:spec.handler;
+   return json({handler,...input,dependencies});
   }
   async function live(tx,lease){
    fields(lease,['executionId','taskId','attempt','attemptId','work']);
@@ -105,12 +111,11 @@ export async function openSyntheticRunner(value){
    if(!task||!attempt||!valid||terminal.has(state.execution.status))throw new Error('Stale synthetic lease');
    return {...state,task};
   }
-  const api={
-   async enqueue(value){
+  async function enqueueIn(tx,value){
     fields(value,['key','templateId','input','costInr']);id(value.key);
     if(value.templateId!==preparationWorkflow.id||value.costInr!==0)throw new Error('Synthetic template unavailable');
     const input=parseSyntheticInput(value.input),sourceDigest=digest({templateId:preparationWorkflow.id,input,costInr:0});
-    return transaction(async tx=>{
+    if(input.dispatch&&(config.database!=='stackpilot_scheduler_test'||process.env.STACKPILOT_SCHEDULER_TEST!=='1'))throw new Error('Local role preparation unavailable');
      const prior=(await tx.db.execute(sql`SELECT * FROM idempotency_keys WHERE organization_id=${organizationId} AND id=${'submission-'+value.key}`)).rows[0];
      if(prior){if(prior.source_digest!==sourceDigest||prior.operation!=='synthetic-enqueue')throw new Error('Synthetic input conflict');return Object.freeze({id:prior.result.executionId});}
      await tx.db.execute(sql`INSERT INTO workflow_definitions(organization_id,id,name,objective) VALUES (${organizationId},'synthetic-preparation','Synthetic preparation','Database-local test only') ON CONFLICT DO NOTHING`);
@@ -121,12 +126,52 @@ export async function openSyntheticRunner(value){
      for(const spec of preparationWorkflow.tasks){
       const half=Math.ceil(input.items.length/2),items=spec.id==='inspect-left'?input.items.slice(0,half):spec.id==='inspect-right'?input.items.slice(half):[];
       const taskInput={...input,items};
-      await tx.db.execute(sql`INSERT INTO tasks(organization_id,id,execution_id,title,idempotency_key,input) VALUES (${organizationId},${taskIds.get(spec.id)},${executionId},${spec.id},${taskIds.get(spec.id)},${JSON.stringify(taskInput)}::jsonb)`);
+      await tx.db.execute(sql`INSERT INTO tasks(organization_id,id,execution_id,title,idempotency_key,input,max_attempts) VALUES (${organizationId},${taskIds.get(spec.id)},${executionId},${spec.id},${taskIds.get(spec.id)},${JSON.stringify(taskInput)}::jsonb,${input.dispatch?.limits.maxAttempts??3})`);
      }
      for(const spec of preparationWorkflow.tasks)for(const dep of spec.dependencies)await tx.db.execute(sql`INSERT INTO task_dependencies(organization_id,id,execution_id,task_id,depends_on_task_id) VALUES (${organizationId},${uid('dependency')},${executionId},${taskIds.get(spec.id)},${taskIds.get(dep)})`);
      await tx.db.execute(sql`INSERT INTO idempotency_keys(organization_id,id,operation,source_digest,result) VALUES (${organizationId},${'submission-'+value.key},'synthetic-enqueue',${sourceDigest},${JSON.stringify({executionId})}::jsonb)`);
      await load(tx,executionId);await event(tx,'synthetic-execution-enqueued',executionId,executionId);
      return Object.freeze({id:executionId});
+  }
+  const api={
+   async enqueue(value){
+    return transaction(tx=>enqueueIn(tx,value));
+   },
+   async enqueueDue(value){
+    fields(value,['jobId','window'],['deadlineMs']);
+    id(value.jobId);
+    const window=parseWindow(value.window);
+    if(value.deadlineMs!==undefined)integer(value.deadlineMs,1,maximumClockMs);
+    if(config.database!=='stackpilot_scheduler_test'||process.env.STACKPILOT_SCHEDULER_TEST!=='1')throw new Error('Local schedule unavailable');
+    return transaction(async tx=>{
+     const clock=(await tx.db.execute(sql`SELECT floor(extract(epoch FROM clock_timestamp())*1000)::bigint AS now_ms`)).rows[0];
+     if(window.toMs>Number(clock.now_ms))throw new Error('Future due window');
+     const deadlineMs=value.deadlineMs??Number(clock.now_ms)+300000;
+     if(deadlineMs>Number(clock.now_ms)+300000)throw new Error('Invalid schedule deadline');
+     async function checkDeadline(){
+      const current=(await tx.db.execute(sql`SELECT floor(extract(epoch FROM clock_timestamp())*1000)::bigint AS now_ms`)).rows[0];
+      if(Number(current.now_ms)>=deadlineMs){const error=new Error('Local schedule deadline');error.code='PST01';throw error;}
+     }
+     const job=(await tx.db.execute(sql`SELECT * FROM scheduled_jobs WHERE organization_id=${organizationId} AND id=${value.jobId} FOR UPDATE`)).rows[0];
+     if(!job||job.enabled!==false||job.definition_id!=='synthetic-preparation')throw new Error('Invalid local schedule');
+     if(job.local_state!=='active')return null;
+     if(job.last_execution_id){
+      const prior=(await tx.db.execute(sql`SELECT status FROM workflow_executions WHERE organization_id=${organizationId} AND id=${job.last_execution_id}`)).rows[0];
+      if(!prior||!terminal.has(prior.status))return null;
+     }
+     const plan=parseUnambiguousJson(job.schedule);
+     fields(plan,['anchorMs','cadenceMs','roleId','items']);
+     const spec=parseSchedule({anchorMs:plan.anchorMs,cadenceMs:plan.cadenceMs});
+     const dueMs=evaluateDueWindow(spec,window,Number(job.next_due_ms));
+     if(dueMs===null)return null;
+     const dispatch=resolveRoleDispatch({roleId:plan.roleId,allowInDisposableScope:true});
+     const input=parseSyntheticInput({items:plan.items,scenario:'normal',delayMs:0,dispatch});
+     await checkDeadline();
+     const result=await enqueueIn(tx,{key:'scheduled-'+digest({jobId:job.id,dueMs}).slice(0,40),templateId:preparationWorkflow.id,input,costInr:0});
+     await tx.db.execute(sql`UPDATE scheduled_jobs SET next_due_ms=${dueMs+spec.cadenceMs},last_execution_id=${result.id} WHERE organization_id=${organizationId} AND id=${job.id}`);
+     await event(tx,'local-schedule-enqueued',job.id,result.id);
+     await checkDeadline();
+     return Object.freeze({...result,jobId:job.id,dueMs});
     });
    },
    async claim(executionId,options={}){
@@ -136,9 +181,14 @@ export async function openSyntheticRunner(value){
      if(terminal.has(state.execution.status))return null;
      const active=await tx.db.execute(sql`SELECT count(*)::integer AS count FROM tasks WHERE organization_id=${organizationId} AND status='RUNNING' AND lease_until>clock_timestamp() AT TIME ZONE 'UTC'`);
      if(active.rows[0].count>=2)return null;
-     const ready=(await tx.db.execute(sql`SELECT t.id FROM tasks t WHERE t.organization_id=${organizationId} AND t.execution_id=${executionId} AND t.status='QUEUED' AND t.retries<3 AND (t.lease_until IS NULL OR t.lease_until<=clock_timestamp() AT TIME ZONE 'UTC') AND NOT EXISTS(SELECT 1 FROM task_dependencies d JOIN tasks p ON p.organization_id=d.organization_id AND p.id=d.depends_on_task_id WHERE d.organization_id=${organizationId} AND d.task_id=t.id AND p.status<>'COMPLETED') ORDER BY t.title LIMIT 1`)).rows[0];
+     const ready=(await tx.db.execute(sql`SELECT t.id FROM tasks t WHERE t.organization_id=${organizationId} AND t.execution_id=${executionId} AND t.status='QUEUED' AND t.retries<t.max_attempts AND (t.lease_until IS NULL OR t.lease_until<=clock_timestamp() AT TIME ZONE 'UTC') AND NOT EXISTS(SELECT 1 FROM task_dependencies d JOIN tasks p ON p.organization_id=d.organization_id AND p.id=d.depends_on_task_id WHERE d.organization_id=${organizationId} AND d.task_id=t.id AND p.status<>'COMPLETED') ORDER BY t.title LIMIT 1`)).rows[0];
      if(!ready)return null;
      const task=state.tasks.find(t=>t.id===ready.id),attempt=task.retries+1,attemptId=uid('attempt');
+     const dispatch=task.input.dispatch;
+     if(dispatch){
+      const roleActive=(await tx.db.execute(sql`SELECT count(*)::integer AS count FROM tasks WHERE organization_id=${organizationId} AND status='RUNNING' AND lease_until>clock_timestamp() AT TIME ZONE 'UTC' AND input->'dispatch'->>'roleId'=${dispatch.roleId}`)).rows[0].count;
+      if(roleActive>=dispatch.limits.maxConcurrent)return null;
+     }
      await tx.db.execute(sql`UPDATE tasks SET status='RUNNING',retries=${attempt},lease_until=(clock_timestamp() AT TIME ZONE 'UTC')+${leaseMs}*interval '1 millisecond' WHERE organization_id=${organizationId} AND id=${task.id}`);
      await tx.db.execute(sql`INSERT INTO task_attempts(organization_id,id,task_id,attempt,status) VALUES (${organizationId},${attemptId},${task.id},${attempt},'RUNNING')`);
      await tx.db.execute(sql`UPDATE workflow_executions SET status='RUNNING' WHERE organization_id=${organizationId} AND id=${executionId}`);
@@ -151,9 +201,13 @@ export async function openSyntheticRunner(value){
     return transaction(async tx=>{
      const {task,tasks}=await live(tx,lease),work=await workFor(tx,task,tasks);
      if(digest(output)!==digest(expectedOutput(work)))throw new Error('Invalid synthetic output');
+     if(work.dispatch&&Buffer.byteLength(JSON.stringify(output))>work.dispatch.limits.maxOutputBytes)throw new Error('Role output limit');
      await tx.db.execute(sql`INSERT INTO idempotency_keys(organization_id,id,operation,source_digest,result) VALUES (${organizationId},${task.id},'synthetic-task-effect',${digest(work)},${JSON.stringify({executionId:lease.executionId,output})}::jsonb)`);
      await tx.db.execute(sql`UPDATE task_attempts SET status='COMPLETED',output=${JSON.stringify(output)}::jsonb WHERE organization_id=${organizationId} AND id=${lease.attemptId}`);
      await event(tx,'synthetic-task-completed',task.id,lease.executionId);
+     if(work.dispatch){
+      await tx.db.execute(sql`INSERT INTO agent_executions(organization_id,id,execution_id,task_id,attempt_id,role_id,pipeline,output_digest) VALUES (${organizationId},${uid('preparation')},${lease.executionId},${task.id},${lease.attemptId},${work.dispatch.roleId},${work.dispatch.pipeline},${digest(output)})`);
+     }
      const remaining=await tx.db.execute(sql`SELECT id FROM tasks WHERE organization_id=${organizationId} AND id=${task.id} AND status='RUNNING' AND retries=${lease.attempt} AND lease_until>clock_timestamp() AT TIME ZONE 'UTC'`);
      if(remaining.rows.length!==1)throw new Error('Synthetic lease expired before commit');
      await tx.db.execute(sql`UPDATE tasks SET status='COMPLETED',lease_until=NULL WHERE organization_id=${organizationId} AND id=${task.id}`);
@@ -163,7 +217,7 @@ export async function openSyntheticRunner(value){
    async fail(lease,code){
     if(!['transient','permanent','timeout','invalid-output','worker-error'].includes(code))throw new Error('Invalid synthetic failure');
     return transaction(async tx=>{
-     const {task}=await live(tx,lease),retry=code==='transient'&&task.retries<3;
+     const {task}=await live(tx,lease),retry=code==='transient'&&task.retries<task.max_attempts;
      await tx.db.execute(sql`UPDATE task_attempts SET status='FAILED',output=${JSON.stringify({code})}::jsonb WHERE organization_id=${organizationId} AND id=${lease.attemptId}`);
      await tx.db.execute(sql`UPDATE tasks SET status=${retry?'QUEUED':'FAILED'},lease_until=CASE WHEN ${retry} THEN (clock_timestamp() AT TIME ZONE 'UTC')+${task.retries*50}*interval '1 millisecond' ELSE NULL END WHERE organization_id=${organizationId} AND id=${task.id}`);
      await event(tx,'synthetic-task-failed',task.id,lease.executionId);await settle(tx,lease.executionId);
@@ -187,18 +241,22 @@ export async function openSyntheticRunner(value){
     if(invocationActive)throw new Error('Synthetic invocation already running');invocationActive=true;
     const deadline=performance.now()+duration;let claimed=0;
     try{
+     const roleLimits=await transaction(async tx=>(await load(tx,executionId)).tasks[0].input.dispatch?.limits??null);
+     const taskBudget=Math.min(maxTasks,roleLimits?.maxTasks??20);
+     const concurrentBudget=Math.min(concurrency,roleLimits?.maxConcurrent??2);
+     const workerTimeout=Math.min(timeout,roleLimits?.timeoutMs??30000);
      await api.recover(executionId);
-     while(claimed<maxTasks&&performance.now()<deadline){
+     while(claimed<taskBudget&&performance.now()<deadline){
       const state=await api.inspect(executionId);if(terminal.has(state.status))break;
       const leases=[];
-      const batchSize=Math.min(concurrency,maxTasks-claimed);
+      const batchSize=Math.min(concurrentBudget,taskBudget-claimed);
       for(let i=0;i<batchSize&&performance.now()<deadline;i++){
        const lease=await api.claim(executionId);if(!lease)break;leases.push(lease);claimed++;
       }
       if(!leases.length){await delay(Math.min(25,Math.max(1,deadline-performance.now())));continue;}
       const outcomes=await Promise.allSettled(leases.map(async lease=>{
        if(performance.now()>=deadline){await api.fail(lease,'timeout');return;}
-       const result=await executeWorker(lease,Math.max(1,Math.min(timeout,deadline-performance.now())),workers,()=>api.inspect(executionId),()=>closed);
+       const result=await executeWorker(lease,Math.max(1,Math.min(workerTimeout,deadline-performance.now())),workers,()=>api.inspect(executionId),()=>closed);
        if(result.code==='cancelled')return;
        try{if(result.code)await api.fail(lease,result.code);else await api.complete(lease,result.output);}
        catch(error){

@@ -5,6 +5,7 @@ import {buildControlMigrationSql} from './control-schema.mjs';
 import {fields} from '../contracts/validation.mjs';
 import {buildApprovalMigrationSql} from './approval-schema.mjs';
 import {buildRunnerMigrationSql} from './runner-schema.mjs';
+import {buildSchedulerMigrationSql} from './scheduler-schema.mjs';
 
 const migrationUrl = new URL('./migrations/0001_platform_foundation.sql',import.meta.url);
 const manifestUrl = new URL('./migrations/manifest.json',import.meta.url);
@@ -34,12 +35,13 @@ export function verifyControlMigration(bytes,manifest) {
 export async function applyMigrations(pool,options={}) {
   fields(options,[],['targetVersion']);
   const target=Object.hasOwn(options,'targetVersion')?options.targetVersion:1;
-  if(![1,2,3,4].includes(target)) throw new Error('Invalid migration target');
+  if(![1,2,3,4,5].includes(target)) throw new Error('Invalid migration target');
   const reviewed=[
     {bytes:readFileSync(migrationUrl),manifest:JSON.parse(readFileSync(manifestUrl,'utf8')),verify:verifyMigration},
     {bytes:readFileSync(new URL('./migrations/0002_local_identity_approvals.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/control-manifest.json',import.meta.url),'utf8')),verify:verifyControlMigration},
     {bytes:readFileSync(new URL('./migrations/0003_independent_approvals.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/approval-manifest.json',import.meta.url),'utf8')),verify:verifyApprovalMigration},
-    {bytes:readFileSync(new URL('./migrations/0004_synthetic_runner.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/runner-manifest.json',import.meta.url),'utf8')),verify:verifyRunnerMigration}
+    {bytes:readFileSync(new URL('./migrations/0004_synthetic_runner.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/runner-manifest.json',import.meta.url),'utf8')),verify:verifyRunnerMigration},
+    {bytes:readFileSync(new URL('./migrations/0005_local_scheduler.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/scheduler-manifest.json',import.meta.url),'utf8')),verify:verifySchedulerMigration}
   ];
   for(const migration of reviewed) migration.verify(migration.bytes,migration.manifest);
   const client = await pool.connect();
@@ -79,5 +81,12 @@ export function verifyRunnerMigration(bytes,manifest){
  fields(manifest,['version','file','sha256']);
  const canonical=canonicalBytes(bytes);
  if(manifest.version!==4||manifest.file!=='0004_synthetic_runner.sql'||manifest.sha256!==createHash('sha256').update(canonical).digest('hex')||canonical.toString()!==buildRunnerMigrationSql())throw new Error('Invalid or changed migration');
+ return true;
+}
+
+export function verifySchedulerMigration(bytes,manifest){
+ fields(manifest,['version','file','sha256']);
+ const canonical=canonicalBytes(bytes);
+ if(manifest.version!==5||manifest.file!=='0005_local_scheduler.sql'||manifest.sha256!==createHash('sha256').update(canonical).digest('hex')||canonical.toString()!==buildSchedulerMigrationSql())throw new Error('Invalid or changed migration');
  return true;
 }
