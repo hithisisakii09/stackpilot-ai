@@ -99,3 +99,14 @@
 **Verification note:** This deliverable is Markdown-only and changes no executable behavior, route or dependency. The Superpowers TDD skill applies to feature/bugfix/refactor behavior; no RED/GREEN test cycle is claimed for this documentation-only work. Do not claim a new build, browser QA or Deploy Preview passed without a fresh exact-head run. Existing PR #8/#14/#15 status results are historical checks of their own SHAs only.
 
 **Release gate:** Keep this branch unmerged and unpublished. No public preview, production promotion, indexing, affiliate activation or spending.
+
+
+## 2026-11-15 primary-source refresh
+
+- Rechecked NIST's official publication record for [SP 1326 — Cybersecurity Supply Chain Management: Due Diligence Assessment Quick-Start Guide](https://www.nist.gov/publications/nist-cybersecurity-supply-chain-management-due-diligence-assessment-quick-start-guide), published 2026-07-08.
+- Added its five ICT-supplier due-diligence components (FOCI, provenance, resilience, foundational cyber practices and supply-chain tiers) to the article. Kept the scope limitation explicit: ICT suppliers; supplement to SP 800-161 Rev. 1; process guidance, not certification, universal legal mandate or product-specific conclusion.
+- Retained NIST SP 1305 as a broader CSF 2.0 reference and CISA Secure by Demand as product-security procurement guidance.
+- Rechecked the existing qualitative competitor evidence: Spendflo's vendor-selection checklist is marked updated 2026-10-13; Discovering SaaS's downloadable checklist page is dated 2025-10-29. Their audience, rankings and conversions remain unverified.
+- Rechecked Google Search Central people-first guidance and current Bing Webmaster Search Performance documentation. The distribution plan remains conditional on separately approved public release; no sitemap submission, indexing request, account creation or external post occurred.
+- gstack upstream reference updated from the obsolete `plan-eng-review` path to current `autoplan`; review and QA references retained. The current upstream gstack review/QA and Superpowers writing-plans/verification-before-completion documents were read for this documentation-only refresh.
+- Documentation-only change: no runtime behavior, route, dependencies, data records, tests, analytics, privacy controls, noindex or provider settings changed. No TDD RED/GREEN or test/build pass is claimed.
