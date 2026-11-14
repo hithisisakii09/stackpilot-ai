@@ -50,6 +50,8 @@ try {
     await admin.query('CREATE DATABASE stackpilot_runner_test');
     await admin.query('CREATE DATABASE stackpilot_scheduler_test');
     await admin.query('CREATE DATABASE stackpilot_market_test');
+    await admin.query('CREATE DATABASE stackpilot_reconciliation_fresh');
+    await admin.query('CREATE DATABASE stackpilot_reconciliation_failure');
   } finally {
     await admin.end();
   }
@@ -106,6 +108,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_market_test'}),STACKPILOT_MARKET_TEST:'1'}
     });
     resultCode=competitors.status??1;
+  }
+  if(resultCode===0) {
+    const reconciliation=spawnSync(process.execPath,['--test','tests/integration/platform-reconciliation.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_market_test'}),STACKPILOT_MARKET_TEST:'1'}
+    });
+    resultCode=reconciliation.status??1;
   }
 } finally {
   let stopped = !started;

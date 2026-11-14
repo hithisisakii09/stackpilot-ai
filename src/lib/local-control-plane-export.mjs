@@ -9,7 +9,9 @@ export function auditLocalControlPlaneExport(files) {
     const runnerMarker=/openSyntheticRunner|openLocalScheduler|openLocalObservability|resolveRoleDispatch|evaluateDueWindow|research-intake|analysis-editorial-proposal|engineering-verification|synthetic-preparation-v1|synthetic-task-completed|(?:leaseUntil|lease_until|attemptId|attempt_id|execution_id|observed_at|observedAt|next_due_ms|nextDueMs|local_state)["']?\s*:/;
     const marketPath=/(?:^|\/)(?:platform\/market|market_(?:observations|opportunities)|competitors)(?:[/.]|$)/i;
     const marketMarker=/prepareMarketImport|analyzeMarketObservations|openMarketObservationStore|normalizeMarketObservation|manual-market-subject-v1|manual-market-observation-v1|market-opportunity-v1|prepareCompetitorImport|compareCompetitorObservations|normalizeCompetitorObservation|normalizeCompetitorComparison|openCompetitorObservationStore|manual-competitor-observation-v1/;
-    if(privatePath.test(file.path)||runnerPath.test(file.path)||marketPath.test(file.path)||typeof file.content==='string'&&(marker.test(file.content)||runnerMarker.test(file.content)||marketMarker.test(file.content))) violations.push('Local control-plane material in static output');
+    const reconciliationPath=/(?:^|\/)reconciliation_links(?:[/.]|$)/i;
+    const reconciliationMarker=/prepareReconciliation|analyzeReconciledEvidence|openReconciliationStore|validateReconciliationGraph|normalizeReconciledSelection|candidate-reconciliation-v1/;
+    if(privatePath.test(file.path)||runnerPath.test(file.path)||marketPath.test(file.path)||reconciliationPath.test(file.path)||typeof file.content==='string'&&(marker.test(file.content)||runnerMarker.test(file.content)||marketMarker.test(file.content)||reconciliationMarker.test(file.content))) violations.push('Local control-plane material in static output');
   }
   return {checkedFiles:files.length,violations};
 }
