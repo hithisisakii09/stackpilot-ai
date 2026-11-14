@@ -9,7 +9,9 @@ export async function openPreparationStore(value){
  try{
   config=normalizeLocalConnection(value);
   const selected=normalizeLocalConnection(JSON.parse(process.env.STACKPILOT_TEST_DB??'null'));
-  if(config.database!=='stackpilot_scheduler_test'||config.user!=='stackpilot_local'||process.env.STACKPILOT_SCHEDULER_TEST!=='1'||JSON.stringify(config)!==JSON.stringify(selected))throw new Error();
+  const schedulerSelected=config.database==='stackpilot_scheduler_test'&&process.env.STACKPILOT_SCHEDULER_TEST==='1';
+  const marketSelected=config.database==='stackpilot_market_test'&&process.env.STACKPILOT_MARKET_TEST==='1';
+  if((!schedulerSelected&&!marketSelected)||config.user!=='stackpilot_local'||JSON.stringify(config)!==JSON.stringify(selected))throw new Error();
  }catch{throw new Error('Local preparation unavailable');}
  const pool=await openLocalPool({...config,user:'stackpilot_app'});
  let closed=false;
