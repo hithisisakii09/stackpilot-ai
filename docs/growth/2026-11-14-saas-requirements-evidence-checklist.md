@@ -1,6 +1,6 @@
 # SaaS vendor evaluation checklist — requirements-to-evidence brief and unpublished draft
 
-**Research date:** 2026-11-14 (Asia/Kolkata)  
+**Research date:** 2026-11-14 (Asia/Kolkata) · **Primary-source refresh:** 2026-11-15  
 **Status:** PRIVATE DEVELOPMENT RESEARCH · UNAPPROVED · NOT PUBLISHED  
 **Branch:** `growth/saas-requirements-evidence-checklist-2026-11-14`  
 **Scope:** Documentation only. No route, application code, analytics, product catalogue, affiliate record or public metadata changes.  
@@ -75,7 +75,7 @@ These pages describe their own content and offers; their audience, conversions a
    [Official PDF](https://www.cisa.gov/sites/default/files/2024-08/SecureByDemandGuide_080624_508c.pdf) · Document marked August 2024.  
    CISA recommends asking software manufacturers product-security questions before, during and after procurement. It distinguishes enterprise security from product security and describes evidence customers can request or inspect, such as an SBOM, vulnerability-disclosure policy, logging and SSO availability. Treat these as discussion prompts; do not imply every SaaS buyer must receive every artifact or that one artifact proves security.
 
-3. **Google Search Central — Creating Helpful, Reliable, People-First Content**  
+4. **Google Search Central — Creating Helpful, Reliable, People-First Content**  
    [Official guidance](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) · Page marked last updated 2026-10-05.  
    Google emphasizes original value, factual accuracy, clear authorship and explaining how content was produced. It warns against producing content primarily to attract search visits or using automation to mass-produce thin pages. This supports one substantial, useful guide rather than keyword-variant pages.
 
