@@ -311,7 +311,7 @@ Do not report private-preview requests, CI traffic, anonymous-denial probes or l
 
 ## Method references
 
-- [gstack plan-eng-review](https://github.com/garrytan/gstack/blob/main/plan-eng-review/SKILL.md)
+- [gstack autoplan](https://github.com/garrytan/gstack/blob/main/autoplan/SKILL.md) — current upstream engineering/review pipeline.
 - [gstack review](https://github.com/garrytan/gstack/blob/main/review/SKILL.md)
 - [gstack QA](https://github.com/garrytan/gstack/blob/main/qa/SKILL.md)
 - [Superpowers writing-plans](https://github.com/obra/superpowers/blob/main/skills/writing-plans/SKILL.md)
