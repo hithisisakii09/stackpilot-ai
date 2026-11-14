@@ -41,7 +41,7 @@ jobs:
           PREVIEW_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: node scripts/anonymous-preview-probe.mjs
       - name: Archive short-lived, non-sensitive report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0, Node 24
         with:
           name: stackpilot-operations-report
           path: artifacts/ops/
@@ -54,7 +54,7 @@ jobs:
           node scripts/create-private-preview-package.mjs
           tar -czf artifacts/private-preview/stackpilot-static-dist.tar.gz -C dist .
       - name: Save temporary private preview package for manual review
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0, Node 24
         with:
           name: stackpilot-private-preview-package
           path: artifacts/private-preview/
