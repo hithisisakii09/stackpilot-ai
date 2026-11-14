@@ -37,7 +37,7 @@
     "research:hubspot-worksheet-check": "node scripts/hubspot-manual-worksheet-check.mjs"
   },
   "dependencies": {
-    "astro": "^7.4.4",
+    "astro": "7.4.7",
     "drizzle-orm": "0.45.4",
     "pg": "8.23.1"
   },
