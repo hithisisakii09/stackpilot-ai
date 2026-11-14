@@ -63,11 +63,15 @@ These pages describe their own content and offers; their audience, conversions a
 
 ### A. Government and search-quality guidance
 
-1. **NIST SP 1305 — Cybersecurity Framework 2.0: Quick-Start Guide for Cybersecurity Supply Chain Risk Management**  
-   [NIST publication page](https://www.nist.gov/publications/nist-cybersecurity-framework-20-quick-start-guide-cybersecurity-supply-chain-risk) · Published 2024-10-21.  
-   NIST describes using CSF 2.0's GV.SC category to establish supplier-risk processes and define/communicate supplier requirements. Use this as a process reference only; it is not a SaaS certification, a legal mandate for every buyer, or a vendor pass/fail result.
+1. **NIST SP 1326 — Cybersecurity Supply Chain Management: Due Diligence Assessment Quick-Start Guide**  
+   [NIST publication record](https://www.nist.gov/publications/nist-cybersecurity-supply-chain-management-due-diligence-assessment-quick-start-guide) · Published 2026-07-08; source rechecked 2026-11-15.  
+   NIST defines due diligence research as investigating pertinent information about a supplier or product before an acquisition or when reviewing an existing system. Its ICT-supplier assessment components are foreign ownership, control or influence (FOCI); provenance; resilience; foundational cyber practices; and supply-chain tiers. The guide is scoped to ICT suppliers and supplements SP 800-161 Rev. 1. Use it as a risk-based research framework, not a SaaS certification, universal legal requirement, vendor pass/fail verdict or substitute for buyer-specific review.
 
-2. **CISA — Secure by Demand Guide: How Software Customers Can Drive a Secure Technology Ecosystem**  
+2. **NIST SP 1305 — Cybersecurity Framework 2.0: Quick-Start Guide for Cybersecurity Supply Chain Risk Management**  
+   [NIST publication page](https://www.nist.gov/publications/nist-cybersecurity-framework-20-quick-start-guide-cybersecurity-supply-chain-risk) · Published 2024-10-21.  
+   NIST describes using CSF 2.0's GV.SC category to establish supplier-risk processes and define/communicate supplier requirements. Use this as a broader process reference only; it is not a SaaS certification, a legal mandate for every buyer, or a vendor pass/fail result.
+
+3. **CISA — Secure by Demand Guide: How Software Customers Can Drive a Secure Technology Ecosystem**  
    [Official PDF](https://www.cisa.gov/sites/default/files/2024-08/SecureByDemandGuide_080624_508c.pdf) · Document marked August 2024.  
    CISA recommends asking software manufacturers product-security questions before, during and after procurement. It distinguishes enterprise security from product security and describes evidence customers can request or inspect, such as an SBOM, vulnerability-disclosure policy, logging and SSO availability. Treat these as discussion prompts; do not imply every SaaS buyer must receive every artifact or that one artifact proves security.
 
@@ -198,7 +202,7 @@ Depending on the product and the risk, ask whether the vendor can explain:
 - how incidents, data deletion, backups and subcontractors are handled; and
 - which statements are contractual commitments rather than general marketing descriptions.
 
-NIST SP 1305 describes using the Cybersecurity Framework 2.0 to define and communicate supplier requirements. These references are process aids, not a statement that every buyer must demand the same artifacts or that a single document proves a product is secure. Match the depth of review to the data, access and business impact involved.
+NIST SP 1326 (published 2026-07-08) provides a due-diligence framework for ICT suppliers, organized around FOCI, provenance, resilience, foundational cyber practices and supply-chain tiers; it supplements SP 800-161 Rev. 1. NIST SP 1305 remains a broader CSF 2.0 reference for defining and communicating supplier requirements. These are process aids, not certifications, universal legal mandates, or conclusions that a particular SaaS product is secure. Match review depth to the data, access and business impact involved.
 
 ## 6. Use a controlled proof of concept
 
