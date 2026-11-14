@@ -1,0 +1,15 @@
+# Manual competitor observations
+
+`prepareCompetitorImport({idempotencyKey,observations})` provides connection-free validation and immutable candidate records. At most ten observations are accepted. Each binds product, vendor, category and source IDs, canonical HTTPS URL, SHA-256 evidence digest, collection/event/period timestamps, region, feature ID, nullable Boolean declaration and a manual reference. Dates follow the existing exact UTC millisecond convention with period start <= period end <= event <= collection <= current clock. Input accessors, proxies, unsupported authority/commercial fields and incomplete source provenance are rejected.
+
+The declaration represents a manually submitted candidate assertion about one feature. Null records unknown information. Content-addressed IDs bind the full normalized observation. Corrections append a new observation and preserve the original declaration. Conflicting declarations within the selected period remain UNKNOWN pending a future explicit reconciliation workflow. Source identities refer to existing candidate evidence and retain unreviewed status.
+
+`openCompetitorObservationStore(config)` uses the existing owned disposable `stackpilot_market_test` database and `STACKPILOT_MARKET_TEST=1` gate. It reuses restricted app-role transactions, loopback cluster verification, forced RLS and tenant serialization. Migration target 6 supports this slice through the existing competitors table and INSERT/SELECT permissions.
+
+`store.scope(organizationId).apply(batch,{apply:true})` captures input before awaiting, validates authoritative product/vendor/category/source bindings and database-clock chronology, and writes observations, idempotency result, audit and outbox atomically. An identical key/input returns count zero after the first commit. Changed input under the same key conflicts. Repeated identical observations under another key retain their existing rows. History UPDATE/DELETE remains unavailable to the app role.
+
+`scope.compare({subjectIds,featureIds,region,periodStart,periodEnd})` accepts at most five subjects and ten features in one category. A single SQL statement reads selected-subject metadata, observations and current source bindings. Changed bindings fail validation. A comparison accepts at most one hundred observations and rejects overflow. The pure `compareCompetitorObservations` function accepts the same selection plus an observations array.
+
+Results include every requested subject/feature, contributing observation IDs, explicit missing/unknown/conflict reasons and a deterministic digest binding selection and sorted observation digests. Subject and feature order use stable code-point ordering. A consistent Boolean is labelled candidate-declaration. Evidence confidence remains UNKNOWN and review state remains unreviewed. Existing source declarations do not establish independent authenticity.
+
+Tests use synthetic assertions in disposable databases. This slice provides internal preparation interfaces. Real owner provisioning, independent research approval, authenticated operational UI and later domain workflows remain separate scoped work.
