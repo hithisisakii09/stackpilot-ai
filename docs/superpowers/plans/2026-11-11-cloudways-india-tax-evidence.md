@@ -56,3 +56,16 @@ Make one narrowly scoped improvement to the existing SaaS usage-meter buyer brie
 The exact public Kinsta Overages URL (https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/) was opened in a normal browser. It rendered without authentication, showed the title “Overages” and last-updated date 2026-03-09, and exposed four separate meters: visits ($0.50/1,000 after cap), server bandwidth ($0.50/GB), SSD disk ($2/GB/month prorated daily) and CDN ($0.05/GB). It also described plan alerts and non-retroactive upgrades. No canonical URL was visible in the rendered content.
 
 This is a reachability and vendor-documentation check only. It does not verify a customer's account, plan, geography, tax, usage, invoice or custom terms, and it does not approve the claim. No sign-in or account action occurred. Keep the source candidate-only.
+
+
+## 2026-11-16 follow-up — Kinsta visit-meter semantics
+
+**Official source:** [Kinsta WordPress Hosting Plans — Overages](https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/), displayed last updated **2026-03-09**; public documentation retrieved 2026-11-16.
+
+The page defines monthly visits as the sum of unique IP addresses seen within a 24-hour period, shared across sites in a WordPress Hosting plan. It says the visit count is not the same as unique IPs in `access.log`, because that log does not include visits served through the edge cache.
+
+**Required wording:** describe this only as Kinsta's published billing definition. Do not relabel it as unique people, compare it as if it were identical to Google Analytics sessions, or infer the billed count from `access.log` alone. No customer account, plan entitlement, region, usage counter or invoice was inspected.
+
+**Scope:** append-only clarification to the existing Kinsta evidence row and article section. No new article, route, application code, source-intake date, reviewer field, approval flag, product catalogue or affiliate record changed. All six vendor claim records remain candidate-only.
+
+**Verification:** documentation-only; no executable behavior changed, so no TDD RED/GREEN or local test run is claimed. Require exact-head GitHub Build/tests, safety/operations, Chromium and Netlify Deploy Preview statuses. Keep the PR draft and unmerged, with no public indexing or release.
