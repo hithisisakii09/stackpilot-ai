@@ -110,3 +110,16 @@
 - Rechecked Google Search Central people-first guidance and current Bing Webmaster Search Performance documentation. The distribution plan remains conditional on separately approved public release; no sitemap submission, indexing request, account creation or external post occurred.
 - gstack upstream reference updated from the obsolete `plan-eng-review` path to current `autoplan`; review and QA references retained. The current upstream gstack review/QA and Superpowers writing-plans/verification-before-completion documents were read for this documentation-only refresh.
 - Documentation-only change: no runtime behavior, route, dependencies, data records, tests, analytics, privacy controls, noindex or provider settings changed. No TDD RED/GREEN or test/build pass is claimed.
+
+
+## 2026-11-16 follow-up — Bing Search Performance history-window discrepancy
+
+**Official sources reviewed:**
+- [Bing Webmaster Tools — Search Performance help](https://www.bing.com/webmasters/help/search-performance-c680da36), currently describes up to six months of performance history and reports clicks, impressions, CTR, average position and query/page details.
+- [Bing Webmaster Tools — 16-month history announcement](https://blogs.bing.com/webmaster/2024/10/Bing-Webmaster-Tools-Extends-Search-Performance-Data-to-16-Months/), published 2024-10-16, says Search Performance data was extended to 16 months.
+
+The official public statements differ. The article now records the conflict and treats the actual account-selectable history window as **UNKNOWN** until an owner-authorized property view is available. Do not create an account, verify a property or submit URLs in this run.
+
+**Baseline refresh:** the exact-head PR #13 operations artifact dated 2026-11-16 reports `automatic: []`, 0 sources needing refresh, 6 prepared evidence packets, 6 pending editorial reviews, 0 approved claims, 4 owner gates, 5 affiliate candidates, 0 applications, 0 acceptances, 0 tracking links, and null actual traffic/revenue. Keep all site-specific traffic, rankings, impressions, clicks, conversions and worksheet usage **UNKNOWN**.
+
+**Scope:** update only this unpublished buyer guide and its plan. No account, public post, URL submission, indexing, analytics, code, route, tracking, privacy, noindex, source-intake date, reviewer or approval status changed. PR #16 remains draft/unmerged.
