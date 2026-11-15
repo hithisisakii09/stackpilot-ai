@@ -4,7 +4,7 @@ import {applyMigrations} from '../src/platform/persistence/migrate.mjs';
 let pool;
 try {
   const args=process.argv.slice(2);
-  if(args[0]!=='--apply'||!(args.length===1||args.length===3&&args[1]==='--target-version'&&['1','2','3','4','5','6','7','8'].includes(args[2]))) throw new Error();
+  if(args[0]!=='--apply'||!(args.length===1||args.length===3&&args[1]==='--target-version'&&['1','2','3','4','5','6','7','8','9'].includes(args[2]))) throw new Error();
   const config = JSON.parse(process.env.STACKPILOT_LOCAL_DATABASE ?? 'null');
   if (config?.user!=='stackpilot_local') throw new Error();
   pool = await openLocalPool(config);

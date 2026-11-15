@@ -12,9 +12,9 @@ export async function assertControlAccess(client) {
         has_table_privilege(current_user,c.oid,'UPDATE,DELETE,TRUNCATE,TRIGGER')
         OR has_any_column_privilege(current_user,c.oid,'REFERENCES')
         OR (has_any_column_privilege(current_user,c.oid,'SELECT') AND c.relname NOT IN
-          ('users','agents','approval_requests','approval_decisions','auth_challenges','auth_sessions','approval_request_bindings','products','product_claims','claim_evidence','evidence_sources'))
+          ('users','agents','approval_requests','approval_decisions','auth_challenges','auth_sessions','approval_request_bindings','products','product_claims','claim_evidence','evidence_sources','claim_lifecycle_events','evidence_revocations'))
         OR (has_any_column_privilege(current_user,c.oid,'INSERT') AND c.relname NOT IN
-          ('auth_challenges','auth_sessions','approval_request_bindings','approval_requests','approval_decisions','audit_events','outbox_events'))
+          ('auth_challenges','auth_sessions','approval_request_bindings','approval_requests','approval_decisions','audit_events','outbox_events','claim_lifecycle_events','evidence_revocations'))
         OR EXISTS (SELECT FROM pg_attribute a WHERE a.attrelid=c.oid AND a.attnum>0 AND NOT a.attisdropped
           AND has_column_privilege(current_user,c.oid,a.attnum,'UPDATE')
           AND NOT (c.relname='auth_challenges' AND a.attname='consumed_at' OR c.relname='auth_sessions' AND a.attname='revoked_at'))

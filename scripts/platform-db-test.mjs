@@ -54,6 +54,9 @@ try {
     await admin.query('CREATE DATABASE stackpilot_reconciliation_failure');
     await admin.query('CREATE DATABASE stackpilot_products_fresh');
     await admin.query('CREATE DATABASE stackpilot_products_failure');
+    await admin.query('CREATE DATABASE stackpilot_lifecycle_test');
+    await admin.query('CREATE DATABASE stackpilot_lifecycle_fresh');
+    await admin.query('CREATE DATABASE stackpilot_lifecycle_failure');
   } finally {
     await admin.end();
   }
@@ -128,6 +131,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_market_test'}),STACKPILOT_MARKET_TEST:'1'}
     });
     resultCode=products.status??1;
+  }
+  if(resultCode===0) {
+    const lifecycle=spawnSync(process.execPath,['--test','tests/integration/platform-claim-lifecycle.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_lifecycle_test'})}
+    });
+    resultCode=lifecycle.status??1;
   }
 } finally {
   let stopped = !started;

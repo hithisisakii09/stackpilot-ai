@@ -44,7 +44,19 @@ async function snapshot(tx,claimId,agentId) {
     const parsed=parseCandidateEvidence({schemaVersion:1,id:source.id,organizationId:tx.scope.organizationId,productId:source.product_id,sourceUrl:source.source_url,collectedAt:new Date(source.collected_at).toISOString(),statement:row.statement,status:source.status},{now:new Date(row.read_at).toISOString()});
     return {id:parsed.id,productId:parsed.productId,sourceUrl:parsed.sourceUrl,collectedAt:parsed.collectedAt,status:parsed.status,sourceDigest:hex(source.source_digest),linkId:id(source.link_id)};
   });
-  return {resourceVersion:payload.claim.version,policyVersion:locked.policyVersion,payloadDigest:digest(payload),evidenceDigest:digest(sources)};
+  return {resourceVersion:payload.claim.version,policyVersion:locked.policyVersion,payloadDigest:digest(payload),evidenceDigest:digest(sources),productId:payload.product.id,sourceIds:sources.map(source=>source.id),nowMs:new Date(row.read_at).getTime()};
+}
+
+// Internal transaction helpers. Authentication and lifecycle authority stay with the caller's service.
+export {snapshot as readClaimReviewSnapshot};
+
+export async function inspectClaimApproval(tx,requestId) {
+  id(requestId);
+  await tx.db.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${tx.scope.organizationId}),hashtext(${requestId}))`);
+  const row=await request(tx,requestId);
+  validateBinding(row);
+  const latest=(await tx.db.execute(sql`SELECT id,decision,version FROM public.approval_decisions WHERE organization_id=${tx.scope.organizationId} AND request_id=${requestId} ORDER BY version DESC LIMIT 1`)).rows[0];
+  return Object.freeze({requestId,claimId:row.resource_id,agentId:row.agent_id,requesterUserId:row.requester_user_id,requestDigest:row.request_digest,resourceVersion:row.resource_version,payloadDigest:row.payload_digest,evidenceDigest:row.evidence_digest,decision:latest?.decision??null,decisionId:latest?.id??null,decisionVersion:latest?.version??0});
 }
 
 async function request(tx,requestId) {
