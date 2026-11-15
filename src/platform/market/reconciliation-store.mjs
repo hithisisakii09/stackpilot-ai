@@ -4,6 +4,7 @@ import {normalizeLocalConnection} from '../persistence/connection.mjs';
 import {openPreparationStore, appendPreparationEvent} from '../orchestration/preparation-store.mjs';
 import {digest} from '../orchestration/dag.mjs';
 import {normalizeObservation, prepareReconciliation, normalizeReconciledSelection, analyzeReconciledEvidence} from './reconciliation.mjs';
+import {prepareMarketHistorySelection, analyzeMarketHistory} from './seasonality.mjs';
 
 function recordQuery(organizationId, domain, condition) {
   const table = sql.identifier(domain === 'market' ? 'market_observations' : 'competitors');
@@ -29,6 +30,22 @@ function readObservation(domain, row) {
   const current = row.category_id === record.categoryId && (domain === 'market' || row.vendor_id === record.vendorId) &&
     record.sourceId !== null && row.source_id === record.sourceId && row.source_url === record.sourceUrl && record.evidenceDigest !== null && row.source_digest === record.evidenceDigest;
   return {record, current};
+}
+
+async function readEvidenceSnapshot(tx, organizationId, domain, condition, subjectIds) {
+  const subjects = sql.join(subjectIds.map(subject => sql`${subject}`), sql`, `);
+  const query = recordQuery(organizationId, domain, condition);
+  const snapshot = (await tx.db.execute(sql`WITH records AS (${query}), selected_links AS (
+      SELECT record FROM reconciliation_links WHERE organization_id=${organizationId} AND domain=${domain}
+        AND (coalesce(market_from_id,competitor_from_id) IN (SELECT id FROM records) OR coalesce(market_to_id,competitor_to_id) IN (SELECT id FROM records)) ORDER BY id LIMIT 101
+    ), subjects AS (SELECT id,category_id FROM products WHERE organization_id=${organizationId} AND id IN (${subjects}))
+    SELECT (SELECT count(*) FROM subjects) AS subject_count,(SELECT count(DISTINCT category_id) FROM subjects) AS category_count,
+      coalesce((SELECT json_agg(records ORDER BY id) FROM records),'[]'::json) AS observations,
+      coalesce((SELECT json_agg(record) FROM selected_links),'[]'::json) AS links`)).rows[0];
+  if (Number(snapshot.subject_count) !== subjectIds.length || Number(snapshot.category_count) !== 1) throw new Error('Invalid reconciliation subjects');
+  if (snapshot.observations.length > 100 || snapshot.links.length > 100) throw new Error('Reconciliation snapshot limit');
+  const rows = snapshot.observations.map(row => readObservation(domain, row));
+  return {observations: rows.map(row => row.record), links: snapshot.links, staleIds: rows.filter(row => !row.current).map(row => row.record.id)};
 }
 
 export async function openReconciliationStore(value) {
@@ -84,18 +101,18 @@ export async function openReconciliationStore(value) {
           const subjects = sql.join(selection.subjectIds.map(subject => sql`${subject}`), sql`, `);
           const dimensions = sql.join(selection.featureIds.map(feature => sql`${feature}`), sql`, `);
           const dimensionKey = domain === 'market' ? 'metric' : 'featureId';
-          const query = recordQuery(organizationId, domain, sql`r.observation->>'subjectId' IN (${subjects}) AND r.observation->>${dimensionKey} IN (${dimensions}) AND r.observation->>'region'=${selection.region} AND r.observation->>'periodStart'=${selection.periodStart} AND r.observation->>'periodEnd'=${selection.periodEnd}`);
-          const snapshot = (await tx.db.execute(sql`WITH records AS (${query}), selected_links AS (
-              SELECT record FROM reconciliation_links WHERE organization_id=${organizationId} AND domain=${domain}
-                AND (coalesce(market_from_id,competitor_from_id) IN (SELECT id FROM records) OR coalesce(market_to_id,competitor_to_id) IN (SELECT id FROM records)) ORDER BY id LIMIT 101
-            ), subjects AS (SELECT id,category_id FROM products WHERE organization_id=${organizationId} AND id IN (${subjects}))
-            SELECT (SELECT count(*) FROM subjects) AS subject_count,(SELECT count(DISTINCT category_id) FROM subjects) AS category_count,
-              coalesce((SELECT json_agg(records ORDER BY id) FROM records),'[]'::json) AS observations,
-              coalesce((SELECT json_agg(record) FROM selected_links),'[]'::json) AS links`)).rows[0];
-          if (Number(snapshot.subject_count) !== selection.subjectIds.length || Number(snapshot.category_count) !== 1) throw new Error('Invalid reconciliation subjects');
-          if (snapshot.observations.length > 100 || snapshot.links.length > 100) throw new Error('Reconciliation snapshot limit');
-          const rows = snapshot.observations.map(row => readObservation(domain, row));
-          return analyzeReconciledEvidence({...captured, observations: rows.map(row => row.record), links: snapshot.links, staleIds: rows.filter(row => !row.current).map(row => row.record.id)});
+          const condition = sql`r.observation->>'subjectId' IN (${subjects}) AND r.observation->>${dimensionKey} IN (${dimensions}) AND r.observation->>'region'=${selection.region} AND r.observation->>'periodStart'=${selection.periodStart} AND r.observation->>'periodEnd'=${selection.periodEnd}`;
+          const snapshot = await readEvidenceSnapshot(tx, organizationId, domain, condition, selection.subjectIds);
+          return analyzeReconciledEvidence({...captured, ...snapshot});
+        });
+      },
+      async historical(input) {
+        const {selection} = prepareMarketHistorySelection(input);
+        return store.transaction(organizationId, async tx => {
+          const subjects = sql.join(selection.subjectIds.map(subject => sql`${subject}`), sql`, `);
+          const condition = sql`r.observation->>'subjectId' IN (${subjects}) AND r.observation->>'metric'=${selection.metric} AND r.observation->>'region'=${selection.region}`;
+          const snapshot = await readEvidenceSnapshot(tx, organizationId, 'market', condition, selection.subjectIds);
+          return analyzeMarketHistory({selection, ...snapshot});
         });
       },
     });

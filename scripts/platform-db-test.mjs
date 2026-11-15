@@ -115,6 +115,12 @@ try {
     });
     resultCode=reconciliation.status??1;
   }
+  if(resultCode===0) {
+    const history=spawnSync(process.execPath,['--test','tests/integration/platform-market-history.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_market_test'}),STACKPILOT_MARKET_TEST:'1'}
+    });
+    resultCode=history.status??1;
+  }
 } finally {
   let stopped = !started;
   if (started && existsSync(join(dataDirectory,'postmaster.pid'))) {

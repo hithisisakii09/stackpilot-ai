@@ -58,14 +58,12 @@ export function normalizeReconciledSelection(value) {
   return Object.freeze({domain, selection, ...(domain === 'market' ? {weights: json(value.weights)} : {})});
 }
 
-export function analyzeReconciledEvidence(value) {
-  fields(value, ['domain', 'selection', 'observations', 'links', 'staleIds'], ['weights']);
-  const captured = normalizeReconciledSelection({domain: value.domain, selection: value.selection, ...(Object.hasOwn(value, 'weights') ? {weights: value.weights} : {})});
-  const {domain, selection} = captured;
+export function inspectReconciliationHistory(value) {
+  fields(value, ['domain', 'observations', 'links', 'staleIds']);
+  const domain = choice(value.domain, ['market', 'competitor']);
   const records = dataArray(value.observations, 100).map(record => normalizeObservation(domain, record));
   const byId = new Map();
   for (const record of records) {
-    if (!selection.subjectIds.includes(record.subjectId) || !selection.featureIds.includes(dimension(domain, record)) || record.region !== selection.region || record.periodStart !== selection.periodStart || record.periodEnd !== selection.periodEnd) throw new Error('Incompatible reconciliation selection');
     if (byId.has(record.id) && digest(byId.get(record.id)) !== digest(record)) throw new Error('Conflicting observation identity');
     byId.set(record.id, record);
   }
@@ -81,6 +79,15 @@ export function analyzeReconciledEvidence(value) {
     return Object.freeze({id: record.id, subjectId: record.subjectId, dimension: dimension(domain, record), sourceId: record.sourceId,
       observationDigest: digest(record), reasons: Object.freeze(reasons), linkIds: Object.freeze(links.filter(link => link.fromId === record.id || link.toId === record.id).map(link => link.id))});
   }));
+  return Object.freeze({observations: Object.freeze(observations), history, links});
+}
+
+export function analyzeReconciledEvidence(value) {
+  fields(value, ['domain', 'selection', 'observations', 'links', 'staleIds'], ['weights']);
+  const captured = normalizeReconciledSelection({domain: value.domain, selection: value.selection, ...(Object.hasOwn(value, 'weights') ? {weights: value.weights} : {})});
+  const {domain, selection} = captured;
+  const {observations, history, links} = inspectReconciliationHistory({domain, observations: value.observations, links: value.links, staleIds: value.staleIds});
+  if (observations.some(record => !selection.subjectIds.includes(record.subjectId) || !selection.featureIds.includes(dimension(domain, record)) || record.region !== selection.region || record.periodStart !== selection.periodStart || record.periodEnd !== selection.periodEnd)) throw new Error('Incompatible reconciliation selection');
   const blockingReasons = (subjectId, featureId) => [...new Set(history.filter(row => row.subjectId === subjectId && (featureId === undefined || row.dimension === featureId)).flatMap(row => row.reasons).filter(reason => ['stale-source-binding', 'unresolved-reconciliation'].includes(reason)))];
   let analysis;
   if (domain === 'competitor') {
