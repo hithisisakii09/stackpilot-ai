@@ -115,7 +115,7 @@
 ## 2026-11-16 follow-up — Bing Search Performance history-window discrepancy
 
 **Official sources reviewed:**
-- [Bing Webmaster Tools — Search Performance help](https://www.bing.com/webmasters/help/search-performance-c680da36), currently describes up to six months of performance history and reports clicks, impressions, CTR, average position and query/page details.
+- [Bing Webmaster Tools — Search Performance help](https://www.bing.com/webmasters/help/search-performance-c680da36): its currently indexed text describes up to six months of performance history and reports clicks, impressions, CTR, average position and query/page details; direct public retrieval currently returns a JavaScript-only shell.
 - [Bing Webmaster Tools — 16-month history announcement](https://blogs.bing.com/webmaster/2024/10/Bing-Webmaster-Tools-Extends-Search-Performance-Data-to-16-Months/), published 2024-10-16, says Search Performance data was extended to 16 months.
 
 The official public statements differ. The article now records the conflict and treats the actual account-selectable history window as **UNKNOWN** until an owner-authorized property view is available. Do not create an account, verify a property or submit URLs in this run.
