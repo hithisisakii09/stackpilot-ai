@@ -272,20 +272,26 @@ This draft uses NIST and CISA as process references and describes a buyer method
 |---|---|---|
 | On-site search intent | Prepare one substantial guide, a descriptive title/meta description, and contextual internal links to the requirements worksheet and narrower buyer guides. | Keep the route unpublished/noindex. Do not create keyword-variant pages or change robots, headers or canonical policy. |
 | Google Search Console | After an independently approved public release and verified property, use the [Search Console Performance report](https://support.google.com/webmasters/answer/10268906) for impressions, clicks, CTR and available query/page/country/position breakdowns. | No account creation, property verification, sitemap submission or indexing request now. |
-| Bing Webmaster Tools | After owner-approved public release, use [Bing Search Performance](https://www.bing.com/webmasters/help/search-performance-c680da36) for query/page clicks, impressions, CTR and average position (the help page describes up to six months of performance history). | No account creation, URL submission or IndexNow now. Submission is not a guarantee of indexing. |
+| Bing Webmaster Tools | After owner-approved public release, use [Bing Search Performance](https://www.bing.com/webmasters/help/search-performance-c680da36) for query/page clicks, impressions, CTR and average position. Its current help page says up to six months, while Microsoft's official announcement says 16 months; verify the selectable range in the authorized account before setting a history window. | No account creation, URL submission or IndexNow now. Submission is not a guarantee of indexing. |
 | Existing professional channel | Prepare a short educational excerpt and a plain-language checklist for a genuine owner-controlled profile, if one is later confirmed. | No post, DM, outreach, new account or claim of audience today. Owner approval and platform rules are required. |
 | Relevant communities | Keep a useful, non-promotional answer ready only if a future question genuinely calls for it. | No community posting, cross-posting, link drops or automated engagement. Follow each community's rules; [Reddit's Spam policy](https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam) prohibits repeated or unsolicited mass engagement. |
 
+### 2026-11-16 measurement-source caveat — Bing history window
+
+Bing's official [Search Performance help page](https://www.bing.com/webmasters/help/search-performance-c680da36) currently describes up to **six months** of performance history. Microsoft's official [Bing Webmaster Tools announcement](https://blogs.bing.com/webmaster/2024/10/Bing-Webmaster-Tools-Extends-Search-Performance-Data-to-16-Months/) says the history was extended to **16 months**. These public statements differ.
+
+**Handling:** do not promise either window or use it to define StackPilot's baseline before an owner-authorized account view. After a separately approved public release, record the actual selectable date range displayed in the authenticated property and cite that observation. No Bing account was created or accessed in this research run.
+
 ## 11. Measurement plan and baseline
 
-**Baseline as of 2026-11-14:**
+**Baseline as of 2026-11-16 (latest inspected operations snapshot):**
 - Search volume / CPC / keyword difficulty: UNKNOWN.
 - Current rankings / indexed URLs: UNKNOWN.
 - Google Search Console impressions / clicks / CTR / average position: UNKNOWN.
 - Bing Search Performance: UNKNOWN.
 - Organic visits / qualified leads / conversions: UNKNOWN.
 - Authentic social audience / engagement: UNKNOWN.
-- Affiliate applications / acceptances / tracking links: 0 / 0 / 0 in the inspected operations snapshot; verified revenue is null/UNKNOWN.
+- Affiliate applications / acceptances / tracking links: 0 / 0 / 0 in the exact-head PR #13 operations artifact dated 2026-11-16; verified revenue is null/UNKNOWN.
 - Requirements worksheet selections or user records: not available and not inferred.
 
 Do not report private-preview requests, CI traffic, anonymous-denial probes or local worksheet use as organic visits or conversions.
