@@ -12,6 +12,7 @@ Existing private materials already cover CRM migration checklists, a fictional r
 | Proposed query family | Stage / specific task | Differentiating buyer utility | Evidence to collect after an approved public launch |
 | --- | --- | --- | --- |
 | `Pipedrive export activities notes files`, `Pipedrive export permission visibility` | Migration/exit diligence | Separate export-inventory checklist with visibility and external-file questions | Verified Search Console impressions/clicks by page/query, if legally configured |
+| `Pipedrive System ID spreadsheet update row limit`, `Pipedrive bulk update 50,000 rows`, `Pipedrive 50,000 vs 200,000 import rows` | Migration execution / troubleshooting | Distinguish general spreadsheet import from existing-record System ID updates; surface the unresolved limit boundary | Same; search demand remains UNKNOWN until measured |
 | `HubSpot export associations contacts deals`, `HubSpot export activities separately` | Migration/exit diligence | Object-to-association completeness audit, explicit activity boundary | Same; record actual page-level query evidence, never estimate |
 | `CRM export checklist before switching`, `CRM migration exit plan` | Pre-purchase due diligence | Neutral evidence-request template and no-go decision rule | Same; do not infer conversions from clicks |
 | `CRM export download expires`, `CRM data portability contract questions` | Urgent exit planning | Retention window and secure handoff checklist | Same; only count actual opt-in interactions if authorized |
@@ -47,12 +48,20 @@ Official pages directly visited:
 - Spanish: https://support.pipedrive.com/es/article/importing-data-into-pipedrive-with-spreadsheets
 - Portuguese: https://support.pipedrive.com/pt/article/importing-data-into-pipedrive-with-spreadsheets
 
-**Correction:** earlier search-result snippets showed 50,000 rows for Indonesian/Thai. That value was not present in the directly rendered current pages. The previous claim that the Thai page currently shows 50,000 rows is superseded and must not be repeated as a current vendor limit. Search snippets can be stale; the live page's displayed 2026-10-19 content is the evidence captured in this recheck.
+**Correction:** earlier search-result snippets showing 50,000 rows for Indonesian/Thai are not supported by the directly rendered **general-import** pages checked here; those six pages show 200,000 rows. However, a separate official System ID update article (below) still contains a 50,000-row note in its import-error guidance. The earlier locale-specific inference remains superseded, but 50,000 must not be described as absent from all current Pipedrive documentation. Keep the general-import and System ID update paths distinct; their relationship is unresolved.
 
 **Interpretation:** no current locale-specific or geographic row-limit difference was established. The three machine-translated pages still warrant a language-quality caveat, but their visible numeric requirements match English. The 200,000-row / under-50-MB limits remain vendor documentation, not an account test or guarantee for every subscription, permission set or future revision. The separate global-admin permission and 48-hour import-revert caveats remain attached. No account was accessed and no import was performed.
 
 **Editorial handling:** replace the earlier 50,000-row locale discrepancy with this direct-browser result. Keep the source attributed to Pipedrive, preserve the translation notices, and require human review before any public use.
-**Plan/region questions still open:** actual user permissions and visibility groups; subscription edition and legacy models; Projects/custom-object entitlements; API authorization; activity/attachment export formats; EU/other regional processing or export conditions; account-specific file expiry and billing/renewal terms. Do not insert vendor prices, availability verdicts or comparisons into catalog data.
+### 2026-11-17 additional Pipedrive System ID update-path check (candidate-only; unresolved scope)
+
+The official [Updating Pipedrive data with a spreadsheet](https://support.pipedrive.com/en/article/updating-pipedrive-data-with-a-spreadsheet) page, last updated **2026-09-03**, describes updating existing deals, people, organizations, products, activities and notes by including each item's Pipedrive System ID. It says the action is available only to admins and regular users with the correct permissions. In its import-error note, the page states a maximum of **50,000 rows** and **50 MB**.
+
+This is distinct from the general [Importing data into Pipedrive with spreadsheets](https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets) page, last updated **2026-10-19**, which states up to **200,000 rows** and a file **under 50 MB**. The two pages do not clearly reconcile whether the 50,000-row note is a limit specific to System ID bulk updates, a limit for error-prone update files, or an outdated statement. Do not infer a country/locale-specific limit or apply either number to every import path. Record both values with their respective page/workflow and mark the cross-workflow relationship **UNRESOLVED** pending vendor clarification or an authorized account test.
+
+No account, customer data or import was accessed; no test file was uploaded and no support request was sent. This remains source review only.
+
+**Plan/region/workflow questions still open:** actual user permissions and visibility groups; subscription edition and legacy models; Projects/custom-object entitlements; API authorization; activity/attachment export formats; EU/other regional processing or export conditions; account-specific file expiry and billing/renewal terms; and the unresolved relationship between the general 200,000-row import guide and the System ID update page's 50,000-row error note. Do not infer geography from this discrepancy or insert vendor prices, availability verdicts or comparisons into catalog data.
 
 ## Unpublished article brief — “Before you leave a CRM: prove the export is complete”
 **Proposed article:** Private editorial draft only; no route or public URL is being created.
