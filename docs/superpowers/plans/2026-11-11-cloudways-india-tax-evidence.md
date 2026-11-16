@@ -69,3 +69,21 @@ The page defines monthly visits as the sum of unique IP addresses seen within a 
 **Scope:** append-only clarification to the existing Kinsta evidence row and article section. No new article, route, application code, source-intake date, reviewer field, approval flag, product catalogue or affiliate record changed. All six vendor claim records remain candidate-only.
 
 **Verification:** documentation-only; no executable behavior changed, so no TDD RED/GREEN or local test run is claimed. Require exact-head GitHub Build/tests, safety/operations, Chromium and Netlify Deploy Preview statuses. Keep the PR draft and unmerged, with no public indexing or release.
+
+
+## 2026-11-17 follow-up — Kinsta plan-family boundary (candidate-only)
+
+**Source:** [Kinsta Choosing the Right Plan](https://kinsta.com/docs/billing/wordpress-hosting-plans/wordpress-choosing-the-right-plan/), last updated **2026-02-05**. The page says it is for existing customers and that the newer Launch, Launch Plus, Build, Expand, Scale and Lead plans are priced by server bandwidth only, with no visits-pricing option.
+
+The [Understand Your Traffic and Usage](https://kinsta.com/docs/wordpress-hosting/using-kinsta/kinsta-understand-your-traffic-and-usage/) page, last updated **2026-10-12**, uses broader wording that every plan comes in visits-based and bandwidth-based versions. The documents do not clearly reconcile the broad statement with the named newer families. Keep the plan-family boundary explicit: the specific plan guide says those newer families are bandwidth-only; do not claim all current Kinsta plans offer both meters. For other plans, require account-specific confirmation.
+
+The exact URLs were retrieved via direct web page retrieval on 2026-11-17. This is not a normal browser-session verification or an account test. No account, plan, region, usage chart or invoice was accessed. No claim approval or source-intake update occurred.
+
+Additional qualitative query hypotheses: `Kinsta Launch plan bandwidth only`; `Kinsta visits vs bandwidth pricing plan families`; `Kinsta WordPress hosting new plans usage meter`. Search volume, CPC, rankings, impressions, clicks and traffic remain UNKNOWN.
+
+### Acceptance addendum
+
+- The six named newer plan families are described as bandwidth-only, attributed to the dated Kinsta plan guide.
+- The broader visits/bandwidth wording from the traffic/usage guide is not generalized to every plan.
+- The documentation discrepancy remains candidate-only; exact plan availability, customer region, custom terms and invoices remain UNKNOWN.
+- No browser connector session, account action, publication, indexing or spending occurs.
