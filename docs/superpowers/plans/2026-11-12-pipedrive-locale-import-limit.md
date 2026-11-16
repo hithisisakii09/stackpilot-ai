@@ -33,6 +33,16 @@ Sources:
 
 The prior search snippets that showed 50,000 rows are superseded by the live browser result. Do not present 50,000 as a current Thai or Indonesian limit. This is not proof of every account's plan, role or geographic entitlement. The global permission requirement and global-admin-only 48-hour revert remain separate caveats.
 
+## 2026-11-17 additional first-party evidence — System ID update workflow
+
+The official [Updating Pipedrive data with a spreadsheet](https://support.pipedrive.com/en/article/updating-pipedrive-data-with-a-spreadsheet) page, last updated **2026-09-03**, describes updating existing records by mapping the Pipedrive System ID. It says the action is available only to admins and regular users with the correct permissions. Its import-error note states a maximum of **50,000 rows** and **50 MB**.
+
+The separate general [Importing data into Pipedrive with spreadsheets](https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets) page, last updated **2026-10-19**, states up to **200,000 rows** and under **50 MB**. The official pages do not clearly explain whether the 50,000-row note is specific to System ID updates, applies only to an error-handling scenario, or is stale. Treat this as an unresolved documentation/workflow boundary, not a country-specific or universal limit. No account was accessed, no import was attempted and no support request was sent.
+
+Additional qualitative query hypotheses: `Pipedrive System ID spreadsheet update row limit`; `Pipedrive bulk update 50,000 rows`; `Pipedrive 50,000 vs 200,000 import rows`. Search volume, CPC, difficulty, rankings, impressions, clicks and traffic remain UNKNOWN.
+
+Source: https://support.pipedrive.com/en/article/updating-pipedrive-data-with-a-spreadsheet
+
 ## Scope
 
 - Replace the outdated locale-discrepancy note in `docs/growth/2026-11-02-crm-exit-evidence-and-ethical-distribution.md`.
@@ -71,7 +81,7 @@ After a separately approved launch, measure page-level impressions, clicks, CTR 
 ## Review / verification
 
 1. Read current instructions, operating policy, current operational state, open PRs and issue #6.
-2. Directly render all six official locale pages in a public browser; record update dates, row/file limits and translation notices.
+2. Directly render all six official general-import locale pages and the separate System ID update page; record update dates, row/file limits, translation notices, permission caveats and the unresolved 50,000/200,000 workflow boundary.
 3. Review the brief diff for stale 50,000-row claims and unsupported geographic inference.
 4. Apply current gstack review/QA principles and Superpowers verification-before-completion. No TDD RED/GREEN is claimed because only documentation changes.
 5. Recheck exact-head build, operations, Chromium and Netlify Deploy Preview statuses after the commit.
@@ -80,7 +90,8 @@ After a separately approved launch, measure page-level impressions, clicks, CTR 
 
 - All six pages are accurately recorded as 200,000 rows / under 50 MB, last updated 2026-10-19.
 - Translation notices are preserved for Indonesian, Thai and Traditional Chinese.
-- The prior 50,000-row search snippet is explicitly superseded, not presented as a current product limit.
+- The prior locale-specific 50,000-row search snippet is explicitly superseded for the six general-import pages; the separate System ID update article's 50,000-row error note is retained with its date and unresolved scope.
+- The 200,000-row general-import figure is not generalized to the System ID update workflow, and the 50,000-row note is not generalized to every import path or geography.
 - All product/vendor claims remain unapproved; source-intake dates and review fields are unchanged.
 - No traffic, ranking, conversion, commission or revenue metric is invented.
 - Noindex/privacy protections, affiliate prohibitions, Netlify hold and ₹0 policy remain unchanged.
