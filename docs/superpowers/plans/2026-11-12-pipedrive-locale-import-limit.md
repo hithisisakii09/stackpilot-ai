@@ -95,3 +95,12 @@ After a separately approved launch, measure page-level impressions, clicks, CTR 
 - All product/vendor claims remain unapproved; source-intake dates and review fields are unchanged.
 - No traffic, ranking, conversion, commission or revenue metric is invented.
 - Noindex/privacy protections, affiliate prohibitions, Netlify hold and ₹0 policy remain unchanged.
+
+
+## 2026-11-18 follow-up — Pipedrive's HubSpot migration guide (candidate-only)
+
+**Source:** [Pipedrive — HubSpot migration to Pipedrive](https://support.pipedrive.com/en/article/hubspot-to-pipedrive-migration), last updated **2026-09-23**. Added this vendor-authored mapping and sequencing guide to the existing CRM exit-evidence brief. It covers terminology mapping, separate record-type exports, destination field/pipeline/activity preparation, import order, post-import spot checks and a suggested 5–10-record test import. The marketing-contact distinction is retained as a Pipedrive-specific note.
+
+**Editorial boundary:** vendor onboarding guidance is not an independent migration test, a guarantee of complete history/attachment portability, or proof of plan/region/role availability. HubSpot export permissions and activity boundaries remain sourced to HubSpot's own documentation. The separate Pipedrive 50,000/200,000 import-workflow discrepancy remains unresolved.
+
+**Scope / verification:** documentation-only update to the existing PR #14 branch; no new article, route, runtime behavior, dependency, test or TDD RED/GREEN claim. Keyword additions are qualitative hypotheses only; search volume, CPC, difficulty, rankings, impressions, clicks, traffic and conversions remain UNKNOWN. Require exact-head Build, operations, Chromium and Netlify status checks after this commit. All vendor claims remain unapproved; no source-intake or reviewer fields changed.
