@@ -1,6 +1,6 @@
 # SaaS Usage Meters: Buyer Brief, Evidence Ledger and Unpublished Draft
 
-**Research date:** 2026-11-04  
+**Research date:** 2026-11-04; evidence addenda **2026-11-11 and 2026-11-13**  
 **Status:** PRIVATE DEVELOPMENT RESEARCH — UNAPPROVED — NOT PUBLISHED  
 **Scope:** Organic-search preparation, first-party vendor evidence, publisher-readiness recheck and one distinct buyer-guide draft.  
 **Budget:** ₹0. No applications, accounts, posts, tracking links, paid tools, provider changes or publication.
@@ -27,7 +27,9 @@ No keyword-volume, difficulty, ranking or conversion data was available. These a
 | per-seat vs usage-based SaaS pricing | Comparison | Is the price based on people, activity, storage, calls or consumption? | Medium |
 | Kinsta visits vs Google Analytics | Vendor-specific troubleshooting / evaluation | Why can hosting-billed visits differ from analytics sessions? | High |
 | Kinsta visits vs bandwidth pricing | Purchase comparison | Which usage meter better reflects this site's traffic pattern? | High |
+| Kinsta Launch plan bandwidth only; Kinsta visits vs bandwidth plan families | Plan-specific purchase research | Does the exact plan family offer a visits-based option, or is it bandwidth-only? | High; plan-family boundary must be verified |
 | Cloudways off-site backup charges Flexible vs Autonomous | Plan comparison | Is backup storage separately metered or included? | High |
+| Cloudways GST / tax on hosting invoice in India | Regional billing / cost verification | Does the provider apply tax based on billing location, and what evidence is needed for any exemption? | Medium; vendor-specific terms require invoice confirmation |
 | Ahrefs Site Audit crawl credits explained | Plan-limit research | Which crawled URLs consume monthly credits? | Medium; covered by the existing SEO audit draft |
 | Semrush Site Audit monthly limit vs per audit | Plan-limit research | How do monthly and single-crawl caps differ? | Medium; covered by the existing SEO audit draft |
 | software subscription hidden usage fees | Commercial investigation | Which non-seat meters should be checked before signing? | High |
@@ -54,24 +56,57 @@ Public landing pages were inspected on 2026-11-04. This is a qualitative positio
 
 **Positioning hypothesis, not a proven USP:** StackPilot can distinguish itself by explaining the unit behind a price, the boundary of the meter, and the source date beside every numeric claim. It should not compete on the number of products listed, claim negotiated prices, or imply that unreviewed vendor facts are verified.
 
+### 2026-11-18 competitor research — CostBench licensing boundary
+
+[CostBench's dataset page](https://costbench.com/data/) says its CSV corpus was generated **2026-11-17** and is licensed **CC BY-NC 4.0**. The same page describes non-commercial reuse and says commercial redistribution rights are separate; it also says individual figures may be quoted or cited with attribution. [CostBench's API documentation](https://costbench.com/api-docs/) describes the API as free for non-commercial use and says responses carry per-field `owned` / `restricted` license metadata.
+
+**StackPilot handling:** do not bulk-ingest, copy or redistribute the dataset/API for a commercial StackPilot use without separately established rights. Cite the competitor's public methodology/positioning only where relevant, and continue to source vendor-specific product facts from the vendors' own documentation. CostBench's claims about its agent pipeline, data coverage, confidence scoring and refresh process are self-described competitor statements, not independently audited facts or StackPilot benchmarks.
+
+This is a competitor-content and licensing note only. It does not change StackPilot product data, prices, rankings, affiliate status, source approvals or the buyer's own cost inputs.
+
 ## 4. First-party evidence ledger — metering examples
 
-All pages were reopened on 2026-11-04. Keep every statement labelled as vendor documentation until a human editor has checked the source, exact plan family and context. No account was accessed and no real invoice or usage counter was tested.
+The core meter pages were reopened on 2026-11-04. The Cloudways fiscal-tax page was separately retrieved on 2026-11-11. Keep every statement labelled as vendor documentation until a human editor has checked the source, exact plan family and context. No account was accessed and no real invoice or usage counter was tested.
 
 | Vendor / source | What the official source says | Scope and caveat to preserve |
 |---|---|---|
 | **Kinsta — [Understand Your Traffic and Usage](https://kinsta.com/docs/wordpress-hosting/using-kinsta/kinsta-understand-your-traffic-and-usage/)**, last updated 2026-10-12 | Plans can be measured by monthly visits or monthly server bandwidth; disk and CDN bandwidth are separate limits. The two pricing versions of a plan are described as the same price. Kinsta says its visit count can differ from Google Analytics. Clearly identifying bots/crawlers are excluded, while traffic classified only as likely automated may still count. | Do not equate visits with GA sessions, unique people or raw access-log IPs. Server bandwidth and CDN bandwidth are separate meters. The source recommends reviewing two full billing cycles before choosing the meter; that is vendor guidance, not an independently tested rule. |
-| **Kinsta — [Overages](https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/)**, last updated 2026-03-09 | Published examples include $0.50 per 1,000 visit overage, $0.50 per GB server-bandwidth overage, SSD overage at $2 per GB/month prorated daily, and CDN overage at $0.05 per GB. Alerts are described at 80% and 100%; visit overage also has a 10% threshold alert. An upgrade is not retroactive. | These are published overage rules, not a quote for a buyer's current plan. Plan family, billing cycle, account settings and any custom terms must be checked before using a rate. |
+| **Kinsta — [Overages](https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/)**, last updated 2026-03-09 | The page defines monthly visits as the sum of unique IP addresses seen within a 24-hour period, shared across sites in the WordPress Hosting plan; it notes that the count differs from unique IPs in `access.log` because edge-cache-served visits are not included in that log. Published examples include $0.50 per 1,000 visit overage, $0.50 per GB server-bandwidth overage, SSD overage at $2 per GB/month prorated daily, and CDN overage at $0.05 per GB. Alerts are described at 80% and 100%; visit overage also has a 10% threshold alert. An upgrade is not retroactive. | These are vendor-defined usage and overage rules, not a quote for a buyer's current plan or a count of unique people. Do not substitute Google Analytics sessions or raw `access.log` totals. Plan family, billing cycle, account settings and any custom terms must be checked before using a rate. |
+| **Kinsta — [Choosing the Right Plan](https://kinsta.com/docs/billing/wordpress-hosting-plans/wordpress-choosing-the-right-plan/)**, last updated 2026-02-05 | The existing-customer guide says newer Launch, Launch Plus, Build, Expand, Scale and Lead plans are priced by server bandwidth only and have no visits-pricing option. It describes visits/bandwidth comparisons for other plan families. | This is a plan-family caveat, not proof that every Kinsta plan has both meters. The broader traffic/usage page says every plan has visits/bandwidth versions; keep that wording qualified and verify the exact account plan. No account or plan was tested. |
 | **Cloudways — [Charges for Off-site Backups](https://support.cloudways.com/en/articles/5119648-charges-for-off-site-backups)**, dated 2025-11-11 | Flexible backup storage is stated at $0.033 per GB and rounded up in $0.50 increments; Autonomous includes backup cost in the plan. Storage use depends partly on changed data and retention. | This is a backup-storage component, not the complete hosting bill. The page says the Flexible rate applies irrespective of server provider/location; it does not establish local taxes, exchange rates or every regional plan term. Recheck the page before publication because its displayed date is 2025. |
+| **Cloudways — [Fiscal Taxes Handling](https://support.cloudways.com/en/articles/5119685-fiscal-taxes-handling-at-cloudways)**, dated 2026-06-23 | Cloudways says tax is based on billing location; its country table lists India at 18%. A valid Tax ID such as GST may be eligible for exemption after verification, and an approved exemption applies to future invoices. Month-to-date tax is an estimate and may differ from the final invoice due to usage changes or rounding. | This is vendor billing guidance, not individualized tax advice or proof of a buyer's tax status. Confirm the actual billing address, invoice, valid GST-ID eligibility and applicable rules; do not automatically add 18% to every quote or infer affiliate payout tax treatment. No account was accessed. |
 | **Ahrefs — [How Site Audit crawl credits are spent](https://help.ahrefs.com/en/articles/3119402-how-are-crawl-credits-in-site-audit-spent)**, dated 2026-09-03; [verified project definition](https://help.ahrefs.com/en/articles/4321336-what-is-a-verified-project)**, dated 2026-09-03 | Only internal HTML pages returning HTTP 200 consume Site Audit crawl credits. Redirects, 4xx/5xx, resources and external URLs do not. The source states 100K–5M pages per month depending on subscription and the first 5,000 crawl credits per verified project/month are free across plans. A verified project requires ownership verification. | “Total URLs crawled” can exceed billable credits because some URL types are free. Do not imply a customer site is verified or that the same project allowance applies to an unverified property. |
 | **Semrush — [Site Audit limits](https://www.semrush.com/kb/31-site-audit)** and [configuration](https://www.semrush.com/kb/539-configuring-site-audit), retrieved 2026-11-04 | The help page distinguishes monthly page budgets from per-audit caps and concurrent audits. It maps Semrush One Starter / Pro+ / Advanced to Pro / Guru / Business SEO Toolkit. Unused monthly page budget does not roll over and resets on the first of the month. JavaScript rendering is stated as available on Guru or Business SEO Toolkit. | Current help-page figures: no SEO Toolkit 100/month and 100/audit; Pro 100,000/month and 20,000/audit; Guru 300,000/month and 20,000/audit; Business 1,000,000/month and 100,000/audit. Concurrent audits are 1/2/2/5 respectively. The pages show no on-page last-updated date; verify current product naming and checkout entitlement before publication. Default domain scope includes subdomains and subfolders unless narrowed. |
 
 ### Editorial interpretation
 
+### 2026-11-16 direct source refresh — Kinsta visit-meter definition (candidate-only)
+
+The public Kinsta Overages URL was retrieved again on **2026-11-16**. It still displays the title **Overages** and last-updated date **2026-03-09**. The page defines monthly visits as the sum of unique IP addresses seen within a 24-hour period, shared across sites in a WordPress Hosting plan. It explicitly says this count differs from unique IPs in `access.log` because visits served through the edge cache are not included in that log.
+
+**Editorial interpretation:** preserve this as Kinsta's vendor-defined billing unit. Do not call it unique people, do not substitute Google Analytics sessions, and do not reconstruct billed visits from `access.log` alone. The source does not verify a particular customer's plan, region, account settings, invoice or actual usage. No account was accessed, no test traffic was generated and no claim was approved.
+
+### 2026-11-17 Kinsta plan-family boundary (candidate-only; wording requires human review)
+
+**Official source:** [Choosing the Right Plan](https://kinsta.com/docs/billing/wordpress-hosting-plans/wordpress-choosing-the-right-plan/), last updated **2026-02-05**. The page says it is for existing Kinsta customers. It states that newer **Launch, Launch Plus, Build, Expand, Scale and Lead** plans are priced by server bandwidth only, with no visits-pricing option to compare against. It separately describes visits-versus-bandwidth comparisons for other plans.
+
+This is more specific than the [Understand Your Traffic and Usage](https://kinsta.com/docs/wordpress-hosting/using-kinsta/kinsta-understand-your-traffic-and-usage/) page, last updated **2026-10-12**, whose general wording says every Kinsta plan comes in visits-based and bandwidth-based versions. The two pages do not clearly reconcile that broad wording with the named newer plan families. Treat this as a **plan-family boundary / documentation wording discrepancy**, not a universal rule. For the named newer families, the specific plan guide says bandwidth-only; for any other plan, confirm the exact current entitlement in the buyer's account. Do not claim every current plan offers both meters.
+
+The exact plan-guide and traffic/usage URLs were retrieved through direct web page retrieval on **2026-11-17**; this was not a normal authenticated browser session or account test. No Kinsta account, plan, region, usage chart or invoice was accessed. The vendor claim remains candidate-only.
+
+### 2026-11-13 direct-browser reachability check — Kinsta Overages (candidate-only)
+
+The exact public URL https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/ was opened directly in a normal browser on **2026-11-13**. The page rendered fully without sign-in; visible title: **Overages**; visible last-updated date: **2026-03-09**. No canonical URL was explicitly visible in the rendered page content.
+
+The page displayed four distinct vendor-published usage meters: visits (**$0.50 per 1,000 visits** after the applicable cap), server bandwidth (**$0.50/GB**), SSD disk overage (**$2/GB/month, prorated daily**) and CDN bandwidth (**$0.05/GB**). It also described 80%/100% plan-limit alerts, an additional 10% visit-overage alert and non-retroactive plan upgrades.
+
+**Evidence boundary:** this confirms public documentation reachability and the wording visible on that page only. It does not verify any buyer's plan, region, custom terms, tax, billing cycle, usage or invoice; it is not independent testing or editorial approval. Keep the figures attributed to Kinsta and do not present them as a quote or prediction for a particular site. No Kinsta account was accessed.
+
 These examples are deliberately not presented as one comparable price table:
 
 - Kinsta illustrates visits, server bandwidth, disk and CDN as distinct measures.
 - Cloudways illustrates backup storage measured in GB and a difference between two service families.
+- Cloudways also publishes country-specific billing-tax guidance; its India entry is 18%, but the actual invoice, billing address and any verified Tax ID treatment control.
 - Ahrefs illustrates that crawled URL count and credit-consuming URL count are not identical.
 - Semrush illustrates monthly allowance, per-audit cap and concurrent jobs as separate dimensions.
 
@@ -132,7 +167,7 @@ When a vendor offers credits, ask:
 
 Your analytics dashboard and the vendor's billing meter may be designed for different purposes.
 
-Kinsta's documentation says its visit count can differ from Google Analytics because they measure traffic differently. It describes visits-based and server-bandwidth-based plan variants, with CDN bandwidth separate from server bandwidth. It also says clearly identifying bots and crawlers are excluded, while traffic classified only as likely automated may still count.
+Kinsta's documentation says its visit count can differ from Google Analytics because they measure traffic differently. Its Overages page defines monthly visits as the sum of unique IP addresses seen within a 24-hour period, shared across sites in a WordPress Hosting plan. It also says the count is not the same as unique IPs in `access.log`, because that log does not include visits served through the edge cache. This is Kinsta's billing definition, not a count of unique people; do not substitute analytics sessions or raw access-log totals. Kinsta describes visits-based and server-bandwidth-based plan variants, with CDN bandwidth separate from server bandwidth. However, its [Choosing the Right Plan](https://kinsta.com/docs/billing/wordpress-hosting-plans/wordpress-choosing-the-right-plan/) page says newer Launch, Launch Plus, Build, Expand, Scale and Lead plans are bandwidth-only and have no visits-pricing option. Do not generalize the two-meter choice to every current plan family; verify the buyer's exact plan. Kinsta also says clearly identifying bots and crawlers are excluded, while traffic classified only as likely automated may still count.
 
 The practical lesson is not that one dashboard is wrong. It is that two systems may use different counting rules. Before choosing a hosting plan, compare the provider's own usage chart with the definition in the billing documentation. Do not substitute analytics sessions for the provider's billed visit count.
 
@@ -141,6 +176,8 @@ The practical lesson is not that one dashboard is wrong. It is that two systems 
 A backup feature can be included in one service family and separately metered in another.
 
 Cloudways' off-site backup article distinguishes Flexible from Autonomous: the cited page describes backup storage as a separate per-GB charge for Flexible, rounded in $0.50 increments, while Autonomous includes backup cost in its plan. The same page explains that storage depends on the amount of backup data and how long it is retained.
+
+Cloudways' fiscal-tax guide says tax is based on billing location and currently lists India at 18%; it also says an eligible, valid Tax ID may apply to future invoices after verification. Treat this as vendor documentation, not a universal tax calculation: check the actual account invoice and applicable local rules, and do not assume an exemption until it is verified.
 
 Before comparing plans, ask:
 - Is backup storage included?
@@ -203,7 +240,7 @@ The existing browser-only subscription calculator is a user-entered arithmetic h
 
 ## 6. Publisher-program and geography recheck — research only
 
-Official pages were reopened on 2026-11-04. These are public program descriptions, not proof that an India-based individual, this website or any application would be accepted. No application, account, contact or payout/KYC step was performed.
+HubSpot, Pipedrive, Cloudways, Kinsta and Semrush program pages were reopened on 2026-11-04. Ahrefs public program evidence was rechecked on 2026-11-11. These are public program descriptions, not proof that an India-based individual, this website or any application would be accepted. No application, account, contact or payout/KYC step was performed.
 
 | Program | Current public evidence | India / channel limitation | Decision |
 |---|---|---|---|
@@ -212,7 +249,7 @@ Official pages were reopened on 2026-11-04. These are public program description
 | **Cloudways** — [official affiliate FAQ](https://support.cloudways.com/en/articles/5134056-how-to-join-cloudways-affiliate-program-faqs-benefits), dated 2026-04-28 | The profile is submitted for review. A referral commission is not approved until the customer has paid at least two invoices. The FAQ lists $250 approved commission for PayPal, $1,000 for wire transfer and $100 for transfer to Cloudways funds. | The public FAQ inspected here does not specify India payout/KYC eligibility or Indian tax treatment. Payout methods and thresholds are not proof that an Indian account can receive them. | Keep UNSUBMITTED. India-specific payout eligibility remains UNKNOWN. |
 | **Kinsta** — [official affiliate page](https://kinsta.com/affiliates/) | The page says applications are manually screened. It generally does not accept unfinished sites, sites without their own domain, thin lists of tools without further information, sites without affiliate disclosure, or social profiles alone. | No India-specific applicant restriction was established by the page inspected. However, the present private prelaunch site has no verified public audience and does not meet the documented site-readiness conditions. | Defer. No application. |
 | **Semrush** — [official affiliate page](https://www.semrush.com/lp/affiliate-program/en/) | The current page says a content publisher's website should have at least 1,000 unique monthly visitors; social channels should typically have at least 1,000 organic followers/likes/views. It generally declines unfinished/new sites and evaluates traffic source, rankings, content frequency and relevance. | The public FAQ inspected does not provide a complete country-by-country publisher eligibility list. No real StackPilot traffic or social audience has been verified. | Defer. No application; traffic requirement is not met by evidence currently available. |
-| **Ahrefs** — [official 2023 statement](https://ahrefs.com/blog/ahrefs-affiliate-program/) | The official article dated 2023-06-12 says Ahrefs did not have an affiliate program then and had no plan to relaunch at that time. | No newer official public affiliate registration page was found in this 2026-11-04 search. A 2023 statement does not prove the 2026 position. | Keep the program-discovery gap open. Do not invent a program URL or use old referral links. |
+| **Ahrefs** — [official 2023 statement](https://ahrefs.com/blog/ahrefs-affiliate-program/) and [2026 affiliate-marketing guide](https://ahrefs.com/blog/affiliate-marketing/) | The 2023-06-12 article says the former program had been discontinued and there were no plans to relaunch at that time. The 2026-10-22 article is general affiliate-marketing education; it discusses programs such as HubSpot but does not offer an Ahrefs SEO-product affiliate signup. No official public SEO-product registration page surfaced in the 2026-11-11 recheck. | The 2023 statement is historical and cannot prove 2026 absence; the 2026 guide is not an Ahrefs partner offer. No account or private partnership channel was checked. | Keep the discovery gap open and `programUrl:null`. Do not invent a signup URL or use old referral links. |
 
 **Publisher-readiness conclusion:** there is no reason to submit an application now. Current site traffic, search audience, social audience, publisher contact/legal identity and India-specific payout eligibility remain UNKNOWN or unverified. Program commissions are not earnings forecasts and are excluded from any revenue estimate.
 
@@ -261,14 +298,12 @@ Content-quality acceptance checks before any later publication:
 
 ## 9. Backlog coordination and next action
 
-The exact-head operations artifact dated 2026-11-03 reports:
-- Advisory-only queue: 12 automatic tasks and 4 separate owner gates.
-- 6 source-backed candidate claims; 6 awaiting human editorial review; 0 approved.
-- 0 sources needing freshness refresh.
-- 5 affiliate program candidates and 1 Ahrefs discovery gap.
-- 0 applications, 0 accepted programs, 0 active tracking links.
-- Actual traffic and earnings are null / UNKNOWN; 11 publisher owner gates remain outstanding.
-- canPublish, canMonetize and canSpend are all false.
+The exact-head PR #8 operations artifact generated 2026-11-09 for commit `29573f0142b2019ba11593569c6d080a5d052c71` reports:
+- Advisory-only `ops:backlog` queue: `automatic: []`; 0 sources needing refresh and no due automatic source-refresh or affiliate task.
+- 6 prepared evidence packets; 6 editorial reviews pending; 0 approved claims; 4 owner gates.
+- 5 affiliate program candidates; 0 applications, 0 accepted programs and 0 active tracking links; one program is recorded without a public affiliate program (Ahrefs).
+- Publisher readiness has 11 owner gates outstanding; actual traffic and earnings are null / UNKNOWN.
+- `canPublish=false`, `canMonetize=false` and `canSpend=false`.
 
 The six claim-level source reviews are already recorded in open issue #6, including the HubSpot/Pipedrive export caveats and the Ahrefs/Semrush/Kinsta/Cloudways plan limits. This task did not duplicate them or alter source intake dates. Issue #4 is closed; it is cross-referenced rather than reopened.
 
@@ -285,19 +320,21 @@ The six claim-level source reviews are already recorded in open issue #6, includ
 6. Semrush Site Audit configuration — https://www.semrush.com/kb/539-configuring-site-audit — retrieved 2026-11-04; no visible on-page updated date.
 7. Kinsta traffic and usage — https://kinsta.com/docs/wordpress-hosting/using-kinsta/kinsta-understand-your-traffic-and-usage/ — last updated 2026-10-12.
 8. Kinsta overages — https://kinsta.com/docs/billing/wordpress-hosting-plans/overages/ — last updated 2026-03-09.
+9. Kinsta Choosing the Right Plan — https://kinsta.com/docs/billing/wordpress-hosting-plans/wordpress-choosing-the-right-plan/ — last updated 2026-02-05; says newer Launch, Launch Plus, Build, Expand, Scale and Lead plans are bandwidth-only.
 9. Cloudways off-site backup charges — https://support.cloudways.com/en/articles/5119648-charges-for-off-site-backups — dated 2025-11-11.
+10. Cloudways fiscal taxes — https://support.cloudways.com/en/articles/5119685-fiscal-taxes-handling-at-cloudways — dated 2026-06-23; retrieved 2026-11-11.
 
 ### Affiliate program pages
-10. HubSpot — https://www.hubspot.com/partners/affiliates/f937 — retrieved 2026-11-04.
-11. Pipedrive — https://www.pipedrive.com/en/affiliate-partnership — retrieved 2026-11-04.
-12. Cloudways — https://support.cloudways.com/en/articles/5134056-how-to-join-cloudways-affiliate-program-faqs-benefits — dated 2026-04-28.
-13. Kinsta — https://kinsta.com/affiliates/ — retrieved 2026-11-04.
-14. Semrush — https://www.semrush.com/lp/affiliate-program/en/ — retrieved 2026-11-04.
-15. Ahrefs — https://ahrefs.com/blog/ahrefs-affiliate-program/ — dated 2023-06-12; historical only.
+11. HubSpot — https://www.hubspot.com/partners/affiliates/f937 — retrieved 2026-11-04.
+12. Pipedrive — https://www.pipedrive.com/en/affiliate-partnership — retrieved 2026-11-04.
+13. Cloudways — https://support.cloudways.com/en/articles/5134056-how-to-join-cloudways-affiliate-program-faqs-benefits — dated 2026-04-28.
+14. Kinsta — https://kinsta.com/affiliates/ — retrieved 2026-11-04.
+15. Semrush — https://www.semrush.com/lp/affiliate-program/en/ — retrieved 2026-11-04.
+16. Ahrefs — https://ahrefs.com/blog/ahrefs-affiliate-program/ — dated 2023-06-12; historical only. Current educational guide: https://ahrefs.com/blog/affiliate-marketing/ — dated 2026-10-22; not a product affiliate offer.
 
 ### Search and community guidance
-16. Google people-first content — https://developers.google.com/search/docs/fundamentals/creating-helpful-content.
-17. Google Search Console — https://developers.google.com/search/docs/monitor-debug/search-console-start.
-18. Bing Search Performance — https://www.bing.com/webmasters/help/search-performance-c680da36.
-19. LinkedIn spam help — https://www.linkedin.com/help/linkedin/answer/a1338787.
-20. Reddit spam help — https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam — updated 2026-10-30.
+17. Google people-first content — https://developers.google.com/search/docs/fundamentals/creating-helpful-content.
+18. Google Search Console — https://developers.google.com/search/docs/monitor-debug/search-console-start.
+19. Bing Search Performance — https://www.bing.com/webmasters/help/search-performance-c680da36.
+20. LinkedIn spam help — https://www.linkedin.com/help/linkedin/answer/a1338787.
+21. Reddit spam help — https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam — updated 2026-10-30.
