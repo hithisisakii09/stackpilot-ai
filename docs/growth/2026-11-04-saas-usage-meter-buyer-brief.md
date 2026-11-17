@@ -56,6 +56,14 @@ Public landing pages were inspected on 2026-11-04. This is a qualitative positio
 
 **Positioning hypothesis, not a proven USP:** StackPilot can distinguish itself by explaining the unit behind a price, the boundary of the meter, and the source date beside every numeric claim. It should not compete on the number of products listed, claim negotiated prices, or imply that unreviewed vendor facts are verified.
 
+### 2026-11-18 competitor research — CostBench licensing boundary
+
+[CostBench's dataset page](https://costbench.com/data/) says its CSV corpus was generated **2026-11-17** and is licensed **CC BY-NC 4.0**. The same page describes non-commercial reuse and says commercial redistribution rights are separate; it also says individual figures may be quoted or cited with attribution. [CostBench's API documentation](https://costbench.com/api-docs/) describes the API as free for non-commercial use and says responses carry per-field `owned` / `restricted` license metadata.
+
+**StackPilot handling:** do not bulk-ingest, copy or redistribute the dataset/API for a commercial StackPilot use without separately established rights. Cite the competitor's public methodology/positioning only where relevant, and continue to source vendor-specific product facts from the vendors' own documentation. CostBench's claims about its agent pipeline, data coverage, confidence scoring and refresh process are self-described competitor statements, not independently audited facts or StackPilot benchmarks.
+
+This is a competitor-content and licensing note only. It does not change StackPilot product data, prices, rankings, affiliate status, source approvals or the buyer's own cost inputs.
+
 ## 4. First-party evidence ledger — metering examples
 
 The core meter pages were reopened on 2026-11-04. The Cloudways fiscal-tax page was separately retrieved on 2026-11-11. Keep every statement labelled as vendor documentation until a human editor has checked the source, exact plan family and context. No account was accessed and no real invoice or usage counter was tested.
