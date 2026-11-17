@@ -87,3 +87,12 @@ Additional qualitative query hypotheses: `Kinsta Launch plan bandwidth only`; `K
 - The broader visits/bandwidth wording from the traffic/usage guide is not generalized to every plan.
 - The documentation discrepancy remains candidate-only; exact plan availability, customer region, custom terms and invoices remain UNKNOWN.
 - No browser connector session, account action, publication, indexing or spending occurs.
+
+
+## 2026-11-18 follow-up — competitor data licensing
+
+**Sources:** [CostBench dataset](https://costbench.com/data/) (generated 2026-11-17; CC BY-NC 4.0) and [CostBench API documentation](https://costbench.com/api-docs/) (describes free non-commercial API use and per-field `owned` / `restricted` license metadata).
+
+**Decision:** no dataset/API ingestion, copying or redistribution for StackPilot's intended commercial model without separately established commercial rights. Public competitor positioning may be described with attribution; product-specific claims continue to require vendor first-party sources. CostBench's methodology and scale statements remain self-described and unverified by StackPilot.
+
+**Scope / verification:** documentation-only note in the existing PR #13 usage-meter brief; no new page, route, product data, vendor claim, price, ranking, affiliate field or tracking. No TDD RED/GREEN is claimed because executable behavior is unchanged. Exact-head Build, operations, Chromium and Netlify status checks must be inspected after the commit. Search volume, CPC, rankings, traffic, conversions and earnings remain UNKNOWN.
