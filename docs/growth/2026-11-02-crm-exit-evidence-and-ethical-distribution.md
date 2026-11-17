@@ -16,6 +16,7 @@ Existing private materials already cover CRM migration checklists, a fictional r
 | `HubSpot export associations contacts deals`, `HubSpot export activities separately` | Migration/exit diligence | Object-to-association completeness audit, explicit activity boundary | Same; record actual page-level query evidence, never estimate |
 | `CRM export checklist before switching`, `CRM migration exit plan` | Pre-purchase due diligence | Neutral evidence-request template and no-go decision rule | Same; do not infer conversions from clicks |
 | `CRM export download expires`, `CRM data portability contract questions` | Urgent exit planning | Retention window and secure handoff checklist | Same; only count actual opt-in interactions if authorized |
+| `HubSpot to Pipedrive migration checklist`, `HubSpot Pipedrive field mapping`, `Pipedrive HubSpot import order`, `HubSpot marketing contacts to Pipedrive` | Migration execution / vendor-specific troubleshooting | Use the vendor's mapping and sequencing guide to build a buyer-side preflight; keep export completeness and history preservation as separate NOT TESTED checks | Same; no volume or ranking estimate |
 
 These are editorial **intent hypotheses**, not measured rankings, search volume, guaranteed demand or promises of organic acquisition. Do not create thin keyword-variant pages.
 
@@ -62,6 +63,12 @@ This is distinct from the general [Importing data into Pipedrive with spreadshee
 No account, customer data or import was accessed; no test file was uploaded and no support request was sent. This remains source review only.
 
 **Plan/region/workflow questions still open:** actual user permissions and visibility groups; subscription edition and legacy models; Projects/custom-object entitlements; API authorization; activity/attachment export formats; EU/other regional processing or export conditions; account-specific file expiry and billing/renewal terms; and the unresolved relationship between the general 200,000-row import guide and the System ID update page's 50,000-row error note. Do not infer geography from this discrepancy or insert vendor prices, availability verdicts or comparisons into catalog data.
+
+### 2026-11-18 additional first-party migration workflow source — candidate-only
+
+**Pipedrive — [HubSpot migration to Pipedrive](https://support.pipedrive.com/en/article/hubspot-to-pipedrive-migration)**, last updated **2026-09-23**. The vendor-authored guide provides a terminology map (HubSpot contact → Pipedrive person; company → organization; custom property → custom field; task/activity → activity), recommends reviewing source data and creating destination custom fields before import, describes separate exports by record type, and gives an import sequence of organizations, persons, deals, leads, activities and optional notes. It also says Pipedrive does not distinguish marketing from non-marketing contacts in the same way and suggests adding a marketing status. Its post-import section recommends spot checks and retaining exported files; it suggests a 5–10-record test import.
+
+**Limits:** This is Pipedrive's own onboarding guidance, not independent migration testing, a guarantee that every HubSpot object/activity/attachment is portable, or proof of account permissions, edition, region or import success. Keep HubSpot's own export documentation as the source for source-side export permissions and activity boundaries. Keep the 50,000 vs 200,000 Pipedrive workflow-limit relationship unresolved as already documented above. Do not turn this into a vendor endorsement or a separate thin comparison page.
 
 ## Unpublished article brief — “Before you leave a CRM: prove the export is complete”
 **Proposed article:** Private editorial draft only; no route or public URL is being created.
