@@ -108,7 +108,7 @@ After a separately approved launch, measure page-level impressions, clicks, CTR 
 
 ## 2026-11-19 HubSpot export documentation refresh — candidate-only
 
-**Source:** [HubSpot — Export your records](https://knowledge.hubspot.com/import-and-export/export-records), directly retrieved on 2026-11-19; the live page displays **Last updated: November 12, 2026**. This supersedes the older April 2, 2026 page date recorded in the original CRM evidence brief.
+**Source:** [HubSpot — Export your records](https://knowledge.hubspot.com/import-and-export/export-records), directly retrieved on 2026-11-19; the live page still displays **Last updated: April 2, 2026**. A search-index snippet surfaced **November 12, 2026**, but the directly rendered canonical page did not corroborate it. Treat that snippet date as unverified; retain April 2, 2026 as the vendor page's displayed date.
 
 ### Verified wording to preserve
 
