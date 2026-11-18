@@ -104,3 +104,36 @@ After a separately approved launch, measure page-level impressions, clicks, CTR 
 **Editorial boundary:** vendor onboarding guidance is not an independent migration test, a guarantee of complete history/attachment portability, or proof of plan/region/role availability. HubSpot export permissions and activity boundaries remain sourced to HubSpot's own documentation. The separate Pipedrive 50,000/200,000 import-workflow discrepancy remains unresolved.
 
 **Scope / verification:** documentation-only update to the existing PR #14 branch; no new article, route, runtime behavior, dependency, test or TDD RED/GREEN claim. Keyword additions are qualitative hypotheses only; search volume, CPC, difficulty, rankings, impressions, clicks, traffic and conversions remain UNKNOWN. Require exact-head Build, operations, Chromium and Netlify status checks after this commit. All vendor claims remain unapproved; no source-intake or reviewer fields changed.
+
+
+## 2026-11-19 HubSpot export documentation refresh — candidate-only
+
+**Source:** [HubSpot — Export your records](https://knowledge.hubspot.com/import-and-export/export-records), directly retrieved on 2026-11-19; the live page displays **Last updated: November 12, 2026**. This supersedes the older April 2, 2026 page date recorded in the original CRM evidence brief.
+
+### Verified wording to preserve
+
+- The page's availability label is **All products and plans**, except where noted; the export permission is still required.
+- A default record export includes the properties/associations in the selected view and up to **1,000 associated record ID values per association column**.
+- The all-associated-records option is documented for **CSV** exports only.
+- Contact activities are handled separately via individual contact-data export, selected activity reports or the engagements API.
+- Download links expire after **30 days**; the page also documents up to **300 exports per rolling 24-hour window** and **three concurrent exports**.
+- Large exports may take hours; exports over 1,000,000 rows for CSV/XLSX and 65,535 rows for XLS may be split into multiple files.
+
+### Buyer-intent hypotheses
+
+- `HubSpot export associations 1,000 limit`
+- `HubSpot export all associations CSV`
+- `HubSpot export activities separately`
+- `HubSpot export link expires 30 days`
+- `HubSpot export over 1 million rows`
+
+These are qualitative task/query hypotheses only. Search volume, CPC, difficulty, rankings, impressions, clicks, traffic and conversions remain UNKNOWN.
+
+### Scope and review
+
+- Update only the existing CRM exit-evidence brief and this plan; no new page, route, code, dependency or analytics.
+- Keep the record-export / activity-export distinction explicit. Do not call the export a complete backup, infer that every object/API route is enabled for every portal, or present the default 1,000 association IDs as a universal record cap.
+- Do not modify `src/data/research-claims.json`, source-intake dates, review fields, approval flags, product data, affiliate records or tracking URLs.
+- Do not execute owner gates. The exact 2026-11-18 `artifacts/ops/backlog.json` has `automatic: []`; its empty queue takes precedence over generic legacy task suggestions in `report.json`.
+- No local test/build was run for this documentation-only update. There is no runtime behavior to test. After the commit, verify exact-head GitHub Build, Operations, Chromium and Netlify status independently; do not describe the prior 468/468 unit tests as a green build because the prior exact-head Build workflow fails at the final production dependency audit.
+- Keep the draft PR open/unmerged, main and production untouched, noindex/privacy intact, Netlify Private/Locked as last owner-reported, and the budget at ₹0.
