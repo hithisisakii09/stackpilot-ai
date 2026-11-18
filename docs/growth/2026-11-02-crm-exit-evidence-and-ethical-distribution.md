@@ -127,7 +127,7 @@ Ask the authorized CRM administrator/vendor to complete this **without sharing p
 
 ### 2026-11-19 HubSpot export documentation refresh — source note only, candidate-only
 
-A fresh direct retrieval of the official [HubSpot — Export your records](https://knowledge.hubspot.com/import-and-export/export-records) page shows **Last updated: November 12, 2026**, superseding the **April 2, 2026** date recorded in the earlier source note. The page's availability line says **All products and plans**, except where noted; it still requires the account's **Export** permission.
+A fresh direct retrieval of the official [HubSpot — Export your records](https://knowledge.hubspot.com/import-and-export/export-records) page on **2026-11-19** still displays **Last updated: April 2, 2026**. A search-index result surfaced **November 12, 2026**, but the directly rendered canonical page did not corroborate that date. Treat the search snippet as unverified and retain **April 2, 2026** as the vendor page's displayed update date. The page's availability line says **All products and plans**, except where noted; it still requires the account's **Export** permission.
 
 The current page clarifies the practical export boundary:
 
