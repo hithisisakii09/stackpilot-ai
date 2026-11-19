@@ -1,6 +1,6 @@
 # StackPilot AI — CRM exit evidence and ethical organic distribution
 **Research date:** 2026-11-02 (Asia/Kolkata) · **PRIVATE DRAFT / NOT EDITORIALLY APPROVED / NOT PUBLISHED**
-**Work queue:** `draft-evidence-review:hubspot` and `draft-evidence-review:pipedrive` (automatic/advisory, priority 30 in exact-head operations artifact); issue #4 historical editorial backlog, issue #6 current unapproved source spot-check, issue #5 release NO-GO.
+**Work queue:** the HubSpot/Pipedrive P30 entries are historical research leads. The latest exact-head `ops:backlog` artifact (2026-11-18) reports `automatic: []`, `sourcesNeedingRefresh: 0`, six prepared evidence packets, six editorial reviews pending, five affiliate-program candidates, zero accepted programs and four owner-only gates; issue #4 is the closed historical editorial backlog, issue #6 is the current open source-review coordination thread, and issue #5 remains the release NO-GO record. This 2026-11-19 HubSpot documentation refresh is a bounded research update under the explicit growth brief, not an automatic queue task or a review-date change.
 **Source classification:** Read-only first-party documentation, **not** a vendor account test, purchased plan, verified feature, regional eligibility determination, affiliate approval, traffic proof or independent benchmark.
 
 ## Why this adds value rather than another generic comparison
@@ -12,9 +12,12 @@ Existing private materials already cover CRM migration checklists, a fictional r
 | Proposed query family | Stage / specific task | Differentiating buyer utility | Evidence to collect after an approved public launch |
 | --- | --- | --- | --- |
 | `Pipedrive export activities notes files`, `Pipedrive export permission visibility` | Migration/exit diligence | Separate export-inventory checklist with visibility and external-file questions | Verified Search Console impressions/clicks by page/query, if legally configured |
+| `Pipedrive System ID spreadsheet update row limit`, `Pipedrive bulk update 50,000 rows`, `Pipedrive 50,000 vs 200,000 import rows` | Migration execution / troubleshooting | Distinguish general spreadsheet import from existing-record System ID updates; surface the unresolved limit boundary | Same; search demand remains UNKNOWN until measured |
 | `HubSpot export associations contacts deals`, `HubSpot export activities separately` | Migration/exit diligence | Object-to-association completeness audit, explicit activity boundary | Same; record actual page-level query evidence, never estimate |
+| `HubSpot export associations 1,000 limit`, `HubSpot export all associations CSV`, `HubSpot export activities separately`, `HubSpot export link expires 30 days` | Migration/exit diligence / export troubleshooting | Check default association truncation, activity separation and temporary export delivery window against the current vendor page | Same; volumes, CPC, rankings, impressions, clicks and traffic remain UNKNOWN |
 | `CRM export checklist before switching`, `CRM migration exit plan` | Pre-purchase due diligence | Neutral evidence-request template and no-go decision rule | Same; do not infer conversions from clicks |
 | `CRM export download expires`, `CRM data portability contract questions` | Urgent exit planning | Retention window and secure handoff checklist | Same; only count actual opt-in interactions if authorized |
+| `HubSpot to Pipedrive migration checklist`, `HubSpot Pipedrive field mapping`, `Pipedrive HubSpot import order`, `HubSpot marketing contacts to Pipedrive` | Migration execution / vendor-specific troubleshooting | Use the vendor's mapping and sequencing guide to build a buyer-side preflight; keep export completeness and history preservation as separate NOT TESTED checks | Same; no volume or ranking estimate |
 
 These are editorial **intent hypotheses**, not measured rankings, search volume, guaranteed demand or promises of organic acquisition. Do not create thin keyword-variant pages.
 
@@ -26,7 +29,47 @@ These are editorial **intent hypotheses**, not measured rankings, search volume,
 
 **Pipedrive import countercheck:** [Importing data with spreadsheets](https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets), vendor page last updated **2026-10-19**. It describes CSV/XLS/XLSX import, mandatory fields, mapping, duplicate handling, a maximum of **200,000 rows** and file size **under 50 MB**; it describes an admin-only revert window of **48 hours**. The import-revert feature is **not** a substitute for a verified source backup or a general migration rollback guarantee. Limits and permissions require account-level confirmation before editorial approval.
 
-**Plan/region questions still open:** actual user permissions and visibility groups; subscription edition and legacy models; Projects/custom-object entitlements; API authorization; activity/attachment export formats; EU/other regional processing or export conditions; account-specific file expiry and billing/renewal terms. Do not insert vendor prices, availability verdicts or comparisons into catalog data.
+### 2026-11-13 direct-browser locale verification — Pipedrive spreadsheet import (candidate-only)
+
+A direct, read-only browser review of six official Pipedrive help pages on **2026-11-13** supersedes the earlier search-index discrepancy. All six pages rendered without sign-in and showed the same current import requirements: **up to 200,000 rows** and a file **under 50 MB**, with each page displaying an update date of **19 October 2026**.
+
+| Locale | Visible update date | Row limit | File limit | Translation note |
+|---|---|---:|---:|---|
+| English | 19 October 2026 | 200,000 | under 50 MB | No machine-translation notice |
+| Indonesian | 19 October 2026 | 200,000 | under 50 MB | Machine-translated from English; not human-reviewed |
+| Thai | 19 October 2026 | 200,000 | under 50 MB | Translation-software notice; not editor-verified |
+| Traditional Chinese | 19 October 2026 | 200,000 | under 50 MB | Explicit machine-translation notice |
+| Spanish | 19 October 2026 | 200,000 | under 50 MB | No machine-translation notice |
+| Portuguese | 19 October 2026 | 200,000 | under 50 MB | No machine-translation notice |
+
+Official pages directly visited:
+- English: https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets
+- Indonesian: https://support.pipedrive.com/id/article/importing-data-into-pipedrive-with-spreadsheets
+- Thai: https://support.pipedrive.com/th/article/importing-data-into-pipedrive-with-spreadsheets
+- Traditional Chinese: https://support.pipedrive.com/zh-hant/article/importing-data-into-pipedrive-with-spreadsheets
+- Spanish: https://support.pipedrive.com/es/article/importing-data-into-pipedrive-with-spreadsheets
+- Portuguese: https://support.pipedrive.com/pt/article/importing-data-into-pipedrive-with-spreadsheets
+
+**Correction:** earlier search-result snippets showing 50,000 rows for Indonesian/Thai are not supported by the directly rendered **general-import** pages checked here; those six pages show 200,000 rows. However, a separate official System ID update article (below) still contains a 50,000-row note in its import-error guidance. The earlier locale-specific inference remains superseded, but 50,000 must not be described as absent from all current Pipedrive documentation. Keep the general-import and System ID update paths distinct; their relationship is unresolved.
+
+**Interpretation:** no current locale-specific or geographic row-limit difference was established. The three machine-translated pages still warrant a language-quality caveat, but their visible numeric requirements match English. The 200,000-row / under-50-MB limits remain vendor documentation, not an account test or guarantee for every subscription, permission set or future revision. The separate global-admin permission and 48-hour import-revert caveats remain attached. No account was accessed and no import was performed.
+
+**Editorial handling:** replace the earlier 50,000-row locale discrepancy with this direct-browser result. Keep the source attributed to Pipedrive, preserve the translation notices, and require human review before any public use.
+### 2026-11-17 additional Pipedrive System ID update-path check (candidate-only; unresolved scope)
+
+The official [Updating Pipedrive data with a spreadsheet](https://support.pipedrive.com/en/article/updating-pipedrive-data-with-a-spreadsheet) page, last updated **2026-09-03**, describes updating existing deals, people, organizations, products, activities and notes by including each item's Pipedrive System ID. It says the action is available only to admins and regular users with the correct permissions. In its import-error note, the page states a maximum of **50,000 rows** and **50 MB**.
+
+This is distinct from the general [Importing data into Pipedrive with spreadsheets](https://support.pipedrive.com/en/article/importing-data-into-pipedrive-with-spreadsheets) page, last updated **2026-10-19**, which states up to **200,000 rows** and a file **under 50 MB**. The two pages do not clearly reconcile whether the 50,000-row note is a limit specific to System ID bulk updates, a limit for error-prone update files, or an outdated statement. Do not infer a country/locale-specific limit or apply either number to every import path. Record both values with their respective page/workflow and mark the cross-workflow relationship **UNRESOLVED** pending vendor clarification or an authorized account test.
+
+No account, customer data or import was accessed; no test file was uploaded and no support request was sent. This remains source review only.
+
+**Plan/region/workflow questions still open:** actual user permissions and visibility groups; subscription edition and legacy models; Projects/custom-object entitlements; API authorization; activity/attachment export formats; EU/other regional processing or export conditions; account-specific file expiry and billing/renewal terms; and the unresolved relationship between the general 200,000-row import guide and the System ID update page's 50,000-row error note. Do not infer geography from this discrepancy or insert vendor prices, availability verdicts or comparisons into catalog data.
+
+### 2026-11-18 additional first-party migration workflow source — candidate-only
+
+**Pipedrive — [HubSpot migration to Pipedrive](https://support.pipedrive.com/en/article/hubspot-to-pipedrive-migration)**, last updated **2026-09-23**. The vendor-authored guide provides a terminology map (HubSpot contact → Pipedrive person; company → organization; custom property → custom field; task/activity → activity), recommends reviewing source data and creating destination custom fields before import, describes separate exports by record type, and gives an import sequence of organizations, persons, deals, leads, activities and optional notes. It also says Pipedrive does not distinguish marketing from non-marketing contacts in the same way and suggests adding a marketing status. Its post-import section recommends spot checks and retaining exported files; it suggests a 5–10-record test import.
+
+**Limits:** This is Pipedrive's own onboarding guidance, not independent migration testing, a guarantee that every HubSpot object/activity/attachment is portable, or proof of account permissions, edition, region or import success. Keep HubSpot's own export documentation as the source for source-side export permissions and activity boundaries. Keep the 50,000 vs 200,000 Pipedrive workflow-limit relationship unresolved as already documented above. Do not turn this into a vendor endorsement or a separate thin comparison page.
 
 ## Unpublished article brief — “Before you leave a CRM: prove the export is complete”
 **Proposed article:** Private editorial draft only; no route or public URL is being created.
@@ -75,8 +118,110 @@ Ask the authorized CRM administrator/vendor to complete this **without sharing p
 
 **Research progress indicators (not traffic promises):** count of original briefs with an explicit buyer task; official URLs directly revisited with vendor-reported update dates; number of unresolved plan/role/region caveats; number of checklists reviewed by a real editor; actual authenticated hosted-UAT pass count. All currently require a real reviewer before becoming launch evidence.
 
-**Next automatic work:** retain this draft as a source review lead, do not re-open all six claims redundantly (issue #6 already spot-checked them); recheck only changed primary documentation and resolve real factual conflicts. **Next human-only gates:** owner validates editorial statements and publisher identity/channel, Netlify billing and Private/Locked state, then separately decides any public launch, indexing or affiliate application. No autonomous gate is checked by this document.
+**Latest queue decision (2026-11-18):** the exact-head `artifacts/ops/backlog.json` reports `automatic: []`, zero sources needing refresh, six prepared evidence packets, six editorial reviews pending, five affiliate candidates, zero accepted programs, zero affiliate reviews due and four owner gates. Do not infer work from the generic legacy `report.json` task list, invent queue work, mark source-intake dates reviewed or execute owner gates. This dated locale discrepancy is recorded as a narrow source-quality note from the user's explicit research scope, not as a queue approval or editorial signoff. Do not re-open all six claims redundantly (issue #6 already spot-checked them); recheck only changed primary documentation and resolve real factual conflicts. **Next human-only gates:** owner validates editorial statements and publisher identity/channel, Netlify billing and Private/Locked state, then separately decides any public launch, indexing or affiliate application. No autonomous gate is checked by this document.
 
-**Hard holds:** `config/operating-policy.json` monthly and delegated spending **₹0**, Netlify production and previews **PRIVATE**, auto-publishing **LOCKED** (owner's historical screenshots; live account controls not independently verified), `main` unchanged, draft PR #1 unmerged, `robots.txt` and `noindex` intact, all `affiliateUrl:null`, no publishing, external posting, signups, paid tools or tracked links.
+**Hard holds:** `config/operating-policy.json` monthly and delegated spending **₹0**, Netlify production and previews **PRIVATE**, auto-publishing **LOCKED** (owner's historical screenshots; live account controls not independently verified), `main` is not modified by this growth work; PR #1 was owner-merged on 2026-11-04 (merge commit `c9b9a1345e99ad97dc84376a20527305d9bb0d7c`); `robots.txt` and `noindex` remain intact, all `affiliateUrl:null`, no publishing, external posting, signups, paid tools or tracked links.
 
 **Method:** read AGENTS.md and current operational state; use gstack [engineering review/QA](https://github.com/garrytan/gstack/blob/main/docs/skills.md) and Superpowers [verification-before-completion](https://github.com/obra/superpowers/blob/main/skills/verification-before-completion/SKILL.md) principles. This is **documentation-only source research**, not code behavior: no TDD RED/GREEN claim, no remote-host test or account verification. Exact-SHA CI and provider status must be rechecked after any branch commit.
+
+
+### 2026-11-19 HubSpot export documentation refresh — source note only, candidate-only
+
+A fresh direct retrieval of the official [HubSpot — Export your records](https://knowledge.hubspot.com/import-and-export/export-records) page on **2026-11-19** still displays **Last updated: April 2, 2026**. A search-index result surfaced **November 12, 2026**, but the directly rendered canonical page did not corroborate that date. Treat the search snippet as unverified and retain **April 2, 2026** as the vendor page's displayed update date. The page's availability line says **All products and plans**, except where noted; it still requires the account's **Export** permission.
+
+The current page clarifies the practical export boundary:
+
+- A record export downloads current property values and associations; by default, only the properties and associations in the selected view are included.
+- The default export includes up to **1,000 associated record ID values per association column**. The customization options include all associated records only for **CSV** exports.
+- Contact activities (for example, calls and notes) are not covered by that general record-export description; HubSpot points readers to individual contact-data export, selected activity reports or the engagements API.
+- Export download links expire after **30 days**.
+- The page states up to **300 exports per rolling 24-hour window** and up to **three simultaneous exports**. Large exports may take hours; CSV/XLSX exports above 1,000,000 rows and XLS exports above 65,535 rows may be delivered as multiple files.
+
+**Buyer-intent hypotheses added:** `HubSpot export associations 1,000 limit`, `HubSpot export all associations CSV`, `HubSpot export activities separately`, `HubSpot export link expires 30 days`, and `HubSpot export over 1 million rows`. These phrases describe task intent only. Search volume, CPC, difficulty, rankings, impressions, clicks, traffic and conversions remain **UNKNOWN**.
+
+**Editorial limits:** This is a HubSpot-authored help page, not an account test or migration benchmark. The “All products and plans” availability label does not prove that every object, activity route, API scope or permission is enabled in a particular portal. The 1,000-ID default is per association column, not a universal record-count ceiling; the all-associated-records option is documented for CSV only. Do not describe the export as a complete CRM backup or guarantee activity/history portability. No HubSpot account, customer data or export was accessed.
+
+**Scope:** This refresh updates the existing CRM exit-evidence draft only. It does not create another article or route and does not alter `src/data/research-claims.json`, any source-intake date, reviewer, approval flag, product record, affiliate record, tracking URL, application code, analytics, noindex, privacy setting, Netlify setting or budget. The six vendor claims remain candidate-only and unapproved.
+
+
+## 2026-11-20 direct-source refresh, buyer-intent refinement and distribution guardrails — candidate-only
+
+**Research pass:** 2026-11-20 (Asia/Kolkata). Official pages below were directly opened on this date; their displayed vendor update dates are retained separately. This is source-level research, not an account test, independent benchmark, editorial approval or regional eligibility determination.
+
+### Fresh first-party export evidence
+
+**HubSpot — [Export your records](https://knowledge.hubspot.com/import-and-export/export-records)**  
+Directly rendered on 2026-11-20; the canonical page still displays **Last updated: April 2, 2026**. A search-index date of November 12 was not corroborated by the rendered page and remains unverified.
+
+- The page labels the general export capability **All products and plans**, except where noted, but still requires the account's **Export** permission.
+- Default exports include the selected view's properties and associations, with up to **1,000 associated record ID values per association column**. The option for **all associated records is documented for CSV exports only**.
+- Contact activities are routed separately to individual contact-data export, selected activity reports or the engagements API; do not imply a standard record export contains full activity history.
+- Download links expire after **30 days**; the page states up to **300 exports per rolling 24-hour window** and **three concurrent exports**.
+- Large exports may take hours. CSV/XLSX exports above **1,000,000 rows** and XLS exports above **65,535 rows** may be split into multiple files. Column limits are **256 for XLS** and **16,384 for XLSX**; the page recommends CSV for large column counts.
+
+**Interpretation boundary:** the availability label is not proof that every object, activity route, API scope or permission is enabled for a particular portal. The 1,000-ID figure is per association column, not a universal record cap. No HubSpot account, export or customer data was accessed.
+
+**Pipedrive — [Exporting data from Pipedrive](https://support.pipedrive.com/en/article/exporting-data-from-pipedrive)**  
+Directly rendered on 2026-11-20; the page displays **Last updated: September 3, 2026**.
+
+- Only global admins can export by data type from the Export data section. Regular users may export only when the correct permission is enabled, and even then only records visible under their visibility group/item-visibility rules.
+- **Projects** export is documented for **Premium and higher plans or the Projects add-on**.
+- Activities, notes and files linked to deals/contacts must be exported separately. Files stored in Google Drive are not exported during global export; the file download link is admin-only.
+- Generated exports remain available for **28 days**.
+
+**Pipedrive — [HubSpot migration to Pipedrive](https://support.pipedrive.com/en/article/hubspot-to-pipedrive-migration)**  
+Directly rendered on 2026-11-20; the page displays **Last updated: September 23, 2026**. It maps HubSpot contacts to Pipedrive people, companies to organizations and custom properties to custom fields; recommends importing organizations, persons, deals, leads, activities and optional notes in that order; suggests a unique key such as email for linking records; and recommends a **5–10-record test import** followed by spot checks. This is vendor onboarding guidance, not independent proof that all history, associations or attachments migrate successfully.
+
+**Plan / geography caveat:** no locale-specific or geographic export/import limit was established by this pass. Keep the already-recorded general spreadsheet import limit (200,000 rows / under 50 MB) separate from the System ID update page's 50,000-row error note; their workflow relationship remains **UNRESOLVED**. Do not infer a regional restriction or generalize either figure to every account, plan or workflow.
+
+### Refined buyer-intent hypotheses — no volume or difficulty data
+
+| Query hypothesis | Intent stage | Buyer question the article must answer |
+| --- | --- | --- |
+| `Pipedrive export activities notes files separately` | Exit diligence | Which data classes require a separate export? |
+| `Pipedrive export Google Drive files` | Exit / attachment recovery | Are externally stored files included in global export? |
+| `Pipedrive export permissions visibility groups` | Pre-purchase / migration risk | Does the export role see the full required record set? |
+| `Pipedrive Projects export Premium add-on` | Plan eligibility | Is Projects export available on the actual subscription? |
+| `Pipedrive generated export available 28 days` | Time-sensitive operations | How long is the generated file retrievable? |
+| `HubSpot export all associated records CSV only` | Data completeness | Which export format supports the all-associated-records option? |
+| `HubSpot export 1000 associated record IDs per column` | Data completeness / troubleshooting | What does the default association limit actually apply to? |
+| `HubSpot export activities separately` | History preservation | Which activity-export route is required? |
+| `HubSpot export XLSX column limit 16384` | Large-export troubleshooting | Which format avoids the documented spreadsheet column cap? |
+| `HubSpot to Pipedrive migration import order test import` | Migration execution | What order and small validation sample does the destination vendor recommend? |
+| `CRM export checklist before switching` | Pre-purchase decision | What evidence is needed before approving a migration? |
+
+These remain qualitative query hypotheses derived from documented buyer tasks. Search volume, CPC, keyword difficulty, rankings, impressions, clicks, visits, leads and conversions are **UNKNOWN**. Do not create separate locale/limit doorway pages.
+
+### Competitor / SERP context
+
+- **Pipedrive's own migration guide** is a vendor-authored how-to result for the exact HubSpot-to-Pipedrive task. It provides mapping, import sequence and a suggested 5–10-record test. StackPilot's distinct role is a neutral buyer-side completeness/exit-evidence checklist, not a competing claim that the migration is easier or better.
+- **Spendflo's [SaaS Procurement Checklist](https://www.spendflo.com/checklist/saas-procurement-checklist)** displays an update date of **October 13, 2026**, 45 checks, seven lifecycle stages and three purchase-risk levels. Its scope is broad procurement from intake through renewal/exit. StackPilot should differentiate narrowly on CRM export scope, role visibility, associations, activity/file portability and temporary download windows—not recreate a generic 45-check procurement list.
+- Existing branch notes already cover Suprdense Switch and Sanka Migrate. Their capabilities remain vendor-described; no independent migration-success, market-share, traffic or conversion comparison was found or claimed.
+
+### Zero-cost distribution: feasible only as future, owner-approved research
+
+- **Google Search:** [people-first guidance](https://developers.google.com/search/docs/fundamentals/creating-helpful-content) prioritizes original reader value and evidence over content made primarily to manipulate rankings. Do not generate thin variants. The current private/noindex state remains unchanged; no sitemap or indexing submission.
+- **Search Console:** its [Performance report](https://support.google.com/webmasters/answer/10268906) defines impressions, clicks and CTR and supports page/query/country/date analysis. These are the correct post-launch measures, not numbers to estimate before the property is eligible and verified.
+- **Reddit:** the [Spam policy](https://support.reddithelp.com/hc/en-us/articles/360043504051-Spam), updated **October 30, 2026**, prohibits repeated or unsolicited mass engagement and automated promotional behavior; community-specific rules also apply. No post, account, DM, cross-post or link drop is authorized.
+- **LinkedIn:** the [User Agreement](https://www.linkedin.com/legal/user-agreement), effective **November 3, 2025**, prohibits bots or unauthorized automated methods for creating, commenting on, liking, sharing or otherwise driving inauthentic engagement. Any future use must be manual, authentic, professionally relevant and separately owner-approved; no account was created and no content was posted.
+- **Available at ₹0 now:** private source research, improving the existing article, and checking its already-existing internal links. External community activity, outreach, indexing and new tracking remain off-limits.
+
+**Unpublished standalone educational excerpt (draft only; do not post):**
+
+> A CRM export is not automatically a recoverable backup. Before switching, check which roles can export which records, whether activities/notes/files are separate, whether cloud-stored files are excluded, how long download links remain available, and whether a small authorized test preserves relationships. Mark every evidence class PASS, FAIL or NOT TESTED; never share customer records with a comparison site to prove the point.
+
+### Measurement contract and current baseline
+
+| Measure | Current value |
+| --- | --- |
+| Public visits / sessions | **UNKNOWN** |
+| Search impressions, clicks, CTR, average position | **UNKNOWN** |
+| Keyword volume, CPC, difficulty and rankings | **UNKNOWN** |
+| Public backlinks / social audience | **UNKNOWN** |
+| Leads, conversions and revenue | **UNKNOWN** |
+| Affiliate applications / accepted programs / active links | **0 / 0 / 0** |
+| Editorially approved vendor claims | **0 of 6** |
+
+Private preview requests or automated QA hits are not public audience evidence; UNKNOWN must not be converted to zero. After a separately approved public release and verified Search Console property, capture the first complete 28-day baseline by page/query/country/device, then review impressions, clicks, CTR and average position weekly with the property and date range recorded. No analytics, consent, tracking or indexing setting is changed by this plan.
+
+**Editorial QA gates:** every vendor-specific statement must point to its own official page and displayed update date; plan/role/workflow caveats stay beside the statement; the 50,000/200,000 import discrepancy stays unresolved; no vendor price, recommendation, geography verdict or independent test is added; every current performance baseline stays UNKNOWN; a human editor and owner must separately approve any public use.
