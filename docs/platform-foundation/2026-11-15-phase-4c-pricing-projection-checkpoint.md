@@ -4,7 +4,7 @@
 
 - Branch: `feature/phase-4c-pricing-projection-2026-11-15`
 - Parent: `4fd299b58cf060d3eb1ccfd1568e2f459a581b02`
-- Implementation commit: pending local review and commit
+- Implementation commit: `3240100b8c3dc44585c8829b2f1c1d03066140fb`
 - Scope: append-only manual pricing observations, evidence-bound internal projections, migration 10, and regression coverage only.
 
 ## Implementation
