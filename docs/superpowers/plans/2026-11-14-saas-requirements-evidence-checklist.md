@@ -27,6 +27,7 @@
 - **Privacy boundary:** the existing worksheet is local/browser-only for selections, while the hosting layer may record page views; do not claim the entire host has no logs.
 - **Content overlap:** do not recreate the TCO, seat-billing, renewal/cancellation, SLA, usage-meter or CRM-exit articles.
 - **Search integrity:** no invented keyword volume, rankings or public indexing; produce one substantial buyer task guide only.
+- **Review-directory boundary:** G2/Capterra review and ranking outputs are discovery signals, not proof of a buyer's exact plan, role, region, contract or migration result. Preserve Capterra's current methodology and geographic qualifiers; do not reproduce proprietary scores.
 
 ---
 
@@ -40,7 +41,7 @@
 - Create: `docs/growth/2026-11-14-saas-requirements-evidence-checklist.md`
 
 **Interfaces:**
-- Consumes: NIST SP 1305, CISA Secure by Demand, Google Search Central, Spendflo and Discovering SaaS public pages, plus the existing StackPilot requirements worksheet source.
+- Consumes: NIST SP 1305, CISA Secure by Demand, Google Search Central, Spendflo, Discovering SaaS, G2's official Compare Tool documentation and Capterra's current methodology page, plus the existing StackPilot requirements worksheet source.
 - Produces: a dated evidence ledger, qualitative keyword hypotheses, competitor-positioning notes and an unpublished article draft.
 
 - [x] Confirm PR #1 is merged and not an active draft.
@@ -123,3 +124,18 @@ The official public statements differ. The article now records the conflict and 
 **Baseline refresh:** the exact-head PR #13 operations artifact dated 2026-11-16 reports `automatic: []`, 0 sources needing refresh, 6 prepared evidence packets, 6 pending editorial reviews, 0 approved claims, 4 owner gates, 5 affiliate candidates, 0 applications, 0 acceptances, 0 tracking links, and null actual traffic/revenue. Keep all site-specific traffic, rankings, impressions, clicks, conversions and worksheet usage **UNKNOWN**.
 
 **Scope:** update only this unpublished buyer guide and its plan. No account, public post, URL submission, indexing, analytics, code, route, tracking, privacy, noindex, source-intake date, reviewer or approval status changed. PR #16 remains draft/unmerged.
+
+
+## 2026-11-21 review-directory competitor refresh — documentation-only
+
+**Sources directly reviewed:**
+- [G2 — Researching and customizing software recommendations](https://documentation.g2.com/help/docs/researching-and-customizing-software-recommendations-on-g2), published 2025-09-18. G2 describes requirement-led suggestions through its Assistant and a Compare Tool that compares up to four products using user reviews.
+- [Capterra — Proprietary Data & Research Methodologies](https://www.capterra.com/resources/proprietary-data-research/), updated 2026-11-20. Its current November 2026 Shortlist describes ratings and popularity dimensions; popularity includes search demand/SERP visibility, review activity, page authority and product-page traffic. Current inclusion criteria include at least 20 recent unique reviews, publicly evidenced functionality and U.S. market presence. The same page distinguishes editorial research from marketplace content and says sponsorship may influence some marketplace placements.
+
+**Editorial decision:** add these as qualitative competitor/alternative evidence only. Review platforms can surface questions and peer experience; they do not establish the availability of a capability in a specific buyer's plan, role, region or contract. StackPilot's potential distinction is a local buyer-entered requirements/evidence workflow with explicit UNKNOWN and NOT TESTED states, not a ratings directory or ranking engine. This is a positioning hypothesis, not a validated competitive advantage.
+
+**Keyword addition:** how to compare software reviews with vendor documentation — medium-priority qualitative intent hypothesis. No search volume, CPC, ranking, impression, click, traffic or conversion data is inferred. Do not create a separate keyword-variant page.
+
+**Baseline refresh:** the exact-head PR #14 operations artifact generated 2026-11-19 UTC / asOf 2026-11-20 reports automatic queue empty, zero sources needing refresh, six prepared evidence packets, six editorial reviews pending, zero approved claims, five affiliate candidates, zero accepted programs and four owner-only gates. The publisher-readiness report shows 11 owner gates outstanding, zero applications/acceptances/tracking links, and null actual traffic/earnings. This is repository readiness data, not audience performance.
+
+**Scope:** only this existing private article brief and its matching plan. No code, route, product data, claim approval, source-intake date, affiliate record, tracking, account, post, indexing, privacy/noindex, Netlify, main, production or budget change. Documentation-only; no TDD RED/GREEN or new CI pass is claimed until the new exact head is checked.

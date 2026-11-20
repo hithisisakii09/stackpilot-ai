@@ -1,6 +1,6 @@
 # SaaS vendor evaluation checklist — requirements-to-evidence brief and unpublished draft
 
-**Research date:** 2026-11-14 (Asia/Kolkata) · **Primary-source refresh:** 2026-11-15  
+**Research date:** 2026-11-14 (Asia/Kolkata) · **Primary-source refresh:** 2026-11-15 · **Competitor refresh:** 2026-11-21  
 **Status:** PRIVATE DEVELOPMENT RESEARCH · UNAPPROVED · NOT PUBLISHED  
 **Branch:** `growth/saas-requirements-evidence-checklist-2026-11-14`  
 **Scope:** Documentation only. No route, application code, analytics, product catalogue, affiliate record or public metadata changes.  
@@ -38,6 +38,7 @@ These are qualitative hypotheses derived from the buyer task and the wording use
 | software selection checklist for small business | Commercial investigation | Avoid buying a tool that misses a critical workflow | High |
 | SaaS proof of concept checklist | Evaluation / risk reduction | Define what a trial must demonstrate before sign-off | Medium |
 | vendor evaluation criteria for software | Educational / commercial investigation | Agree on criteria and evidence before scoring | Medium |
+| how to compare software reviews with vendor documentation | Commercial investigation / risk reduction | Use review themes to form questions, then verify the exact plan, role, region and contract with primary evidence | Medium |
 | SaaS security due diligence questions | Risk / procurement intent | Ask a supplier for product-security evidence | Medium |
 | SaaS requirements matrix template | Template / task intent | Track requirement, owner, evidence and result | Medium |
 
@@ -54,8 +55,10 @@ Reviewed public first-party pages on 2026-11-14. This is a qualitative content s
 | [Spendflo — Vendor Selection Criteria Checklist](https://www.spendflo.com/checklist/vendor-selection-criteria-checklist) | Its page describes 60 criteria across eight groups, three purchase-size views, and fields for owner, evidence and red flag. It was marked updated 2026-10-13. | Explain how to write a testable requirement and preserve plan/region/date context; do not recreate a 60-point scoring catalogue. |
 | [Spendflo — Software Vendor Evaluation Template](https://www.spendflo.com/template/software-vendor-evaluation-template) | Its page describes a weighted matrix, 1–5 ratings, and a worked three-vendor example; marked updated 2026-10-07. | Show why must-have gates and evidence quality should be agreed before weights or scores. Do not invent scores or a winner. |
 | [Discovering SaaS — SaaS Evaluation Checklist](https://discoveringsaas.com/templates-and-checklists/saas-evaluation-checklist/) | Its page offers a downloadable PDF/Excel checklist and broad software-evaluation topics; the page is dated 2025-10-29. | Provide a concise, browser-local requirements workflow with explicit PASS / FAIL / NOT TESTED / UNKNOWN states and a source trail. |
+| [G2 — software recommendations and Compare Tool](https://documentation.g2.com/help/docs/researching-and-customizing-software-recommendations-on-g2) | G2's help page (published 2025-09-18) describes an Assistant that accepts buyer requirements and a Compare Tool for side-by-side comparisons of up to four products based on user reviews. | Treat peer reviews as discovery signals; help the buyer translate review themes into requirements that can be checked against the exact plan, role, region and contract. Do not imitate review scores or claim to validate G2 reviews. |
+| [Capterra — proprietary data and research methodologies](https://www.capterra.com/resources/proprietary-data-research/) | Capterra's methodology page was updated 2026-11-20. Its current November 2026 Shortlist uses ratings and popularity; the latter includes standardized keyword demand/SERP visibility, review activity, page authority and product-page traffic. Current inclusion criteria include at least 20 recent unique reviews, publicly evidenced functionality and U.S. market presence. The page distinguishes editorial research from marketplace content, where sponsorship may influence placement. | Explain that review/ranking systems answer a different question from account-specific fit. Preserve the current U.S.-market caveat and distinguish editorial Shortlist from marketplace listings; do not reproduce proprietary scores or imply global coverage. |
 
-These pages describe their own content and offers; their audience, conversions and performance were not independently verified.
+These pages describe their own content and offers; their audience, conversions and performance were not independently verified. G2 and Capterra are review-led discovery alternatives, while Spendflo's materials are procurement templates. Their own methodology statements are not independent validation of StackPilot's positioning or a buyer's exact subscription entitlement.
 
 **Positioning boundary:** StackPilot should not claim to replace procurement platforms, security assessors, review directories or legal counsel. Its defensible current utility is a vendor-neutral, buyer-entered requirements worksheet for CRM, SEO and hosting. The existing tool does not score vendors, submit answers, connect to vendor accounts or certify compliance.
 
@@ -189,6 +192,8 @@ Do not treat every source as equally strong. A public feature page may describe 
 
 A source-intake date is not an approval date. Reopen the original document before publication or purchase, and record when it was checked. If a page has no visible update date, say so rather than inventing one.
 
+Review directories can help identify recurring user questions, but their outputs are not interchangeable with a buyer's own requirements evidence. G2's own help page describes requirement-led suggestions and comparisons of up to four products based on user reviews. Capterra's current November 2026 Shortlist methodology combines review ratings with popularity signals and requires U.S. market presence for inclusion; its methodology page also distinguishes editorial research from marketplace content, where sponsorship may affect placement. Use review themes to generate questions, then verify exact product, edition, plan, role, region and contract with current primary documents and an authorized test.
+
 ## 5. Ask security questions at the product level
 
 Security due diligence should not stop at a company-level badge or questionnaire. CISA's Secure by Demand guidance distinguishes enterprise security from product security and encourages customers to ask software manufacturers questions before, during and after procurement.
@@ -284,14 +289,15 @@ The currently indexed text for Bing's official [Search Performance help page](ht
 
 ## 11. Measurement plan and baseline
 
-**Baseline as of 2026-11-16 (latest inspected operations snapshot):**
+**Baseline as of 2026-11-20 (latest inspected exact-head operations artifact, PR #14 run [#44627849663](https://github.com/hithisisakii09/stackpilot-ai/actions/runs/44627849663)):**
 - Search volume / CPC / keyword difficulty: UNKNOWN.
 - Current rankings / indexed URLs: UNKNOWN.
 - Google Search Console impressions / clicks / CTR / average position: UNKNOWN.
 - Bing Search Performance: UNKNOWN.
 - Organic visits / qualified leads / conversions: UNKNOWN.
 - Authentic social audience / engagement: UNKNOWN.
-- Affiliate applications / acceptances / tracking links: 0 / 0 / 0 in the exact-head PR #13 operations artifact dated 2026-11-16; verified revenue is null/UNKNOWN.
+- Six vendor claims are still candidate-only; approved claims 0/6. The operations artifact reports six editorial reviews pending, five affiliate candidates, zero accepted programs, zero affiliate reviews due, four owner-only gates, and automatic queue empty / zero sources needing refresh.
+- Publisher-readiness report: 11 owner gates outstanding; applications submitted 0, acceptances 0, tracking links 0; actual traffic and earnings are null/UNKNOWN.
 - Requirements worksheet selections or user records: not available and not inferred.
 
 Do not report private-preview requests, CI traffic, anonymous-denial probes or local worksheet use as organic visits or conversions.
