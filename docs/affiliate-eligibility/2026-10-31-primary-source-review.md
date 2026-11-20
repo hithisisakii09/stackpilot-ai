@@ -73,3 +73,20 @@ A single “social presence” does not satisfy all programs:
 The exact-head `artifacts/ops/backlog.json` from PR #14 (head `c767a77b97632a0978672caa822636830560e4ec`, generated 2026-11-11 22:20 UTC; `asOf: 2026-11-12`) reports: `automatic: []`; six prepared evidence packets; six editorial reviews pending; zero approved claims; five program candidates; zero program-discovery gaps; zero affiliate reviews due; zero accepted programs; verified revenue `null`; `canPublish:false`, `canMonetize:false`, `canSpend:false`. Its separate operations report lists research follow-up suggestions, but no due automatic queue item. No owner gate was executed.
 
 **Do not change** `affiliate-programs.json`, `research-claims.json`, source-intake dates, reviewer fields, approval flags, program URLs, tracking links or application state from this recheck. The next legitimate step is authentic human editorial review and owner verification of publisher identity/channel evidence—not another signup, traffic estimate or commission calculation.
+
+
+## 2026-11-21 HubSpot affiliate program detail recheck — NO APPLICATION
+
+**Official source:** [HubSpot Affiliate Program overview](https://www.hubspot.com/partners/affiliates/f937), directly opened 2026-11-21. No visible last-updated date was displayed on the retrieved overview. This is public program information, not the Affiliate Program Agreement, an application result, a payout/KYC check or an account test.
+
+The overview currently states:
+- The program is free to join and does not require the publisher to be a HubSpot customer.
+- The public overview advertises 30% recurring commission for up to one year and a 180-day cookie. These are vendor-stated headline terms, not an earnings estimate or a promise for an unaccepted applicant.
+- The page says there is no minimum number of sales required to earn commission. Do not reinterpret this as no traffic, audience, content-quality or application-review requirements.
+- The named publisher profiles include SaaS reviewers, content creators, digital educators and product integrations. The page says applications are reviewed, with a stated 2–3 business-day response window; this is not an acceptance guarantee.
+- The page lists 100–200 qualifying signups per month for the Super tier and 200+ for Elite. Its FAQ says signups counted toward those two higher tiers must be desktop-originated and match a listed customer region and product type.
+- The listed regions are NORTHAM, UK&I, ANZ, FRANCE, DACH, JAPAN, BENELUX, NORDICS, SEA, LATAM and IBERIA. **India is not named explicitly, and the page does not define whether India is included in SEA.** Do not infer that Indian customer signups qualify or do not qualify for higher-tier progression. The geographic/device/product filters are stated for Super/Elite tier qualification; do not generalize them into a base-program exclusion.
+
+**Publisher-readiness interpretation:** the public page still gives no numeric minimum-traffic threshold for the base affiliate application. That absence is not proof of acceptance. StackPilot's actual traffic, public audience, channel history and publisher identity remain UNKNOWN/unverified; the HubSpot application remains UNSUBMITTED. The owner would need authoritative clarification of India/SEA treatment before making any tier-eligibility assumption.
+
+**Controls:** no Impact account, HubSpot account, signup, application, contract, tracking URL, tax/KYC, outreach or payment action occurred. No affiliate-program record, program URL, application state, source-intake date, vendor claim approval, noindex/privacy setting, Netlify control, production state or budget changed. All affiliate actions remain owner-only.
