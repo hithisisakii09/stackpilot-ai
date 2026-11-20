@@ -17,7 +17,7 @@ const dataDirectory = join(root,'data');
 const clusterId = 'cluster-'+randomUUID();
 let started = false;
 let resultCode = 1;
-const run = (name,args) => execFileSync(executable(name),args,{windowsHide:true,stdio:'ignore',timeout:60000});
+const run = (name,args,timeout=60000) => execFileSync(executable(name),args,{windowsHide:true,stdio:'ignore',timeout});
 
 try {
   run('initdb',['-D',dataDirectory,'--username=stackpilot_local','--auth=trust','--no-locale','--encoding=UTF8']);
@@ -57,6 +57,9 @@ try {
     await admin.query('CREATE DATABASE stackpilot_lifecycle_test');
     await admin.query('CREATE DATABASE stackpilot_lifecycle_fresh');
     await admin.query('CREATE DATABASE stackpilot_lifecycle_failure');
+    await admin.query('CREATE DATABASE stackpilot_pricing_test');
+    await admin.query('CREATE DATABASE stackpilot_pricing_fresh');
+    await admin.query('CREATE DATABASE stackpilot_pricing_failure');
   } finally {
     await admin.end();
   }
@@ -138,10 +141,16 @@ try {
     });
     resultCode=lifecycle.status??1;
   }
+  if(resultCode===0) {
+    const pricing=spawnSync(process.execPath,['--test','tests/integration/platform-pricing-projection.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_pricing_test'})}
+    });
+    resultCode=pricing.status??1;
+  }
 } finally {
   let stopped = !started;
   if (started && existsSync(join(dataDirectory,'postmaster.pid'))) {
-    try {run('pg_ctl',['-D',dataDirectory,'-m','fast','-w','stop']);stopped=true;}
+    try {run('pg_ctl',['-D',dataDirectory,'-m','fast','-w','stop'],300000);stopped=true;}
     catch {console.error('Owned test PostgreSQL instance could not be stopped');resultCode=1;}
   } else stopped = true;
   if (stopped) {

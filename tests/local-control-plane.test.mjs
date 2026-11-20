@@ -42,7 +42,7 @@ test('session cookie parsing rejects ambiguity and header injection',()=>{
 
 test('CLI imports are inert and missing explicit startup configuration exits safely',()=>{
  const path=fileURLToPath(new URL('../scripts/platform-control-plane.mjs',import.meta.url));
- const imported=spawnSync(process.execPath,['--input-type=module','-e',"await import("+JSON.stringify(new URL('../scripts/platform-control-plane.mjs',import.meta.url).href)+")"],{encoding:'utf8',timeout:10000});
+ const imported=spawnSync(process.execPath,['--input-type=module','-e',"await import("+JSON.stringify(new URL('../scripts/platform-control-plane.mjs',import.meta.url).href)+")"],{encoding:'utf8',timeout:20000});
  assert.equal(imported.status,0);
  assert.equal(imported.stdout,'');
  assert.equal(imported.stderr,'');

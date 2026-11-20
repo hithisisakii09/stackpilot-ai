@@ -37,6 +37,9 @@ async function inspect(tx,claimId,agentId) {
   return {history,latest,current,review,approval,effective};
 }
 
+// Internal coherent lifecycle inspection for authenticated read models.
+export {inspect as inspectClaimLifecycle};
+
 function publicState(state) {
   return Object.freeze({version:state.latest?.version??0,recordedStatus:state.latest?.status??'candidate',effectiveStatus:state.effective.status,reason:state.effective.reason,history:Object.freeze(state.history.map(row=>Object.freeze({id:row.id,version:row.version,status:row.status,claimVersion:row.claim_version,expiresAt:date(row.valid_until),actorId:row.actor_id,createdAt:date(row.created_at)})))});
 }
