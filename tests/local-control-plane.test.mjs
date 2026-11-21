@@ -13,6 +13,7 @@ test('static export rejects control modules, trust data and TLS material',()=>{
   {path:'control-plane/server.mjs',content:'synthetic'},
   {path:'server.key',content:'synthetic'},
   {path:'assets/app.js',content:'createIdentityService({})'},
+  {path:'assets/app.js',content:'buildPublicCatalog({})'},
   {path:'trust.json',content:'{"publicKeySpkiBase64":"synthetic"}'},
   {path:'dump.json',content:'{"requester_user_id":"synthetic"}'},
   {path:'tls.txt',content:'-----BEGIN CERTIFICATE----- synthetic'},

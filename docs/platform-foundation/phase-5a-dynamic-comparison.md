@@ -12,7 +12,7 @@
 
 ## Public projection
 
-The public model allowlists product ID, display name, category, candidate-safe description, local profile/pairwise links, workflow tags, and explicit `UNKNOWN` evidence labels. It rejects rather than strips internal tenant/identity/trust/approval/control-path/note/commercial fields. The export command is dry-run by default; only `--write` may emit its designated generated JSON, never overwrite the static catalog.
+The public model allowlists only product ID, display name, category, workflow tags, and `CANDIDATE_UNVERIFIED`. It rejects rather than strips internal tenant/identity/trust/approval/control-path/note/commercial fields. The export command is dry-run by default; only `--write output.json` may create a new JSON file (never overwrite the static catalog).
 
 ## Browser contract
 

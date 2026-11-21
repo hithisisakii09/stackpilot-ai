@@ -14,3 +14,9 @@
 2. Write RED static-export and CLI tests; implement dry-run-only export with explicit `--write`, a safe generated read-model target, and guard regressions; tests GREEN.
 3. Write RED browser/a11y tests for query restoration, malformed query rejection, filters, 2–3 selection matrix, keyboard/a11y landmarks, and formula-neutral CSV. Replace the compare page inline script with a first-party module and safe static model; tests GREEN.
 4. Review security and scope, run local Node/postgres/data/build/preflight/browser checks, then commit only scoped implementation/tests/docs. Keep the checkpoint report uncommitted; do not push, create/edit a PR, merge, deploy, or dispatch workflows without the separately requested remote stage.
+
+## Implemented interfaces
+
+- `buildPublicCatalog(products)` emits deterministic candidate-only records and reuses the pricing projection's empty eligibility contract to prevent a public pricing surface.
+- `scripts/export-public-catalog.mjs` prints the model by default; `--write output.json` uses exclusive creation.
+- `/compare/` passes the candidate-only model through an escaped data attribute to `/scripts/compare-picker.js`; it accepts only known category and product IDs, uses DOM text nodes, and exports formula-neutral CSV.

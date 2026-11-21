@@ -1,14 +1,10 @@
 ---
 import products from '../../data/products.json';
 import { comparisonCategories, categoryComparisonRows } from '../../lib/comparison.mjs';
-import { buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
 
 const categories = comparisonCategories(products);
-const breadcrumbs = [
-  { name: 'Home', url: '/' },
-  { name: 'Compare', url: '/compare/' }
-];
-const breadcrumbJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
+// This page deliberately serializes only the already-reviewed candidate fields.
+const publicCatalog = {products: products.map(({id,name,category,bestFor}) => ({id,name,category,workflowTags:bestFor,suitabilityStatus:'CANDIDATE_UNVERIFIED'}))};
 ---
 <!doctype html>
 <html lang="en">
@@ -18,7 +14,6 @@ const breadcrumbJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
   <meta name="robots" content="noindex, nofollow" />
   <meta name="description" content="Compare SaaS research candidates by category, known information and evidence gaps." />
   <title>Compare software candidates | StackPilot AI</title>
-  <script type="application/ld+json" set:html={breadcrumbJson}></script>
   <style>
     :root { font-family: system-ui, sans-serif; background: #0b1220; color: #e9f1ff; }
     * { box-sizing: border-box; }
@@ -33,7 +28,7 @@ const breadcrumbJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
     thead th { background: #253652; }
     .notice { background: #152138; border-left: 4px solid #edc777; padding: 16px; }
     .links { display: flex; flex-wrap: wrap; gap: 18px; }
-    .compare-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 18px 0; }
+    .compare-controls { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin: 18px 0; }
     .compare-controls label { display: block; font-weight: 650; }
     .compare-controls select { width: 100%; display: block; margin-top: 7px; padding: 12px; background: #0b1220; color: #e9f1ff; border: 1px solid #6a819e; border-radius: 8px; }
     button { background: #7ce8c6; color: #06231d; border: 0; border-radius: 8px; padding: 12px 20px; font-weight: 700; cursor: pointer; }
@@ -67,20 +62,29 @@ const breadcrumbJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
     </section>
 
     <section aria-labelledby="compare-title">
-      <h2 id="compare-title">Choose two tools to compare</h2>
-      <p>This browser-only comparison displays the same information for both tools. It does not calculate a winner, compare live prices, or send your selections to a server.</p>
-      <form id="compare-form">
+      <h2 id="compare-title">Choose two or three tools to compare</h2>
+      <p>This browser-only comparison displays candidate status only. It does not calculate a winner, compare live prices, or send your selections to a server.</p>
+      <form id="compare-form" data-catalog={JSON.stringify(publicCatalog.products)}>
         <div class="compare-controls">
+          <label for="compare-search">Search tools
+            <input id="compare-search" name="search" type="search" autocomplete="off" />
+          </label>
           <label for="compare-category">Category
             <select id="compare-category" name="category">
               {categories.map(category => <option value={category}>{category}</option>)}
             </select>
+          </label>
+          <label for="compare-workflow">Workflow
+            <select id="compare-workflow" name="workflow"><option value="">All workflows</option></select>
           </label>
           <label for="compare-first">First tool
             <select id="compare-first" name="first" required></select>
           </label>
           <label for="compare-second">Second tool
             <select id="compare-second" name="second" required></select>
+          </label>
+          <label for="compare-third">Optional third tool
+            <select id="compare-third" name="third"><option value="">No third tool</option></select>
           </label>
         </div>
         <button type="submit">Compare selected tools</button>
@@ -118,138 +122,6 @@ const breadcrumbJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
     <p>Product pages include links to official documentation for independent follow-up. A deeper feature-by-feature comparison will require approved claim-level evidence.</p>
   </main>
   <footer>StackPilot AI · <a href="/privacy/">Privacy notes</a> · <a href="/methodology/">Methodology</a> · <a href="/disclosure/">Affiliate disclosure</a></footer>
-<script>
-import products from '../../data/products.json';
-import { categoryCandidates, compareCandidates } from '../../lib/comparison.mjs';
-import { buildVendorQuestionsCsv, listVendorQuestions } from '../../lib/vendor-questions.mjs';
-
-const form = document.querySelector('#compare-form');
-const category = document.querySelector('#compare-category');
-const first = document.querySelector('#compare-first');
-const second = document.querySelector('#compare-second');
-const result = document.querySelector('#comparison-result');
-const error = document.querySelector('#comparison-error');
-const download = document.querySelector('#download-comparison-csv');
-const downloadStatus = document.querySelector('#comparison-download-status');
-let latestCsv = null;
-
-function invalidateComparison() {
-  latestCsv = null;
-  download.disabled = true;
-  downloadStatus.textContent = '';
-  result.replaceChildren();
-  error.textContent = '';
-}
-
-function updateSelections() {
-  const candidates = categoryCandidates(products, category.value);
-  for (const [select, index] of [[first, 0], [second, 1]]) {
-    select.replaceChildren();
-    candidates.forEach(product => {
-      const option = document.createElement('option');
-      option.value = product.id;
-      option.textContent = product.name;
-      select.append(option);
-    });
-    select.selectedIndex = Math.min(index, candidates.length - 1);
-  }
-  invalidateComparison();
-}
-function cell(tag, value) {
-  const node = document.createElement(tag);
-  node.textContent = String(value);
-  return node;
-}
-category.addEventListener('change', updateSelections);
-first.addEventListener('change', invalidateComparison);
-second.addEventListener('change', invalidateComparison);
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-  invalidateComparison();
-  let model;
-  try {
-    model = compareCandidates(products, category.value, first.value, second.value);
-  } catch (e) {
-    error.textContent = e instanceof Error ? e.message : 'Unable to compare selections';
-    return;
-  }
-  const title = cell('h3', model.products.map(p => p.name).join(' vs '));
-  const note = cell('p', 'Research candidates only. Unknown or unapproved information is labeled unverified; no recommendation winner is determined.');
-  const wrapper = document.createElement('div');
-  wrapper.className = 'table-scroll';
-  wrapper.setAttribute('role', 'region');
-  wrapper.setAttribute('tabindex', '0');
-  wrapper.setAttribute('aria-label', model.category + ' comparison table, scroll horizontally for all columns');
-  const table = document.createElement('table');
-  table.id = 'comparison-table';
-  table.append(cell('caption', model.category + ': same-category evidence comparison'));
-  const head = document.createElement('thead');
-  const headings = document.createElement('tr');
-  headings.append(cell('th', 'Criterion'));
-  for (const product of model.products) {
-    const th = cell('th', product.name);
-    th.scope = 'col';
-    headings.append(th);
-  }
-  head.append(headings);
-  table.append(head);
-  const body = document.createElement('tbody');
-  for (const row of model.rows) {
-    const tr = document.createElement('tr');
-    const heading = cell('th', row.label);
-    heading.scope = 'row';
-    tr.append(heading);
-    for (const product of model.products) tr.append(cell('td', product[row.key]));
-    body.append(tr);
-  }
-  const links = document.createElement('tr');
-  const linkHeader = cell('th', 'Further reading');
-  linkHeader.scope = 'row';
-  links.append(linkHeader);
-  for (const product of model.products) {
-    const td = document.createElement('td');
-    const anchor = document.createElement('a');
-    anchor.href = product.profileUrl;
-    anchor.textContent = 'View ' + product.name + ' research profile';
-    td.append(anchor);
-    links.append(td);
-  }
-  body.append(links);
-  table.append(body);
-  wrapper.append(table);
-  const questionsHeading=cell('h4','Questions to ask both vendors');
-  const questionList=document.createElement('ol');
-  questionList.id='vendor-questions-preview';
-  for (const {criterion,question} of listVendorQuestions(model)) {
-    const item=document.createElement('li');
-    const emphasis=document.createElement('strong');
-    emphasis.textContent=criterion+': ';
-    item.append(emphasis,document.createTextNode(question));
-    questionList.append(item);
-  }
-  const questionNotice=cell('p','These are questions for your own due diligence. Neither vendor has verified responses; the download starts with all answers unverified.');
-  result.append(title, note, wrapper, questionsHeading, questionList, questionNotice);
-  latestCsv = buildVendorQuestionsCsv(model);
-  download.disabled = false;
-});
-download.addEventListener('click', () => {
-  if (!latestCsv) return;
-  try {
-    const blob = new Blob([latestCsv], {type:'text/csv;charset=utf-8'});
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = 'stackpilot-vendor-questions-' + category.value.toLowerCase() + '.csv';
-    document.body.append(anchor);
-    anchor.click();
-    anchor.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    downloadStatus.textContent = 'CSV saved on your device. No answers were sent to StackPilot.';
-  } catch {
-    downloadStatus.textContent = 'Unable to start CSV download. Try again.';
-  }
-});
-updateSelections();
-</script>
+<script type="module" src="/scripts/compare-picker.js"></script>
 </body>
 </html>
