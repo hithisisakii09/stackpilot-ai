@@ -207,7 +207,8 @@ try {
   await page.locator('#compare-category').selectOption('CRM');
   await page.locator('#compare-third').selectOption('pipedrive');
   await page.locator('#compare-form button').click();
-  assert.equal(await page.locator('#comparison-table thead th').count(),4,'Any-vs-any picker supports three candidates');
+  assert.equal(await page.locator('#comparison-table').count(), 0, 'Duplicate third tool must not render comparison');
+  assert.match(await page.locator('#comparison-error').innerText(), /Select two or three different tools/);
   await page.goto(base+'/compare/?category=CRM&tools=hubspot,pipedrive,%3Cimg%3E',{waitUntil:'networkidle'});
   assert.equal(await page.locator('#compare-third').inputValue(),'','Unsafe URL tool id is discarded');
   await page.locator('#compare-search').fill('pipe');

@@ -87,4 +87,20 @@ test('compare-picker.js executes safeState() without TypeError and populates too
   elements.get('#compare-form').dispatchEvent({ type: 'submit', preventDefault() {} });
   assert.equal(elements.get('#comparison-result').children.length, 3);
   assert.equal(elements.get('#download-comparison-csv').disabled, false);
+
+  // Also verify three distinct candidates render 4 header columns (Field + 3 tools).
+  const threeCatalog = JSON.stringify([
+    { id: 'hubspot', name: 'HubSpot', category: 'CRM', workflowTags: ['sales'] },
+    { id: 'pipedrive', name: 'Pipedrive', category: 'CRM', workflowTags: ['sales'] },
+    { id: 'zoho', name: 'Zoho', category: 'CRM', workflowTags: ['sales'] }
+  ]);
+  elements.get('#compare-form').dataset.catalog = threeCatalog;
+  const secondContext = {
+    ...context,
+    location: { pathname: '/compare/', search: '?category=CRM&tools=hubspot,pipedrive,zoho' }
+  };
+  vm.runInNewContext(source, secondContext);
+  elements.get('#compare-form').dispatchEvent({ type: 'submit', preventDefault() {} });
+  const table = elements.get('#comparison-result').children[2].children[0];
+  assert.equal(table.children[1].children[0].children.length, 4);
 });
