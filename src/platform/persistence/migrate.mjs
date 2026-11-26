@@ -11,6 +11,7 @@ import {buildReconciliationMigrationSql} from './reconciliation-schema.mjs';
 import {buildProductMigrationSql} from './product-schema.mjs';
 import {buildLifecycleMigrationSql} from './lifecycle-schema.mjs';
 import {buildPricingMigrationSql} from './pricing-schema.mjs';
+import {buildPartnershipsRevenueMigrationSql} from './partnerships-revenue-schema.mjs';
 
 const migrationUrl = new URL('./migrations/0001_platform_foundation.sql',import.meta.url);
 const manifestUrl = new URL('./migrations/manifest.json',import.meta.url);
@@ -40,7 +41,7 @@ export function verifyControlMigration(bytes,manifest) {
 export async function applyMigrations(pool,options={}) {
   fields(options,[],['targetVersion']);
   const target=Object.hasOwn(options,'targetVersion')?options.targetVersion:1;
-  if(![1,2,3,4,5,6,7,8,9,10].includes(target)) throw new Error('Invalid migration target');
+  if(![1,2,3,4,5,6,7,8,9,10,11].includes(target)) throw new Error('Invalid migration target');
   const reviewed=[
     {bytes:readFileSync(migrationUrl),manifest:JSON.parse(readFileSync(manifestUrl,'utf8')),verify:verifyMigration},
     {bytes:readFileSync(new URL('./migrations/0002_local_identity_approvals.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/control-manifest.json',import.meta.url),'utf8')),verify:verifyControlMigration},
@@ -51,7 +52,8 @@ export async function applyMigrations(pool,options={}) {
     {bytes:readFileSync(new URL('./migrations/0007_candidate_reconciliation.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/reconciliation-manifest.json',import.meta.url),'utf8')),verify:verifyReconciliationMigration},
     {bytes:readFileSync(new URL('./migrations/0008_product_candidates.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/product-manifest.json',import.meta.url),'utf8')),verify:verifyProductMigration},
     {bytes:readFileSync(new URL('./migrations/0009_claim_lifecycle.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/lifecycle-manifest.json',import.meta.url),'utf8')),verify:verifyLifecycleMigration},
-    {bytes:readFileSync(new URL('./migrations/0010_pricing_observations.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/pricing-manifest.json',import.meta.url),'utf8')),verify:verifyPricingMigration}
+    {bytes:readFileSync(new URL('./migrations/0010_pricing_observations.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/pricing-manifest.json',import.meta.url),'utf8')),verify:verifyPricingMigration},
+    {bytes:readFileSync(new URL('./migrations/0011_partnerships_revenue_ledger.sql',import.meta.url)),manifest:JSON.parse(readFileSync(new URL('./migrations/partnerships-revenue-manifest.json',import.meta.url),'utf8')),verify:verifyPartnershipsRevenueMigration}
   ];
   for(const migration of reviewed) migration.verify(migration.bytes,migration.manifest);
   const client = await pool.connect();
@@ -133,5 +135,12 @@ export function verifyPricingMigration(bytes, manifest) {
   fields(manifest, ['version', 'file', 'sha256']);
   const canonical=canonicalBytes(bytes);
   if(manifest.version!==10||manifest.file!=='0010_pricing_observations.sql'||manifest.sha256!==createHash('sha256').update(canonical).digest('hex')||canonical.toString()!==buildPricingMigrationSql()) throw new Error('Invalid or changed migration');
+  return true;
+}
+
+export function verifyPartnershipsRevenueMigration(bytes, manifest) {
+  fields(manifest, ['version', 'file', 'sha256']);
+  const canonical=canonicalBytes(bytes);
+  if(manifest.version!==11||manifest.file!=='0011_partnerships_revenue_ledger.sql'||manifest.sha256!==createHash('sha256').update(canonical).digest('hex')||canonical.toString()!==buildPartnershipsRevenueMigrationSql()) throw new Error('Invalid or changed migration');
   return true;
 }

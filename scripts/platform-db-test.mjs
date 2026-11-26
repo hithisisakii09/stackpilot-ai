@@ -61,6 +61,9 @@ try {
     await admin.query('CREATE DATABASE stackpilot_pricing_fresh');
     await admin.query('CREATE DATABASE stackpilot_pricing_failure');
     await admin.query('CREATE DATABASE stackpilot_growth_test');
+    await admin.query('CREATE DATABASE stackpilot_partnerships_test');
+    await admin.query('CREATE DATABASE stackpilot_partnerships_fresh');
+    await admin.query('CREATE DATABASE stackpilot_partnerships_failure');
   } finally {
     await admin.end();
   }
@@ -153,6 +156,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_growth_test'})}
     });
     resultCode=growth.status??1;
+  }
+  if(resultCode===0) {
+    const partnerships=spawnSync(process.execPath,['--test','tests/integration/platform-partnerships-revenue.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_partnerships_test'})}
+    });
+    resultCode=partnerships.status??1;
   }
 } finally {
   let stopped = !started;
