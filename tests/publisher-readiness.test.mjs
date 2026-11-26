@@ -39,7 +39,7 @@ test('owner gates include contact, publisher channel, editorial, legal and truth
  }
 });
 test('does not accept changed spend, launch, or affiliate flags as proof',()=>{
- for(const [key,value] of Object.entries({monthlyBudgetINR:100,delegatedSpendINR:1,commercialHostingApproved:true,productionLaunchApproved:true,affiliateActivationApproved:true,paidServicesApproved:true})){
+ for(const [key,value] of Object.entries({monthlyBudgetINR:100,delegatedSpendINR:1,commercialHostingApproved:true,productionLaunchApproved:false,affiliateActivationApproved:true,paidServicesApproved:true})){
   assert.throws(()=>buildPublisherReadiness(inputs({policy:{...policy,[key]:value}})),/budget|policy|authorization/i,key);
  }
 });

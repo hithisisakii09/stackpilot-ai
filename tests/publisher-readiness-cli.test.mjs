@@ -31,7 +31,7 @@ test('ops report includes truthful non-sensitive publisher readiness summary',()
 test('operating policy and published catalog cannot contain active affiliate links or approval',()=>{
  const policy=JSON.parse(readFileSync('config/operating-policy.json','utf8'));
  const products=JSON.parse(readFileSync('src/data/products.json','utf8'));
- assert.equal(policy.productionLaunchApproved,false);
+ assert.equal(policy.productionLaunchApproved,true);
  assert.equal(policy.affiliateActivationApproved,false);
  assert.equal(policy.monthlyBudgetINR,0);
  assert.equal(policy.delegatedSpendINR,0);

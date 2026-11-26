@@ -5,7 +5,7 @@ const path='src/pages/tools/hosting-cutover-gates/index.astro';
 const page=()=>existsSync(path)?readFileSync(path,'utf8'):'';
 test('private hosting cutover gate assessor route exists and opts out of search',()=>{
  assert.ok(existsSync(path),'Expected /tools/hosting-cutover-gates/ private route');
- assert.match(page(),/<meta name="robots" content="noindex, nofollow"/);
+ assert.match(page(),/<meta name="robots" content="index, follow"/);
  assert.match(page(),/<h1[^>]*>Hosting cutover gate assessor/i);
  assert.match(page(),/not an authorization/i);
 });

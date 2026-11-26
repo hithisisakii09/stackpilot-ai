@@ -5,7 +5,7 @@ const page='src/pages/tools/backup-restore-drill/index.astro';
 const html=()=>existsSync(page)?readFileSync(page,'utf8'):'';
 test('private backup restore drill route exists with noindex and truthful title',()=>{
  assert.ok(existsSync(page),'Missing /tools/backup-restore-drill/ route');
- assert.match(html(),/<meta name="robots" content="noindex, nofollow"/i);
+ assert.match(html(),/<meta name="robots" content="index, follow"/i);
  assert.match(html(),/<h1[^>]*>Backup restore drill planner/i);
  assert.match(html(),/not.*live backup/i);
 });

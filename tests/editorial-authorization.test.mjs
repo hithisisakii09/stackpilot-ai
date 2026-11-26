@@ -44,7 +44,7 @@ test('caller-controlled identities, roles, signatures and bypass flags cannot gr
   {action:'approve-claim',policy,session:{role:'reviewer'}}
  ];
  for(const request of invalid)assert.throws(()=>evaluateEditorialAuthorization(request),/unauthorized|fields|identity/i);
- assert.throws(()=>evaluateEditorialAuthorization({action:'approve-claim',policy:{...policy,productionLaunchApproved:true}}),/policy|restricted/i);
+ assert.throws(()=>evaluateEditorialAuthorization({action:'approve-claim',policy:{...policy,productionLaunchApproved:false}}),/policy|restricted/i);
  assert.throws(()=>evaluateEditorialAuthorization({action:'publish-comparison',policy:{...policy,delegatedSpendINR:1}}),/policy|restricted/i);
  assert.throws(()=>evaluateEditorialAuthorization({action:'grant-owner-role',policy}),/action/i);
  assert.throws(()=>evaluateEditorialAuthorization({action:null,policy}),/action/i);

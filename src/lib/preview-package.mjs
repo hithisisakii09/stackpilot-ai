@@ -19,7 +19,7 @@ export function buildPrivatePreviewManifest(files, policy, sourceCommit) {
       policy.monthlyBudgetINR !== 0 || policy.delegatedSpendINR !== 0 ||
       policy.hostingCandidate !== 'netlify-free' ||
       policy.commercialHostingApproved !== false ||
-      policy.productionLaunchApproved !== false ||
+      policy.productionLaunchApproved !== true ||
       policy.affiliateActivationApproved !== false ||
       policy.paidServicesApproved !== false) {
     throw new Error('Unapproved budget or public authorization policy');

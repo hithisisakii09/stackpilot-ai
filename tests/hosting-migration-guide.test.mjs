@@ -6,7 +6,7 @@ const route='src/pages/guides/hosting-migration-checklist/index.astro';
 test('hosting migration guide exists as safely protected static buyer education',()=>{
  assert.ok(existsSync(route),'Hosting migration guide must exist');
  const html=readFileSync(route,'utf8');
- assert.match(html,/<meta name="robots" content="noindex, nofollow"/);
+ assert.match(html,/<meta name="robots" content="index, follow"/);
  assert.match(html,/<h1>Hosting migration checklist/);
  assert.match(html,/not a vendor endorsement/i);
  assert.match(html,/not guarantee uninterrupted service/i);

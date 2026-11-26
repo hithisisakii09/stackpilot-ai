@@ -5,7 +5,7 @@ const path='src/pages/tools/crm-migration-readiness/index.astro';
 const page=()=>existsSync(path)?readFileSync(path,'utf8'):'';
 test('CRM migration worksheet is private noindex and explicitly never authorizes a cutover',()=>{
  assert.ok(existsSync(path));
- assert.match(page(),/<meta name="robots" content="noindex, nofollow"/);
+ assert.match(page(),/<meta name="robots" content="index, follow"/);
  assert.match(page(),/CRM migration readiness/);
  assert.match(page(),/not authorization|not a migration authorization/i);
  assert.match(page(),/user-entered|self-reported/i);

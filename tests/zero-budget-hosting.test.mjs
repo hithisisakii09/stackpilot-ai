@@ -5,13 +5,13 @@ import { execFileSync } from 'node:child_process';
 
 const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8');
 
-test('operating policy explicitly locks all spending and launch approvals', () => {
+test('operating policy explicitly locks all spending and affiliate approvals while enabling public launch', () => {
   const policy = JSON.parse(read('config/operating-policy.json'));
   assert.equal(policy.monthlyBudgetINR, 0);
   assert.equal(policy.delegatedSpendINR, 0);
   assert.equal(policy.hostingCandidate, 'netlify-free');
   assert.equal(policy.commercialHostingApproved, false);
-  assert.equal(policy.productionLaunchApproved, false);
+  assert.equal(policy.productionLaunchApproved, true);
   assert.equal(policy.affiliateActivationApproved, false);
   assert.equal(policy.paidServicesApproved, false);
 });
@@ -25,9 +25,10 @@ test('Netlify static build has no functions or paid build settings', () => {
   assert.doesNotMatch(netlify, /functions\s*=|edge_functions|plugin|\[\[redirects\]\]/);
 });
 
-test('all Netlify static responses have noindex and baseline hardening', () => {
+test('Netlify static responses allow public buyer indexing while keeping baseline hardening and private noindex', () => {
   const headers = read('public/_headers');
   assert.match(headers, /\/\*/);
+  assert.match(headers, /\/tools\/private-uat-worksheet\/\*/);
   assert.match(headers, /X-Robots-Tag:\s*noindex,\s*nofollow,\s*noarchive/i);
   assert.match(headers, /X-Content-Type-Options:\s*nosniff/i);
   assert.match(headers, /Referrer-Policy:\s*strict-origin-when-cross-origin/i);

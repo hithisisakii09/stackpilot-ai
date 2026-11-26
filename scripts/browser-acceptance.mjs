@@ -67,7 +67,7 @@ try {
   await page.goto(base + '/', { waitUntil: 'networkidle' });
   assert.match(await page.title(), /StackPilot AI/);
   assert.ok((await page.locator('h1').innerText()).includes('Explore software categories'));
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /\bindex\b/);
   // A buyer should discover the privacy-first CRM seat audit without a deep link.
   const seatAuditHomeLink=page.locator('header nav a[href="/tools/crm-seat-audit/"]');
   assert.equal(await seatAuditHomeLink.count(),1,'Homepage must link to CRM seat audit');
@@ -224,12 +224,17 @@ try {
     assert.equal(resp?.status(), 200, 'Missing profile ' + slug);
     assert.match(await page.locator('main').innerText(), /pricing.*not verified|pricing.*current plans/i);
     if (slug === 'hubspot') await checkAccessibility(page, 'software profile');
-    assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+    assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /\bindex\b/);
   }
   for (const route of ['/methodology/', '/disclosure/', '/privacy/', '/research/']) {
     const resp = await page.goto(base + route, { waitUntil: 'domcontentloaded' });
     assert.equal(resp?.status(), 200);
-    assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+    const robotsContent = await page.locator('meta[name="robots"]').getAttribute('content');
+    if (route === '/research/') {
+      assert.match(robotsContent, /noindex/);
+    } else {
+      assert.match(robotsContent, /\bindex\b/);
+    }
   }
 
   await page.goto(base + '/research/', { waitUntil: 'domcontentloaded' });
@@ -246,7 +251,7 @@ try {
   // Privacy-first requirements worksheet: user-entered state is browser-only.
   await page.goto(base + '/tools/requirements-checklist/', { waitUntil: 'networkidle' });
   assert.match(await page.title(), /StackPilot AI/);
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /\bindex\b/);
   const worksheetOutbound=[];
   const captureWorksheetRequest=req=>{
     if(req.method()!=='GET' || !req.url().startsWith(base)) worksheetOutbound.push({method:req.method(),url:req.url()});
@@ -298,7 +303,7 @@ try {
   // Pricing truth: calculate only buyer-supplied prices, never vendor claims.
   await page.goto(base + '/tools/software-cost-calculator/', { waitUntil:'networkidle' });
   assert.match(await page.title(), /StackPilot AI/);
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /\bindex\b/);
   const calculatorOutbound=[];
   const captureCalculatorRequest=req=>{
     if(req.method()!=='GET' || !req.url().startsWith(base)) calculatorOutbound.push({method:req.method(),url:req.url()});
@@ -360,7 +365,7 @@ try {
 
   // CRM seat audit: strictly buyer-supplied counts and no inferred savings.
   await page.goto(base+'/tools/crm-seat-audit/',{waitUntil:'networkidle'});
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/\bindex\b/);
   await page.locator('#seat-billedSeats').fill('8');
   await page.locator('#seat-occupiedPaidSeats').fill('5');
   await page.locator('#seat-activeUsers').fill('5');
@@ -408,7 +413,7 @@ try {
   page.on('request',trackSeoRequest);
   await page.goto(base+'/tools/seo-audit-scope/',{waitUntil:'networkidle'});
   assert.match(await page.title(),/SEO audit scope planner/);
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/\bindex\b/);
   await page.locator('#seo-rootPages').fill('80');
   await page.locator('#seo-folderPages').fill('20');
   await page.locator('#seo-subdomainPages').fill('40');
@@ -460,7 +465,7 @@ try {
 
   await page.goto(base + '/guides/saas-total-cost-of-ownership/', {waitUntil:'networkidle'});
   assert.match(await page.title(),/SaaS total cost of ownership/);
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/\bindex\b/);
   assert.equal(await page.locator('h1').count(),1);
   assert.match(await page.locator('main').innerText(),/USD 1000.00/);
   assert.match(await page.locator('main').innerText(),/USD 936.00/);
@@ -473,7 +478,7 @@ try {
   // CRM migration decision guide: new static content must receive browser and axe coverage.
   await page.goto(base + '/guides/crm-migration-checklist/', {waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(), /CRM migration checklist/);
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /\bindex\b/);
   const migrationText = await page.locator('main').innerText();
   for (const topic of ['permissions','deduplication','rollback','staff hours','sample import']) {
     assert.match(migrationText, new RegExp(topic,'i'));
@@ -490,7 +495,7 @@ try {
   page.on('request',trackCrmRequest);
   await page.goto(base+'/tools/crm-migration-readiness/',{waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(),/CRM migration readiness/i);
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/\bindex\b/);
   assert.equal(await page.locator('#crm-form select').count(),5);
   assert.ok(await page.locator('#crm-download').isDisabled());
   await page.locator('#crm-form button[type="submit"]').click();
@@ -612,7 +617,7 @@ try {
   // Hosting migration guide: category-balanced buyer education; no vendor endorsements.
   await page.goto(base + '/guides/hosting-migration-checklist/', {waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(), /Hosting migration checklist/);
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'), /\bindex\b/);
   const hostingGuideText=await page.locator('main').innerText();
   for (const topic of ['DNS','backups','restore','TLS','rollback','data retention','GO/NO-GO']) {
     assert.match(hostingGuideText,new RegExp(topic,'i'));
@@ -631,7 +636,7 @@ try {
   };
   page.on('request',trackGateRequest);
   await page.goto(base+'/tools/hosting-cutover-gates/',{waitUntil:'networkidle'});
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/\bindex\b/);
   assert.equal(await page.locator('#gate-form select').count(),5);
   assert.ok(await page.locator('#gate-download').isDisabled());
   await page.locator('#gate-form button[type="submit"]').click();
@@ -678,7 +683,7 @@ try {
   };
   page.on('request',trackDrillRequest);
   await page.goto(base+'/tools/backup-restore-drill/',{waitUntil:'networkidle'});
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/\bindex\b/);
   assert.ok(await page.locator('#drill-download').isDisabled());
   await page.locator('#drill-form button[type="submit"]').click();
   assert.match(await page.locator('#drill-report').inputValue(),/NO_GO/);
@@ -726,7 +731,7 @@ try {
   };
   page.on('request',trackHostingRequest);
   await page.goto(base+'/tools/hosting-hidden-costs/',{waitUntil:'networkidle'});
-  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
+  assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/\bindex\b/);
   assert.ok(await page.locator('#hosting-download').isDisabled());
   await page.locator('#hosting-form button[type="submit"]').click();
   assert.equal(await page.locator('#hosting-report').inputValue(),'','Empty required fields cannot create a quote');
@@ -942,6 +947,7 @@ try {
 
   // Full-build browser gate: every emitted page, at BOTH canonical desktop and mobile widths.
   // This is local static preview QA only, not authenticated hosted Netlify UAT.
+  const privateBuiltRoutes = new Set(['/tools/private-uat-worksheet/', '/preview-build/', '/research/']);
   const allBuiltRoutes=routePathsFromBuiltHtml(emittedBuildFiles());
   for(const viewport of [{name:'desktop',width:1440,height:900},{name:'mobile',width:390,height:844}]){
     await page.setViewportSize({width:viewport.width,height:viewport.height});
@@ -951,8 +957,13 @@ try {
       assert.equal(response?.status(),200,'Build route browser HTTP failure: '+route+' '+viewport.name);
       assert.equal(await page.locator('h1').count(),1,'Expected one h1 in '+route+' '+viewport.name);
       assert.ok((await page.locator('h1').innerText()).trim().length>0,'Empty h1 in '+route);
-      assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/,
-        'Private page unexpectedly indexable: '+route);
+      const robotsContent=await page.locator('meta[name="robots"]').getAttribute('content');
+      if(privateBuiltRoutes.has(route)) {
+        assert.match(robotsContent,/noindex/,'Private page unexpectedly indexable: '+route);
+      } else {
+        assert.match(robotsContent,/\bindex\b/,'Public page missing index directive: '+route);
+        assert.doesNotMatch(robotsContent,/noindex/,'Public page unexpectedly has noindex: '+route);
+      }
       await checkAccessibility(page, 'built '+route+' '+viewport.name);
       if(viewport.name==='mobile'){
         const scrollWidth=await page.evaluate(()=>document.documentElement.scrollWidth);

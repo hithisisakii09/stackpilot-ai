@@ -14,7 +14,7 @@ export const EDITORIAL_ACTIONS=Object.freeze([
 const expectedPolicy={
  policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,
  hostingCandidate:'netlify-free',commercialHostingApproved:false,
- productionLaunchApproved:false,affiliateActivationApproved:false,
+ productionLaunchApproved:true,affiliateActivationApproved:false,
  paidServicesApproved:false
 };
 const record=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);

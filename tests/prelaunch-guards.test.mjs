@@ -11,8 +11,8 @@ const pages = [
   'src/pages/privacy/index.astro',
   'src/pages/disclosure/index.astro'
 ];
-test('every prelaunch page is opted out of search indexing', () => {
-  for (const page of pages) assert.match(read(page), /name="robots" content="noindex, nofollow"/, page);
+test('every public buyer page is opted into search indexing', () => {
+  for (const page of pages) assert.match(read(page), /name="robots" content="index, follow"/, page);
 });
 test('official outbound links avoid opener and referrer leakage', () => {
   for (const page of ['src/pages/index.astro', 'src/pages/software/[id].astro']) {

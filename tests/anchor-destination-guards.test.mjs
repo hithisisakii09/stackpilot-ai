@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {auditStaticRoutes} from '../src/lib/release-preflight.mjs';
 
-const shell='<!doctype html><html lang="en"><head><title>Private safety test</title><meta name="robots" content="noindex,nofollow"></head><body>{{LINK}}</body></html>';
+const shell='<!doctype html><html lang="en"><head><title>Public safety test</title><meta name="robots" content="index, follow"></head><body>{{LINK}}</body></html>';
 const scan=link=>auditStaticRoutes([{path:'index.html',html:shell.replace('{{LINK}}',link)}]).violations;
 
 test('blocks unsafe explicit and protocol-relative anchor hrefs before a private preview',()=>{

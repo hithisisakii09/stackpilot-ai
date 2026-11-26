@@ -17,6 +17,11 @@ const policy = JSON.parse(readFileSync('config/operating-policy.json', 'utf8'));
 const products = JSON.parse(readFileSync('src/data/products.json', 'utf8'));
 assert.ok(products.length === 6 && products.every(p => p.affiliateUrl === null && p.verified === false),
   'Unapproved affiliate URLs or editorial claims found');
+const privateRoutes = new Set([
+  'tools/private-uat-worksheet/index.html',
+  'preview-build/index.html',
+  'research/index.html'
+]);
 const entries = [];
 function walk(dir) {
   for (const item of readdirSync(dir, { withFileTypes:true })) {
@@ -28,8 +33,16 @@ function walk(dir) {
     const content = readFileSync(full);
     const path = relative(root, full).split('\\').join('/');
     if (path.endsWith('.html')) {
-      assert.match(content.toString('utf8'), /<meta[^>]*name=["']robots["'][^>]*noindex/i,
-        `Missing page noindex: ${path}`);
+      const html = content.toString('utf8');
+      if (privateRoutes.has(path) || policy.productionLaunchApproved !== true) {
+        assert.match(html, /<meta[^>]*name=["']robots["'][^>]*noindex/i,
+          `Missing page noindex: ${path}`);
+      } else {
+        assert.match(html, /<meta[^>]*name=["']robots["'][^>]*\bindex\b/i,
+          `Public route missing index directive: ${path}`);
+        assert.doesNotMatch(html, /<meta[^>]*name=["']robots["'][^>]*noindex/i,
+          `Public route unexpectedly has noindex: ${path}`);
+      }
     }
     entries.push({path,bytes:content.byteLength,
       sha256:createHash('sha256').update(content).digest('hex')});
@@ -39,7 +52,15 @@ walk(root);
 const headers = readFileSync(join(root, '_headers'), 'utf8');
 assert.match(headers, /X-Robots-Tag:\s*noindex,\s*nofollow,\s*noarchive/i);
 assert.match(headers, /X-Content-Type-Options:\s*nosniff/i);
-assert.match(readFileSync(join(root,'robots.txt'),'utf8'), /Disallow:\s*\//);
+const robotsTxt = readFileSync(join(root, 'robots.txt'), 'utf8');
+if (policy.productionLaunchApproved === true) {
+  assert.match(robotsTxt, /^Allow:\s*\/$/m);
+  assert.match(robotsTxt, /^Disallow:\s*\/tools\/private-uat-worksheet\/$/m);
+  assert.match(robotsTxt, /^Disallow:\s*\/preview-build\/$/m);
+  assert.match(robotsTxt, /^Disallow:\s*\/research\/$/m);
+} else {
+  assert.match(robotsTxt, /Disallow:\s*\//);
+}
 const htmlCount = entries.filter(f => f.path.endsWith('.html')).length;
 assert.ok(htmlCount >= 15, 'Require baseline static pages for current catalog');
 assert.ok(entries.some(f => f.path === 'guides/crm-migration-checklist/index.html'),

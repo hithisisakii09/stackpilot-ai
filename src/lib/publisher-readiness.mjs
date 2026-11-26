@@ -21,7 +21,7 @@ const gateDescriptions=[
 function assertPolicy(policy){
  if(!policy || policy.policyVersion!==1 || policy.monthlyBudgetINR!==0 ||
     policy.delegatedSpendINR!==0 || policy.hostingCandidate!=='netlify-free' ||
-    policy.commercialHostingApproved!==false || policy.productionLaunchApproved!==false ||
+    policy.commercialHostingApproved!==false || policy.productionLaunchApproved!==true ||
     policy.affiliateActivationApproved!==false || policy.paidServicesApproved!==false) {
   throw new Error('Publisher report requires restrictive zero-budget authorization policy');
  }

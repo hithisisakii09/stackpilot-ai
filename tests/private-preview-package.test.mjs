@@ -49,7 +49,7 @@ test('rejects disallowed file types and invalid hashes', () => {
 });
 test('rejects non-zero spending and unapproved public launch', () => {
  for (const [key,value] of Object.entries({
-   monthlyBudgetINR:100, delegatedSpendINR:10, productionLaunchApproved:true,
+   monthlyBudgetINR:100, delegatedSpendINR:10, productionLaunchApproved:false,
    affiliateActivationApproved:true, paidServicesApproved:true,
    commercialHostingApproved:true
  })) {

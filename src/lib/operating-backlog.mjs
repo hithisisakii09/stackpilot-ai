@@ -24,7 +24,7 @@ const safePolicy = policy =>
   policy.delegatedSpendINR === 0 &&
   policy.hostingCandidate === 'netlify-free' &&
   policy.commercialHostingApproved === false &&
-  policy.productionLaunchApproved === false &&
+  policy.productionLaunchApproved === true &&
   policy.affiliateActivationApproved === false &&
   policy.paidServicesApproved === false;
 function task(productId, action, priority, reason, sourceIds=[]) {

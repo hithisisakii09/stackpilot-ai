@@ -28,11 +28,21 @@ const pages = [
   'compare/kinsta-vs-cloudways/index.html',
   ...products.map(p => `software/${p.id}/index.html`)
 ];
+const privateRoutes = new Set([
+  'research/index.html',
+  'preview-build/index.html',
+  'tools/private-uat-worksheet/index.html'
+]);
 for (const page of pages) {
   const path = join('dist', page);
   assert.ok(existsSync(path), `Missing built route: ${path}`);
   const html = readFileSync(path, 'utf8');
-  assert.match(html, /<meta[^>]*name=["']robots["'][^>]*noindex/i, `Non-indexing protection missing: ${page}`);
+  if (privateRoutes.has(page)) {
+    assert.match(html, /<meta[^>]*name=["']robots["'][^>]*noindex/i, `Private route non-indexing protection missing: ${page}`);
+  } else {
+    assert.match(html, /<meta[^>]*name=["']robots["'][^>]*\bindex\b/i, `Public route missing index directive: ${page}`);
+    assert.doesNotMatch(html, /<meta[^>]*name=["']robots["'][^>]*noindex/i, `Public route unexpectedly has noindex: ${page}`);
+  }
   assert.match(html, /StackPilot AI/, `Brand missing: ${page}`);
 }
 const home = readFileSync('dist/index.html', 'utf8');
@@ -57,17 +67,23 @@ for (const product of products) assert.ok(compare.includes(product.name), `Compa
 assert.match(compare, /\/compare\/hubspot-vs-pipedrive\//);
 console.log(`Static route smoke passed for ${pages.length} pages`);
 
-assert.ok(existsSync('dist/robots.txt'), 'Prelaunch robots.txt missing');
-assert.match(readFileSync('dist/robots.txt', 'utf8'), /Disallow:\s*\//, 'Prelaunch crawl blocking disabled');
-// vercel.json has been removed; noindex enforcement is now via dist/_headers (Netlify) and robots.txt only.
+assert.ok(existsSync('dist/robots.txt'), 'robots.txt missing');
+const robotsTxt = readFileSync('dist/robots.txt', 'utf8');
+assert.match(robotsTxt, /^Allow:\s*\/$/m, 'Public buyer routes must be allowed in robots.txt');
+assert.doesNotMatch(robotsTxt, /^Disallow:\s*\/$/m, 'Wildcard Disallow: / must be removed for public launch');
+assert.match(robotsTxt, /^Disallow:\s*\/tools\/private-uat-worksheet\/$/m);
+assert.match(robotsTxt, /^Disallow:\s*\/preview-build\/$/m);
+assert.match(robotsTxt, /^Disallow:\s*\/research\/$/m);
+// vercel.json has been removed; headers enforcement is via dist/_headers (Netlify) and robots.txt only.
 const research = readFileSync('dist/research/index.html', 'utf8');
 for (const product of products) assert.ok(research.includes(product.name), `Research workbench omits ${product.name}`);
 assert.match(research, /No product claims or pricing have been editorially approved/);
 
-assert.ok(existsSync('dist/_headers'), 'Hosting-platform noindex header file missing from published assets');
+assert.ok(existsSync('dist/_headers'), 'Hosting-platform headers file missing from published assets');
 const staticHeaders = readFileSync('dist/_headers','utf8');
+assert.match(staticHeaders, /Content-Security-Policy:/i, 'CSP header missing');
 assert.match(staticHeaders, /X-Robots-Tag:\s*noindex,\s*nofollow,\s*noarchive/i,
-  'Netlify/Cloudflare prelaunch non-indexing header missing');
+  'Private-route non-indexing header missing');
 assert.match(staticHeaders, /X-Content-Type-Options:\s*nosniff/i,
   'Static hosting content-type safeguard missing');
 

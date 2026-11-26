@@ -27,7 +27,7 @@ test('even classified allowed actions cannot execute without independently provi
 });
 
 test('caller roles, tokens, approval flags and verifier callbacks cannot mint authorization',()=>{
- for(const patch of [{actor:{...request().actor,role:'owner'}},{actor:{...request().actor,authenticated:true}},{approved:true},{authority:'owner'},{verifyIdentity:()=>true},{policy:{...policy,productionLaunchApproved:true}},{costINR:NaN},{costINR:-1},{costINR:1},{action:'unknown'},{actor:null}]){
+ for(const patch of [{actor:{...request().actor,role:'owner'}},{actor:{...request().actor,authenticated:true}},{approved:true},{authority:'owner'},{verifyIdentity:()=>true},{policy:{...policy,productionLaunchApproved:false}},{costINR:NaN},{costINR:-1},{costINR:1},{action:'unknown'},{actor:null}]){
   const result=evaluateAction({...request(),...patch});assert.equal(result.decision,'DENY');assert.equal(result.tier,'prohibited');assert.deepEqual(result.reasons,['invalid-request']);
  }
  assert.equal(evaluateAction().decision,'DENY');

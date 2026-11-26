@@ -10,7 +10,7 @@ const optionB={flatMonthly:'55.00',seatMonthly:'3.00',seats:'5',extrasMonthly:'8
 
 test('TCO guide exists as its own prelaunch Astro route',()=>{
  assert.ok(existsSync(page),'Missing SaaS TCO guide route');
- assert.match(text(),/<meta name="robots" content="noindex, nofollow"/);
+ assert.match(text(),/<meta name="robots" content="index, follow"/);
  assert.match(text(),/<h1[^>]*>SaaS total cost of ownership/);
  assert.match(text(),/<title>[^<]*SaaS[^<]*total cost/i);
 });
