@@ -73,7 +73,7 @@ test('tenant-scoped keyword clusters and evidence-bound editorial drafts with RL
     controlPool = await openLocalControlPool({ ...config, user: 'stackpilot_control' });
     appPool = await openLocalPool({ ...config, user: 'stackpilot_app' });
     identity = createIdentityService({ pool: controlPool, trustPath, origin: 'https://127.0.0.1:55441' });
-    approvals = createApprovalService({ pool: controlPool, identity });
+    approvals = createApprovalService({ identity });
     lifecycle = createClaimLifecycleService({ identity });
     store = createEditorialGrowthStore({ identity, appPool });
 
