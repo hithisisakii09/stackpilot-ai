@@ -13,8 +13,8 @@ export function auditLocalControlPlaneExport(files) {
     const reconciliationMarker=/prepareReconciliation|analyzeReconciledEvidence|openReconciliationStore|validateReconciliationGraph|normalizeReconciledSelection|inspectReconciliationHistory|candidate-reconciliation-v1|analyzeMarketHistory|prepareMarketHistorySelection|calendar-month-change-v1/;
     const productPath=/(?:^|\/)(?:platform\/products|category_aliases|product_duplicate_proposals|claim_lifecycle_events|evidence_revocations|pricing_observations)(?:[/.]|$)/i;
     const productMarker=/openProductCandidateStore|prepareProductIntake|proposeProductDuplicates|manual-product-candidate-v1|manual-products-imported|createClaimLifecycleService|claim-review-lifecycle-v1|readClaimReviewSnapshot|inspectClaimApproval|createProductProjectionService|createPricingHistoryService|inspectClaimLifecycle|readPricingHistory|manual-pricing-observation-v1/;
-    const growthPath=/(?:^|\/)platform\/growth(?:[/.]|$)/i;
-    const growthMarker=/buildPublicCatalog|evaluateSuitability|recommendAlternatives/;
+    const growthPath=/(?:^|\/)(?:platform\/growth|keyword_clusters|content_versions|content_claims)(?:[/.]|$)/i;
+    const growthMarker=/buildPublicCatalog|evaluateSuitability|recommendAlternatives|normalizeKeywordPhrase|normalizeClusterKey|classifySearchIntent|normalizeKeywordClusterInput|deduplicateKeywordClusters|buildEditorialDraft|validateEditorialDraft|createEditorialGrowthStore|stackpilot-editorial-draft-v1/;
     if(privatePath.test(file.path)||runnerPath.test(file.path)||marketPath.test(file.path)||reconciliationPath.test(file.path)||productPath.test(file.path)||growthPath.test(file.path)||typeof file.content==='string'&&(marker.test(file.content)||runnerMarker.test(file.content)||marketMarker.test(file.content)||reconciliationMarker.test(file.content)||productMarker.test(file.content)||growthMarker.test(file.content))) violations.push('Local control-plane material in static output');
   }
   return {checkedFiles:files.length,violations};
