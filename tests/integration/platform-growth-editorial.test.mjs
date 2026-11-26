@@ -69,7 +69,6 @@ test('tenant-scoped keyword clusters and evidence-bound editorial drafts with RL
     }
 
     await admin.query('ALTER ROLE stackpilot_control LOGIN');
-    await admin.query('ALTER ROLE stackpilot_app LOGIN');
     controlPool = await openLocalControlPool({ ...config, user: 'stackpilot_control' });
     appPool = await openLocalPool({ ...config, user: 'stackpilot_app' });
     identity = createIdentityService({ pool: controlPool, trustPath, origin: 'https://127.0.0.1:55441' });
@@ -234,6 +233,7 @@ test('tenant-scoped keyword clusters and evidence-bound editorial drafts with RL
   } finally {
     await appPool?.end();
     await controlPool?.end();
+    await admin.query('ALTER ROLE stackpilot_control NOLOGIN');
     await admin.end();
     rmSync(root, { recursive: true, force: true });
   }
