@@ -19,12 +19,13 @@ async function verifyApprovedClaims(controlTx, organizationId, citedClaimIds) {
       ORDER BY version DESC
       LIMIT 1
     `)).rows[0];
-    if (!latest) throw new Error('Unverified evidence reference');
+    if (!latest) return false;
     const state = await inspectClaimLifecycle(controlTx, claimId, latest.agent_id);
     if (state.effective.status !== 'approved') {
-      throw new Error('Unverified evidence reference');
+      return false;
     }
   }
+  return true;
 }
 
 /**
@@ -163,10 +164,12 @@ export function createEditorialGrowthStore(options) {
 
     saveEditorialDraft: safe(async (handle, input) => {
       const draft = buildEditorialDraft(input);
-      const principal = await withAuthenticatedTransaction(identity, handle, false, async (controlTx, caller) => {
-        await verifyApprovedClaims(controlTx, caller.organizationId, draft.citedClaimIds);
-        return caller;
+      const auth = await withAuthenticatedTransaction(identity, handle, false, async (controlTx, caller) => {
+        const verified = await verifyApprovedClaims(controlTx, caller.organizationId, draft.citedClaimIds);
+        return { caller, verified };
       });
+      if (!auth.verified) throw new Error('Unverified evidence reference');
+      const principal = auth.caller;
       const organizationId = principal.organizationId;
 
       return withTransaction(

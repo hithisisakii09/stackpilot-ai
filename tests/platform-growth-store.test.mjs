@@ -49,6 +49,30 @@ test('createEditorialGrowthStore validates options and rejects invalid/Proxy/com
     }),
     /Commercial input is prohibited/
   );
+
+  await assert.rejects(
+    () => store.saveEditorialDraft(fakeHandle, {
+      id: 'draft-3',
+      categoryId: 'cat-crm',
+      title: 'Unapproved Evidence',
+      status: 'draft',
+      evidenceBindings: [{ claimId: 'claim-unapproved', status: 'candidate', stale: false, revoked: false }],
+      spans: [{ id: 'span-1', kind: 'factual', text: 'Fact', claimIds: ['claim-unapproved'] }]
+    }),
+    /Unverified evidence reference: claim-unapproved/
+  );
+
+  await assert.rejects(
+    () => store.saveEditorialDraft(fakeHandle, {
+      id: 'draft-4',
+      categoryId: 'cat-crm',
+      title: 'Sanitized Auth Failure',
+      status: 'draft',
+      evidenceBindings: [{ claimId: 'claim-approved', status: 'approved', stale: false, revoked: false }],
+      spans: [{ id: 'span-1', kind: 'factual', text: 'Fact', claimIds: ['claim-approved'] }]
+    }),
+    /Growth store operation failed/
+  );
 });
 
 test('auditLocalControlPlaneExport blocks Phase 5B keyword, editorial, and growth-store markers in dist', () => {
