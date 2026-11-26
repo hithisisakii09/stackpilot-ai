@@ -65,6 +65,7 @@ try {
     await admin.query('CREATE DATABASE stackpilot_partnerships_fresh');
     await admin.query('CREATE DATABASE stackpilot_partnerships_failure');
     await admin.query('CREATE DATABASE stackpilot_ai_test');
+    await admin.query('CREATE DATABASE stackpilot_admin_test');
   } finally {
     await admin.end();
   }
@@ -169,6 +170,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_ai_test'})}
     });
     resultCode=ai.status??1;
+  }
+  if(resultCode===0) {
+    const adminUi=spawnSync(process.execPath,['--test','tests/integration/platform-admin-ui.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_admin_test'})}
+    });
+    resultCode=adminUi.status??1;
   }
 } finally {
   let stopped = !started;

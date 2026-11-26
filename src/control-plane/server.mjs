@@ -1,13 +1,13 @@
 import {createServer} from 'node:https';
 import {loadControlConfiguration} from './config.mjs';
 import {createControlHandler,respond} from './routes.mjs';
-import {openLocalControlPool} from '../platform/persistence/connection.mjs';
+import {openLocalControlPool,openLocalPool} from '../platform/persistence/connection.mjs';
 import {createIdentityService} from '../platform/identity/sessions.mjs';
 import {createApprovalService} from '../platform/approvals/service.mjs';
 import {auditCurrentEditorialRuntimeSurface} from '../../scripts/editorial-runtime-source.mjs';
 
 export async function startLocalControlPlane(options) {
-  let pool,server,closed=false,closing;
+  let pool,appPool,server,closed=false,closing;
   const sockets=new Set();
   function close() {
     if(closing) return closing;
@@ -18,6 +18,7 @@ export async function startLocalControlPlane(options) {
         for(const socket of sockets) socket.destroy();
         await stopped;
       }
+      if(appPool) await appPool.end();
       if(pool) await pool.end();
     })();
     return closing;
@@ -40,9 +41,10 @@ export async function startLocalControlPlane(options) {
     if(closed) throw new Error();
     const identity=createIdentityService({pool,trustPath:config.trustPath,origin:config.origin});
     const approvals=createApprovalService({identity});
+    appPool=await openLocalPool({...config.database,user:'stackpilot_app'});
     server=createServer({key:config.key,cert:config.cert,minVersion:'TLSv1.2',handshakeTimeout:5000,maxHeaderSize:8192,
       requestTimeout:5000,headersTimeout:5000,keepAliveTimeout:1000,connectionsCheckingInterval:1000,
-      highWaterMark:8192,rejectNonStandardBodyWrites:true},createControlHandler({identity,approvals,origin:config.origin,authority:config.authority}));
+      highWaterMark:8192,rejectNonStandardBodyWrites:true},createControlHandler({identity,approvals,appPool,origin:config.origin,authority:config.authority}));
     // Retain an extra pair so application rejection sees a count above 32.
     server.maxHeadersCount=33;
     server.maxRequestsPerSocket=100;

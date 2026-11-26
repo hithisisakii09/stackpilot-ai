@@ -3,6 +3,7 @@ import {fields,id,json} from '../platform/contracts/validation.mjs';
 import {parseUnambiguousJson} from '../platform/identity/trust.mjs';
 import {withAuthenticatedTransaction} from '../platform/identity/sessions.mjs';
 import {parseSessionCookie,sessionCookie,expiredSessionCookie} from './csrf.mjs';
+import {createAdminDbReader,createAdminUiRouter} from '../platform/admin-ui/routes.mjs';
 
 class RequestFailure extends Error {
   constructor(status) {super('Request denied');this.status=status;}
@@ -54,7 +55,12 @@ async function body(req) {
   catch {deny(400);}
 }
 
-export function createControlHandler({identity,approvals,origin,authority}) {
+export function createControlHandler({identity,approvals,appPool,origin,authority}) {
+  const adminRouter=createAdminUiRouter({
+    identity,
+    reader:createAdminDbReader({identity,appPool,approvals}),
+    onApprovalDecision:(handle,input)=>approvals.decide(handle,input)
+  });
   const counters={all:{start:performance.now(),count:0},auth:{start:performance.now(),count:0}};
   function throttle(group,limit) {
     const state=counters[group],now=performance.now();
@@ -86,13 +92,19 @@ export function createControlHandler({identity,approvals,origin,authority}) {
         return respond(req,res,200,{csrfToken:session.csrfToken,expiresAt:session.expiresAt},{'Set-Cookie':sessionCookie(input.keyId,session.token)});
       }
       const decisionPath=/^\/approval-requests\/([a-z][a-z0-9-]{2,63})\/(decisions|revocations)$/.exec(path);
+      const adminPaths=['/admin','/admin/approvals','/admin/claims','/admin/partnerships','/admin/revenue','/admin/ai-engineering','/admin/api/summary'];
       const known=['/session','/logout','/agents','/approval-requests'];
-      if(!known.includes(path)&&!decisionPath) deny(404);
+      const isAdmin=adminPaths.includes(path);
+      if(!known.includes(path)&&!decisionPath&&!isAdmin) deny(404);
       let credentials,handle;
       try {credentials=parseSessionCookie(cookieHeader);handle=await identity.authenticate(credentials);}
       catch {deny(401);}
       if(req.method==='POST') {
         try {await identity.verifyCsrf(handle,csrf);} catch {deny(403);}
+      }
+      if(isAdmin) {
+        const parsedBody=req.method==='POST'?await body(req):undefined;
+        return await adminRouter.handle(req,res,{path,handle,body:parsedBody});
       }
       if(path==='/session') {
         if(req.method!=='GET') deny(405);
