@@ -66,6 +66,8 @@ try {
     await admin.query('CREATE DATABASE stackpilot_partnerships_failure');
     await admin.query('CREATE DATABASE stackpilot_ai_test');
     await admin.query('CREATE DATABASE stackpilot_admin_test');
+    await admin.query('CREATE DATABASE stackpilot_e2e_test');
+    await admin.query('CREATE DATABASE stackpilot_e2e_drift');
   } finally {
     await admin.end();
   }
@@ -176,6 +178,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_admin_test'})}
     });
     resultCode=adminUi.status??1;
+  }
+  if(resultCode===0) {
+    const e2e=spawnSync(process.execPath,['--test','tests/integration/platform-e2e-recovery.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_e2e_test'})}
+    });
+    resultCode=e2e.status??1;
   }
 } finally {
   let stopped = !started;
