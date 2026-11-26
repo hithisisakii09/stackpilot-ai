@@ -60,7 +60,8 @@ test('platform-launch-gate CLI exits 0 with decision ready when valid offline fi
         requesterId: 'agent-1',
         approvedAt: attestedAt
       })),
-      highOrCriticalVulnerabilities: 0
+      highOrCriticalVulnerabilities: 0,
+      preflightViolations: 0
     }));
 
     const res = spawnSync(process.execPath, [cliPath, '--json', '--input', fixturePath], { encoding: 'utf8', windowsHide: true });

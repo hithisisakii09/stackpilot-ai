@@ -30,7 +30,7 @@ try {
   drillReport = JSON.parse(drillProc.stdout || 'null');
 } catch {}
 
-let preflightViolations = null;
+let preflightViolations = fixture.preflightViolations ?? null;
 if (existsSync(join(root, 'dist'))) {
   const preProc = spawnSync(process.execPath, [join(root, 'scripts', 'release-preflight.mjs'), '--json'], {
     encoding: 'utf8',
