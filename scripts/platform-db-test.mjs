@@ -68,6 +68,7 @@ try {
     await admin.query('CREATE DATABASE stackpilot_admin_test');
     await admin.query('CREATE DATABASE stackpilot_e2e_test');
     await admin.query('CREATE DATABASE stackpilot_e2e_drift');
+    await admin.query('CREATE DATABASE stackpilot_launch_test');
   } finally {
     await admin.end();
   }
@@ -184,6 +185,12 @@ try {
       stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_e2e_test'})}
     });
     resultCode=e2e.status??1;
+  }
+  if(resultCode===0) {
+    const launch=spawnSync(process.execPath,['--test','tests/integration/platform-launch-gates.test.mjs'],{
+      stdio:'inherit',windowsHide:true,timeout:120000,env:{...process.env,STACKPILOT_TEST_DB:JSON.stringify({...config,database:'stackpilot_launch_test'})}
+    });
+    resultCode=launch.status??1;
   }
 } finally {
   let stopped = !started;
