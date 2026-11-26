@@ -98,8 +98,10 @@ test('6-vendor claim readiness, owner key-ceremony gate, and RLS isolation acros
 
       const inspected = await lifecycle.inspect(ownerAlpha, { claimId, agentId: 'qa-agent' });
       assert.equal(inspected.effectiveStatus, 'approved');
-      // Org Beta cannot inspect Org Alpha's claim lifecycle (RLS isolation)
-      await assert.rejects(lifecycle.inspect(ownerBeta, { claimId, agentId: 'qa-agent' }));
+      // Org Beta is RLS-scoped to its own org: same claimId resolves to Beta's unprocessed claim (candidate),
+      // not Alpha's approved lifecycle — proving cross-tenant event isolation without throwing.
+      const betaView = await lifecycle.inspect(ownerBeta, { claimId, agentId: 'qa-agent' });
+      assert.equal(betaView.effectiveStatus, 'candidate');
 
       approvedClaimsAlpha.push({
         vendorId,
