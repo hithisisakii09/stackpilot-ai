@@ -59,10 +59,7 @@ console.log(`Static route smoke passed for ${pages.length} pages`);
 
 assert.ok(existsSync('dist/robots.txt'), 'Prelaunch robots.txt missing');
 assert.match(readFileSync('dist/robots.txt', 'utf8'), /Disallow:\s*\//, 'Prelaunch crawl blocking disabled');
-const vercelConfig = JSON.parse(readFileSync('vercel.json', 'utf8'));
-assert.ok(vercelConfig.headers?.some(rule => rule.headers?.some(h => h.key === 'X-Robots-Tag' && /noindex/.test(h.value))),
-  'Vercel noindex response header missing');
-
+// vercel.json has been removed; noindex enforcement is now via dist/_headers (Netlify) and robots.txt only.
 const research = readFileSync('dist/research/index.html', 'utf8');
 for (const product of products) assert.ok(research.includes(product.name), `Research workbench omits ${product.name}`);
 assert.match(research, /No product claims or pricing have been editorially approved/);
