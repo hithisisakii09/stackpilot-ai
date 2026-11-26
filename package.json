@@ -8,7 +8,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "check:data": "node scripts/validate.mjs",
-    "test": "node --test tests/*.test.mjs && npm run check:data && npm run build && npm run check:build && npm run release:preflight",
+    "test": "node --test tests/*.test.mjs && npm run test:persistence && npm run check:data && npm run build && npm run check:build && npm run release:preflight",
+    "test:persistence": "node scripts/platform-db-test.mjs",
+    "db:import-candidates": "node scripts/platform-import-candidates.mjs",
+    "db:migrate": "node scripts/platform-db-migrate.mjs",
     "check:build": "node scripts/check-build.mjs",
     "research:queue": "node scripts/research-queue.mjs",
     "research:evidence": "node scripts/evidence-report.mjs",
@@ -17,10 +20,26 @@
     "ops:backlog": "node scripts/operating-backlog.mjs",
     "research:claims": "node scripts/research-claims-report.mjs",
     "publisher:readiness": "node scripts/publisher-readiness-report.mjs",
-    "release:preflight": "node scripts/release-preflight.mjs"
+    "release:preflight": "node scripts/release-preflight.mjs",
+    "research:comparisons": "node scripts/comparison-evidence-report.mjs",
+    "release:readiness": "node scripts/production-readiness-report.mjs",
+    "research:source-risk": "node scripts/candidate-source-risk-report.mjs",
+    "research:review-packets": "node scripts/comparison-review-packets.mjs",
+    "research:review-history": "node scripts/editorial-review-history-report.mjs",
+    "editorial:authorization": "node scripts/editorial-authorization-report.mjs",
+    "research:evidence-captures": "node scripts/comparison-evidence-captures-report.mjs",
+    "research:gap-worklist": "node scripts/comparison-gap-worklist.mjs",
+    "research:intake": "node scripts/manual-research-intake.mjs",
+    "research:claim-starter": "node scripts/claim-research-starter.mjs",
+    "research:snapshot-check": "node scripts/offline-snapshot-consistency.mjs",
+    "research:material-guard": "node scripts/private-research-material-guard.mjs",
+    "research:hubspot-export-checklist": "node scripts/hubspot-export-evidence-assessment.mjs",
+    "research:hubspot-worksheet-check": "node scripts/hubspot-manual-worksheet-check.mjs"
   },
   "dependencies": {
-    "astro": "^7.4.4"
+    "astro": "7.4.7",
+    "drizzle-orm": "0.45.4",
+    "pg": "8.23.1"
   },
   "engines": {
     "node": ">=22.23.4"

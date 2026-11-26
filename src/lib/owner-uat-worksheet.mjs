@@ -5,7 +5,7 @@ import { escapeSpreadsheetCsvCell } from './buyer-worksheet.mjs';
  * No external observation, identity proof, authentication or release approval.
  */
 export const OWNER_UAT_CHECKS=Object.freeze([
- Object.freeze({id:'previewSha',label:'Current preview commit observed',hint:'After signing in, compare the full displayed commit to current PR #1 HEAD; mark pass only on actual matching observation.'}),
+ Object.freeze({id:'previewSha',label:'Current preview commit observed',hint:'After signing in, compare the full displayed commit and preview PR number with the current draft PR for this deployment; mark pass only after actual observation.'}),
  Object.freeze({id:'authenticatedRoutes',label:'Authenticated routes and interactions tested',hint:'Open each route in the SHA-bound CI UAT packet; test forms and downloads in desktop/mobile authenticated browsers.'}),
  Object.freeze({id:'anonymousDenial',label:'Separate anonymous browser denied',hint:'In an unrelated incognito session verify no preview content appears; do not confuse a redirect or noindex with access control.'}),
  Object.freeze({id:'liveHeaders',label:'Live Netlify security headers inspected',hint:'Check actual X-Robots-Tag, Content-Security-Policy, nosniff and framing controls on the authenticated hosted response.'}),

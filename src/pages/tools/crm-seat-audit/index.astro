@@ -60,7 +60,7 @@
    <label class="check" for="seat-roleRequirementsConfirmed"><input type="checkbox" id="seat-roleRequirementsConfirmed" name="roleRequirementsConfirmed"/><span>I checked the required editing, viewing and admin roles</span></label>
    <label class="check" for="seat-billingChangeDateConfirmed"><input type="checkbox" id="seat-billingChangeDateConfirmed" name="billingChangeDateConfirmed"/><span>I checked when seat reductions would affect my bill</span></label>
   </fieldset>
-  <div class="actions"><button type="submit">Audit my entered seats</button><button type="reset" class="secondary">Clear worksheet</button></div>
+  <div class="actions"><button type="submit" id="seat-submit" disabled>Audit my entered seats</button><button type="reset" class="secondary">Clear worksheet</button></div>
  </form>
  <p id="seat-status" role="status" aria-live="polite"></p>
  <section class="panel" aria-labelledby="seat-report-title">
@@ -78,6 +78,7 @@
  const report=document.querySelector('#seat-report');
  const status=document.querySelector('#seat-status');
  const copy=document.querySelector('#seat-copy');
+ const submit=document.querySelector('#seat-submit');
  const counts=['billedSeats','occupiedPaidSeats','activeUsers','invitedUsers','deactivatedUsers'];
  const checks=['accountModelConfirmed','roleRequirementsConfirmed','billingChangeDateConfirmed'];
  function invalidate(){report.value='';copy.disabled=true;}
@@ -106,6 +107,7 @@
   try{await navigator.clipboard.writeText(report.value);status.textContent='Report copied.';}
   catch{report.focus();report.select();status.textContent='Clipboard unavailable. Select and copy manually.';}
  });
+ submit.disabled=false;
 </script>
 </body>
 </html>

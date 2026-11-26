@@ -82,9 +82,9 @@ try {
   await checkAccessibility(page, 'homepage desktop');
 
   const scenarios = [
-    { goal: 'sales', expected: ['HubSpot', 'Pipedrive'] },
-    { goal: 'seo', expected: ['Ahrefs', 'Semrush'] },
-    { goal: 'hosting', expected: ['Cloudways', 'Kinsta'] }
+    { goal: 'sales', expected: ['HubSpot', 'Pipedrive'], peerSlug: 'hubspot-vs-pipedrive', productIds: ['hubspot','pipedrive'] },
+    { goal: 'seo', expected: ['Ahrefs', 'Semrush'], peerSlug: 'semrush-vs-ahrefs', productIds: ['ahrefs','semrush'] },
+    { goal: 'hosting', expected: ['Cloudways', 'Kinsta'], peerSlug: 'kinsta-vs-cloudways', productIds: ['cloudways','kinsta'] }
   ];
   for (const item of scenarios) {
     await page.locator('#goal').selectOption(item.goal);
@@ -97,13 +97,27 @@ try {
     assert.match(result, /Team-size suitability has not been verified/);
     assert.match(result, /Current pricing and budget suitability are not verified/);
     assert.match(result, /No affiliate links are active/);
-    for (const link of await page.locator('#result a').all()) {
+    // Three public-safe categories must link to real static comparison routes
+    // and profiles without exposing unreviewed vendor matrix assertions.
+    const peerLinks = await page.locator('#result a').filter({hasText:'Review questions for category peer'}).all();
+    assert.equal(peerLinks.length,2,'Exactly two neutral category-peer links');
+    for (const peerLink of peerLinks){
+      assert.equal(await peerLink.getAttribute('href'),'/compare/'+item.peerSlug+'/');
+      assert.equal(await peerLink.getAttribute('target'),null,'Internal links remain first-party');
+    }
+    assert.equal((await page.request.get(base+'/compare/'+item.peerSlug+'/')).status(),200,
+      'Canonical peer route must exist for '+item.goal);
+    const profileLinks = await page.locator('#result a').filter({hasText:'View product profile'}).all();
+    assert.equal(profileLinks.length,2,'Exactly two individual profile links');
+    const profileHrefs = await Promise.all(profileLinks.map(link=>link.getAttribute('href')));
+    assert.deepEqual(profileHrefs.sort(),item.productIds.map(id=>'/software/'+id+'/').sort());
+    for (const link of await page.locator('#result a[target="_blank"]').all()) {
       const href = await link.getAttribute('href');
       assert.ok(href?.startsWith('https://'), 'Outbound link must be HTTPS');
       assert.ok(!/[?&](ref|aff|utm_)/i.test(href), 'Unexpected tracking parameter');
-      assert.equal(await link.getAttribute('target'), '_blank');
       assert.match(await link.getAttribute('rel'), /noopener noreferrer/);
     }
+    assert.equal(await page.locator('#result a[target="_blank"]').count(),2);
   }
 
   // All priority/team/budget combinations must behave honestly in the rendered browser.
@@ -146,7 +160,10 @@ try {
   assert.deepEqual(await page.locator('section[aria-label="Hosting candidates"] tbody th').allTextContents(),['Cloudways','Kinsta']);
   await page.screenshot({ path: output + '/compare-desktop.png', fullPage: true });
   await checkAccessibility(page, 'category comparison desktop');
-  // Interactive comparisons cannot cross categories or imply verified pricing.
+  // External-only, local comparison picker cannot leak claims or execute URL input.
+  assert.equal(await page.locator('script:not([src])').count(), 0, 'Compare page must have zero inline scripts');
+  assert.equal(await page.locator('script[src="/scripts/compare-picker.js"]').count(), 1);
+  assert.match(await page.locator('meta[http-equiv="Content-Security-Policy"]').count() ? await page.locator('meta[http-equiv="Content-Security-Policy"]').getAttribute('content') : 'script-src self', /script-src/);
   assert.equal(await page.locator('#compare-category').inputValue(), 'CRM');
   const downloadQuestions = page.locator('#download-comparison-csv');
   assert.ok(await downloadQuestions.isDisabled(), 'Download disabled until a valid comparison');
@@ -155,49 +172,50 @@ try {
   assert.equal(await page.locator('#comparison-table').count(), 1);
   assert.equal(await page.locator('#comparison-table thead th').count(), 3);
   assert.match(await panel.innerText(), /HubSpot vs Pipedrive/);
-  assert.match(await panel.innerText(), /Unverified/);
-  assert.match(await panel.innerText(), /No affiliate links active/);
-  const questionsPreview=page.locator('#vendor-questions-preview');
-  assert.equal(await questionsPreview.locator('li').count(),6);
-  assert.match(await questionsPreview.innerText(), /written current total price/);
-  assert.match(await questionsPreview.innerText(), /sample pipeline import/);
-  assert.match(await panel.innerText(), /all answers unverified/);
+  assert.match(await panel.innerText(), /Candidate.*unverified/);
   assert.ok(await downloadQuestions.isEnabled());
   const comparisonCsvPromise = page.waitForEvent('download');
   await downloadQuestions.click();
   const comparisonCsv = await comparisonCsvPromise;
-  assert.equal(comparisonCsv.suggestedFilename(), 'stackpilot-vendor-questions-crm.csv');
+  assert.equal(comparisonCsv.suggestedFilename(), 'stackpilot-candidate-comparison-crm.csv');
   const comparisonCsvStream = await comparisonCsv.createReadStream();
   const questionChunks = [];
   for await (const chunk of comparisonCsvStream) questionChunks.push(Buffer.from(chunk));
   const questionCsvText = Buffer.concat(questionChunks).toString('utf8');
-  assert.match(questionCsvText, /"HubSpot","Unverified","Pipedrive","Unverified"/);
-  assert.match(questionCsvText, /sample pipeline import/);
+  assert.match(questionCsvText, /"HubSpot"/);
+  assert.match(questionCsvText, /CANDIDATE_UNVERIFIED/);
   assert.doesNotMatch(questionCsvText, /affiliate|winner|recommended/i);
   assert.match(await page.locator('#comparison-download-status').innerText(), /saved on your device/);
   await checkAccessibility(page, 'interactive CRM comparison');
   await page.locator('#compare-second').selectOption('hubspot');
   await page.locator('#compare-form button').click();
-  assert.match(await page.locator('#comparison-error').innerText(), /Select two different products/);
+  assert.match(await page.locator('#comparison-error').innerText(), /Select two or three different tools/);
   assert.equal(await page.locator('#comparison-table').count(), 0);
-  assert.equal(await questionsPreview.count(),0,'Invalid selection clears stale question preview');
   assert.ok(await downloadQuestions.isDisabled(), 'Invalid comparison must invalidate CSV');
   await page.locator('#compare-category').selectOption('SEO');
   assert.ok(await downloadQuestions.isDisabled(), 'Category change invalidates previous CSV');
   assert.deepEqual((await page.locator('#compare-first option').allTextContents()), ['Ahrefs', 'Semrush']);
   await page.locator('#compare-form button').click();
   assert.match(await panel.innerText(), /Ahrefs vs Semrush/);
-  assert.equal(await questionsPreview.locator('li').count(),6);
-  assert.match(await questionsPreview.innerText(), /crawl and query limits/);
   assert.ok(await downloadQuestions.isEnabled());
   await page.locator('#compare-category').selectOption('Hosting');
   assert.ok(await downloadQuestions.isDisabled(), 'Hosting change clears stale SEO CSV');
   await page.locator('#compare-form button').click();
   assert.match(await panel.innerText(), /Cloudways vs Kinsta/);
-  assert.equal(await questionsPreview.locator('li').count(),6);
-  assert.match(await questionsPreview.innerText(), /backup restoration tested/);
   assert.ok(await downloadQuestions.isEnabled());
   assert.ok(!(await panel.innerText()).includes('HubSpot'), 'Category change must not leak stale product comparisons');
+  await page.locator('#compare-category').selectOption('CRM');
+  await page.locator('#compare-third').selectOption('pipedrive');
+  await page.locator('#compare-form button').click();
+  assert.equal(await page.locator('#comparison-table').count(), 0, 'Duplicate third tool must not render comparison');
+  assert.match(await page.locator('#comparison-error').innerText(), /Select two or three different tools/);
+  await page.goto(base+'/compare/?category=CRM&tools=hubspot,pipedrive,%3Cimg%3E',{waitUntil:'networkidle'});
+  assert.equal(await page.locator('#compare-third').inputValue(),'','Unsafe URL tool id is discarded');
+  await page.locator('#compare-search').fill('pipe');
+  assert.deepEqual(await page.locator('#compare-first option').allTextContents(),['Pipedrive']);
+  await page.locator('#compare-search').fill('');
+  await page.locator('#compare-workflow').selectOption('sales');
+  assert.deepEqual(await page.locator('#compare-first option').allTextContents(),['HubSpot','Pipedrive']);
   await checkAccessibility(page, 'interactive Hosting comparison');
 
 
@@ -530,6 +548,18 @@ try {
   page.on('request',trackUatRequest);
   await page.goto(base+'/tools/private-uat-worksheet/',{waitUntil:'networkidle'});
   assert.match(await page.locator('h1').innerText(),/Private owner UAT evidence worksheet/);
+  const ownerPrContext=await page.locator('#owner-uat-pr-context').innerText();
+  const ownerPrLink=await page.locator('#owner-uat-github-pr').getAttribute('href');
+  const ownerExpectedLabel=await page.locator('label[for="owner-uat-expectedSha"]').innerText();
+  if(/identity unavailable/i.test(ownerPrContext)){
+    assert.match(ownerPrContext,/BLOCKED/i,'Unknown local preview context must be visibly blocked');
+    assert.match(ownerPrLink,/\/pulls$/,'Unknown build must not link a stale fixed PR');
+    assert.match(ownerExpectedLabel,/current draft PR HEAD SHA/);
+  }else{
+    assert.match(ownerPrContext,/Netlify build metadata identifies preview PR #\d+/);
+    assert.match(ownerPrLink,/\/pull\/\d+$/);
+    assert.match(ownerExpectedLabel,/Expected PR #\d+ HEAD SHA/);
+  }
   assert.match(await page.locator('meta[name="robots"]').getAttribute('content'),/noindex/);
   assert.equal(await page.locator('#owner-uat-form select').count(),6);
   assert.ok(await page.locator('#owner-uat-download').isDisabled());

@@ -1,4 +1,6 @@
 # StackPilot AI — private preview access and privacy acceptance protocol
+
+> **Current Phase 2 owner UAT note (2026-11-06):** This runbook's historical PR #1 instructions are **not** the active source of the PR number for Draft PR #8. On the current protected Netlify preview, `/tools/private-uat-worksheet/` derives its GitHub PR link and label from the same validated *build-time* `REVIEW_ID` metadata used by `/preview-build/`. If valid Netlify Deploy Preview metadata is unavailable, the worksheet labels the preview PR **BLOCKED / unavailable** and provides a generic PR-list link instead of guessing. The owner must personally compare the displayed PR number and full **40-character** source SHA against the current draft PR, and must separately test anonymous denial, deployed headers and actual account Private/Locked settings. No SHA fields are prefilled and a matching self-report **does not** constitute independently authenticated remote UAT or release approval. Public launch remains NO-GO; ₹0 budget and private/locked conditions remain binding.
 **Draft date:** 2026-10-31. **Not an executed test or legal certification.**
 
 ## Purpose

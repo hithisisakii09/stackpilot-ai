@@ -28,7 +28,7 @@ These are upstream reference methodologies, **not an assertion their slash comma
 - Do not store secrets, live cookies, private customer data or third-party skill telemetry in this repository.
 
 ## Reminder for next session
-Continue from the active development branch `feature/phase-1-1-recommendation-engine` and draft PR #1. Read this file and the linked skill docs, then verify CI and current scope before edits.
+PR #1 and PR #7 are merged. The active Phase 2 engineering branch is `feature/phase-2-product-readiness` (Draft PR #8); a separate documentation-only growth branch is `growth/seat-billing-audit-2026-11-05` (Draft PR #9). Last verified PR #8 head before this instruction refresh was `607b20cb2963c8e23c33968e8e353d735fc2a87b`; this AGENTS update creates a new docs-only commit, so fetch the live PR #8 head, exact-SHA CI and Netlify status before further work. PR #1 is not an active draft. Read this file, `docs/current-operational-state.md`, the linked skill docs and live PR status before edits.
 
 
 ## Continuous autonomous business operation (enabled at ChatGPT scheduling layer)
@@ -37,8 +37,8 @@ StackPilot has a **daily autonomous operator** scheduled task and an **hourly in
 
 On every operator run:
 1. Check latest GitHub Actions results, Netlify Deploy Preview commit status, and user-confirmed Private/Locked settings. Do not monitor or retry the deleted Vercel project. Historical failed Vercel status contexts may persist on older commits; only new exact-SHA contexts indicate new activity. Do not equate READY with an authenticated remote browser pass.
-2. Run or inspect `npm run ops:report -- --json`; follow fail-closed restrictions.
-3. Choose the highest-priority **automatic** task from `npm run ops:backlog -- --json`; separately inspect `src/lib/autonomy-policy.mjs` for release gates. Only act if the needed tools and explicitly scoped permissions exist.
+2. Run or inspect the current `npm run ops:report -- --json` artifact and `npm run ops:backlog -- --json`; follow fail-closed restrictions and the deterministic backlog order. If `automatic` is empty, do not invent a task or treat owner gates as executable.
+3. Inspect `npm run partners:queue -- --json` and `npm run research:claims -- --json` for unapplied partner candidates and unapproved vendor claims; separately inspect `src/lib/autonomy-policy.mjs` for release gates. Only act if the needed tools and explicitly scoped permissions exist.
 4. Use gstack review/QA and Superpowers plan/TDD RED→GREEN/verification for every code change.
 5. Create only development-branch changes, draft PRs, research candidates and issue updates. Never self-approve evidence or claim earnings without external affiliate statements.
 6. Escalate only owner-only actions identified in private GitHub issue #2. Do not collect secrets in issue bodies.
@@ -56,7 +56,7 @@ The report/decision module has no runtime LLM, network or publishing side effect
 
 ## Binding owner instruction: ₹0 commercial hosting preparation (2026-10-31)
 - Owner chose **₹0 INR/month**, delegated spend **₹0**, most cost-effective commercially allowed hosting; initial Netlify project setup was completed by the owner and observed in screenshots. No further signups, purchases, contracts, public production launch, monetization activation or legal attestation are approved.
-- Hosting candidate is **Netlify Free** (explicitly permits commercial projects). Cloudflare Pages Free is a fallback, not a connected account.
+- Hosting candidate is **Netlify Free** for the private preview. Commercial-use entitlement, current plan terms and billing controls must be independently confirmed by the owner before public/commercial operation; `commercialHostingApproved` remains false. Cloudflare Pages Free is an alternative candidate, not a connected account or approved migration.
 - Read `config/operating-policy.json` and `docs/zero-budget-hosting.md` before acting. Reject any operation that could incur a charge, activate an affiliate link, publish publicly, remove noindex, change `main`, or sign up for a service without separate owner approval.
 - `netlify.toml` and `public/_headers` are used by the current **private Netlify Deploy Preview**; their presence does **not** authorize public deployment or unlocked production. Do not confuse noindex with authentication.
 - The old Masher Vercel Hobby project was deleted by the owner. Do not recreate it, reconnect GitHub, spend on Vercel, or interpret old failed statuses as new deployment attempts. Prefer verified private Netlify preview checks.

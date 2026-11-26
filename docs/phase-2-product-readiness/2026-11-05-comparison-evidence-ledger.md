@@ -1,0 +1,187 @@
+# Candidate comparison evidence ledger
+
+This ledger is **not** an editorial approval ledger. All 36 records cover the six dimensions for each of the three comparison pairs, for both vendors. Every record is `candidate`, `approved:false`, `checkedAt:null` and `expiresAt:null`.
+
+`sourceId` is deliberately **null for every candidate record**. Existing vendor documentation research candidates are tracked separately in `src/data/research-claims.json`; none has been reviewed as proof of any particular comparison dimension. A future reviewer must inspect the exact assertion, its plan/region/date scope, and a relevant source before any verification claim can be made.
+
+`src/lib/comparison-evidence.mjs` enforces the current candidate-only schema, exact pair/product references, null unreviewed source references, duplicate rejection and complete ledger coverage. It intentionally offers no method to approve a claim. The comparison page validates the ledger during static build; the presentation layer still suppresses all raw vendor assertions and displays neutral questions.
+
+To support verified assertions later, create a separate owner-authorized approval design with source-scope matching, dated reviewer attestation, expiration, audit trail and revocation. Never flip `approved` manually or treat the current candidate source reference as proof.
+
+Owner gates remain: ₹0 spending, private Netlify preview, production auto-publishing locked, no public launch, no affiliate activation, no merge to `main` without separate approval.
+
+## Offline review queue
+
+Run `npm run research:comparisons -- --json` to generate the deterministic, read-only list of 36 vendor-dimension research questions. The command performs no network calls and does not modify files, approve evidence, rank vendors, publish pages or activate affiliates.
+
+The queue intentionally provides no source URL or evidence approval. Reviewers must first collect source-specific evidence independently; this command cannot turn candidate assertions into verified claims.
+
+## Production readiness inventory
+
+Run `npm run release:readiness` to generate a read-only JSON **NO-GO** report. It checks restrictive operating policy, unverified catalog, inactive affiliate links and complete unapproved comparison evidence. It lists owner/editorial/hosted-UAT/legal/security release blockers.
+
+The command is intentionally incapable of changing any release gate. A green CI build does not establish a production approval, hosted privacy, legal sign-off, or reviewed vendor evidence.
+
+## Candidate research-source lifecycle (offline)
+
+`npm run research:source-risk -- --json` reports all six vendor-document research candidates as **unverified**. The report records intake age using UTC dates. Items older than 90 days are tagged `stale`, but recently recorded candidates are merely `unreviewed`—not independently checked or approved.
+
+`src/data/research-source-revocations.json` starts empty. An explicit revocation record may include only `sourceId`, `revokedOn` (on/after the original collection date, not in the future), and a plain-text `reason`. Duplicate, unknown, malformed and future-dated entries fail data validation. A revoked candidate stays unapproved and cannot be published. Records are a manually maintained internal warning, **not** evidence that an actual vendor page was withdrawn.
+
+`npm run release:readiness` now includes counts of unreviewed, stale, and revoked candidate documents as additional blockers. Neither report fetches vendor websites, validates commercial terms, enables approval, contacts third parties or alters production. No source is linked to an approved comparison claim.
+
+## Negative-only editorial triage register (PR #8, Milestone 2)
+
+`src/data/editorial-triage.json` starts as an empty array. It may contain at most one internal disposition for each exact `claimId` + `productId` in the complete 36-record evidence ledger. Allowed keys are exactly `claimId`, `productId`, `decision`, `reason` and `recordedOn`. Allowed decisions are `needs-evidence` and `rejected` **only**. No approval, reviewer identity, source association, signature or URL field is accepted. Dates are validated as real UTC dates not in the future; reasons are bounded single-line plain text. Unknown/duplicate claims or missing evidence fail closed during `npm run check:data` and `npm test`.
+
+The offline `npm run research:comparisons -- --json` queue now displays optional negative dispositions, keeping `approved:false`, `approvalAuthenticated:false` and `publicationAllowed:false` for all 36 items. `npm run release:readiness` shows triage counts but always NO-GO and keeps all owner gates blocked. Raw candidate vendor assertions and triage reasons must never be rendered into public comparison pages.
+
+**Security limitation:** a Git contributor's ability to edit a JSON record is not an authenticated editorial approval or a tamper-proof audit log. Git diffs may document changes but do not prove human sign-off. Authentic approval/rejection audit trails require owner-reviewed authentication, protected approval authority, scoped source evidence, review attestation and expiring/revocable claims. This implementation intentionally does not create any approval transition.
+
+## Private, claim-specific editorial research packets
+
+Run `npm run research:review-packets -- --json` **only within a trusted local development or private CI environment**. This read-only CLI outputs 36 candidate comparison assertions that were deliberately hidden from public pages, alongside their precise claim/vendor identifiers and triage questions. Treat the output as an internal research queue, **not as verified marketing content**.
+
+The new `src/data/comparison-source-proposals.json` is empty initially. A research-only proposal may reference an existing vendor documentation candidate via a product-matched `researchLeadId`, explaining possible relevance to an exact comparison claim, with optional plan/region scope. Dates and fields are strictly validated; no `approved`, reviewer, signature, or source verification metadata can be set. Duplicate associations and cross-product sources fail closed. All proposed sources are explicitly `sourceReviewedForThisClaim:false`, `scopeVerified:false`, `eligibleAsEvidence:false`, including if a vendor document is recently recorded. Stale and revoked research-lead risks remain visible; rejected triage never becomes approval.
+
+**Security boundary:** Research packets contain *unsourced original candidate comparison assertions*. Do not include these in Astro pages, the public build, public artifacts, external messages, or a production-ready content feed. The empty proposal file and CLI do not automatically contact any vendor or create valid proof. `npm run check:data` validates this intake and `npm run release:readiness` reports proposal coverage as an additional NO-GO blocker.
+
+Before actual editorial sign-off is possible, the owner must separately approve a trusted authentication and authorization design (role-bound reviewers, independent source and plan/region verification, immutable review event logging, claim-specific approvals, expiration, revocation, publisher release control). A Git commit or research proposal is **not** an authenticated approval.
+
+## Cryptographic receipt-integrity foundation (still no editorial approval)
+
+The pure, offline module `src/lib/editorial-receipt-integrity.mjs` can check whether a source-inspection receipt is signed by a **caller-supplied** Ed25519 public key. It binds the signature to a specific comparison claim, product, exact candidate assertion SHA-256, source URL, source snapshot SHA-256, plan, region, review date, expiration date and key ID. Domain-separated deterministic serialization prevents accidental cross-protocol signature reuse. Invalid signatures, expired records, future review dates, unknown or revoked keys, wrong expected context, and unrecognized fields fail closed.
+
+**CRITICAL:** Even when a test-only signature verifies, the output says `reviewerAuthenticated:false`, `editorialApproved:false` and `canPublish:false`. This is *signature integrity only*; it proves neither who owns the private key nor whether the vendor claim is true. The repository contains **no signing private key** and has no signing, authentication, or content-publishing action.
+
+Both `src/data/editorial-review-trust-anchors.json` and `src/data/editorial-review-receipts.json` are intentionally empty arrays. `npm run check:data` and `npm run release:readiness` **fail** if either becomes populated or malformed. Do not edit either file or provision keys through a Git change as a workaround. The trust-anchor lock must remain until the owner separately approves and independently verifies a secure provisioning plan; this task does not authorize such approval.
+
+Before an actual approval capability is designed or enabled, require: verified owner-controlled reviewer identity and role authority; key enrollment/rotation/revocation outside untrusted PR content; source-document capture and scoped human inspection; independently recorded review decisions and expiration; immutable/auditable event storage; reviewer conflict-of-interest checks; replay/revocation handling; legally accurate disclosures; and a separate owner-controlled publishing gate. A signature or green CI is not production authorization. The signed-receipt primitive does **not** implement these later requirements.
+
+## Public-build private research leakage guard
+
+`npm run release:preflight` now checks **every emitted text asset** in `dist/` (HTML, JavaScript, CSS, JSON, sourcemaps, text, XML, SVG, Markdown, and CSV) against the original unverified per-vendor comparison candidate values. It rejects accidentally shipped internal research JSON filenames and serialized editorial-only keys such as `candidateAssertion`, `triageReason`, `relevanceNote`, `sourceSnapshotSha256`, or `publicKeySpkiBase64`. Common HTML entities and JS string escapes are normalized before matching. The report names the affected file and stable claim reference **without printing any raw unverified assertion**.
+
+This guard runs after Astro build in the existing `npm test` pipeline and through the operations preflight; any violation causes a nonzero exit. The neutral, buyer-facing comparison pages must continue to render only the unverified verification-question text. Internal packets from `npm run research:review-packets` must never be copied into `dist/`, client code, public artifacts, or live pages.
+
+**Limit:** string-based scanning is defense in depth, not a formal guarantee against intentionally obfuscated or compressed leaks. The site must remain private, and reviewer records/signing keys must remain outside browser-delivered artifacts. No access policy, identity, editorial approval, or production release is inferred from a green scan.
+
+## Negative-only local review-history integrity
+
+`src/data/editorial-review-history.json` starts as an **empty array**. The offline validator in `src/lib/editorial-review-history.mjs` accepts strictly ordered, negative-only events (`needs-evidence` and `rejected`) tied to a valid claim/product combination. Each event records a bounded plain-text reason, date, unique ID, sequence, previous SHA-256 digest, and its own domain-separated SHA-256 digest. Invalid fields, unknown claims, duplicate IDs, future or out-of-order dates, broken digest links, and any approval action fail closed.
+
+Run `npm run research:review-history -- --json` for a **local structural consistency** report. `npm run check:data` validates the event file, and `npm run release:readiness` keeps an `independent-review-audit` blocker permanently active. This is not a reviewer session, signature authority, proof of independent human inspection, or a publishing capability.
+
+**Critical limitation:** hashes alone do not create an immutable, authenticated audit log. A repository editor can rewrite every event and recompute all hashes. The output therefore explicitly reports `externallyAnchored:false`, `reviewerAuthenticated:false`, `authenticatedApprovals:0`, and `canPublish:false` even when `localChainConsistent:true`. Never call the event file a trusted approval history. Future independently managed storage, signed checkpoints and authorization are required before any approval functionality is considered.
+
+## Reviewer authorization and static service surface (default-deny)
+
+`src/lib/editorial-authorization.mjs` defines the eight future editorial actions and **always returns `DENY`** with `reviewerAuthenticated:false`, `verifiedReviewerRole:false`, `trustedSigningAuthority:false`, `independentAuditAvailable:false`, `sourceVerified:false` and `canPublish:false`. It rejects unrecognized actions, permissive operating policies, and caller-supplied principal/role/JWT/approval fields instead of trusting client statements. This is a future integration **contract**, not a login, review API or authorization server.
+
+`npm run editorial:authorization` provides a read-only JSON inventory of all denied operations and the repository's static runtime surface. `npm run check:data` enforces the same controls: Astro must remain an explicitly static build, Netlify config must remain the approved static build/publish setup, and no `src/pages/api`, `src/pages/admin`, `src/pages/editorial`, `src/pages/review`, `src/middleware`, Astro actions, or serverless/edge function routes may be introduced without a separately reviewed architecture and authorization. A violation causes a CI failure. These checks examine the *local source tree* and **do not establish Netlify account-level restrictions or authenticated remote access**.
+
+The release NO-GO report now explicitly names `reviewer-authorization-service` as blocked. A real editorial system requires separate owner approval for an independently authenticated service, securely provisioned identities and authorization roles, claim-specific evidence attestation, independently anchored audit records and trustworthy key management. Do not circumvent the default-deny boundary by setting a Git JSON flag or adding a client-side role.
+
+## Strict public comparison view model (Milestone 2)
+
+The raw `COMPARISON_PAIRS` matrix and original, unreviewed SEO comparison descriptions remain **private editorial research candidates**. `getComparisonPair(slug,products)` now returns a detached, explicit allowlist of neutral metadata (`slug`, `category`, `title`, `firstId`, `secondId`, `metaDescription`, `relatedTools`, `relatedGuides`) and a separate evidence-safe public matrix. The public `pair` object has **no raw research matrix** and tool/guide records carry only `title` and `href`. The generated description explicitly labels the comparisons unverified rather than restating unsourced vendor or architecture claims.
+
+The Astro comparison pages pass **only the route slug** through `getStaticPaths` and call `getComparisonPair(Astro.params.slug,products)`, rather than passing private pair records through route props. The static build preflight also scans generated text assets for the original, unreviewed SEO descriptions in addition to raw candidate matrix values. The source-specific review-packet CLI still reads the private candidates offline for later independent assessment; it remains nonpublishable.
+
+This is a public/private data boundary, not factual verification, authenticated reviewer identity, a host-access guarantee, or production approval. No raw vendor statements, SEO conclusions, pricing, scores, or affiliate links are authorized by it. PR #8 remains draft; no merge or public launch.
+
+## Manual claim-specific excerpt capture (Milestone 2; private-only)
+
+`src/data/comparison-evidence-captures.json` is intentionally **`[]`**. No vendor page has been fetched, no excerpt has been fabricated, and there are currently **zero** verified comparison claims. Before adding a record, an internal researcher must first create a strictly unapproved, claim-specific research-lead entry in `src/data/comparison-source-proposals.json`. A capture must match the exact `claimId`, `productId`, `researchLeadId`, original vendor `sourceUrl` and proposed plan/region scope. It also binds to the SHA-256 of the exact *private candidate assertion*; editing that assertion invalidates the old association. Each capture has a unique ID, a real UTC capture date no earlier than the proposal or source intake, `captureMethod:"manual"`, `status:"candidate"`, and `approved:false`.
+
+The locally supplied `excerpt` is a bounded, single-line, plain-text research snippet (40–1000 characters, no HTML or control characters). `excerptSha256` is the SHA-256 of **those exact UTF-8 excerpt bytes only**. Use the pure `hashEvidenceExcerpt(excerpt)` helper in `src/lib/comparison-evidence-captures.mjs` to calculate this field. The hash does **not** prove the excerpt came from the URL, that it was independently verified, that the web page is live, or that the excerpt actually supports the comparison claim. Do not collect credentials, personal data, copyrighted full documents, or private customer information in excerpts.
+
+Run `npm run research:evidence-captures -- --json` **only in trusted private development** for the full deterministic candidate report; the default text report prints IDs and source risk without revealing excerpt content. The existing `npm run research:review-packets -- --json` now groups unverified captured snippets with their matching private candidate claim packet. Both commands are offline read-only and never contact vendors. `npm run check:data` rejects unknown source associations, mismatched plan/region, altered snippet or claim digests, duplicate IDs and same-claim/source/date captures, malformed dates, and any extra approval/reviewer fields.
+
+`npm run release:readiness` now exposes `manualEvidenceCaptures` counts and keeps a `source-excerpt-verification` **BLOCKED** gate; even a well-formed manual record is `independentlyVerified:false`, `supportsClaimVerified:false`, `eligibleForPublication:false`, and never changes the 36 comparison rows' `sourceId:null` or `approved:false`. `npm run release:preflight` blocks the private capture JSON filename and excerpt/capture metadata from browser-delivered text assets.
+
+**Owner-gated next step:** independently collect and inspect first-party vendor content, verify the exact plan/region/claim meaning with an authenticated and independently authorized reviewer, preserve genuine source provenance and expiration, anchor the review audit outside untrusted repository files, then require separate owner approval before any public claim or production release. None of those approval authorities exists or is enabled in this increment.
+
+## Private evidence-gap worklist — next manual action per claim
+
+Run `npm run research:gap-worklist` in private development for a **redaction-friendly summary** of all 36 claim/vendor research tasks. It lists identifiers, research stages, and next actions **without printing raw candidate assertions**. Use `npm run research:gap-worklist -- --csv` to emit an offline **PRIVATE** CSV worksheet to standard output, or `--json` to emit the structured internal worklist. These two explicit formats include raw, **unverified** candidate assertions. Do not upload, publish, commit, send to vendors, or place the outputs in `dist/` or public artifacts.
+
+The worklist is derived from the already validated research proposals, manually recorded excerpts, source age/revocations, and negative-only triage. It distinguishes:
+- `needs-source-proposal` — identify a relevant official vendor source for the exact vendor and claim;
+- `needs-manual-capture` — manually inspect a proposed source and capture a short dated excerpt with plan/region;
+- `needs-independent-verification` — local excerpts exist, but **no reviewer** has independently authenticated the source or the assertion;
+- `source-refresh-needed` — some proposed documentation is stale or flagged as revoked; do not promote it;
+- `rejected-needs-reassessment` — a negative editorial disposition remains effective, never approval.
+
+The CSV contains an explicit unverified assertion column and blank fields for the source URL, plan, region, checked date, exact short excerpt, and research notes. **Blank cells are intentional**: this command has no web access or authority to invent research evidence. All fields are double-quoted and leading spreadsheet-formula triggers, including whitespace/zero-width prefixes, are escaped. The CSV is a *worksheet*, **not an import path or approval ledger**. To preserve provenance, review the current official vendor page yourself and enter only genuinely inspected, short non-personal text through the existing `comparison-source-proposals.json` and `comparison-evidence-captures.json` validation process; never copy worksheet cells directly into approved public claims.
+
+The build preflight rejects accidental `comparison-gap-worklist.csv` or `.json` exports and continues to block private raw comparison statements and manually captured excerpts in browser assets. The existing release-readiness audit remains **NO-GO**, with all 36 claims unapproved and every editorial authorization denied. Repository CI cannot establish live vendor accuracy, reviewer identity, hosted private-preview acceptance, or owner permission to release.
+
+## Offline manual source intake — preparation without auto-approval
+
+Two new local commands format *human-supplied, unverified* research into a strict, candidate-only JSON record. **They never fetch a vendor page or write to the repository**:
+
+```bash
+# After manually examining a real official vendor source,
+# create a PRIVATE JSON input file outside the repository:
+npm run research:intake -- --proposal < /path/to/private/proposal-input.json
+
+# Only after independently deciding the proposal is a relevant lead
+# and manually recording its candidate record in the private register:
+npm run research:intake -- --capture < /path/to/private/capture-input.json
+```
+
+The **proposal input** must contain exactly `claimId`, `productId`, `researchLeadId`, `proposedOn` (YYYY-MM-DD), `relevanceNote` (your own meaningful explanation, at least 30 characters), `planScope` and `regionScope` (strings or explicit `null` when scope is unknown). Choose a real claim/vendor from `npm run research:gap-worklist` and a source candidate from `npm run research:source-risk -- --json`. The formatter copies the existing exact official-vendor URL for reference, validates date and product association, prevents duplicates, and outputs `record` with `status:"candidate"`, `approved:false`, `sourceInspected:false`, and `sourceVerified:false`. **An official-vendor URL is only an initial research lead; it is not proof that a page is currently accessible or supports the assertion.**
+
+The **capture input** must contain exactly `captureId` (e.g. `excerpt-capture-0001`), `claimId`, `productId`, `researchLeadId`, `capturedOn` (YYYY-MM-DD), and `excerpt` (your manually inspected exact 40–1000 character, single-line source snippet). A matching proposal must **already exist** in the private `comparison-source-proposals.json` register. The formatter derives the exact source URL and proposal scope, computes the original private candidate-assertion SHA-256 and excerpt SHA-256, validates duplicates and date constraints, and emits `record` with `captureMethod:"manual"`, `status:"candidate"` and `approved:false`. It does **not** assess factual support, independently inspect the page or authenticate a reviewer.
+
+Each command prints only a draft result to **private stdout**. A researcher must manually inspect the generated `record` and decide whether to add it to the corresponding private `src/data/*.json` register. Then run `npm run check:data` and `npm test`. Do **not** copy the outer informational wrapper into the register. Do not paste fabricated placeholder text, credentials, customer data, full copyrighted documents, or unsupported marketing claims. Keep stdin input files and resulting JSON/CSV outside the public build; do not post any result to public issues or artifacts.
+
+A matching digest validates consistency of local text, **not** remote provenance. Both the source and its relevance to the exact plan/region require later independent review by properly authorized humans. Review approvals, trust anchors, authenticated reviewer roles and public release remain disabled. This work adds no new source records, paid services, contacts or deploy permissions.
+
+## Private claim-specific research starter — manual source selection
+
+For a given vendor/claim on the internal 36-item worklist, run:
+
+```bash
+# Default view: no raw candidate assertion
+npm run research:claim-starter -- --claim comparison-hubspot-vs-pipedrive-01 --vendor hubspot
+
+# PRIVATE ONLY: original unverified assertion, lead options and blank input templates
+npm run research:claim-starter -- --claim comparison-hubspot-vs-pipedrive-01 --vendor hubspot --json
+```
+
+The command checks the exact claim/vendor pairing and the already validated data registers. It shows existing **vendor-matched** official-document *research leads* and their date/risks (unreviewed/stale/revoked), whether they were already proposed for **that exact claim**, existing manual-capture IDs, the unresolved research stage, and the precise human research question. It never interprets the stored vendor-document URL as proof that it is live, relevant to the particular assertion, correctly scoped, or approved. Options are **not automatically mapped** to a claim.
+
+The JSON response contains a `proposalTemplate` whose `researchLeadId`, `proposedOn`, and `relevanceNote` are deliberately **null**. This is not a valid proposal; the human researcher must choose a genuinely relevant documented lead after inspecting it, enter the real inspection date and meaningful note, then use `npm run research:intake -- --proposal < private-input.json` to validate an explicitly unapproved draft. For each **already recorded** proposal with a non-stale, non-revoked lead, the starter also supplies a `captureTemplates` entry with `captureId`, `capturedOn`, and `excerpt` all **null**. No excerpt or date is guessed. Fill these from genuine manual inspection, then use `npm run research:intake -- --capture < private-input.json`. The output record still requires manual review before being added to the private candidate register.
+
+Only the explicit `--json` command prints the raw, unsourced candidate assertion; it is **not public copy**. Keep private JSON and any saved output outside `dist/`, public pages, assets and external communications. The static build leakage audit rejects `claim-research-starter.json` exports if they appear in browser-delivered assets. Do not use this to activate editorial authorization, publication, pricing claims, affiliate tracking or external vendor outreach. All 36 comparison claims continue to require independent authenticated evidence verification and separate owner release consent.
+
+## Offline excerpt-to-snapshot text consistency (local-only)
+
+After you have manually inspected official vendor documentation and prepared/recorded a valid **unapproved** claim-specific source proposal and manual excerpt capture, you can optionally check whether the exact excerpt bytes appear in a **local UTF-8 plain-text copy** of the document. This is a local consistency check only and **never verifies the authenticity of the saved copy, URL accessibility, source relevance, plan terms, reviewer identity, or publication readiness**.
+
+Create one **private JSON file outside the repository** containing exactly two root keys, `capture` and `snapshot`. `capture` is the candidate `record` produced by `npm run research:intake -- --capture`, not its outer output wrapper. `snapshot` has exactly `sourceUrl` (identical to the candidate vendor lead), `snapshotOn` (YYYY-MM-DD, equal to capture's real `capturedOn` date), and `text` (the human-supplied UTF-8 plain-text copy). Limit the input to 256 KiB. Do not include credentials, customer data, personal data, or an entire copyrighted vendor document without appropriate authorization. Example command:
+
+```bash
+npm run research:snapshot-check < /private/manual-source-check.json
+```
+
+The tool validates the claim, exact vendor, original candidate-assertion digest, proposal association, excerpt digest, source URL, date, and plan/region scope using the same existing fail-closed validators. It reports only the local snapshot SHA-256, claim/source IDs and a result: `LOCAL-TEXT-MATCH-UNVERIFIED`, `LOCAL-TEXT-MISMATCH`, or `LOCAL-TEXT-MATCH-REFRESH-REQUIRED` when a stale/revoked source happens to match. It performs a **case-sensitive, byte-exact UTF-8 substring match** without HTML decoding or whitespace normalization; matches within tags or altered rendering are not silently accepted. A mismatch exits unsuccessfully. Neither private excerpt nor raw source text is copied to stdout/stderr.
+
+**A matching excerpt in an editable local file does not prove vendor provenance.** The file might be fabricated, stale, extracted incorrectly, or irrelevant to the intended assertion. The tool always returns `localCopyAuthenticated:false`, `remoteVendorSourceVerified:false`, `relevanceToClaimVerified:false`, `reviewerAuthenticated:false`, `approved:false`, and `canPublish:false`. It never writes to the repo, downloads a page, provisions credentials, signs a review or activates publishing. Source claims remain unverified until independent authenticated human verification and separately authorized release gates.
+
+Do not put private snapshot files, `source-snapshot-check.json` exports, or local source text in `dist/`, repository fixtures or public artifacts. The preflight rejects named snapshot exports and internal inspection metadata from browser assets; this is defense-in-depth, not a guarantee against obfuscated content. All 36 comparison claims and commercial release remain **NO-GO**.
+
+## Read-only local source TEXT FILE mode
+
+For a real claim-specific manual source inspection, keep the **plain UTF-8 source text file outside the repository**, `dist/`, website uploads and Git history. Once the unapproved source proposal is actually recorded and a valid candidate capture has been prepared, the existing snapshot checker can read the local source file directly:
+
+```bash
+# On your own local computer, with the source file stored OUTSIDE the project:
+npm run research:snapshot-check -- --text-file /absolute/private/vendor-document.txt < /absolute/private/snapshot-metadata.json
+```
+
+The metadata JSON must have exactly `capture` (a **validated candidate-only** capture object) and `snapshot`, whose only keys are `sourceUrl` and `snapshotOn`. Both values must match the candidate source URL/date. Unlike the original embedded-text mode, **do not put `text` in this JSON**; the CLI reads text from `--text-file` instead. The original embedded-text input mode remains available without flags. The local source file must be a regular, non-symlink UTF-8 file given by an absolute path, outside the repository, 40 bytes–256 KiB, without NUL or unsafe control bytes. The metadata input is limited to 8 KiB in file mode. This prevents accidental reuse of tracked/public files and avoids duplicating the entire source text inside JSON.
+
+Never save personal data, credentials, full copyrighted material without rights, or raw vendor research within public assets. The tool opens the file **read-only**, never contacts the vendor, and reports only a digest and exact local text match or mismatch. Even a matching text copy might be fabricated; the output always denies source authentication, independent editorial approval, and publication. A genuinely inspected source and an authenticated human reviewer are still required, followed by a separately owner-authorized release review. All 36 claims remain unapproved and production stays **NO-GO**.

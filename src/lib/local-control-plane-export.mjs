@@ -1,0 +1,27 @@
+export function auditLocalControlPlaneExport(files) {
+  if(!Array.isArray(files)||!files.length) throw new Error('Missing built assets');
+  const violations=[];
+  for(const file of files) {
+    if(!file||typeof file.path!=='string'||!/^(?:[A-Za-z0-9_.-]+\/)*[A-Za-z0-9_.-]+$/.test(file.path)||file.path.split('/').some(part=>part==='.'||part==='..')) throw new Error('Invalid built asset');
+    const privatePath=/(?:^|\/)(?:control-plane|src\/platform|platform-control-plane)(?:[/.]|$)|\.(?:pem|key|pfx|p12|crt|cer)$|(?:auth[_-](?:sessions|challenges)|approval[_-](?:requests|decisions|request[_-]bindings))\.(?:json|csv|sql)$/i;
+    const marker=/createIdentityService|createApprovalService|withAuthenticatedTransaction|__Host-stackpilot_session|stackpilot-(?:auth|principal)-v1|publicKeySpkiBase64|requesterUserId|requester_user_id|deciderUserId|decider_user_id|requestDigest|request_digest|tokenHash|token_hash|nonceDigest|nonce_digest|auth_sessions|auth_challenges|approval_request_bindings|approval_requests|approval_decisions|csrfToken["']?\s*:|-----BEGIN (?:[A-Z0-9]+ )?(?:PRIVATE KEY|PUBLIC KEY|CERTIFICATE)-----/i;
+    const runnerPath=/(?:^|\/)(?:platform\/orchestration|workflow_(?:executions|definitions|versions)|task_attempts|task_dependencies|scheduled_jobs|outbox_events|agent_executions)(?:[/.]|$)/i;
+    const runnerMarker=/openSyntheticRunner|openLocalScheduler|openLocalObservability|resolveRoleDispatch|evaluateDueWindow|research-intake|analysis-editorial-proposal|engineering-verification|synthetic-preparation-v1|synthetic-task-completed|(?:leaseUntil|lease_until|attemptId|attempt_id|execution_id|observed_at|observedAt|next_due_ms|nextDueMs|local_state)["']?\s*:/;
+    const marketPath=/(?:^|\/)(?:platform\/market|market_(?:observations|opportunities)|competitors)(?:[/.]|$)/i;
+    const marketMarker=/prepareMarketImport|analyzeMarketObservations|openMarketObservationStore|normalizeMarketObservation|manual-market-subject-v1|manual-market-observation-v1|market-opportunity-v1|prepareCompetitorImport|compareCompetitorObservations|normalizeCompetitorObservation|normalizeCompetitorComparison|openCompetitorObservationStore|manual-competitor-observation-v1/;
+    const reconciliationPath=/(?:^|\/)reconciliation_links(?:[/.]|$)/i;
+    const reconciliationMarker=/prepareReconciliation|analyzeReconciledEvidence|openReconciliationStore|validateReconciliationGraph|normalizeReconciledSelection|inspectReconciliationHistory|candidate-reconciliation-v1|analyzeMarketHistory|prepareMarketHistorySelection|calendar-month-change-v1/;
+    const productPath=/(?:^|\/)(?:platform\/products|category_aliases|product_duplicate_proposals|claim_lifecycle_events|evidence_revocations|pricing_observations)(?:[/.]|$)/i;
+    const productMarker=/openProductCandidateStore|prepareProductIntake|proposeProductDuplicates|manual-product-candidate-v1|manual-products-imported|createClaimLifecycleService|claim-review-lifecycle-v1|readClaimReviewSnapshot|inspectClaimApproval|createProductProjectionService|createPricingHistoryService|inspectClaimLifecycle|readPricingHistory|manual-pricing-observation-v1/;
+    const growthPath=/(?:^|\/)(?:platform\/growth|keyword_clusters|content_versions|content_claims)(?:[/.]|$)/i;
+    const growthMarker=/buildPublicCatalog|evaluateSuitability|recommendAlternatives|normalizeKeywordPhrase|normalizeClusterKey|classifySearchIntent|normalizeKeywordClusterInput|deduplicateKeywordClusters|buildEditorialDraft|validateEditorialDraft|createEditorialGrowthStore|stackpilot-editorial-draft-v1/;
+    const partnershipRevenuePath=/(?:^|\/)(?:platform\/partnerships|platform\/revenue|partnerships|partnership_events|affiliate_programmes|commission_terms|revenue_forecasts|external_statements|commission_records|revenue_ledger_entries)(?:[/.]|$)/i;
+    const partnershipRevenueMarker=/createPartnershipStore|createRevenueLedgerStore|validatePartnershipTransition|applyPartnershipTransition|buildRevenueLedgerEntry|summarizeRevenueByCurrency|owner_application_approved|owner_activation_approved/;
+    const aiEngineeringPath=/(?:^|\/)(?:platform\/ai|platform\/engineering)(?:[/.]|$)/i;
+    const aiEngineeringMarker=/routeAiRequest|createAiRouterStore|evaluateCiHealth|triageRegression|validateEngineeringProposal|createEngineeringIntelligenceStore|ai-routing-decision|engineering-action-approval/;
+    const adminUiPath=/(?:^|\/)(?:platform\/admin-ui|admin(?:\/(?:approvals|claims|partnerships|revenue|ai-engineering|api\/summary))?)(?:[/.]|$)/i;
+    const adminUiMarker=/createAdminUiRouter|createAdminDbReader|renderAdminPage|presentAdminOverview|presentAdminApprovals|presentAdminClaims|presentAdminPartnerships|presentAdminRevenue|presentAdminAiEngineering|ADMIN_SECURITY_HEADERS|Control Console/;
+    if(privatePath.test(file.path)||runnerPath.test(file.path)||marketPath.test(file.path)||reconciliationPath.test(file.path)||productPath.test(file.path)||growthPath.test(file.path)||partnershipRevenuePath.test(file.path)||aiEngineeringPath.test(file.path)||adminUiPath.test(file.path)||typeof file.content==='string'&&(marker.test(file.content)||runnerMarker.test(file.content)||marketMarker.test(file.content)||reconciliationMarker.test(file.content)||productMarker.test(file.content)||growthMarker.test(file.content)||partnershipRevenueMarker.test(file.content)||aiEngineeringMarker.test(file.content)||adminUiMarker.test(file.content))) violations.push('Local control-plane material in static output');
+  }
+  return {checkedFiles:files.length,violations};
+}
