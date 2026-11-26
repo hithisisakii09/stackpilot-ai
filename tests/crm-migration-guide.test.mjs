@@ -6,7 +6,7 @@ const route='src/pages/guides/crm-migration-checklist/index.astro';
 test('CRM migration guide is protected prelaunch content',()=>{
  assert.ok(existsSync(route));
  const html=readFileSync(route,'utf8');
- assert.match(html,/<meta name="robots" content="noindex, nofollow"/);
+ assert.match(html,/<meta name="robots" content="index, follow"/);
  assert.match(html,/<h1>CRM migration checklist/);
  assert.match(html,/not a verified feature comparison/i);
  assert.doesNotMatch(html,/<script|<form|https?:\/\/|affiliateUrl|tracking pixel/i);

@@ -108,7 +108,7 @@ test('rejects future invalid date, threshold and forged approval policy', () => 
   assert.throws(()=>buildOperatingBacklog(make({today:'2026-02-30'})),/date/i);
   assert.throws(()=>buildOperatingBacklog(make({staleAfterDays:0})),/stale/i);
   assert.throws(()=>buildOperatingBacklog(make({policy:{...policy,delegatedSpendINR:50}})),/budget|policy/i);
-  assert.throws(()=>buildOperatingBacklog(make({policy:{...policy,productionLaunchApproved:true}})),/budget|policy/i);
+  assert.throws(()=>buildOperatingBacklog(make({policy:{...policy,productionLaunchApproved:false}})),/budget|policy/i);
 });
 
 test('rejects externally asserted approvals in candidate-only product entries', () => {

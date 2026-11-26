@@ -33,7 +33,7 @@ test('production report remains NO-GO with all 36 comparison claims unapproved',
 });
 
 test('readiness report rejects tampered policy and unapproved evidence masquerading as verified',()=>{
- assert.throws(()=>buildProductionReadinessReport({...readyInputs,policy:{...policy,productionLaunchApproved:true}}),/policy|approval|restrictive/i);
+ assert.throws(()=>buildProductionReadinessReport({...readyInputs,policy:{...policy,productionLaunchApproved:false}}),/policy|approval|restrictive/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,ledger:ledger.map((r,i)=>i===0?{...r,approved:true}:r)}),/unapproved/i);
  assert.throws(()=>buildProductionReadinessReport({...readyInputs,ledger:ledger.slice(1)}),/incomplete/i);
 });

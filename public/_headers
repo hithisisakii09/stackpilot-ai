@@ -1,9 +1,17 @@
-# Prelaunch crawl prevention for Netlify Free and Cloudflare Pages static output.
-# Noindex is NOT an access-control mechanism. Do not publish without approval.
+# Public launch security headers for Netlify Free static output.
+# Public buyer routes are indexable; private/owner-only utility routes remain noindex.
 /*
-  X-Robots-Tag: noindex, nofollow, noarchive
   Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; worker-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+/tools/private-uat-worksheet/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/preview-build/*
+  X-Robots-Tag: noindex, nofollow, noarchive
+
+/research/*
+  X-Robots-Tag: noindex, nofollow, noarchive

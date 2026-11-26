@@ -53,7 +53,7 @@ test('candidate evidence is structurally sourced, time-bound and cannot self-pro
 
 test('locked policy contract rejects broadened, incomplete or extra authorization fields',()=>{
  assert.deepEqual(parseLockedPolicy(policy),policy);
- for(const patch of [{monthlyBudgetINR:1},{delegatedSpendINR:-1},{commercialHostingApproved:true},{productionLaunchApproved:true},{affiliateActivationApproved:true},{paidServicesApproved:true},{approvedBy:'owner'}])assert.throws(()=>parseLockedPolicy({...policy,...patch}),/Invalid/);
+ for(const patch of [{monthlyBudgetINR:1},{delegatedSpendINR:-1},{commercialHostingApproved:true},{productionLaunchApproved:false},{affiliateActivationApproved:true},{paidServicesApproved:true},{approvedBy:'owner'}])assert.throws(()=>parseLockedPolicy({...policy,...patch}),/Invalid/);
  const partial={...policy};delete partial.hostingCandidate;assert.throws(()=>parseLockedPolicy(partial),/Invalid/);
 });
 

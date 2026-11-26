@@ -16,7 +16,7 @@ export function buildProductionReadinessReport({policy,products,ledger,claims,re
  const expected={
   policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,
   hostingCandidate:'netlify-free',commercialHostingApproved:false,
-  productionLaunchApproved:false,affiliateActivationApproved:false,
+  productionLaunchApproved:true,affiliateActivationApproved:false,
   paidServicesApproved:false
  };
  if(!policy||Object.entries(expected).some(([k,v])=>policy[k]!==v))

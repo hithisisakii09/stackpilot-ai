@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-test('check-build script must audit all 25 emitted HTML routes for brand and noindex', () => {
+test('check-build script must audit all 25+ emitted HTML routes for brand and robots directives', () => {
   const content = readFileSync('scripts/check-build.mjs', 'utf8');
   assert.match(content, /'preview-build\/index\.html'/, 'Must audit preview-build route');
   assert.match(content, /'tools\/crm-migration-readiness\/index\.html'/, 'Must audit crm-migration-readiness route');

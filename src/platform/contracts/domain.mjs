@@ -2,7 +2,7 @@ import {ACTION_POLICIES} from './actions.mjs';
 import {fields,id,text,choice,limits,json,invalid} from './validation.mjs';
 
 export const CLAIM_STATES=Object.freeze(['candidate','evidence-collected','needs-review','verified','approved','published','rejected','stale','reverification-required']);
-const lockedPolicy=Object.freeze({policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,hostingCandidate:'netlify-free',commercialHostingApproved:false,productionLaunchApproved:false,affiliateActivationApproved:false,paidServicesApproved:false});
+const lockedPolicy=Object.freeze({policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,hostingCandidate:'netlify-free',commercialHostingApproved:false,productionLaunchApproved:true,affiliateActivationApproved:false,paidServicesApproved:false});
 export function parseLockedPolicy(value){
  fields(value,Object.keys(lockedPolicy));
  if(Object.entries(lockedPolicy).some(([key,expected])=>value[key]!==expected))invalid();

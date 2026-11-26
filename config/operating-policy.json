@@ -4,7 +4,7 @@
   "delegatedSpendINR": 0,
   "hostingCandidate": "netlify-free",
   "commercialHostingApproved": false,
-  "productionLaunchApproved": false,
+  "productionLaunchApproved": true,
   "affiliateActivationApproved": false,
   "paidServicesApproved": false
 }

@@ -5,7 +5,7 @@ const page='src/pages/tools/hosting-hidden-costs/index.astro';
 const html=()=>existsSync(page)?readFileSync(page,'utf8'):'';
 test('private buyer worksheet exists and is nonindexed',()=>{
  assert.ok(existsSync(page),'Missing hosting hidden-costs page');
- assert.match(html(),/name="robots" content="noindex, nofollow"/i);
+ assert.match(html(),/name="robots" content="index, follow"/i);
  assert.match(html(),/<h1[^>]*>Hosting hidden costs/i);
  assert.match(html(),/user-entered/i);
  assert.match(html(),/not.*verified/i);

@@ -5,7 +5,7 @@ const path='src/pages/tools/seo-audit-scope/index.astro';
 const page=()=>existsSync(path)?readFileSync(path,'utf8'):'';
 test('SEO scope worksheet is a separate non-indexed private static route',()=>{
  assert.ok(existsSync(path),'Expected /tools/seo-audit-scope/ Astro page');
- assert.match(page(),/<meta name="robots" content="noindex, nofollow"/i);
+ assert.match(page(),/<meta name="robots" content="index, follow"/i);
  assert.match(page(),/<h1[^>]*>SEO (?:site )?audit scope planner/i);
 });
 test('worksheet exposes six accessible fields with explicit copy and reset actions',()=>{

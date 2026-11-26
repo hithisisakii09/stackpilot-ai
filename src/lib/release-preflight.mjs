@@ -46,6 +46,12 @@ function unsafeAnchorDestination(value) {
   return Boolean(scheme&&!['https','mailto'].includes(scheme[1].toLowerCase()));
 }
 
+const PRIVATE_UTILITY_ROUTES=new Set([
+  'tools/private-uat-worksheet/index.html',
+  'preview-build/index.html',
+  'research/index.html'
+]);
+
 export function auditStaticRoutes(pages) {
   const violations=[];
   if (!Array.isArray(pages) || pages.length===0) return {checkedRoutes:0,violations:['No generated HTML routes found']};
@@ -66,13 +72,18 @@ export function auditStaticRoutes(pages) {
     const html=page.html;
     const metaTags=html.match(/<meta\b[^>]*>/gi) || [];
     // Only the actual name/content attributes count. A data-name spoof or
-    // token such as noindex-test must not satisfy the prelaunch requirement.
+    // token such as noindex-test must not satisfy the robots requirement.
     const robotsDirectives=metaTags
       .filter(tag=>String(attributeValue(tag,'name')??'').trim().toLowerCase()==='robots')
       .flatMap(tag=>String(attributeValue(tag,'content')??'')
         .split(',').map(value=>value.trim().toLowerCase()));
-    const noindex=robotsDirectives.includes('noindex') && !robotsDirectives.includes('index');
-    if(!noindex) violations.push(path+': missing or conflicting noindex meta robots directive');
+    if(PRIVATE_UTILITY_ROUTES.has(path)) {
+      const noindex=robotsDirectives.includes('noindex') && !robotsDirectives.includes('index');
+      if(!noindex) violations.push(path+': missing or conflicting noindex meta robots directive');
+    } else {
+      const indexable=robotsDirectives.includes('index') && !robotsDirectives.includes('noindex');
+      if(!indexable) violations.push(path+': missing or conflicting index meta robots directive');
+    }
     if(!/<html\b[^>]*\blang\s*=\s*["']en["']/i.test(html))
       violations.push(path+': missing html lang="en"');
     if(!/<title\b[^>]*>[^<\s][^<]*<\/title>/i.test(html))
@@ -149,41 +160,64 @@ export function auditDeploymentConstraints({policy,headers,robots}={}) {
   const violations=[];
   const expected={policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,
     hostingCandidate:'netlify-free',commercialHostingApproved:false,
-    productionLaunchApproved:false,affiliateActivationApproved:false,
+    productionLaunchApproved:true,affiliateActivationApproved:false,
     paidServicesApproved:false};
   for (const [key,value] of Object.entries(expected)) {
     if (!policy || policy[key]!==value)
       violations.push('Restrictive policy mismatch: '+key);
   }
   const text=typeof headers==='string'?headers:'';
-  // Netlify supports path-scoped _headers blocks. Any second path block can
-  // override prelaunch security/noindex behavior even when /* remains intact.
-  // The unpublished site permits only one global wildcard block.
+  const expectedScopes=[
+    '/*',
+    '/tools/private-uat-worksheet/*',
+    '/preview-build/*',
+    '/research/*'
+  ];
   const headerScopes=text.split(/\r?\n/).map(line=>line.trim())
     .filter(line=>line.startsWith('/'));
-  if(headerScopes.length!==1 || headerScopes[0]!=='/*')
-    violations.push('Unsafe Netlify headers: route-specific override or duplicate wildcard scope');
-  const rule=text.match(/(?:^|\r?\n)\/\*\s*\r?\n((?:[ \t]+[^\r\n]*\r?\n?)*)/);
-  const wildcard=rule?.[1]||'';
-  for(const name of ['X-Robots-Tag','X-Content-Type-Options','X-Frame-Options']) {
+  if(headerScopes.length!==expectedScopes.length ||
+     expectedScopes.some((scope,idx)=>headerScopes[idx]!==scope))
+    violations.push('Unsafe Netlify headers: unexpected or missing route scope');
+
+  const blockFor=scope=>{
+    const escaped=scope.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const m=text.match(new RegExp(`(?:^|\\r?\\n)${escaped}\\s*\\r?\\n((?:[ \\t]+[^\\r\\n]*\\r?\\n?)*)`));
+    return m?.[1]||'';
+  };
+  const wildcard=blockFor('/*');
+  for(const name of ['X-Content-Type-Options','X-Frame-Options','Referrer-Policy']) {
     const count=wildcard.split(/\r?\n/)
       .filter(line=>line.trim().toLowerCase().startsWith(name.toLowerCase()+':')).length;
     if(count!==1) violations.push('Duplicate or missing wildcard header: '+name);
   }
-  const headerValue=name=>wildcard.split(/\r?\n/).map(line=>line.trim())
+  const wildcardRobotsCount=wildcard.split(/\r?\n/)
+    .filter(line=>line.trim().toLowerCase().startsWith('x-robots-tag:')).length;
+  if(wildcardRobotsCount!==0)
+    violations.push('Unexpected wildcard X-Robots-Tag on public routes');
+  const headerValue=(block,name)=>block.split(/\r?\n/).map(line=>line.trim())
     .find(line=>line.toLowerCase().startsWith(name.toLowerCase()+':'))
     ?.slice(name.length+1).trim()??'';
-  const robotsDirectives=headerValue('X-Robots-Tag')
-    .split(',').map(value=>value.trim().toLowerCase());
-  const allowedRobots=new Set(['noindex','nofollow','noarchive']);
-  if(!robotsDirectives.includes('noindex')||
-     robotsDirectives.some(value=>!allowedRobots.has(value))||
-     new Set(robotsDirectives).size!==robotsDirectives.length)
-    violations.push('Missing or malformed wildcard X-Robots-Tag: noindex');
-  if(headerValue('X-Content-Type-Options').toLowerCase()!=='nosniff')
+  if(headerValue(wildcard,'X-Content-Type-Options').toLowerCase()!=='nosniff')
     violations.push('Missing or malformed wildcard X-Content-Type-Options: nosniff');
-  if(headerValue('X-Frame-Options').toUpperCase()!=='DENY')
+  if(headerValue(wildcard,'X-Frame-Options').toUpperCase()!=='DENY')
     violations.push('Missing or malformed wildcard X-Frame-Options: DENY');
+
+  for(const privateScope of expectedScopes.slice(1)) {
+    const scopeBlock=blockFor(privateScope);
+    const robotsCount=scopeBlock.split(/\r?\n/)
+      .filter(line=>line.trim().toLowerCase().startsWith('x-robots-tag:')).length;
+    if(robotsCount!==1) {
+      violations.push('Missing or duplicate private X-Robots-Tag on '+privateScope);
+      continue;
+    }
+    const robotsDirectives=headerValue(scopeBlock,'X-Robots-Tag')
+      .split(',').map(value=>value.trim().toLowerCase());
+    const allowedRobots=new Set(['noindex','nofollow','noarchive']);
+    if(!robotsDirectives.includes('noindex')||
+       robotsDirectives.some(value=>!allowedRobots.has(value))||
+       new Set(robotsDirectives).size!==robotsDirectives.length)
+      violations.push('Missing or malformed private X-Robots-Tag: noindex on '+privateScope);
+  }
 
   // Browser enforcement on Netlify: a single restrictive wildcard CSP.
   // This protects scripts and passive connections that evade static HTML scans.
@@ -256,16 +290,17 @@ export function auditDeploymentConstraints({policy,headers,robots}={}) {
     }
   }
   const robotsText=typeof robots==='string'?robots:'';
-  // A later Allow rule, user-agent group, or duplicate directive can override
-  // the global Disallow. Accept exactly this unpublished crawl policy.
   const robotsRules=robotsText.split(/\r?\n/).map(line=>line.trim())
     .filter(line=>line.length>0 && !line.startsWith('#'));
-  if(robotsRules.length!==2 ||
-     !/^User-agent:\s*\*$/i.test(robotsRules[0]) ||
-     !/^Disallow:\s*\/$/i.test(robotsRules[1]))
+  const expectedRobotsRules=[
+    /^User-agent:\s*\*$/i,
+    /^Allow:\s*\/$/i,
+    /^Disallow:\s*\/tools\/private-uat-worksheet\/$/i,
+    /^Disallow:\s*\/preview-build\/$/i,
+    /^Disallow:\s*\/research\/$/i
+  ];
+  if(robotsRules.length!==expectedRobotsRules.length ||
+     expectedRobotsRules.some((pattern,idx)=>!pattern.test(robotsRules[idx])))
     violations.push('Unsafe robots.txt: unexpected or conflicting crawl directives');
-  if(!/^\s*User-agent:\s*\*\s*$/im.test(robotsText) ||
-     !/^\s*Disallow:\s*\/\s*$/im.test(robotsText))
-    violations.push('Missing User-agent: * and Disallow: / prelaunch crawl block');
   return {violations};
 }

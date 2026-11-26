@@ -2,11 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { auditStaticRoutes, auditDeploymentConstraints } from '../src/lib/release-preflight.mjs';
 
-const goodPage = '<!doctype html><html lang="en"><head><meta name="robots" content="noindex, nofollow"><title>StackPilot AI</title></head><body><h1>Comparison</h1></body></html>';
-const policy = {policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,hostingCandidate:'netlify-free',commercialHostingApproved:false,productionLaunchApproved:false,affiliateActivationApproved:false,paidServicesApproved:false};
+const goodPage = '<!doctype html><html lang="en"><head><meta name="robots" content="index, follow"><title>StackPilot AI</title></head><body><h1>Comparison</h1></body></html>';
+const privatePage = '<!doctype html><html lang="en"><head><meta name="robots" content="noindex, nofollow"><title>StackPilot AI</title></head><body><h1>Private</h1></body></html>';
+const policy = {policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,hostingCandidate:'netlify-free',commercialHostingApproved:false,productionLaunchApproved:true,affiliateActivationApproved:false,paidServicesApproved:false};
 const secureCsp = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; worker-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests";
-const headers = '/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n  X-Content-Type-Options: nosniff\n  X-Frame-Options: DENY\n  Content-Security-Policy: '+secureCsp+'\n';
-const robots = 'User-agent: *\nDisallow: /\n';
+const headers = '/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  Content-Security-Policy: '+secureCsp+'\n\n/tools/private-uat-worksheet/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n\n/preview-build/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n\n/research/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n';
+const robots = 'User-agent: *\nAllow: /\nDisallow: /tools/private-uat-worksheet/\nDisallow: /preview-build/\nDisallow: /research/\n';
 
 test('audits all generated static routes rather than a fixed hand-written shortlist', () => {
   const result=auditStaticRoutes([
@@ -18,10 +19,13 @@ test('audits all generated static routes rather than a fixed hand-written shortl
   assert.deepEqual(result.violations,[]);
 });
 
-test('fails closed if any new page lacks prelaunch noindex, title or English language marker', () => {
-  const missingIndex=goodPage.replace('noindex, nofollow','index, follow');
-  const bad=auditStaticRoutes([{path:'index.html',html:goodPage},{path:'new-path/index.html',html:missingIndex}]);
-  assert.ok(bad.violations.some(v=>v.includes('new-path/index.html')&&v.includes('noindex')));
+test('fails closed if public page has noindex, private page lacks noindex, or page lacks title/lang', () => {
+  const accidentalNoindex=goodPage.replace('index, follow','noindex, nofollow');
+  const badPublic=auditStaticRoutes([{path:'index.html',html:goodPage},{path:'new-path/index.html',html:accidentalNoindex}]);
+  assert.ok(badPublic.violations.some(v=>v.includes('new-path/index.html')&&v.includes('index')));
+  const badPrivate=auditStaticRoutes([{path:'tools/private-uat-worksheet/index.html',html:goodPage}]);
+  assert.ok(badPrivate.violations.some(v=>v.includes('tools/private-uat-worksheet/index.html')&&v.includes('noindex')));
+  assert.deepEqual(auditStaticRoutes([{path:'tools/private-uat-worksheet/index.html',html:privatePage}]).violations,[]);
   assert.deepEqual(auditStaticRoutes([{path:'index.html',html:goodPage.replace('<title>StackPilot AI</title>','')}]).violations.filter(v=>v.includes('title')).length,1);
   assert.ok(auditStaticRoutes([{path:'index.html',html:goodPage.replace('lang="en"','lang="fr"')}]).violations.some(v=>v.includes('lang')));
 });
@@ -39,14 +43,14 @@ test('requires at least one route and rejects duplicate or unsafe route paths', 
   assert.ok(auditStaticRoutes([{path:'../secret.html',html:goodPage}]).violations.some(v=>v.includes('Invalid route')));
 });
 
-test('validates zero budget, disabled release and affiliate gates, wildcard headers and robots', () => {
+test('validates zero budget, disabled affiliate gates, public launch headers and robots', () => {
   assert.deepEqual(auditDeploymentConstraints({policy,headers,robots}).violations,[]);
-  for (const [key,value] of Object.entries({monthlyBudgetINR:1,delegatedSpendINR:1,productionLaunchApproved:true,affiliateActivationApproved:true,paidServicesApproved:true,commercialHostingApproved:true})) {
+  for (const [key,value] of Object.entries({monthlyBudgetINR:1,delegatedSpendINR:1,productionLaunchApproved:false,affiliateActivationApproved:true,paidServicesApproved:true,commercialHostingApproved:true})) {
     const result=auditDeploymentConstraints({policy:{...policy,[key]:value},headers,robots});
     assert.ok(result.violations.some(v=>v.includes(key)),key);
   }
   assert.ok(auditDeploymentConstraints({policy,headers:headers.replace('noindex','index'),robots}).violations.some(v=>v.includes('X-Robots-Tag')));
-  assert.ok(auditDeploymentConstraints({policy,headers,robots:'User-agent: *\nAllow: /\n'}).violations.some(v=>v.includes('Disallow')));
+  assert.ok(auditDeploymentConstraints({policy,headers,robots:'User-agent: *\nDisallow: /\n'}).violations.some(v=>v.includes('robots')));
 });
 
 test('does not mutate supplied inputs or assert site access from a static scan', () => {
@@ -181,7 +185,7 @@ test('fails closed when CSP enables active scripts, remote connections, or unsaf
 
 test('rejects duplicate, truncated and unexpected CSP directives', () => {
   const wrong=[
-    withCsp+'  Content-Security-Policy: default-src *\n',
+    withCsp.replace('  X-Frame-Options: DENY', '  X-Frame-Options: DENY\n  Content-Security-Policy: default-src *'),
     withCsp.replace("object-src 'none'; ",""),
     withCsp.replace("; upgrade-insecure-requests",""),
     withCsp.replace("; upgrade-insecure-requests","; report-uri https://tracking.example")
@@ -192,12 +196,12 @@ test('rejects duplicate, truncated and unexpected CSP directives', () => {
   }
 });
 
-test('fails closed if Netlify headers add route-level overrides or duplicate noindex', () => {
+test('fails closed if Netlify headers add unexpected route overrides or wildcard X-Robots-Tag', () => {
   const variants=[
     headers+'\n/tools/*\n  X-Robots-Tag: index, follow\n',
     headers+'\n/tools/*\n  Content-Security-Policy: default-src *\n',
-    headers+'\n/*\n  X-Robots-Tag: index\n',
-    headers+'  X-Robots-Tag: index, follow\n'
+    headers+'\n/*\n  X-Robots-Tag: noindex\n',
+    headers.replace('X-Frame-Options: DENY','X-Frame-Options: DENY\n  X-Robots-Tag: noindex, nofollow')
   ];
   for(const compromised of variants){
     const violations=auditDeploymentConstraints({policy,headers:compromised,robots}).violations;
@@ -205,22 +209,22 @@ test('fails closed if Netlify headers add route-level overrides or duplicate noi
   }
 });
 
-test('fails closed if robots.txt adds an allow rule or crawler-specific bypass', () => {
+test('fails closed if robots.txt drops private disallow rules or adds unexpected crawler bypass', () => {
   const variants=[
-    robots+'Allow: /\n',
+    'User-agent: *\nDisallow: /\n',
     robots+'User-agent: Googlebot\nAllow: /\n',
-    robots+'Disallow: /\n'
+    'User-agent: *\nAllow: /\n'
   ];
   for(const compromised of variants){
     const violations=auditDeploymentConstraints({policy,headers,robots:compromised}).violations;
     assert.ok(violations.some(v=>v.includes('crawl')||v.includes('robots')),
       'Conflicting robots rule was not rejected: '+compromised);
   }
-  assert.deepEqual(auditDeploymentConstraints({policy,headers,robots:'# Prelaunch only\n'+robots+'\n# Comments allowed\n'}).violations,[]);
+  assert.deepEqual(auditDeploymentConstraints({policy,headers,robots:'# Public launch\n'+robots+'\n# Comments allowed\n'}).violations,[]);
 });
 
-test('rejects spoofed or malformed noindex metadata but accepts valid robot tokens',()=>{
- const page=meta=>goodPage.replace('<meta name="robots" content="noindex, nofollow">',meta);
+test('rejects spoofed or malformed noindex metadata on private routes and validates public index metadata',()=>{
+ const page=meta=>privatePage.replace('<meta name="robots" content="noindex, nofollow">',meta);
  const rejected=[
   '<meta data-name="robots" content="noindex">',
   '<meta name="robots" data-content="noindex">',
@@ -229,7 +233,7 @@ test('rejects spoofed or malformed noindex metadata but accepts valid robot toke
   '<meta name="robots" content="noindex"><meta name="robots" content="index">'
  ];
  for(const injected of rejected){
-  const result=auditStaticRoutes([{path:'index.html',html:page(injected)}]);
+  const result=auditStaticRoutes([{path:'tools/private-uat-worksheet/index.html',html:page(injected)}]);
   assert.ok(result.violations.some(v=>v.includes('noindex')),injected+': '+result.violations.join(' | '));
  }
  for(const ok of [
@@ -237,11 +241,11 @@ test('rejects spoofed or malformed noindex metadata but accepts valid robot toke
   '<meta name=robots content=noindex>',
   "<meta content='nofollow, noindex' name='robots'>"
  ]){
-  assert.deepEqual(auditStaticRoutes([{path:'index.html',html:page(ok)}]).violations,[],ok);
+  assert.deepEqual(auditStaticRoutes([{path:'tools/private-uat-worksheet/index.html',html:page(ok)}]).violations,[],ok);
  }
 });
 
-test('rejects invalid noindex, nosniff and DENY security header values',()=>{
+test('rejects invalid private X-Robots-Tag, nosniff and DENY security header values',()=>{
  const variants=[
   ['X-Robots-Tag','noindex-not-a-directive'],
   ['X-Robots-Tag','noindex, index'],
