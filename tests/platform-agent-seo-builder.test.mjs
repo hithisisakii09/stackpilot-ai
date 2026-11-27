@@ -59,9 +59,23 @@ function sampleGuide(overrides = {}) {
 
 test('default runSeoContentBuilder fails closed with live_seo_disabled and zero AI calls', async () => {
   let aiCalls = 0;
+  const syntheticBacklog = {
+    schemaVersion: 1,
+    topics: [
+      {
+        slug: 'crm-data-export-and-portability-guide',
+        targetTitle: 'CRM Data Export and Portability Buyer Guide',
+        focusKeywords: ['crm data export', 'hubspot pipedrive portability'],
+        relatedComparisonSlugs: ['hubspot-vs-pipedrive'],
+        status: 'pending'
+      }
+    ]
+  };
+  const syntheticGuides = { schemaVersion: 1, guides: [] };
+
   const res = await runSeoContentBuilder({
-    backlog: backlogData,
-    existingGuides: guidesData,
+    backlog: syntheticBacklog,
+    existingGuides: syntheticGuides,
     verifiedVendorFacts: verifiedFacts,
     runAiPrompt: async () => { aiCalls++; throw new Error('Must not call AI'); },
     allowLiveSeo: false,
@@ -148,9 +162,22 @@ test('validateAgentBuyerGuides accepts grounded guides and rejects hallucinated 
 
 test('runSeoContentBuilder parses fenced AI JSON, appends guide, updates backlog, and syncs sitemap without private routes', async () => {
   const guide = sampleGuide();
+  const syntheticBacklog = {
+    schemaVersion: 1,
+    topics: [
+      {
+        slug: 'crm-data-export-and-portability-guide',
+        targetTitle: 'CRM Data Export and Portability Buyer Guide',
+        focusKeywords: ['crm data export', 'hubspot pipedrive portability'],
+        relatedComparisonSlugs: ['hubspot-vs-pipedrive'],
+        status: 'pending'
+      }
+    ]
+  };
+  const syntheticGuides = { schemaVersion: 1, guides: [] };
   const res = await runSeoContentBuilder({
-    backlog: backlogData,
-    existingGuides: guidesData,
+    backlog: syntheticBacklog,
+    existingGuides: syntheticGuides,
     verifiedVendorFacts: verifiedFacts,
     allowLiveSeo: true,
     allowLiveAi: true,
@@ -184,7 +211,10 @@ test('runSeoContentBuilder parses fenced AI JSON, appends guide, updates backlog
   assert.doesNotMatch(xml, /private-uat-worksheet|preview-build|\/research\//);
 });
 
-test('agent-seo-builder.mjs --dry-run runs offline and reports 6 pending topics with estimatedCostMinor 0', () => {
+test('agent-seo-builder.mjs --dry-run runs offline and reports dynamic backlog/guides counts with estimatedCostMinor 0', () => {
+  const expectedPending = backlogData.topics.filter(t => t.status === 'pending').length;
+  const expectedPublished = guidesData.guides.length;
+  const expectedNextSlug = backlogData.topics.find(t => t.status === 'pending')?.slug ?? null;
   const out = execFileSync(process.execPath, ['scripts/agent-seo-builder.mjs', '--dry-run'], {
     encoding: 'utf8',
     env: { ...process.env, STACKPILOT_ALLOW_LIVE_SEO: 'false', STACKPILOT_ALLOW_LIVE_AI: 'false' }
@@ -192,9 +222,9 @@ test('agent-seo-builder.mjs --dry-run runs offline and reports 6 pending topics 
   const report = JSON.parse(out);
   assert.equal(report.mode, 'dry-run');
   assert.equal(report.ok, true);
-  assert.equal(report.pendingTopics, 6);
-  assert.equal(report.publishedGuides, 0);
-  assert.equal(report.nextTopicSlug, 'crm-data-export-and-portability-guide');
+  assert.equal(report.pendingTopics, expectedPending);
+  assert.equal(report.publishedGuides, expectedPublished);
+  assert.equal(report.nextTopicSlug, expectedNextSlug);
   assert.equal(report.estimatedCostMinor, 0);
 });
 
@@ -262,9 +292,23 @@ test('runSeoContentBuilder wires cleanly through real executeLiveRoutedPrompt, r
   };
   const registry = createFreeTierModelRegistry();
 
+  const syntheticBacklog = {
+    schemaVersion: 1,
+    topics: [
+      {
+        slug: 'crm-data-export-and-portability-guide',
+        targetTitle: 'CRM Data Export and Portability Buyer Guide',
+        focusKeywords: ['crm data export', 'hubspot pipedrive portability'],
+        relatedComparisonSlugs: ['hubspot-vs-pipedrive'],
+        status: 'pending'
+      }
+    ]
+  };
+  const syntheticGuides = { schemaVersion: 1, guides: [] };
+
   const res = await runSeoContentBuilder({
-    backlog: backlogData,
-    existingGuides: guidesData,
+    backlog: syntheticBacklog,
+    existingGuides: syntheticGuides,
     verifiedVendorFacts: verifiedFacts,
     allowLiveSeo: true,
     allowLiveAi: true,
