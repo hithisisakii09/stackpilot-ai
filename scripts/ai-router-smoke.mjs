@@ -50,8 +50,7 @@ if (!liveMode) {
       prompt: 'Reply with a single word: OK',
       systemPrompt: 'You are a concise health check responder.',
       requestedTokens: 64,
-      maxOutputTokens: 16,
-      temperature: 0
+      maxOutputTokens: 16
     },
     allowLiveNetwork: process.env.STACKPILOT_ALLOW_LIVE_AI === 'true',
     env: process.env,

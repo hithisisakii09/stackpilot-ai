@@ -88,7 +88,7 @@ export function validateProviderEndpoint(rawUrl, tier = 'free') {
 export function createFreeTierModelRegistry() {
   return Object.freeze([
     Object.freeze({
-      id: 'gemini-2-5-flash',
+      id: 'gemini-3-5-flash-lite',
       provider: 'gemini',
       tier: 'free',
       estimatedCostMinor: 0,
@@ -111,12 +111,35 @@ export function createFreeTierModelRegistry() {
       circuitOpen: false
     }),
     Object.freeze({
+      id: 'gemini-3-8-flash',
+      provider: 'gemini',
+      tier: 'free',
+      estimatedCostMinor: 0,
+      maxContextTokens: 131072,
+      priority: 2,
+      capabilities: Object.freeze([
+        'classification',
+        'extraction',
+        'editorial_draft',
+        'code_review',
+        'incident_triage',
+        'summarization'
+      ]),
+      dailyCallLimit: 250,
+      dailyTokenLimit: 1_000_000,
+      callsUsed: 0,
+      tokensUsed: 0,
+      healthy: true,
+      rateLimited: false,
+      circuitOpen: false
+    }),
+    Object.freeze({
       id: 'gpt-4o-mini',
       provider: 'openai',
       tier: 'free',
       estimatedCostMinor: 0,
       maxContextTokens: 128000,
-      priority: 2,
+      priority: 3,
       capabilities: Object.freeze([
         'classification',
         'extraction',
@@ -137,7 +160,8 @@ export function createFreeTierModelRegistry() {
 }
 
 const API_MODEL_IDS = Object.freeze({
-  'gemini-2-5-flash': 'gemini-2.5-flash',
+  'gemini-3-5-flash-lite': 'gemini-3.5-flash-lite',
+  'gemini-3-8-flash': 'gemini-3.8-flash',
   'gpt-4o-mini': 'gpt-4o-mini'
 });
 
@@ -199,7 +223,7 @@ export function createGeminiFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, 
   if (typeof fetchImpl !== 'function') fail('Missing fetch implementation for Gemini adapter');
   return Object.freeze({
     provider: 'gemini',
-    async generate({ modelId = 'gemini-2.5-flash', prompt, systemPrompt, maxOutputTokens = 512, temperature = 0.2 }) {
+    async generate({ modelId = 'gemini-3.5-flash-lite', prompt, systemPrompt, maxOutputTokens = 512, temperature }) {
       if (typeof apiKey !== 'string' || apiKey.trim().length === 0) {
         throw new ProviderCallError({
           code: 'provider_auth_failed',
@@ -214,9 +238,12 @@ export function createGeminiFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, 
         `https://generativelanguage.googleapis.com/v1beta/models/${cleanModelId}:generateContent`,
         'free'
       );
+      const generationConfig = typeof temperature === 'number'
+        ? { temperature, maxOutputTokens }
+        : { maxOutputTokens };
       const body = {
         contents: [{ role: 'user', parts: [{ text: prompt }] }],
-        generationConfig: { temperature, maxOutputTokens }
+        generationConfig
       };
       if (typeof systemPrompt === 'string' && systemPrompt.trim().length > 0) {
         body.systemInstruction = { parts: [{ text: systemPrompt.trim() }] };
