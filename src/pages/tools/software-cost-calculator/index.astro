@@ -16,35 +16,7 @@ const fields = [
   <meta name="robots" content="index, follow" /><link rel="canonical" href={canonicalUrl('/tools/software-cost-calculator/')} />
   <meta name="description" content="Compare software subscription costs using only the prices you enter, privately in your browser." />
   <title>Software subscription cost calculator | StackPilot AI</title>
-  <style>
-    :root{font-family:system-ui,sans-serif;background:#0b1220;color:#edf5ff;color-scheme:dark}
-    *{box-sizing:border-box}
-    body{margin:0}
-    header,main,footer{max-width:1050px;margin:auto;padding:24px}
-    nav{display:flex;gap:16px;flex-wrap:wrap}
-    a{color:#7ce8c6}
-    h1{font-size:clamp(32px,5vw,58px);line-height:1.13}
-    p{color:#c8d9ed;line-height:1.65}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-    .panel{background:#152138;border:1px solid #3d5776;padding:22px;border-radius:16px;min-width:0}
-    fieldset{margin:0;border:0;padding:0;min-width:0}
-    legend{font-size:1.2rem;font-weight:700;margin:0 0 15px}
-    label{display:block;margin:13px 0;font-weight:600;line-height:1.45}
-    input,select,textarea{display:block;width:100%;margin-top:7px;background:#0b1220;border:1px solid #91a5c0;border-radius:8px;color:#fff;padding:11px;font:inherit;min-width:0}
-    textarea{min-height:240px;resize:vertical}
-    .settings{display:flex;flex-wrap:wrap;gap:18px}
-    .settings label{flex:1;min-width:160px}
-    .buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
-    button{background:#7ce8c6;color:#06231d;border:0;border-radius:9px;padding:13px 18px;font-weight:750;cursor:pointer}
-    button.secondary{background:#293d58;color:#edf5ff;border:1px solid #7f95b2}
-    button:disabled{opacity:.5;cursor:not-allowed}
-    :focus-visible{outline:3px solid #7ce8c6;outline-offset:3px}
-    #cost-status{min-height:1.5em;color:#ffe2a6}
-    footer{border-top:1px solid #374c67;margin-top:30px}
-    @media(max-width:720px){.grid{grid-template-columns:1fr}header,main,footer{padding:18px}.panel{padding:16px}}
-    .skip-link { position: absolute; top: -100px; left: 16px; background: #7ce8c6; color: #06231d; padding: 10px 16px; font-weight: 700; border-radius: 6px; z-index: 1000; text-decoration: none; }
-    .skip-link:focus { top: 16px; outline: 3px solid #fff; }
-  </style>
+  <link rel="stylesheet" href="/styles/executive-theme.css" />
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>

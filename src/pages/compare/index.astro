@@ -15,34 +15,7 @@ const publicCatalog = {products: products.map(({id,name,category,bestFor}) => ({
   <meta name="robots" content="index, follow" /><link rel="canonical" href={canonicalUrl('/compare/')} />
   <meta name="description" content="Compare SaaS research candidates by category, known information and evidence gaps." />
   <title>Compare software candidates | StackPilot AI</title>
-  <style>
-    :root { font-family: system-ui, sans-serif; background: #0b1220; color: #e9f1ff; }
-    * { box-sizing: border-box; }
-    body { margin: 0; }
-    header, main, footer { max-width: 1080px; margin: auto; padding: 24px; }
-    a { color: #7ce8c6; }
-    p, li { color: #c6d5e8; line-height: 1.7; }
-    section { margin: 38px 0; }
-    .table-scroll { overflow-x: auto; border: 1px solid #34455f; border-radius: 12px; }
-    table { width: 100%; border-collapse: collapse; background: #152138; min-width: 640px; }
-    th, td { text-align: left; padding: 16px; border-bottom: 1px solid #34455f; vertical-align: top; }
-    thead th { background: #253652; }
-    .notice { background: #152138; border-left: 4px solid #edc777; padding: 16px; }
-    .links { display: flex; flex-wrap: wrap; gap: 18px; }
-    .compare-controls { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; margin: 18px 0; }
-    .compare-controls label { display: block; font-weight: 650; }
-    .compare-controls select { width: 100%; display: block; margin-top: 7px; padding: 12px; background: #0b1220; color: #e9f1ff; border: 1px solid #6a819e; border-radius: 8px; }
-    button { background: #7ce8c6; color: #06231d; border: 0; border-radius: 8px; padding: 12px 20px; font-weight: 700; cursor: pointer; }
-    :focus-visible { outline: 3px solid #7ce8c6; outline-offset: 3px; }
-    #comparison-result { margin: 22px 0; }
-    :global(#comparison-result a) { color: #7ce8c6; }
-    :global(#comparison-result a:focus-visible) { outline: 3px solid #7ce8c6; outline-offset: 3px; }
-    .helper { font-size: .95rem; }
-    #comparison-error { color: #ffe2ae; }
-    @media (max-width: 700px) { .compare-controls { grid-template-columns: 1fr; } }
-    .skip-link { position: absolute; top: -100px; left: 16px; background: #7ce8c6; color: #06231d; padding: 10px 16px; font-weight: 700; border-radius: 6px; z-index: 1000; text-decoration: none; }
-    .skip-link:focus { top: 16px; outline: 3px solid #fff; }
-  </style>
+  <link rel="stylesheet" href="/styles/executive-theme.css" />
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>

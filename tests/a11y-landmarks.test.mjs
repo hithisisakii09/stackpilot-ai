@@ -18,6 +18,8 @@ function findAstroFiles(dir) {
 
 const astroFiles = findAstroFiles('src/pages');
 
+const themeCss = readFileSync(new URL('../public/styles/executive-theme.css', import.meta.url), 'utf8');
+
 test('all page templates contain semantic landmarks, skip-link, and accessible viewport', () => {
   assert.equal(astroFiles.length, 21, 'Expected exactly 21 Astro page templates');
 
@@ -33,8 +35,9 @@ test('all page templates contain semantic landmarks, skip-link, and accessible v
     // Skip-to-content navigation (WCAG 2.4.1 Level A)
     assert.match(html, /<body[^>]*>\s*<a\s+href=["']#main["']\s+class=["']skip-link["']>Skip to main content<\/a>/i,
       `${file} must have skip-link as first element in <body>`);
-    assert.match(html, /\.skip-link\s*\{[^}]*position:\s*absolute/i, `${file} must style .skip-link positioned off-screen`);
-    assert.match(html, /\.skip-link:focus\s*\{[^}]*outline:/i, `${file} must style .skip-link:focus with visible outline`);
+    const styleSource = html.includes('/styles/executive-theme.css') ? `${html}\n${themeCss}` : html;
+    assert.match(styleSource, /\.skip-link\s*\{[^}]*position:\s*absolute/i, `${file} must style .skip-link positioned off-screen`);
+    assert.match(styleSource, /\.skip-link:focus\s*\{[^}]*outline:/i, `${file} must style .skip-link:focus with visible outline`);
 
     // Viewport configuration without scale locking (WCAG 1.4.4)
     assert.match(html, /<meta\s+name=["']viewport["']\s+content=["'][^"']*width=device-width[^"']*["']/i,

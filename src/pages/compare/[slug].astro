@@ -49,29 +49,7 @@ const faqJson = serializeJsonLd(buildFAQSchema(faqs));
   <title>{pair.title} Comparison | StackPilot AI</title>
   <script type="application/ld+json" set:html={breadcrumbJson}></script>
   <script type="application/ld+json" set:html={faqJson}></script>
-  <style>
-    :root { font-family: system-ui, sans-serif; background: #0b1220; color: #e9f1ff; }
-    * { box-sizing: border-box; }
-    body { margin: 0; }
-    header, main, footer { max-width: 1080px; margin: auto; padding: 24px; }
-    a { color: #7ce8c6; }
-    p, li { color: #c6d5e8; line-height: 1.7; }
-    section { margin: 38px 0; }
-    .table-scroll { overflow-x: auto; border: 1px solid #34455f; border-radius: 12px; }
-    table { width: 100%; border-collapse: collapse; background: #152138; min-width: 640px; }
-    th, td { text-align: left; padding: 16px; border-bottom: 1px solid #34455f; vertical-align: top; }
-    thead th { background: #253652; color: #fff; }
-    .notice { background: #152138; border-left: 4px solid #edc777; padding: 16px; border-radius: 0 8px 8px 0; }
-    .links { display: flex; flex-wrap: wrap; gap: 18px; }
-    .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .card { background: #152138; border: 1px solid #34455f; border-radius: 12px; padding: 20px; }
-    .card h3 { margin-top: 0; color: #fff; }
-    #download-questions { background: #7ce8c6; color: #06231d; border: 0; border-radius: 8px; padding: 12px 20px; font-weight: 700; cursor: pointer; }
-    :focus-visible { outline: 3px solid #7ce8c6; outline-offset: 3px; }
-    @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
-    .skip-link { position: absolute; top: -100px; left: 16px; background: #7ce8c6; color: #06231d; padding: 10px 16px; font-weight: 700; border-radius: 6px; z-index: 1000; text-decoration: none; }
-    .skip-link:focus { top: 16px; outline: 3px solid #fff; }
-  </style>
+  <link rel="stylesheet" href="/styles/executive-theme.css" />
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to main content</a>
@@ -140,8 +118,8 @@ const faqJson = serializeJsonLd(buildFAQSchema(faqs));
                 <th scope="row">
                   <strong>{row.dimension}</strong>
                   <br />
-                  <small style="color: #9ab0cf;">{row.buyerContext}</small>
-                  <small style="display: block; color: #edc777;">Evidence: {row.evidenceStatus} · Claim ID: {row.claimId} · No editorial approval</small>
+                  <small class="claim-context">{row.buyerContext}</small>
+                  <small class="claim-meta">Evidence: {row.evidenceStatus} · Claim ID: {row.claimId} · No editorial approval</small>
                 </th>
                 <td>{row.firstValue}</td>
                 <td>{row.secondValue}</td>
