@@ -2,7 +2,7 @@ import { routeAiRequest } from '../src/platform/ai/router.mjs';
 import {
   createFreeTierModelRegistry,
   createGeminiFreeAdapter,
-  createGroqFreeAdapter
+  createOpenAIFallbackAdapter
 } from '../src/platform/ai/live-adapters.mjs';
 import { executeLiveRoutedPrompt } from '../src/platform/ai/live-runner.mjs';
 
@@ -10,11 +10,11 @@ const liveMode = process.argv.includes('--live');
 const now = new Date().toISOString();
 const registry = createFreeTierModelRegistry();
 const geminiKey = process.env.GEMINI_API_KEY ?? '';
-const groqKey = process.env.GROQ_API_KEY ?? '';
+const openaiKey = process.env.OPENAI_API_KEY ?? '';
 
 const baseStatus = {
   geminiKeyConfigured: geminiKey.trim().length > 0,
-  groqKeyConfigured: groqKey.trim().length > 0,
+  openaiKeyConfigured: openaiKey.trim().length > 0,
   estimatedCostMinor: 0
 };
 
@@ -42,7 +42,7 @@ if (!liveMode) {
     router: { routeAiRequest },
     adapters: {
       gemini: createGeminiFreeAdapter({ apiKey: geminiKey }),
-      groq: createGroqFreeAdapter({ apiKey: groqKey })
+      openai: createOpenAIFallbackAdapter({ apiKey: openaiKey })
     },
     registry,
     request: {
