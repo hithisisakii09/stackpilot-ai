@@ -70,15 +70,16 @@ test('Gemini adapter sends x-goog-api-key header (never query string), parses us
 
   const adapter = createGeminiFreeAdapter({ apiKey: DUMMY_GEMINI_KEY, fetchImpl, timeoutMs: 3000 });
   const out = await adapter.generate({
-    modelId: 'gemini-2.5-flash',
+    modelId: 'gemini-3.5-flash-lite',
     prompt: 'Summarize',
     systemPrompt: 'Be concise.'
   });
 
   assert.equal(seen.length, 1);
-  assert.equal(seen[0].url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent');
+  assert.equal(seen[0].url, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
   assert.equal(seen[0].url.includes('key='), false);
   assert.equal(seen[0].init.headers['x-goog-api-key'], DUMMY_GEMINI_KEY);
+  assert.deepEqual(JSON.parse(seen[0].init.body).generationConfig, { maxOutputTokens: 512 });
   assert.equal(out.provider, 'gemini');
   assert.equal(out.text, 'Gemini summary ok');
   assert.equal(out.inputTokens, 12);
@@ -91,7 +92,7 @@ test('Gemini adapter sends x-goog-api-key header (never query string), parses us
       candidates: [{ content: { parts: [{ text: 'No usage' }] }, finishReason: 'STOP' }]
     })
   });
-  const outNull = await nullUsageAdapter.generate({ modelId: 'gemini-2.5-flash', prompt: 'Hi' });
+  const outNull = await nullUsageAdapter.generate({ modelId: 'gemini-3.5-flash-lite', prompt: 'Hi' });
   assert.equal(outNull.inputTokens, null);
   assert.equal(outNull.outputTokens, null);
 });
@@ -135,8 +136,9 @@ test('OpenAI fallback adapter sends Authorization Bearer header, caps max_tokens
   assert.equal(outNull.outputTokens, null);
 });
 
-test('runner falls back from Gemini 429 rate_limited to OpenAI 200 and records attempts with zero cost', async () => {
+test('runner falls back from Gemini 3.5 Flash-Lite -> Gemini 3.8 Flash -> OpenAI 200 and records attempts with zero cost', async () => {
   const registry = createFreeTierModelRegistry();
+  assert.deepEqual(registry.map(m => m.id), ['gemini-3-5-flash-lite', 'gemini-3-8-flash', 'gpt-4o-mini']);
   assert.equal(registry.every(m => m.tier === 'free' && m.estimatedCostMinor === 0), true);
 
   const geminiAdapter = createGeminiFreeAdapter({
@@ -167,18 +169,20 @@ test('runner falls back from Gemini 429 rate_limited to OpenAI 200 and records a
   assert.equal(res.provider, 'openai');
   assert.equal(res.selectedModel, 'gpt-4o-mini');
   assert.equal(res.estimatedCostMinor, 0);
-  assert.equal(res.attemptedModels.length, 2);
-  assert.equal(res.attemptedModels[0].provider, 'gemini');
+  assert.equal(res.attemptedModels.length, 3);
+  assert.equal(res.attemptedModels[0].modelId, 'gemini-3-5-flash-lite');
   assert.equal(res.attemptedModels[0].code, 'rate_limited');
-  assert.equal(res.attemptedModels[1].provider, 'openai');
-  assert.equal(res.attemptedModels[1].ok, true);
+  assert.equal(res.attemptedModels[1].modelId, 'gemini-3-8-flash');
+  assert.equal(res.attemptedModels[1].code, 'rate_limited');
+  assert.equal(res.attemptedModels[2].provider, 'openai');
+  assert.equal(res.attemptedModels[2].ok, true);
 
   const serialized = JSON.stringify(res);
   assert.equal(serialized.includes(DUMMY_GEMINI_KEY), false);
   assert.equal(serialized.includes(DUMMY_OPENAI_KEY), false);
 });
 
-test('runner falls back on timeout/503 and fails closed when both Gemini and OpenAI fail without leaking secrets', async () => {
+test('runner falls back on timeout/503 and fails closed when all 3 models fail without leaking secrets', async () => {
   const timeoutErr = new Error(`Request timeout with Bearer ${DUMMY_GEMINI_KEY}`);
   timeoutErr.name = 'TimeoutError';
 
@@ -206,9 +210,10 @@ test('runner falls back on timeout/503 and fails closed when both Gemini and Ope
   assert.equal(res.ok, false);
   assert.equal(res.reason, 'all_free_providers_failed');
   assert.equal(res.estimatedCostMinor, 0);
-  assert.equal(res.attemptedModels.length, 2);
+  assert.equal(res.attemptedModels.length, 3);
   assert.equal(res.attemptedModels[0].code, 'timeout');
-  assert.equal(res.attemptedModels[1].code, 'provider_unavailable');
+  assert.equal(res.attemptedModels[1].code, 'timeout');
+  assert.equal(res.attemptedModels[2].code, 'provider_unavailable');
 
   const serialized = JSON.stringify(res);
   assert.equal(serialized.includes(DUMMY_GEMINI_KEY), false);
@@ -313,7 +318,7 @@ test('static leakage guard blocks Phase 11B live LLM files and OpenAI markers fr
   }
 });
 
-test('Gemini handles multi-part/thinking candidate parts and uses gemini-2.5-flash endpoint', async () => {
+test('Gemini handles multi-part/thinking candidate parts and uses gemini-3.5-flash-lite endpoint', async () => {
   let requestedUrl = '';
   const adapter = createGeminiFreeAdapter({
     apiKey: DUMMY_GEMINI_KEY,
@@ -333,12 +338,12 @@ test('Gemini handles multi-part/thinking candidate parts and uses gemini-2.5-fla
       });
     }
   });
-  const out = await adapter.generate({ modelId: 'gemini-2-5-flash', prompt: 'Reply OK' });
-  assert.equal(requestedUrl, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent');
+  const out = await adapter.generate({ modelId: 'gemini-3-5-flash-lite', prompt: 'Reply OK' });
+  assert.equal(requestedUrl, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent');
   assert.equal(out.text, 'OK!');
 });
 
-test('runner records sanitized httpStatus and falls back from Gemini 400/404 to OpenAI 200 without leaking secrets', async () => {
+test('runner records sanitized httpStatus and falls back from Gemini 400/404 across both Gemini models to OpenAI 200 without leaking secrets', async () => {
   for (const [status, expectedCode] of [[400, 'invalid_provider_response'], [404, 'model_not_found']]) {
     const geminiAdapter = createGeminiFreeAdapter({
       apiKey: DUMMY_GEMINI_KEY,
@@ -367,10 +372,12 @@ test('runner records sanitized httpStatus and falls back from Gemini 400/404 to 
     assert.equal(res.ok, true);
     assert.equal(res.provider, 'openai');
     assert.equal(res.selectedModel, 'gpt-4o-mini');
-    assert.equal(res.attemptedModels.length, 2);
+    assert.equal(res.attemptedModels.length, 3);
     assert.equal(res.attemptedModels[0].code, expectedCode);
     assert.equal(res.attemptedModels[0].httpStatus, status);
-    assert.equal(res.attemptedModels[1].httpStatus, 200);
+    assert.equal(res.attemptedModels[1].code, expectedCode);
+    assert.equal(res.attemptedModels[1].httpStatus, status);
+    assert.equal(res.attemptedModels[2].httpStatus, 200);
     const serialized = JSON.stringify(res);
     assert.equal(serialized.includes(DUMMY_GEMINI_KEY), false);
     assert.equal(serialized.includes(DUMMY_OPENAI_KEY), false);
