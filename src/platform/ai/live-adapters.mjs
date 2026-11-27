@@ -37,12 +37,13 @@ function scrubSecret(text, apiKey) {
 }
 
 export class ProviderCallError extends Error {
-  constructor({ code, retryable, provider, message, apiKey }) {
+  constructor({ code, retryable, provider, message, apiKey, httpStatus = null }) {
     super(scrubSecret(message, apiKey));
     this.name = 'ProviderCallError';
     this.code = code;
     this.retryable = Boolean(retryable);
     this.provider = provider;
+    this.httpStatus = Number.isInteger(httpStatus) ? httpStatus : null;
   }
 }
 
@@ -145,24 +146,29 @@ function resolveApiModelId(modelId) {
 }
 
 function classifyHttpFailure(status, provider, detail, apiKey) {
+  const httpStatus = Number.isInteger(status) ? status : null;
   if (status === 429) {
-    return new ProviderCallError({ code: 'rate_limited', retryable: true, provider, message: `${provider} rate limited (HTTP 429)`, apiKey });
+    return new ProviderCallError({ code: 'rate_limited', retryable: true, provider, message: `${provider} rate limited (HTTP 429)`, apiKey, httpStatus });
   }
   if (status === 401 || status === 403) {
-    return new ProviderCallError({ code: 'provider_auth_failed', retryable: true, provider, message: `${provider} authentication failed (HTTP ${status})`, apiKey });
+    return new ProviderCallError({ code: 'provider_auth_failed', retryable: true, provider, message: `${provider} authentication failed (HTTP ${status})`, apiKey, httpStatus });
+  }
+  if (status === 404) {
+    return new ProviderCallError({ code: 'model_not_found', retryable: true, provider, message: `${provider} model not found (HTTP 404)`, apiKey, httpStatus });
   }
   if (status >= 500 && status <= 599) {
-    return new ProviderCallError({ code: 'provider_unavailable', retryable: true, provider, message: `${provider} unavailable (HTTP ${status})`, apiKey });
+    return new ProviderCallError({ code: 'provider_unavailable', retryable: true, provider, message: `${provider} unavailable (HTTP ${status})`, apiKey, httpStatus });
   }
   if (status >= 300 && status < 400) {
-    return new ProviderCallError({ code: 'invalid_provider_response', retryable: false, provider, message: `${provider} redirect blocked (HTTP ${status})`, apiKey });
+    return new ProviderCallError({ code: 'invalid_provider_response', retryable: false, provider, message: `${provider} redirect blocked (HTTP ${status})`, apiKey, httpStatus });
   }
   return new ProviderCallError({
     code: 'invalid_provider_response',
     retryable: false,
     provider,
     message: `${provider} invalid response (HTTP ${status}): ${scrubSecret(detail, apiKey).slice(0, 120)}`,
-    apiKey
+    apiKey,
+    httpStatus
   });
 }
 
@@ -248,20 +254,24 @@ export function createGeminiFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, 
           retryable: false,
           provider: 'gemini',
           message: 'Gemini returned non-JSON response',
-          apiKey
+          apiKey,
+          httpStatus: response.status
         });
       }
 
       const candidate = parsed?.candidates?.[0];
       const parts = Array.isArray(candidate?.content?.parts) ? candidate.content.parts : [];
-      const text = parts.map(p => (typeof p?.text === 'string' ? p.text : '')).join('').trim();
+      const answerParts = parts.filter(p => !p?.thought && typeof p?.text === 'string').map(p => p.text);
+      const fallbackParts = parts.map(p => (typeof p?.text === 'string' ? p.text : ''));
+      const text = (answerParts.join('').trim() || fallbackParts.join('').trim());
       if (!text) {
         throw new ProviderCallError({
           code: 'invalid_provider_response',
           retryable: false,
           provider: 'gemini',
           message: 'Gemini response contained no candidate text',
-          apiKey
+          apiKey,
+          httpStatus: response.status
         });
       }
 

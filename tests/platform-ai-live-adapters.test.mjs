@@ -312,3 +312,67 @@ test('static leakage guard blocks Phase 11B live LLM files and OpenAI markers fr
     assert.ok(res.violations.length > 0, `Expected leakage violation for ${marker}`);
   }
 });
+
+test('Gemini handles multi-part/thinking candidate parts and uses gemini-2.5-flash endpoint', async () => {
+  let requestedUrl = '';
+  const adapter = createGeminiFreeAdapter({
+    apiKey: DUMMY_GEMINI_KEY,
+    fetchImpl: async (url) => {
+      requestedUrl = url;
+      return jsonResponse(200, {
+        candidates: [{
+          content: {
+            parts: [
+              { thought: true, text: 'internal reasoning' },
+              { text: 'OK' },
+              { text: '!' }
+            ]
+          },
+          finishReason: 'STOP'
+        }]
+      });
+    }
+  });
+  const out = await adapter.generate({ modelId: 'gemini-2-5-flash', prompt: 'Reply OK' });
+  assert.equal(requestedUrl, 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent');
+  assert.equal(out.text, 'OK!');
+});
+
+test('runner records sanitized httpStatus and falls back from Gemini 400/404 to OpenAI 200 without leaking secrets', async () => {
+  for (const [status, expectedCode] of [[400, 'invalid_provider_response'], [404, 'model_not_found']]) {
+    const geminiAdapter = createGeminiFreeAdapter({
+      apiKey: DUMMY_GEMINI_KEY,
+      fetchImpl: async () => jsonResponse(status, { error: { message: `Bad request with ${DUMMY_GEMINI_KEY}` } })
+    });
+    const openaiAdapter = createOpenAIFallbackAdapter({
+      apiKey: DUMMY_OPENAI_KEY,
+      fetchImpl: async () => jsonResponse(200, {
+        choices: [{ message: { content: 'OK' }, finish_reason: 'stop' }],
+        usage: { prompt_tokens: 10, completion_tokens: 1 }
+      })
+    });
+
+    const res = await executeLiveRoutedPrompt({
+      router: { routeAiRequest },
+      adapters: { gemini: geminiAdapter, openai: openaiAdapter },
+      request: {
+        taskClass: 'classification',
+        prompt: 'Reply with a single word: OK',
+        requestedTokens: 64
+      },
+      allowLiveNetwork: true,
+      now: NOW
+    });
+
+    assert.equal(res.ok, true);
+    assert.equal(res.provider, 'openai');
+    assert.equal(res.selectedModel, 'gpt-4o-mini');
+    assert.equal(res.attemptedModels.length, 2);
+    assert.equal(res.attemptedModels[0].code, expectedCode);
+    assert.equal(res.attemptedModels[0].httpStatus, status);
+    assert.equal(res.attemptedModels[1].httpStatus, 200);
+    const serialized = JSON.stringify(res);
+    assert.equal(serialized.includes(DUMMY_GEMINI_KEY), false);
+    assert.equal(serialized.includes(DUMMY_OPENAI_KEY), false);
+  }
+});
