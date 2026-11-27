@@ -4,48 +4,85 @@
     {
       "slug": "crm-data-export-and-portability-guide",
       "targetTitle": "CRM Data Export and Portability Buyer Guide: HubSpot vs Pipedrive",
-      "focusKeywords": ["crm data export", "hubspot export records", "pipedrive csv export", "crm portability"],
-      "relatedComparisonSlugs": ["hubspot-vs-pipedrive"],
-      "status": "pending",
-      "generatedAt": null
+      "focusKeywords": [
+        "crm data export",
+        "hubspot export records",
+        "pipedrive csv export",
+        "crm portability"
+      ],
+      "relatedComparisonSlugs": [
+        "hubspot-vs-pipedrive"
+      ],
+      "status": "drafted",
+      "generatedAt": "2026-11-27"
     },
     {
       "slug": "seo-tool-team-seat-pricing-guide",
       "targetTitle": "SEO Tool Team Seat Pricing Guide: Semrush vs Ahrefs",
-      "focusKeywords": ["seo tool seat pricing", "semrush user management", "ahrefs shared workspaces"],
-      "relatedComparisonSlugs": ["semrush-vs-ahrefs"],
+      "focusKeywords": [
+        "seo tool seat pricing",
+        "semrush user management",
+        "ahrefs shared workspaces"
+      ],
+      "relatedComparisonSlugs": [
+        "semrush-vs-ahrefs"
+      ],
       "status": "pending",
       "generatedAt": null
     },
     {
       "slug": "managed-wordpress-hosting-billing-models-guide",
       "targetTitle": "Managed WordPress Hosting Billing Models: Kinsta vs Cloudways",
-      "focusKeywords": ["managed wordpress hosting billing", "kinsta visit limits", "cloudways flexible pricing"],
-      "relatedComparisonSlugs": ["kinsta-vs-cloudways"],
+      "focusKeywords": [
+        "managed wordpress hosting billing",
+        "kinsta visit limits",
+        "cloudways flexible pricing"
+      ],
+      "relatedComparisonSlugs": [
+        "kinsta-vs-cloudways"
+      ],
       "status": "pending",
       "generatedAt": null
     },
     {
       "slug": "hubspot-vs-pipedrive-seat-scaling-guide",
       "targetTitle": "HubSpot vs Pipedrive Seat Scaling & Hub Licensing Guide",
-      "focusKeywords": ["hubspot seat pricing", "pipedrive per seat", "crm seat scaling"],
-      "relatedComparisonSlugs": ["hubspot-vs-pipedrive"],
+      "focusKeywords": [
+        "hubspot seat pricing",
+        "pipedrive per seat",
+        "crm seat scaling"
+      ],
+      "relatedComparisonSlugs": [
+        "hubspot-vs-pipedrive"
+      ],
       "status": "pending",
       "generatedAt": null
     },
     {
       "slug": "semrush-vs-ahrefs-credit-and-workspace-guide",
       "targetTitle": "Semrush vs Ahrefs Credit Governance & Workspace Guide",
-      "focusKeywords": ["ahrefs credit plans", "semrush pro plus", "seo workspace limits"],
-      "relatedComparisonSlugs": ["semrush-vs-ahrefs"],
+      "focusKeywords": [
+        "ahrefs credit plans",
+        "semrush pro plus",
+        "seo workspace limits"
+      ],
+      "relatedComparisonSlugs": [
+        "semrush-vs-ahrefs"
+      ],
       "status": "pending",
       "generatedAt": null
     },
     {
       "slug": "kinsta-vs-cloudways-staging-and-backups-guide",
       "targetTitle": "Kinsta vs Cloudways Staging, Backups & Security Stack Guide",
-      "focusKeywords": ["kinsta staging backups", "cloudways 1-click restore", "wordpress security stack"],
-      "relatedComparisonSlugs": ["kinsta-vs-cloudways"],
+      "focusKeywords": [
+        "kinsta staging backups",
+        "cloudways 1-click restore",
+        "wordpress security stack"
+      ],
+      "relatedComparisonSlugs": [
+        "kinsta-vs-cloudways"
+      ],
       "status": "pending",
       "generatedAt": null
     }
