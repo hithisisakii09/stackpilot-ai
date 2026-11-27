@@ -58,6 +58,7 @@ if (policy.productionLaunchApproved === true) {
   assert.match(robotsTxt, /^Disallow:\s*\/tools\/private-uat-worksheet\/$/m);
   assert.match(robotsTxt, /^Disallow:\s*\/preview-build\/$/m);
   assert.match(robotsTxt, /^Disallow:\s*\/research\/$/m);
+  assert.match(robotsTxt, /^Sitemap:\s*https:\/\/inspiring-chaja-cfb85f\.netlify\.app\/sitemap\.xml$/m);
 } else {
   assert.match(robotsTxt, /Disallow:\s*\//);
 }

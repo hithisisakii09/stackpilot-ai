@@ -1,9 +1,12 @@
+---
+import { canonicalUrl } from '../../../lib/site-origin.mjs';
+---
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta name="robots" content="index, follow" />
+<meta name="robots" content="index, follow" /><link rel="canonical" href={canonicalUrl('/guides/hosting-migration-checklist/')} />
 <meta name="description" content="Vendor-neutral hosting migration checklist for small teams covering DNS, email records, backups, rollback, testing and total switching cost." />
 <title>Hosting migration checklist | StackPilot AI</title>
 <style>

@@ -1,4 +1,5 @@
 ---
+import { canonicalUrl } from '../../../lib/site-origin.mjs';
 const fields = [
  ['flatMonthly','Monthly base subscription'],
  ['seatMonthly','Monthly price per seat'],
@@ -12,7 +13,7 @@ const fields = [
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow" /><link rel="canonical" href={canonicalUrl('/tools/software-cost-calculator/')} />
   <meta name="description" content="Compare software subscription costs using only the prices you enter, privately in your browser." />
   <title>Software subscription cost calculator | StackPilot AI</title>
   <style>

@@ -1,4 +1,5 @@
 ---
+import { canonicalUrl } from '../../../lib/site-origin.mjs';
 import { listCategories } from '../../../lib/buyer-worksheet.mjs';
 ---
 <!doctype html>
@@ -6,7 +7,7 @@ import { listCategories } from '../../../lib/buyer-worksheet.mjs';
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="index, follow" />
+  <meta name="robots" content="index, follow" /><link rel="canonical" href={canonicalUrl('/tools/requirements-checklist/')} />
   <meta name="description" content="Plan your software purchase using a private, independent requirements checklist." />
   <title>Software requirements worksheet | StackPilot AI</title>
   <style>

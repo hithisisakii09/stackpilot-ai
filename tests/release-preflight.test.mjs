@@ -7,7 +7,7 @@ const privatePage = '<!doctype html><html lang="en"><head><meta name="robots" co
 const policy = {policyVersion:1,monthlyBudgetINR:0,delegatedSpendINR:0,hostingCandidate:'netlify-free',commercialHostingApproved:false,productionLaunchApproved:true,affiliateActivationApproved:false,paidServicesApproved:false};
 const secureCsp = "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; frame-src 'none'; object-src 'none'; base-uri 'self'; worker-src 'none'; media-src 'self'; manifest-src 'self'; upgrade-insecure-requests";
 const headers = '/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  X-Frame-Options: DENY\n  Content-Security-Policy: '+secureCsp+'\n\n/tools/private-uat-worksheet/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n\n/preview-build/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n\n/research/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n';
-const robots = 'User-agent: *\nAllow: /\nDisallow: /tools/private-uat-worksheet/\nDisallow: /preview-build/\nDisallow: /research/\n';
+const robots = 'User-agent: *\nAllow: /\nDisallow: /tools/private-uat-worksheet/\nDisallow: /preview-build/\nDisallow: /research/\nSitemap: https://inspiring-chaja-cfb85f.netlify.app/sitemap.xml\n';
 
 test('audits all generated static routes rather than a fixed hand-written shortlist', () => {
   const result=auditStaticRoutes([

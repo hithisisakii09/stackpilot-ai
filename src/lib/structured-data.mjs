@@ -3,6 +3,7 @@
  * Pure, deterministic functions that produce valid Schema.org vocabulary objects.
  * Sanitized against script breakouts to ensure XSS safety in HTML templates.
  */
+import { canonicalUrl } from './site-origin.mjs';
 
 export function buildSoftwareApplicationSchema(product) {
   if (!product || typeof product !== 'object' || typeof product.name !== 'string') {
@@ -16,7 +17,7 @@ export function buildSoftwareApplicationSchema(product) {
     applicationCategory: product.category || 'BusinessApplication',
     operatingSystem: 'Cloud-based',
     description: product.description || `${product.name} software candidate profile.`,
-    url: `https://stackpilot.invalid/software/${product.id}/`
+    url: canonicalUrl(`/software/${product.id}/`)
   };
 }
 
@@ -67,7 +68,7 @@ export function buildBreadcrumbSchema(crumbs) {
       '@type': 'ListItem',
       position: index + 1,
       name: crumb.name,
-      item: `https://stackpilot.invalid${crumb.url.startsWith('/') ? crumb.url : '/' + crumb.url}`
+      item: canonicalUrl(crumb.url)
     }))
   };
 }

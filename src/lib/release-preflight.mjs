@@ -1,4 +1,5 @@
 import {hasExternalCssResource} from './static-asset-audit.mjs';
+import {SITE_ORIGIN} from './site-origin.mjs';
 /**
  * Fail-closed, read-only audit of build outputs and development release locks.
  * This is NOT remote access verification, legal approval or public launch clearance.
@@ -134,7 +135,9 @@ export function auditStaticRoutes(pages) {
       }
     }
     for (const tag of htmlTags.filter(tag=>/^<link\b/i.test(tag))) {
+      const rel=String(attributeValue(tag,'rel')??'').trim().toLowerCase();
       const href=attributeValue(tag,'href');
+      if(rel==='canonical' && typeof href==='string' && href.startsWith(SITE_ORIGIN+'/')) continue;
       if(isExternalOrExecutable(href))
         violations.push(path+': external linked resource');
     }
@@ -292,12 +295,14 @@ export function auditDeploymentConstraints({policy,headers,robots}={}) {
   const robotsText=typeof robots==='string'?robots:'';
   const robotsRules=robotsText.split(/\r?\n/).map(line=>line.trim())
     .filter(line=>line.length>0 && !line.startsWith('#'));
+  const escapedOrigin=SITE_ORIGIN.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
   const expectedRobotsRules=[
     /^User-agent:\s*\*$/i,
     /^Allow:\s*\/$/i,
     /^Disallow:\s*\/tools\/private-uat-worksheet\/$/i,
     /^Disallow:\s*\/preview-build\/$/i,
-    /^Disallow:\s*\/research\/$/i
+    /^Disallow:\s*\/research\/$/i,
+    new RegExp(`^Sitemap:\\s*${escapedOrigin}\\/sitemap\\.xml$`,'i')
   ];
   if(robotsRules.length!==expectedRobotsRules.length ||
      expectedRobotsRules.some((pattern,idx)=>!pattern.test(robotsRules[idx])))

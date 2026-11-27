@@ -1,6 +1,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
+import { SITE_ORIGIN, canonicalUrl } from '../src/lib/site-origin.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const pages = [
@@ -42,6 +43,11 @@ for (const page of pages) {
   } else {
     assert.match(html, /<meta[^>]*name=["']robots["'][^>]*\bindex\b/i, `Public route missing index directive: ${page}`);
     assert.doesNotMatch(html, /<meta[^>]*name=["']robots["'][^>]*noindex/i, `Public route unexpectedly has noindex: ${page}`);
+    const routePath = page === 'index.html' ? '/' : '/' + page.replace(/index\.html$/, '');
+    const expectedCanonical = canonicalUrl(routePath);
+    assert.ok(html.includes(`<link rel="canonical" href="${expectedCanonical}"`) || html.includes(`<link rel="canonical" href=${expectedCanonical}`),
+      `Public route missing matching canonical tag (${expectedCanonical}): ${page}`);
+    assert.doesNotMatch(html, /stackpilot\.invalid/i, `Placeholder origin found in built HTML: ${page}`);
   }
   assert.match(html, /StackPilot AI/, `Brand missing: ${page}`);
 }
@@ -74,6 +80,18 @@ assert.doesNotMatch(robotsTxt, /^Disallow:\s*\/$/m, 'Wildcard Disallow: / must b
 assert.match(robotsTxt, /^Disallow:\s*\/tools\/private-uat-worksheet\/$/m);
 assert.match(robotsTxt, /^Disallow:\s*\/preview-build\/$/m);
 assert.match(robotsTxt, /^Disallow:\s*\/research\/$/m);
+assert.match(robotsTxt, new RegExp(`^Sitemap:\\s*${SITE_ORIGIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/sitemap\\.xml$`, 'm'));
+assert.ok(existsSync('dist/sitemap.xml'), 'dist/sitemap.xml missing');
+const sitemapXml = readFileSync('dist/sitemap.xml', 'utf8');
+for (const page of pages) {
+  const routePath = page === 'index.html' ? '/' : '/' + page.replace(/index\.html$/, '');
+  const loc = `<loc>${canonicalUrl(routePath)}</loc>`;
+  if (privateRoutes.has(page)) {
+    assert.equal(sitemapXml.includes(loc), false, `Private route leaked into sitemap.xml: ${routePath}`);
+  } else {
+    assert.equal(sitemapXml.includes(loc), true, `Public route missing from sitemap.xml: ${routePath}`);
+  }
+}
 // vercel.json has been removed; headers enforcement is via dist/_headers (Netlify) and robots.txt only.
 const research = readFileSync('dist/research/index.html', 'utf8');
 for (const product of products) assert.ok(research.includes(product.name), `Research workbench omits ${product.name}`);

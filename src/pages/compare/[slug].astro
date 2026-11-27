@@ -4,6 +4,7 @@ import evidenceLedger from '../../data/comparison-evidence.json';
 import {validateComparisonEvidence} from '../../lib/comparison-evidence.mjs';
 import { getAllComparisonPairs, getComparisonPair } from '../../lib/comparison-pairs.mjs';
 import { buildFAQSchema, buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
+import { canonicalUrl } from '../../lib/site-origin.mjs';
 
 export function getStaticPaths() {
   return getAllComparisonPairs().map(pair => ({
@@ -41,6 +42,7 @@ const faqJson = serializeJsonLd(buildFAQSchema(faqs));
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={canonicalUrl(`/compare/${pair.slug}/`)} />
   <meta name="description" content={pair.metaDescription} />
   <title>{pair.title} Comparison | StackPilot AI</title>
   <script type="application/ld+json" set:html={breadcrumbJson}></script>

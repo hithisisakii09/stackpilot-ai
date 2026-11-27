@@ -3,3 +3,5 @@ Allow: /
 Disallow: /tools/private-uat-worksheet/
 Disallow: /preview-build/
 Disallow: /research/
+
+Sitemap: https://inspiring-chaja-cfb85f.netlify.app/sitemap.xml

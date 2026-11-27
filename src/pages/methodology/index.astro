@@ -1,8 +1,9 @@
 ---
+import { canonicalUrl } from '../../lib/site-origin.mjs';
 const title = 'How StackPilot AI researches and recommends software';
 ---
 <!doctype html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="robots" content="index, follow"/>
+<meta name="robots" content="index, follow"/><link rel="canonical" href={canonicalUrl('/methodology/')} />
 <meta name="description" content="How StackPilot AI evaluates SaaS products, handles uncertainty, and separates recommendations from commissions."/>
 <title>{title}</title><style>
 :root{font-family:system-ui,sans-serif;background:#0b1220;color:#edf4ff}body{margin:0}
