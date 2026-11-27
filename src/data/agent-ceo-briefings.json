@@ -1,4 +1,47 @@
 {
   "schemaVersion": 1,
-  "briefings": []
+  "briefings": [
+    {
+      "id": "ceo-briefing-2026-11-27",
+      "generatedAt": "2026-11-27",
+      "snapshot": {
+        "researchMonitor": {
+          "monitoredUrlCount": 12,
+          "baselinedUrlCount": 12,
+          "lastUpdatedAt": "2026-11-27T13:33:59.839Z"
+        },
+        "seoBuilder": {
+          "publishedGuidesCount": 1,
+          "pendingTopicsCount": 5,
+          "publicSitemapUrlCount": 26
+        },
+        "trafficDistribution": {
+          "pendingPacksCount": 0,
+          "uncoveredPublishedCount": 4
+        },
+        "vendorOutreach": {
+          "totalCatalogVendors": 6,
+          "pendingDraftsCount": 0,
+          "remainingVendorsCount": 6,
+          "activeAffiliateLinksCount": 0
+        },
+        "governanceAndRevenue": {
+          "monthlyBudgetINR": 0,
+          "affiliateActivationApproved": false,
+          "verifiedRevenueMinorUnits": 0,
+          "externalClicksLast7d": null,
+          "externalImpressionsLast7d": null,
+          "estimatedAiSpendMinor": 0
+        }
+      },
+      "executiveSummary": "StackPilot AI currently monitors twelve baselined URLs with one published guide and five pending topics in the SEO builder. Vendor outreach catalog stands at six remaining vendors with zero active affiliate links, and affiliate activation remains unapproved with zero verified revenue. External clicks and impressions for the last seven days are currently uncollected and reported as null.",
+      "topPriorities": [
+        "Address the five pending topics in the SEO builder to expand published guide coverage beyond the current single guide.",
+        "Process the six remaining vendors in the catalog through outreach workflows while monitoring affiliate activation status.",
+        "Confirm tracking integration to ensure external clicks and impressions data for the last seven days is successfully collected."
+      ],
+      "aiSynthesized": true,
+      "estimatedCostMinor": 0
+    }
+  ]
 }
