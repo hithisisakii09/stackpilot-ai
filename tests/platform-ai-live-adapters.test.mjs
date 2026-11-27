@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import {
   createFreeTierModelRegistry,
   createGeminiFreeAdapter,
-  createGroqFreeAdapter,
+  createOpenAIFallbackAdapter,
   validateProviderEndpoint
 } from '../src/platform/ai/live-adapters.mjs';
 import { executeLiveRoutedPrompt } from '../src/platform/ai/live-runner.mjs';
@@ -13,7 +13,7 @@ import { auditLocalControlPlaneExport } from '../src/lib/local-control-plane-exp
 
 const NOW = '2026-11-27T12:00:00.000Z';
 const DUMMY_GEMINI_KEY = 'AIzaSyDUMMY1234567890123456789012345';
-const DUMMY_GROQ_KEY = 'gsk_DUMMY1234567890123456789012345678';
+const DUMMY_OPENAI_KEY = 'sk-proj-DUMMY1234567890123456789012345';
 
 function jsonResponse(status, body) {
   return {
@@ -36,7 +36,7 @@ test('default live runner fails closed with live_network_disabled and zero fetch
     router: { routeAiRequest },
     adapters: {
       gemini: createGeminiFreeAdapter({ apiKey: DUMMY_GEMINI_KEY, fetchImpl }),
-      groq: createGroqFreeAdapter({ apiKey: DUMMY_GROQ_KEY, fetchImpl })
+      openai: createOpenAIFallbackAdapter({ apiKey: DUMMY_OPENAI_KEY, fetchImpl })
     },
     request: {
       taskClass: 'summarization',
@@ -96,44 +96,46 @@ test('Gemini adapter sends x-goog-api-key header (never query string), parses us
   assert.equal(outNull.outputTokens, null);
 });
 
-test('Groq adapter sends Authorization Bearer header, parses usage, and preserves null when omitted', async () => {
+test('OpenAI fallback adapter sends Authorization Bearer header, caps max_tokens, parses usage, and preserves null when omitted', async () => {
   const seen = [];
   const fetchImpl = async (url, init) => {
     seen.push({ url, init });
     return jsonResponse(200, {
-      choices: [{ message: { content: 'Groq summary ok' }, finish_reason: 'stop' }],
+      choices: [{ message: { content: 'OpenAI summary ok' }, finish_reason: 'stop' }],
       usage: { prompt_tokens: 18, completion_tokens: 7 }
     });
   };
 
-  const adapter = createGroqFreeAdapter({ apiKey: DUMMY_GROQ_KEY, fetchImpl, timeoutMs: 3000 });
+  const adapter = createOpenAIFallbackAdapter({ apiKey: DUMMY_OPENAI_KEY, fetchImpl, timeoutMs: 3000 });
   const out = await adapter.generate({
-    modelId: 'llama-3.3-70b-versatile',
+    modelId: 'gpt-4o-mini',
     prompt: 'Summarize',
-    systemPrompt: 'Be concise.'
+    systemPrompt: 'Be concise.',
+    maxOutputTokens: 2048
   });
 
   assert.equal(seen.length, 1);
-  assert.equal(seen[0].url, 'https://api.groq.com/openai/v1/chat/completions');
-  assert.equal(seen[0].init.headers.Authorization, `Bearer ${DUMMY_GROQ_KEY}`);
-  assert.equal(out.provider, 'groq');
-  assert.equal(out.text, 'Groq summary ok');
+  assert.equal(seen[0].url, 'https://api.openai.com/v1/chat/completions');
+  assert.equal(seen[0].init.headers.Authorization, `Bearer ${DUMMY_OPENAI_KEY}`);
+  assert.equal(JSON.parse(seen[0].init.body).max_tokens, 512);
+  assert.equal(out.provider, 'openai');
+  assert.equal(out.text, 'OpenAI summary ok');
   assert.equal(out.inputTokens, 18);
   assert.equal(out.outputTokens, 7);
   assert.equal(out.estimatedCostMinor, 0);
 
-  const nullUsageAdapter = createGroqFreeAdapter({
-    apiKey: DUMMY_GROQ_KEY,
+  const nullUsageAdapter = createOpenAIFallbackAdapter({
+    apiKey: DUMMY_OPENAI_KEY,
     fetchImpl: async () => jsonResponse(200, {
       choices: [{ message: { content: 'No usage' }, finish_reason: 'stop' }]
     })
   });
-  const outNull = await nullUsageAdapter.generate({ modelId: 'llama-3.3-70b-versatile', prompt: 'Hi' });
+  const outNull = await nullUsageAdapter.generate({ modelId: 'gpt-4o-mini', prompt: 'Hi' });
   assert.equal(outNull.inputTokens, null);
   assert.equal(outNull.outputTokens, null);
 });
 
-test('runner falls back from Gemini 429 rate_limited to Groq 200 and records attempts with zero cost', async () => {
+test('runner falls back from Gemini 429 rate_limited to OpenAI 200 and records attempts with zero cost', async () => {
   const registry = createFreeTierModelRegistry();
   assert.equal(registry.every(m => m.tier === 'free' && m.estimatedCostMinor === 0), true);
 
@@ -141,8 +143,8 @@ test('runner falls back from Gemini 429 rate_limited to Groq 200 and records att
     apiKey: DUMMY_GEMINI_KEY,
     fetchImpl: async () => jsonResponse(429, { error: { message: `Quota exceeded for ${DUMMY_GEMINI_KEY}` } })
   });
-  const groqAdapter = createGroqFreeAdapter({
-    apiKey: DUMMY_GROQ_KEY,
+  const openaiAdapter = createOpenAIFallbackAdapter({
+    apiKey: DUMMY_OPENAI_KEY,
     fetchImpl: async () => jsonResponse(200, {
       choices: [{ message: { content: 'Fallback ok' }, finish_reason: 'stop' }],
       usage: { prompt_tokens: 9, completion_tokens: 3 }
@@ -151,7 +153,7 @@ test('runner falls back from Gemini 429 rate_limited to Groq 200 and records att
 
   const res = await executeLiveRoutedPrompt({
     router: { routeAiRequest },
-    adapters: { gemini: geminiAdapter, groq: groqAdapter },
+    adapters: { gemini: geminiAdapter, openai: openaiAdapter },
     request: {
       taskClass: 'classification',
       prompt: 'Classify: build passed',
@@ -162,21 +164,21 @@ test('runner falls back from Gemini 429 rate_limited to Groq 200 and records att
   });
 
   assert.equal(res.ok, true);
-  assert.equal(res.provider, 'groq');
-  assert.equal(res.selectedModel, 'llama-3-3-70b-versatile');
+  assert.equal(res.provider, 'openai');
+  assert.equal(res.selectedModel, 'gpt-4o-mini');
   assert.equal(res.estimatedCostMinor, 0);
   assert.equal(res.attemptedModels.length, 2);
   assert.equal(res.attemptedModels[0].provider, 'gemini');
   assert.equal(res.attemptedModels[0].code, 'rate_limited');
-  assert.equal(res.attemptedModels[1].provider, 'groq');
+  assert.equal(res.attemptedModels[1].provider, 'openai');
   assert.equal(res.attemptedModels[1].ok, true);
 
   const serialized = JSON.stringify(res);
   assert.equal(serialized.includes(DUMMY_GEMINI_KEY), false);
-  assert.equal(serialized.includes(DUMMY_GROQ_KEY), false);
+  assert.equal(serialized.includes(DUMMY_OPENAI_KEY), false);
 });
 
-test('runner falls back on timeout/503 and fails closed when all free providers fail without leaking secrets', async () => {
+test('runner falls back on timeout/503 and fails closed when both Gemini and OpenAI fail without leaking secrets', async () => {
   const timeoutErr = new Error(`Request timeout with Bearer ${DUMMY_GEMINI_KEY}`);
   timeoutErr.name = 'TimeoutError';
 
@@ -184,14 +186,14 @@ test('runner falls back on timeout/503 and fails closed when all free providers 
     apiKey: DUMMY_GEMINI_KEY,
     fetchImpl: async () => { throw timeoutErr; }
   });
-  const groqAdapter = createGroqFreeAdapter({
-    apiKey: DUMMY_GROQ_KEY,
-    fetchImpl: async () => jsonResponse(503, `Upstream error for ${DUMMY_GROQ_KEY}`)
+  const openaiAdapter = createOpenAIFallbackAdapter({
+    apiKey: DUMMY_OPENAI_KEY,
+    fetchImpl: async () => jsonResponse(503, `Upstream error for ${DUMMY_OPENAI_KEY}`)
   });
 
   const res = await executeLiveRoutedPrompt({
     router: { routeAiRequest },
-    adapters: { gemini: geminiAdapter, groq: groqAdapter },
+    adapters: { gemini: geminiAdapter, openai: openaiAdapter },
     request: {
       taskClass: 'summarization',
       prompt: 'Summarize',
@@ -210,12 +212,13 @@ test('runner falls back on timeout/503 and fails closed when all free providers 
 
   const serialized = JSON.stringify(res);
   assert.equal(serialized.includes(DUMMY_GEMINI_KEY), false);
-  assert.equal(serialized.includes(DUMMY_GROQ_KEY), false);
+  assert.equal(serialized.includes(DUMMY_OPENAI_KEY), false);
 });
 
 test('rejects SSRF hosts, non-HTTPS remote URLs, paid tiers, Proxy payloads, and secret-bearing prompts', async () => {
   assert.throws(() => validateProviderEndpoint('https://evil.example/v1/chat', 'free'), /allowlist|host/i);
-  assert.throws(() => validateProviderEndpoint('http://api.groq.com/openai/v1/chat/completions', 'free'), /HTTPS/i);
+  assert.throws(() => validateProviderEndpoint('https://api.groq.com/openai/v1/chat/completions', 'free'), /allowlist|host/i);
+  assert.throws(() => validateProviderEndpoint('http://api.openai.com/v1/chat/completions', 'free'), /HTTPS/i);
   assert.throws(() => validateProviderEndpoint('http://127.0.0.1:11434/api/generate', 'free'), /HTTPS|local/i);
   assert.doesNotThrow(() => validateProviderEndpoint('http://127.0.0.1:11434/api/generate', 'local'));
 
@@ -268,7 +271,7 @@ test('rejects SSRF hosts, non-HTTPS remote URLs, paid tiers, Proxy payloads, and
       adapters: { gemini: createGeminiFreeAdapter({ apiKey: DUMMY_GEMINI_KEY, fetchImpl }) },
       request: {
         taskClass: 'summarization',
-        prompt: `Here is my key ${DUMMY_GEMINI_KEY}`,
+        prompt: `Here is my key ${DUMMY_OPENAI_KEY}`,
         requestedTokens: 10
       },
       allowLiveNetwork: true,
@@ -286,7 +289,7 @@ test('ai-router-smoke.mjs --dry-run runs offline, reports key booleans without s
     env: {
       ...process.env,
       GEMINI_API_KEY: DUMMY_GEMINI_KEY,
-      GROQ_API_KEY: DUMMY_GROQ_KEY,
+      OPENAI_API_KEY: DUMMY_OPENAI_KEY,
       STACKPILOT_ALLOW_LIVE_AI: 'false'
     }
   });
@@ -294,17 +297,17 @@ test('ai-router-smoke.mjs --dry-run runs offline, reports key booleans without s
   assert.equal(report.mode, 'dry-run');
   assert.equal(report.estimatedCostMinor, 0);
   assert.equal(report.geminiKeyConfigured, true);
-  assert.equal(report.groqKeyConfigured, true);
+  assert.equal(report.openaiKeyConfigured, true);
   assert.equal(out.includes(DUMMY_GEMINI_KEY), false);
-  assert.equal(out.includes(DUMMY_GROQ_KEY), false);
+  assert.equal(out.includes(DUMMY_OPENAI_KEY), false);
 });
 
-test('static leakage guard blocks Phase 11 live LLM files and markers from dist/', () => {
+test('static leakage guard blocks Phase 11B live LLM files and OpenAI markers from dist/', () => {
   for (const path of ['live-adapters.mjs', 'live-runner.mjs', 'ai-router-smoke.mjs']) {
     const res = auditLocalControlPlaneExport([{ path, content: 'clean' }]);
     assert.ok(res.violations.length > 0, `Expected leakage violation for ${path}`);
   }
-  for (const marker of ['generativelanguage.googleapis.com', 'api.groq.com', 'STACKPILOT_ALLOW_LIVE_AI']) {
+  for (const marker of ['generativelanguage.googleapis.com', 'api.openai.com', 'OPENAI_API_KEY', 'STACKPILOT_ALLOW_LIVE_AI']) {
     const res = auditLocalControlPlaneExport([{ path: 'index.html', content: `marker:${marker}` }]);
     assert.ok(res.violations.length > 0, `Expected leakage violation for ${marker}`);
   }

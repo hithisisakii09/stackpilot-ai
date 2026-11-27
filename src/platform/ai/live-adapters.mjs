@@ -3,7 +3,7 @@ import { redactSecrets } from './router.mjs';
 
 const ALLOWED_FREE_HOSTS = new Set([
   'generativelanguage.googleapis.com',
-  'api.groq.com'
+  'api.openai.com'
 ]);
 
 const ALLOWED_LOCAL_HOSTS = new Set([
@@ -110,11 +110,11 @@ export function createFreeTierModelRegistry() {
       circuitOpen: false
     }),
     Object.freeze({
-      id: 'llama-3-3-70b-versatile',
-      provider: 'groq',
+      id: 'gpt-4o-mini',
+      provider: 'openai',
       tier: 'free',
       estimatedCostMinor: 0,
-      maxContextTokens: 131072,
+      maxContextTokens: 128000,
       priority: 2,
       capabilities: Object.freeze([
         'classification',
@@ -137,7 +137,7 @@ export function createFreeTierModelRegistry() {
 
 const API_MODEL_IDS = Object.freeze({
   'gemini-2-5-flash': 'gemini-2.5-flash',
-  'llama-3-3-70b-versatile': 'llama-3.3-70b-versatile'
+  'gpt-4o-mini': 'gpt-4o-mini'
 });
 
 function resolveApiModelId(modelId) {
@@ -287,24 +287,27 @@ export function createGeminiFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, 
 }
 
 /**
- * Creates a zero-dependency Groq Free Tier HTTP adapter (API key passed via Authorization Bearer header).
+ * Creates a zero-dependency OpenAI fallback HTTP adapter (API key passed via Authorization Bearer header).
  */
-export function createGroqFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, timeoutMs = 15000 } = {}) {
-  if (typeof fetchImpl !== 'function') fail('Missing fetch implementation for Groq adapter');
+export function createOpenAIFallbackAdapter({ apiKey, fetchImpl = globalThis.fetch, timeoutMs = 15000 } = {}) {
+  if (typeof fetchImpl !== 'function') fail('Missing fetch implementation for OpenAI adapter');
   return Object.freeze({
-    provider: 'groq',
-    async generate({ modelId = 'llama-3.3-70b-versatile', prompt, systemPrompt, maxOutputTokens = 512, temperature = 0.2 }) {
+    provider: 'openai',
+    async generate({ modelId = 'gpt-4o-mini', prompt, systemPrompt, maxOutputTokens = 512, temperature = 0.2 }) {
       if (typeof apiKey !== 'string' || apiKey.trim().length === 0) {
         throw new ProviderCallError({
           code: 'provider_auth_failed',
           retryable: true,
-          provider: 'groq',
-          message: 'Groq API key is not configured',
+          provider: 'openai',
+          message: 'OpenAI API key is not configured',
           apiKey
         });
       }
-      const cleanModelId = resolveApiModelId(String(modelId)).replace(/[^A-Za-z0-9._:/-]/g, '');
-      const endpoint = validateProviderEndpoint('https://api.groq.com/openai/v1/chat/completions', 'free');
+      const cleanModelId = resolveApiModelId(String(modelId)).replace(/[^A-Za-z0-9._-]/g, '');
+      const endpoint = validateProviderEndpoint('https://api.openai.com/v1/chat/completions', 'free');
+      const cappedMaxTokens = Number.isInteger(maxOutputTokens) && maxOutputTokens > 0
+        ? Math.min(maxOutputTokens, 512)
+        : 512;
       const messages = [];
       if (typeof systemPrompt === 'string' && systemPrompt.trim().length > 0) {
         messages.push({ role: 'system', content: systemPrompt.trim() });
@@ -323,20 +326,20 @@ export function createGroqFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, ti
           body: JSON.stringify({
             model: cleanModelId,
             messages,
-            max_tokens: maxOutputTokens,
+            max_tokens: cappedMaxTokens,
             temperature
           }),
           redirect: 'manual',
           signal: AbortSignal.timeout(timeoutMs)
         });
       } catch (err) {
-        throw classifyThrownError(err, 'groq', apiKey);
+        throw classifyThrownError(err, 'openai', apiKey);
       }
 
       const latencyMs = Math.max(0, Date.now() - started);
       const rawText = await response.text();
       if (!response.ok) {
-        throw classifyHttpFailure(response.status, 'groq', rawText, apiKey);
+        throw classifyHttpFailure(response.status, 'openai', rawText, apiKey);
       }
 
       let parsed;
@@ -346,8 +349,8 @@ export function createGroqFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, ti
         throw new ProviderCallError({
           code: 'invalid_provider_response',
           retryable: false,
-          provider: 'groq',
-          message: 'Groq returned non-JSON response',
+          provider: 'openai',
+          message: 'OpenAI returned non-JSON response',
           apiKey
         });
       }
@@ -358,8 +361,8 @@ export function createGroqFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, ti
         throw new ProviderCallError({
           code: 'invalid_provider_response',
           retryable: false,
-          provider: 'groq',
-          message: 'Groq response contained no assistant content',
+          provider: 'openai',
+          message: 'OpenAI response contained no assistant content',
           apiKey
         });
       }
@@ -372,7 +375,7 @@ export function createGroqFreeAdapter({ apiKey, fetchImpl = globalThis.fetch, ti
         : null;
 
       return Object.freeze({
-        provider: 'groq',
+        provider: 'openai',
         modelId: cleanModelId,
         text,
         finishReason: typeof choice?.finish_reason === 'string' ? choice.finish_reason : null,
