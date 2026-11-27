@@ -5,6 +5,7 @@ import {validateComparisonEvidence} from '../../lib/comparison-evidence.mjs';
 import { getAllComparisonPairs, getComparisonPair } from '../../lib/comparison-pairs.mjs';
 import { buildFAQSchema, buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
 import { canonicalUrl } from '../../lib/site-origin.mjs';
+import { getVerifiedVendorFacts } from '../../lib/verified-vendor-facts.mjs';
 
 export function getStaticPaths() {
   return getAllComparisonPairs().map(pair => ({
@@ -16,6 +17,7 @@ export function getStaticPaths() {
 validateComparisonEvidence(evidenceLedger, getAllComparisonPairs(), products);
 const pairData = getComparisonPair(Astro.params.slug, products);
 const { pair, first, second, matrix } = pairData;
+const verifiedDocs = getVerifiedVendorFacts(pair.slug);
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -89,6 +91,37 @@ const faqJson = serializeJsonLd(buildFAQSchema(faqs));
     <p class="notice">
       <strong>Research-only boundary:</strong> This is not a verified feature comparison. The matrix contains unverified prompts rather than authenticated vendor specifications. It does not establish a better vendor, fit, or savings. No affiliate links or commercial rankings are active. Confirm all material details directly with each vendor before signing contracts.
     </p>
+
+    <section aria-labelledby="verified-docs">
+      <h2 id="verified-docs">First-party vendor documentation snapshot (checked {verifiedDocs.checkedAt})</h2>
+      <p>Owner-reviewed excerpts from official vendor documentation. Vendor pricing, quotas, and plan terms change periodically; confirm current details directly via the linked official documentation below.</p>
+      <div class="table-scroll" role="region" tabindex="0" aria-label={`First-party vendor documentation snapshot for ${pair.title}, scroll horizontally for all columns`}>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col" style="width: 22%;">Dimension</th>
+              <th scope="col" style="width: 39%;">{first.name}</th>
+              <th scope="col" style="width: 39%;">{second.name}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {verifiedDocs.rows.map((row) => (
+              <tr>
+                <th scope="row"><strong>{row.dimension}</strong></th>
+                <td>
+                  <p style="margin-top: 0;">{row.first.summary}</p>
+                  <a href={row.first.sourceUrl} target="_blank" rel="noopener noreferrer">{row.first.sourceLabel} ↗</a>
+                </td>
+                <td>
+                  <p style="margin-top: 0;">{row.second.summary}</p>
+                  <a href={row.second.sourceUrl} target="_blank" rel="noopener noreferrer">{row.second.sourceLabel} ↗</a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
 
     <section aria-labelledby="side-by-side">
       <h2 id="side-by-side">Questions to verify with each vendor</h2>

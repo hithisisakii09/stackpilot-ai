@@ -1,0 +1,108 @@
+{
+  "hubspot-vs-pipedrive": {
+    "checkedAt": "2026-11-27",
+    "rows": [
+      {
+        "dimension": "Seat & pricing structure",
+        "first": {
+          "summary": "Per-seat tiered subscriptions across Starter ($20/mo/seat Core), Professional ($50/mo/seat Core; $100/mo/seat Sales or Service Hub), and Enterprise ($75/mo/seat Core; $150/mo/seat Sales or Service Hub).",
+          "sourceLabel": "HubSpot Product & Services Catalog",
+          "sourceUrl": "https://legal.hubspot.com/hubspot-product-and-services-catalog"
+        },
+        "second": {
+          "summary": "Sales-pipeline CRM priced per seat across tiered monthly plans ($14–$79/mo range depending on tier), 14-day free trial, and optional add-ons such as LeadBooster.",
+          "sourceLabel": "Pipedrive Plan & Solution Docs",
+          "sourceUrl": "https://www.pipedrive.com/en/crm/solutions/nimble-alternative"
+        }
+      },
+      {
+        "dimension": "Data export & portability",
+        "first": {
+          "summary": "Exports CRM records, lists/segments, property history, and individual contact data (including optional associations and activities) to CSV, XLS, or XLSX, with optional Super Admin export approvals.",
+          "sourceLabel": "HubSpot Export Records Docs",
+          "sourceUrl": "https://knowledge.hubspot.com/import-and-export/export-records"
+        },
+        "second": {
+          "summary": "Supports CSV, XLS, and XLSX spreadsheet import/export (up to 50 MB / 50,000 rows per import), 30-day deleted-deal recovery, and up to 300,000 archived leads/deals per company.",
+          "sourceLabel": "Pipedrive Storage & Export Docs",
+          "sourceUrl": "https://support.pipedrive.com/en/article/how-can-i-free-up-space"
+        }
+      },
+      {
+        "dimension": "Platform & integration scope",
+        "first": {
+          "summary": "Multi-hub customer platform covering CRM, Marketing, Sales, Service, and Content with native connectors and REST APIs.",
+          "sourceLabel": "HubSpot Knowledge Base",
+          "sourceUrl": "https://knowledge.hubspot.com/"
+        },
+        "second": {
+          "summary": "Sales-focused pipeline CRM with 400+ marketplace integrations, visibility groups, and built-in migration importers.",
+          "sourceLabel": "Pipedrive Visibility & Permissions Docs",
+          "sourceUrl": "https://support.pipedrive.com/en/article/visibility-and-permissions-overview"
+        }
+      }
+    ]
+  },
+  "semrush-vs-ahrefs": {
+    "checkedAt": "2026-11-27",
+    "rows": [
+      {
+        "dimension": "Plans & historical data access",
+        "first": {
+          "summary": "Tiered plans including SEO ($139/mo or $117.33/mo annual: 5 sites, 500 daily keywords), Starter ($199/mo or $165.17/mo annual: SEO + AI Search), Pro+ ($299/mo or $248.17/mo annual: 15 sites, 1,500 keywords, historical SEO data), and custom Advanced.",
+          "sourceLabel": "Semrush Pricing & Plans",
+          "sourceUrl": "https://www.semrush.com/pricing/seo-ai-search/"
+        },
+        "second": {
+          "summary": "Offers Credit-based entry plans (Starter, Lite) and Unlimited credit plans (no monthly viewing/filtering cap; Projects, Rank Tracker, and Site Audit still follow plan-tier limits).",
+          "sourceLabel": "Ahrefs Credit & Unlimited Plans Docs",
+          "sourceUrl": "https://help.ahrefs.com/en/articles/9734884-what-is-the-difference-between-credit-based-plans-and-unlimited-credit-plans"
+        }
+      },
+      {
+        "dimension": "Multi-seat licensing & usage governance",
+        "first": {
+          "summary": "Core crawl and usage limits are shared across users; additional seats carry per-user fees ($45 Pro / $80 Guru / $100 Business base) plus separate per-user fees for add-on toolkits like AI Visibility ($99/user).",
+          "sourceLabel": "Semrush User Management Docs",
+          "sourceUrl": "https://www.semrush.com/kb/1409-user-management"
+        },
+        "second": {
+          "summary": "Shared workspaces require individual user seats (login sharing is prohibited) with Owner/Admin/Member roles; credit-based plans bill additional users by monthly credit usage (Inactive free, Casual 5–100 credits, Power 101+ credits).",
+          "sourceLabel": "Ahrefs Shared Workspaces Docs",
+          "sourceUrl": "https://help.ahrefs.com/en/articles/3945807-about-shared-workspaces"
+        }
+      }
+    ]
+  },
+  "kinsta-vs-cloudways": {
+    "checkedAt": "2026-11-27",
+    "rows": [
+      {
+        "dimension": "Hosting & billing model",
+        "first": {
+          "summary": "Managed WordPress hosting billed by monthly visits or server bandwidth (e.g., Single 35k visits or 20GB bandwidth at $35/mo standard; WP 2 at $70/mo standard), with $30/mo additional site add-ons sharing plan resources.",
+          "sourceLabel": "Kinsta WordPress Hosting Plans Docs",
+          "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/"
+        },
+        "second": {
+          "summary": "Managed cloud hosting (Flexible & Autonomous autoscaling) with no lock-in and unlimited apps per server on Flexible; extra usage charges apply for offsite backups ($0.033/GB), extra CDN ($0.02/GB), and added disk storage ($1/10GB Flexible or $1/GB Autonomous).",
+          "sourceLabel": "Cloudways Official Pricing",
+          "sourceUrl": "https://www.cloudways.com/en/pricing.php"
+        }
+      },
+      {
+        "dimension": "Staging, backups & included stack",
+        "first": {
+          "summary": "Every site includes a staging environment, DNS zone, free migrations, SSL, uptime monitoring, CDN, Cloudflare Enterprise DDoS protection, and automated backups (up to 30-day retention on Enterprise).",
+          "sourceLabel": "Kinsta WordPress Hosting Overview",
+          "sourceUrl": "https://kinsta.com/wordpress-hosting/"
+        },
+        "second": {
+          "summary": "Includes free 1-click password-protected staging, automated/on-demand backups with 1-click restore, Imunify360 firewall, free Let's Encrypt SSL, Object Cache Pro (4GB+ servers), and NGINX-based Lightning Stack.",
+          "sourceLabel": "Cloudways Official Pricing",
+          "sourceUrl": "https://www.cloudways.com/en/pricing.php"
+        }
+      }
+    ]
+  }
+}
