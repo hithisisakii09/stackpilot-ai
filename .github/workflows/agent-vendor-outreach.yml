@@ -75,13 +75,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           DATE=$(date -u +%Y-%m-%d)
-          BRANCH="agent/vendor-outreach-${DATE}"
+          BRANCH="agent/vendor-outreach-${DATE}-${GITHUB_RUN_ID}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add src/data/agent-vendor-outreach-drafts.json
           git commit -m "feat(agent-4): draft vendor partnership outreach (${DATE})"
-          git push -u origin "$BRANCH" --force-with-lease
+          git push -u origin "${BRANCH}"
           EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
           if [ -n "$EXISTING_PR" ]; then
             gh pr edit "$EXISTING_PR" --body-file /tmp/vendor-outreach-report.md

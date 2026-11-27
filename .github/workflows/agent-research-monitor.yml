@@ -68,13 +68,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           DATE=$(date -u +%Y-%m-%d)
-          BRANCH="agent/research-monitor-${DATE}"
+          BRANCH="agent/research-monitor-${DATE}-${GITHUB_RUN_ID}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add src/data/vendor-doc-fingerprints.json
           git commit -m "chore(agent-1): update vendor documentation fingerprints (${DATE})"
-          git push -u origin "$BRANCH" --force-with-lease
+          git push -u origin "${BRANCH}"
           EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
           if [ -n "$EXISTING_PR" ]; then
             gh pr edit "$EXISTING_PR" --body-file /tmp/vendor-monitor-report.md

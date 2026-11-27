@@ -70,13 +70,13 @@ jobs:
         if: steps.diff.outputs.changed == 'true'
         run: |
           DATE=$(date -u +%Y-%m-%d)
-          BRANCH="agent/traffic-distribution-${DATE}"
+          BRANCH="agent/traffic-distribution-${DATE}-${GITHUB_RUN_ID}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add src/data/agent-distribution-drafts.json
           git commit -m "feat(agent-15): draft distribution pack [${DATE}] [skip ci]"
-          git push origin "$BRANCH"
+          git push -u origin "${BRANCH}"
           gh pr create \
             --base main \
             --head "$BRANCH" \
