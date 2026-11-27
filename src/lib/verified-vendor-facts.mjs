@@ -178,3 +178,32 @@ export function getVerifiedVendorFacts(slug, options = {}) {
   }
   return validateVerifiedVendorFacts(rawVerifiedVendorFacts, options)[slug];
 }
+
+const PRODUCT_COMPARISON_MAP = Object.freeze({
+  hubspot: { comparisonSlug: 'hubspot-vs-pipedrive', side: 'first' },
+  pipedrive: { comparisonSlug: 'hubspot-vs-pipedrive', side: 'second' },
+  semrush: { comparisonSlug: 'semrush-vs-ahrefs', side: 'first' },
+  ahrefs: { comparisonSlug: 'semrush-vs-ahrefs', side: 'second' },
+  kinsta: { comparisonSlug: 'kinsta-vs-cloudways', side: 'first' },
+  cloudways: { comparisonSlug: 'kinsta-vs-cloudways', side: 'second' }
+});
+
+/**
+ * Returns the validated, deeply frozen first-party vendor documentation snapshot rows for a single product.
+ */
+export function getVerifiedVendorFactsForProduct(productId, options = {}) {
+  if (typeof productId !== 'string' || !Object.hasOwn(PRODUCT_COMPARISON_MAP, productId)) {
+    fail(`Unknown product ID for verified vendor facts: ${String(productId)}`);
+  }
+  const mapping = PRODUCT_COMPARISON_MAP[productId];
+  const pair = getVerifiedVendorFacts(mapping.comparisonSlug, options);
+  return Object.freeze({
+    productId,
+    comparisonSlug: mapping.comparisonSlug,
+    checkedAt: pair.checkedAt,
+    rows: Object.freeze(pair.rows.map(row => Object.freeze({
+      dimension: row.dimension,
+      entry: row[mapping.side]
+    })))
+  });
+}

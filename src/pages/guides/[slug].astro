@@ -1,0 +1,110 @@
+---
+import products from '../../data/products.json';
+import { getAgentBuyerGuides } from '../../lib/agent-buyer-guides.mjs';
+import { getAllComparisonPairs } from '../../lib/comparison-pairs.mjs';
+import { SITE_ORIGIN, canonicalUrl } from '../../lib/site-origin.mjs';
+import { buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
+
+export function getStaticPaths() {
+  return getAgentBuyerGuides().map((guide) => ({
+    params: { slug: guide.slug },
+    props: { guide }
+  }));
+}
+
+const { guide } = Astro.props;
+const allPairs = getAllComparisonPairs();
+const relatedPairs = allPairs.filter(p => guide.relatedComparisonSlugs.includes(p.slug));
+const relatedProducts = products.filter(p => relatedPairs.some(pair => pair.firstId === p.id || pair.secondId === p.id));
+
+const breadcrumbs = [
+  { name: 'Home', url: '/' },
+  { name: 'Compare', url: '/compare/' },
+  { name: guide.title, url: `/guides/${guide.slug}/` }
+];
+const breadcrumbJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
+const articleJson = serializeJsonLd({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: guide.title,
+  description: guide.metaDescription,
+  datePublished: guide.publishedAt,
+  mainEntityOfPage: `${SITE_ORIGIN}/guides/${guide.slug}/`,
+  publisher: {
+    '@type': 'Organization',
+    name: 'StackPilot AI',
+    url: `${SITE_ORIGIN}/`
+  }
+});
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href={canonicalUrl(`/guides/${guide.slug}/`)} />
+  <meta name="description" content={guide.metaDescription} />
+  <title>{guide.title} | StackPilot AI</title>
+  <script type="application/ld+json" set:html={breadcrumbJson}></script>
+  <script type="application/ld+json" set:html={articleJson}></script>
+  <link rel="stylesheet" href="/styles/executive-theme.css" />
+</head>
+<body>
+  <a href="#main" class="skip-link">Skip to main content</a>
+  <header class="links">
+    <nav aria-label="Site navigation">
+      <a href="/">← StackPilot AI</a>
+      <a href="/compare/">Compare categories</a>
+      <a href="/methodology/">Methodology</a>
+      <a href="/disclosure/">Disclosure</a>
+    </nav>
+  </header>
+  <main id="main">
+    <p class="eyebrow">Grounded buyer guide · Updated {guide.publishedAt}</p>
+    <h1>{guide.title}</h1>
+    <p class="lead">{guide.summary}</p>
+    <p class="notice"><strong>Verification boundary:</strong> Every vendor statement below is grounded solely in linked first-party vendor documentation. No affiliate links or paid placements are active; confirm current plan terms directly with each vendor before signing contracts.</p>
+
+    {guide.sections.map((section) => (
+      <section>
+        <h2>{section.heading}</h2>
+        <p>{section.body}</p>
+      </section>
+    ))}
+
+    <section aria-labelledby="guide-checklist">
+      <h2 id="guide-checklist">Buyer verification checklist</h2>
+      <ul>
+        {guide.checklist.map((item) => (
+          <li>{item}</li>
+        ))}
+      </ul>
+    </section>
+
+    <section aria-labelledby="guide-citations">
+      <h2 id="guide-citations">First-party vendor documentation sources</h2>
+      <ul>
+        {guide.citations.map((citation) => (
+          <li><a href={citation.url} target="_blank" rel="noopener noreferrer">{citation.label} ↗</a></li>
+        ))}
+      </ul>
+    </section>
+
+    <section aria-labelledby="guide-related">
+      <h2 id="guide-related">Related comparisons &amp; software profiles</h2>
+      <ul>
+        {relatedPairs.map((pair) => (
+          <li><a href={`/compare/${pair.slug}/`}>{pair.title} Comparison Matrix</a></li>
+        ))}
+        {relatedProducts.map((product) => (
+          <li><a href={`/software/${product.id}/`}>{product.name} Software Profile</a></li>
+        ))}
+      </ul>
+    </section>
+  </main>
+  <footer>
+    <p>© {new Date().getFullYear()} StackPilot AI. Independent software research. · <a href="/disclosure/">Disclosure</a> · <a href="/privacy/">Privacy</a> · <a href="/methodology/">Methodology</a></p>
+  </footer>
+</body>
+</html>

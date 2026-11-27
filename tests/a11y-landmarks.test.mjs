@@ -21,7 +21,7 @@ const astroFiles = findAstroFiles('src/pages');
 const themeCss = readFileSync(new URL('../public/styles/executive-theme.css', import.meta.url), 'utf8');
 
 test('all page templates contain semantic landmarks, skip-link, and accessible viewport', () => {
-  assert.equal(astroFiles.length, 21, 'Expected exactly 21 Astro page templates');
+  assert.equal(astroFiles.length, 22, 'Expected exactly 22 Astro page templates');
 
   for (const file of astroFiles) {
     const html = readFileSync(file, 'utf8');
