@@ -28,13 +28,13 @@ export function buildGroundedSeoPrompt(topic, verifiedVendorFacts) {
     'STRICT GROUNDING RULES:',
     '1. Use ONLY facts present in the verified vendor documentation JSON below.',
     '2. Every citation url MUST be an exact string copied from the sourceUrl fields below (no other URLs allowed).',
-    '3. Do NOT include HTML tags (< or >), affiliate links, or unverified claims.',
+    '3. Do NOT include HTML tags (angle brackets), affiliate links, or unverified claims.',
     '4. metaDescription must be 50 to 160 characters.',
     '5. Include 2 to 6 sections (heading + body) and 3 to 6 checklist items.',
     'Verified vendor documentation JSON:',
     JSON.stringify(groundedEvidence),
     'Return STRICT JSON ONLY with keys: title, metaDescription, summary, sections, checklist, citations.'
-  ].join('\n\n');
+  ].join(' | ').replace(/[<>\x00-\x1f\x7f]+/g, ' ').trim();
 }
 
 /**
@@ -129,7 +129,7 @@ export async function runSeoContentBuilder({
     prompt,
     systemPrompt: 'You are an objective B2B software research writer. Output strict JSON only, grounded exclusively in the provided verified vendor documentation.',
     requestedTokens: 3072,
-    maxOutputTokens: 512
+    maxOutputTokens: 2048
   });
 
   if (!aiResult?.ok) {
