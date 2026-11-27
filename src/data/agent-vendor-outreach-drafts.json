@@ -1,4 +1,24 @@
 {
   "schemaVersion": 1,
-  "drafts": []
+  "drafts": [
+    {
+      "id": "outreach-ahrefs-2026-11-27",
+      "vendorSlug": "ahrefs",
+      "outreachType": "documentation_verification",
+      "status": "pending_owner_review",
+      "draftedAt": "2026-11-27",
+      "recipientTarget": "Official Partner Program Portal / Vendor Partnerships Team",
+      "subject": "Documentation verification and partner program inquiry for ToolChoice Lab directory",
+      "body": "Hello Ahrefs Partnerships Team,\n\nI am reaching out from ToolChoice Lab to verify our technical documentation regarding your platform before publishing our updated vendor profile and comparison resources.\n\nWe have documented your current pricing and feature tiers based on your official documentation:\n- Plans & historical data access: https://help.ahrefs.com/en/articles/9734884-what-is-the-difference-between-credit-based-plans-and-unlimited-credit-plans\n- Multi-seat licensing & usage governance: https://help.ahrefs.com/en/articles/3945807-about-shared-workspaces\n\nYou can review our current directory drafts here:\n- https://inspiring-chaja-cfb85f.netlify.app/software/ahrefs/\n- https://inspiring-chaja-cfb85f.netlify.app/compare/semrush-vs-ahrefs/\n\nCould you please confirm if these technical summaries are accurate? Additionally, we would like to know if Ahrefs currently offers an official partner program or preferred vendor directory listing for software evaluators.\n\nThank you for your time and assistance.",
+      "referencedOfficialUrls": [
+        "https://help.ahrefs.com/en/articles/9734884-what-is-the-difference-between-credit-based-plans-and-unlimited-credit-plans",
+        "https://help.ahrefs.com/en/articles/3945807-about-shared-workspaces"
+      ],
+      "liveSiteUrls": [
+        "https://inspiring-chaja-cfb85f.netlify.app/software/ahrefs/",
+        "https://inspiring-chaja-cfb85f.netlify.app/compare/semrush-vs-ahrefs/"
+      ],
+      "ownerApprovalRequired": true
+    }
+  ]
 }
