@@ -1,4 +1,45 @@
 {
   "schemaVersion": 1,
-  "guides": []
+  "guides": [
+    {
+      "slug": "crm-data-export-and-portability-guide",
+      "title": "CRM Data Export and Portability Buyer Guide: HubSpot vs Pipedrive",
+      "metaDescription": "Compare CRM data export, formats, and portability options between HubSpot and Pipedrive based on official vendor documentation.",
+      "publishedAt": "2026-11-27",
+      "summary": "This buyer guide examines CRM data export and portability features for HubSpot and Pipedrive, detailing supported file formats, row limits, and administrative controls.",
+      "relatedComparisonSlugs": [
+        "hubspot-vs-pipedrive"
+      ],
+      "sections": [
+        {
+          "heading": "Understanding CRM Data Export and Portability",
+          "body": "When evaluating crm portability and crm data export capabilities, organizations must review the supported file types and record limits. Both platforms allow teams to manage their data portability using standard spreadsheet formats."
+        },
+        {
+          "heading": "HubSpot Export Mechanics",
+          "body": "HubSpot export records functionality enables users to export CRM records, lists, segments, property history, and individual contact data. Exports can include optional associations and activities, and can be saved to CSV, XLS, or XLSX formats with optional Super Admin export approvals."
+        },
+        {
+          "heading": "Pipedrive Export and Storage Specifications",
+          "body": "Pipedrive csv export capabilities support CSV, XLS, and XLSX spreadsheet import and export. Imports handle up to 50 MB or 50,000 rows per import, while companies can utilize 30-day deleted-deal recovery and store up to 300,000 archived leads and deals."
+        }
+      ],
+      "checklist": [
+        "Verify supported export file formats such as CSV, XLS, and XLSX.",
+        "Review file size and row limits for data imports and exports.",
+        "Check for administrative controls like Super Admin export approvals.",
+        "Examine historical data retention and deleted record recovery periods."
+      ],
+      "citations": [
+        {
+          "label": "HubSpot - Export Records Docs",
+          "url": "https://knowledge.hubspot.com/import-and-export/export-records"
+        },
+        {
+          "label": "Pipedrive - Storage & Export Docs",
+          "url": "https://support.pipedrive.com/en/article/how-can-i-free-up-space"
+        }
+      ]
+    }
+  ]
 }
