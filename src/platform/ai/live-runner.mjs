@@ -112,6 +112,7 @@ export async function executeLiveRoutedPrompt(input) {
         provider: model?.provider ?? 'unknown',
         ok: false,
         code: 'adapter_unavailable',
+        httpStatus: null,
         retryable: true
       }));
       if (model) model.circuitOpen = true;
@@ -132,6 +133,7 @@ export async function executeLiveRoutedPrompt(input) {
         provider: model.provider,
         ok: true,
         code: null,
+        httpStatus: 200,
         retryable: false
       }));
 
@@ -166,6 +168,7 @@ export async function executeLiveRoutedPrompt(input) {
         provider: model.provider,
         ok: false,
         code: providerErr.code,
+        httpStatus: providerErr.httpStatus ?? null,
         retryable: providerErr.retryable
       }));
 
@@ -173,7 +176,10 @@ export async function executeLiveRoutedPrompt(input) {
       if (providerErr.code === 'rate_limited') {
         model.rateLimited = true;
       }
-      if (!providerErr.retryable) {
+      const canFallback = providerErr.retryable ||
+        providerErr.code === 'invalid_provider_response' ||
+        providerErr.code === 'model_not_found';
+      if (!canFallback) {
         break;
       }
     }
