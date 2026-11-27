@@ -1,0 +1,86 @@
+name: Agent 5 — Weekly CEO Briefing
+
+on:
+  schedule:
+    - cron: '30 3 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: agent-ceo-briefing
+  cancel-in-progress: false
+
+jobs:
+  weekly-ceo-briefing:
+    name: Generate Weekly CEO Briefing
+    runs-on: ubuntu-24.04
+    env:
+      STACKPILOT_ALLOW_LIVE_CEO_BRIEF: 'true'
+      STACKPILOT_ALLOW_LIVE_AI: 'true'
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run CEO briefing agent
+        run: |
+          node scripts/agent-ceo-briefing.mjs --live --write --report-out /tmp/ceo-briefing-report.md
+          cat /tmp/ceo-briefing-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check for changes to agent-ceo-briefings.json
+        id: diff
+        run: |
+          if git diff --quiet src/data/agent-ceo-briefings.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run full verification before PR
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          node --test tests/*.test.mjs
+          npm run build
+          node scripts/check-build.mjs
+          node scripts/release-preflight.mjs --json
+
+      - name: Commit and open or update PR
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          BRANCH="agent/ceo-briefing-${DATE}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add src/data/agent-ceo-briefings.json
+          git commit -m "chore(agent-5): weekly CEO briefing [${DATE}] [skip ci]"
+          git push -u origin "$BRANCH"
+          EXISTING=$(gh pr list --head "$BRANCH" --base main --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING" ]; then
+            gh pr edit "$EXISTING" --body-file /tmp/ceo-briefing-report.md
+          else
+            gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "Agent 5: Weekly CEO Briefing [${DATE}]" \
+              --body-file /tmp/ceo-briefing-report.md
+          fi
