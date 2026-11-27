@@ -1,0 +1,83 @@
+name: Agent 1 — Research & Pricing Monitor
+on:
+  schedule:
+    - cron: '30 2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: agent-research-monitor
+  cancel-in-progress: false
+
+jobs:
+  monitor-vendor-docs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          persist-credentials: true
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.23.4'
+          package-manager-cache: false
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run Agent 1 daily vendor documentation monitor
+        env:
+          STACKPILOT_ALLOW_LIVE_MONITOR: 'true'
+          STACKPILOT_ALLOW_LIVE_AI: 'true'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: node scripts/agent-research-monitor.mjs --live --update-fingerprints --report-out /tmp/vendor-monitor-report.md
+
+      - name: Append report to GitHub Step Summary
+        if: always()
+        run: |
+          if [ -f /tmp/vendor-monitor-report.md ]; then
+            cat /tmp/vendor-monitor-report.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Check for fingerprint changes
+        id: diff
+        run: |
+          if git diff --quiet src/data/vendor-doc-fingerprints.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No vendor documentation changes detected"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate repository before opening PR
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          node --test tests/*.test.mjs
+          npm run build
+          node scripts/release-preflight.mjs --json
+
+      - name: Create or update Pull Request with updated baselines
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          BRANCH="agent/research-monitor-${DATE}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add src/data/vendor-doc-fingerprints.json
+          git commit -m "chore(agent-1): update vendor documentation fingerprints (${DATE})"
+          git push -u origin "$BRANCH" --force-with-lease
+          EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
+          if [ -n "$EXISTING_PR" ]; then
+            gh pr edit "$EXISTING_PR" --body-file /tmp/vendor-monitor-report.md
+          else
+            gh pr create --base main --head "$BRANCH" --title "chore(agent-1): vendor documentation & pricing monitor (${DATE})" --body-file /tmp/vendor-monitor-report.md
+          fi
