@@ -7,6 +7,13 @@ import { validateAgentBuyerGuides } from '../src/lib/agent-buyer-guides.mjs';
 import { buildSitemapXml } from '../src/lib/sitemap-sync.mjs';
 import { runSeoContentBuilder } from '../src/platform/agents/seo-content-builder.mjs';
 import { auditLocalControlPlaneExport } from '../src/lib/local-control-plane-export.mjs';
+import { routeAiRequest } from '../src/platform/ai/router.mjs';
+import {
+  createFreeTierModelRegistry,
+  createGeminiFreeAdapter,
+  createOpenAIFallbackAdapter
+} from '../src/platform/ai/live-adapters.mjs';
+import { executeLiveRoutedPrompt } from '../src/platform/ai/live-runner.mjs';
 
 const NOW = '2026-11-27T03:30:00.000Z';
 const verifiedFacts = JSON.parse(readFileSync(new URL('../src/data/verified-vendor-facts.json', import.meta.url), 'utf8'));
@@ -208,4 +215,82 @@ test('static leakage guard blocks Phase 13 SEO builder files and markers from di
   }
   const markerRes = auditLocalControlPlaneExport([{ path: 'index.html', content: 'STACKPILOT_ALLOW_LIVE_SEO' }]);
   assert.ok(markerRes.violations.length > 0);
+});
+
+test('runSeoContentBuilder wires cleanly through real executeLiveRoutedPrompt, routeAiRequest, and Gemini adapter with mock fetchImpl', async () => {
+  const guide = sampleGuide();
+  const capturedBodies = [];
+  const mockFetch = async (url, init) => {
+    assert.match(String(url), /^https:\/\/generativelanguage\.googleapis\.com\/v1beta\/models\/gemini-3\.5-flash-lite:generateContent$/);
+    capturedBodies.push(JSON.parse(init.body));
+    return {
+      ok: true,
+      status: 200,
+      async text() {
+        return JSON.stringify({
+          candidates: [
+            {
+              finishReason: 'STOP',
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify({
+                      title: guide.title,
+                      metaDescription: guide.metaDescription,
+                      summary: guide.summary,
+                      sections: guide.sections,
+                      checklist: guide.checklist,
+                      citations: guide.citations
+                    })
+                  }
+                ]
+              }
+            }
+          ],
+          usageMetadata: {
+            promptTokenCount: 420,
+            candidatesTokenCount: 310
+          }
+        });
+      }
+    };
+  };
+
+  const adapters = {
+    gemini: createGeminiFreeAdapter({ apiKey: 'test-gemini-key-123456', fetchImpl: mockFetch }),
+    openai: createOpenAIFallbackAdapter({ apiKey: '', fetchImpl: mockFetch })
+  };
+  const registry = createFreeTierModelRegistry();
+
+  const res = await runSeoContentBuilder({
+    backlog: backlogData,
+    existingGuides: guidesData,
+    verifiedVendorFacts: verifiedFacts,
+    allowLiveSeo: true,
+    allowLiveAi: true,
+    now: NOW,
+    runAiPrompt: (request) => executeLiveRoutedPrompt({
+      router: { routeAiRequest },
+      adapters,
+      registry,
+      request: {
+        taskClass: request.taskClass,
+        prompt: request.prompt,
+        systemPrompt: request.systemPrompt,
+        requestedTokens: request.requestedTokens,
+        maxOutputTokens: Math.max(Number(request.maxOutputTokens) || 0, 2048)
+      },
+      allowLiveNetwork: true,
+      env: { STACKPILOT_ALLOW_LIVE_AI: 'true' },
+      now: NOW
+    })
+  });
+
+  assert.equal(res.ok, true);
+  assert.equal(res.status, 'guide_drafted');
+  assert.equal(res.selectedModel, 'gemini-3-5-flash-lite');
+  assert.equal(res.estimatedCostMinor, 0);
+  assert.equal(capturedBodies.length, 1);
+  assert.equal(capturedBodies[0].generationConfig.maxOutputTokens, 2048);
+  assert.equal(res.updatedGuides.guides.length, 1);
 });

@@ -8,7 +8,7 @@ import {
   runSeoContentBuilder,
   formatSeoBuilderReportMarkdown
 } from '../src/platform/agents/seo-content-builder.mjs';
-import { routeAiRequest } from '../src/platform/ai/router.mjs';
+import { routeAiRequest, redactSecrets } from '../src/platform/ai/router.mjs';
 import {
   createFreeTierModelRegistry,
   createGeminiFreeAdapter,
@@ -66,7 +66,13 @@ if (!liveMode) {
       router: { routeAiRequest },
       adapters,
       registry,
-      request,
+      request: {
+        taskClass: request.taskClass,
+        prompt: request.prompt,
+        systemPrompt: request.systemPrompt,
+        requestedTokens: request.requestedTokens,
+        maxOutputTokens: Math.max(Number(request.maxOutputTokens) || 0, 2048)
+      },
       allowLiveNetwork: allowLiveAi,
       env: process.env,
       now
@@ -84,17 +90,20 @@ if (!liveMode) {
     writeFileSync(reportOut, markdown, 'utf8');
   }
 
+  const sanitizedReason = result.reason ? redactSecrets(String(result.reason)) : null;
+
   process.stdout.write(JSON.stringify({
     mode: 'live',
     ok: result.ok,
     status: result.status,
-    reason: result.reason ?? null,
+    reason: sanitizedReason,
     generatedSlug: result.generatedGuide?.slug ?? null,
     estimatedCostMinor: result.estimatedCostMinor,
     executedAt: result.executedAt
   }, null, 2) + '\n');
 
   if (!result.ok) {
+    process.stderr.write(`[agent-seo-builder] failed: ${sanitizedReason ?? 'unknown_error'}\n`);
     process.exitCode = 1;
   }
 }

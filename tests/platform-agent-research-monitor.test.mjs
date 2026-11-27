@@ -11,6 +11,13 @@ import {
   formatMonitorReportMarkdown
 } from '../src/platform/agents/research-monitor.mjs';
 import { auditLocalControlPlaneExport } from '../src/lib/local-control-plane-export.mjs';
+import { routeAiRequest } from '../src/platform/ai/router.mjs';
+import {
+  createFreeTierModelRegistry,
+  createGeminiFreeAdapter,
+  createOpenAIFallbackAdapter
+} from '../src/platform/ai/live-adapters.mjs';
+import { executeLiveRoutedPrompt } from '../src/platform/ai/live-runner.mjs';
 
 const NOW = '2026-11-27T02:30:00.000Z';
 const verifiedFacts = JSON.parse(readFileSync(new URL('../src/data/verified-vendor-facts.json', import.meta.url), 'utf8'));
@@ -225,4 +232,86 @@ test('static leakage guard blocks Phase 12 monitor files and markers from dist/'
   }
   const markerRes = auditLocalControlPlaneExport([{ path: 'index.html', content: 'STACKPILOT_ALLOW_LIVE_MONITOR' }]);
   assert.ok(markerRes.violations.length > 0);
+});
+
+test('runResearchMonitor wires cleanly through real executeLiveRoutedPrompt and routeAiRequest on content drift', async () => {
+  const entries = collectMonitoredVendorUrls(verifiedFacts);
+  const baselineUrls = {};
+  const priorHash = computeDocumentFingerprint('<html><body>Old pricing</body></html>').contentHash;
+  for (const entry of entries) {
+    baselineUrls[entry.url] = { contentHash: priorHash, lastCheckedAt: '2026-11-26T02:30:00.000Z' };
+  }
+
+  let aiCalls = 0;
+  const mockGeminiFetch = async () => {
+    aiCalls++;
+    return {
+      ok: true,
+      status: 200,
+      async text() {
+        return JSON.stringify({
+          candidates: [
+            {
+              finishReason: 'STOP',
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify({
+                      meaningfulChange: true,
+                      summary: 'Pricing tier wording updated.',
+                      affectedRows: ['pricing'],
+                      recommendedAction: 'Review vendor pricing page.'
+                    })
+                  }
+                ]
+              }
+            }
+          ],
+          usageMetadata: { promptTokenCount: 150, candidatesTokenCount: 40 }
+        });
+      }
+    };
+  };
+
+  const adapters = {
+    gemini: createGeminiFreeAdapter({ apiKey: 'test-gemini-key-123456', fetchImpl: mockGeminiFetch }),
+    openai: createOpenAIFallbackAdapter({ apiKey: '', fetchImpl: mockGeminiFetch })
+  };
+  const registry = createFreeTierModelRegistry();
+
+  const res = await runResearchMonitor({
+    verifiedFacts,
+    fingerprints: { schemaVersion: 1, updatedAt: '2026-11-26T02:30:00.000Z', urls: baselineUrls },
+    fetchImpl: async (url) => {
+      if (url === entries[0].url) {
+        return { ok: true, status: 200, async text() { return '<html><body>Updated pricing tier $29/mo</body></html>'; } };
+      }
+      return { ok: true, status: 200, async text() { return '<html><body>Old pricing</body></html>'; } };
+    },
+    allowLiveMonitor: true,
+    allowLiveAi: true,
+    now: NOW,
+    runAiPrompt: (request) => executeLiveRoutedPrompt({
+      router: { routeAiRequest },
+      adapters,
+      registry,
+      request: {
+        taskClass: request.taskClass,
+        prompt: request.prompt,
+        systemPrompt: request.systemPrompt,
+        requestedTokens: request.requestedTokens,
+        maxOutputTokens: request.maxOutputTokens
+      },
+      allowLiveNetwork: true,
+      env: { STACKPILOT_ALLOW_LIVE_AI: 'true' },
+      now: NOW
+    })
+  });
+
+  assert.equal(res.ok, true);
+  assert.equal(res.counts.changed, 1);
+  assert.equal(aiCalls, 1);
+  const changedItem = res.results.find(r => r.status === 'changed');
+  assert.equal(changedItem.aiAnalysis.meaningfulChange, true);
+  assert.equal(changedItem.aiAnalysis.summary, 'Pricing tier wording updated.');
 });

@@ -6,7 +6,7 @@ import {
   runResearchMonitor,
   formatMonitorReportMarkdown
 } from '../src/platform/agents/research-monitor.mjs';
-import { routeAiRequest } from '../src/platform/ai/router.mjs';
+import { routeAiRequest, redactSecrets } from '../src/platform/ai/router.mjs';
 import {
   createFreeTierModelRegistry,
   createGeminiFreeAdapter,
@@ -57,7 +57,13 @@ if (!liveMode) {
       router: { routeAiRequest },
       adapters,
       registry,
-      request,
+      request: {
+        taskClass: request.taskClass,
+        prompt: request.prompt,
+        systemPrompt: request.systemPrompt,
+        requestedTokens: request.requestedTokens,
+        maxOutputTokens: request.maxOutputTokens
+      },
       allowLiveNetwork: allowLiveAi,
       env: process.env,
       now
@@ -74,16 +80,19 @@ if (!liveMode) {
     writeFileSync(reportOut, markdown, 'utf8');
   }
 
+  const sanitizedReason = result.reason ? redactSecrets(String(result.reason)) : null;
+
   process.stdout.write(JSON.stringify({
     mode: 'live',
     ok: result.ok,
-    reason: result.reason ?? null,
+    reason: sanitizedReason,
     counts: result.counts,
     estimatedCostMinor: result.estimatedCostMinor,
     updatedAt: result.updatedAt
   }, null, 2) + '\n');
 
   if (!result.ok) {
+    process.stderr.write(`[agent-research-monitor] failed: ${sanitizedReason ?? 'unknown_error'}\n`);
     process.exitCode = 1;
   }
 }

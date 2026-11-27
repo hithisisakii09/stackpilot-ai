@@ -356,7 +356,7 @@ export async function runResearchMonitor({
         'New normalized page excerpt:',
         fetched.excerpt,
         'Return strict JSON only: {"meaningfulChange": boolean, "summary": string, "affectedRows": string[], "recommendedAction": string}'
-      ].join('\n\n');
+      ].join(' | ').replace(/[<>\x00-\x1f\x7f]+/g, ' ').trim();
 
       const aiResult = await runAiPrompt({
         taskClass: 'extraction',
