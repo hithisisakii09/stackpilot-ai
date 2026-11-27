@@ -2,11 +2,13 @@
 import products from '../../data/products.json';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
 import { canonicalUrl } from '../../lib/site-origin.mjs';
+import { getVerifiedVendorFactsForProduct } from '../../lib/verified-vendor-facts.mjs';
 
 export function getStaticPaths() {
   return products.map((product) => ({ params: { id: product.id }, props: { product } }));
 }
 const { product } = Astro.props;
+const verifiedDocs = getVerifiedVendorFactsForProduct(product.id);
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -86,6 +88,31 @@ const guide = categoryGuides[product.category];
 <p>Team-size suitability: {product.supportedTeams.length ? product.supportedTeams.join(', ') : 'Not yet verified'}</p>
 <p>Budget compatibility: {product.budgetTiers.length ? product.budgetTiers.join(', ') : 'Not yet verified'}</p>
 <p>Pricing: Consult the provider for current plans, currency, taxes, and limits. StackPilot AI has not verified pricing.</p>
+</section>
+
+<section aria-labelledby="verified-docs">
+  <h2 id="verified-docs">First-party vendor documentation snapshot (checked {verifiedDocs.checkedAt})</h2>
+  <p>Owner-reviewed excerpts from {product.name}'s official documentation. Confirm current pricing, quotas, and contract terms directly via the linked official documentation.</p>
+  <div class="table-scroll" role="region" tabindex="0" aria-label={`First-party vendor documentation snapshot for ${product.name}, scroll horizontally for all columns`}>
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Dimension</th>
+          <th scope="col">Official documentation excerpt</th>
+          <th scope="col">Primary source</th>
+        </tr>
+      </thead>
+      <tbody>
+        {verifiedDocs.rows.map((row) => (
+          <tr>
+            <th scope="row"><strong>{row.dimension}</strong></th>
+            <td>{row.entry.summary}</td>
+            <td><a href={row.entry.sourceUrl} target="_blank" rel="noopener noreferrer">{row.entry.sourceLabel} ↗</a></td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 </section>
 
 {comparison && (

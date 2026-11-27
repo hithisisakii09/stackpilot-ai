@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { SITE_ORIGIN, canonicalUrl } from '../src/lib/site-origin.mjs';
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
+const agentGuides = JSON.parse(readFileSync(new URL('../src/data/agent-buyer-guides.json', import.meta.url), 'utf8')).guides;
 const pages = [
   'index.html',
   'compare/index.html',
@@ -27,7 +28,8 @@ const pages = [
   'compare/hubspot-vs-pipedrive/index.html',
   'compare/semrush-vs-ahrefs/index.html',
   'compare/kinsta-vs-cloudways/index.html',
-  ...products.map(p => `software/${p.id}/index.html`)
+  ...products.map(p => `software/${p.id}/index.html`),
+  ...agentGuides.map(g => `guides/${g.slug}/index.html`)
 ];
 const privateRoutes = new Set([
   'research/index.html',
