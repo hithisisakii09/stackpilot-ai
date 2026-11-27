@@ -33,8 +33,87 @@ export function buildGroundedSeoPrompt(topic, verifiedVendorFacts) {
     '5. Include 2 to 6 sections (heading + body) and 3 to 6 checklist items.',
     'Verified vendor documentation JSON:',
     JSON.stringify(groundedEvidence),
-    'Return STRICT JSON ONLY with keys: title, metaDescription, summary, sections, checklist, citations.'
+    'Return STRICT JSON ONLY matching this schema: {"title":"string","metaDescription":"50-160 char string","summary":"string","sections":[{"heading":"string","body":"string"}],"checklist":["string"],"citations":[{"label":"Vendor - Doc topic","url":"https://..."}]}.'
   ].join(' | ').replace(/[<>\x00-\x1f\x7f]+/g, ' ').trim();
+}
+
+function buildSourceLabelMap(verifiedVendorFacts) {
+  const validated = validateVerifiedVendorFacts(verifiedVendorFacts, { today: '9999-12-31' });
+  const map = new Map();
+  for (const pair of Object.values(validated)) {
+    for (const row of pair.rows) {
+      map.set(row.first.sourceUrl, row.first.sourceLabel);
+      map.set(row.second.sourceUrl, row.second.sourceLabel);
+    }
+  }
+  return map;
+}
+
+function deriveHostnameLabel(rawUrl) {
+  try {
+    return new URL(rawUrl).hostname;
+  } catch {
+    return 'Vendor documentation';
+  }
+}
+
+function normalizeCitations(rawCitations, urlLabelMap) {
+  if (!Array.isArray(rawCitations)) return rawCitations;
+  const seenUrls = new Set();
+  const normalized = [];
+  for (const entry of rawCitations) {
+    let item = entry;
+    if (typeof entry === 'string') {
+      const url = entry.trim();
+      item = { label: urlLabelMap.get(url) ?? deriveHostnameLabel(url), url };
+    } else if (entry && typeof entry === 'object' && !Array.isArray(entry)) {
+      const url = typeof entry.url === 'string' ? entry.url.trim() : entry.url;
+      const rawLabel = entry.label ?? entry.title ?? entry.name;
+      const label = typeof rawLabel === 'string' && rawLabel.trim()
+        ? rawLabel.trim()
+        : (typeof url === 'string' ? (urlLabelMap.get(url) ?? deriveHostnameLabel(url)) : rawLabel);
+      item = { label, url };
+    }
+    const dedupeKey = item && typeof item === 'object' && typeof item.url === 'string' ? item.url : null;
+    if (dedupeKey) {
+      if (seenUrls.has(dedupeKey)) continue;
+      seenUrls.add(dedupeKey);
+    }
+    normalized.push(item);
+  }
+  return normalized;
+}
+
+function normalizeSections(rawSections) {
+  if (!Array.isArray(rawSections)) return rawSections;
+  return rawSections.map(sec => {
+    if (!sec || typeof sec !== 'object' || Array.isArray(sec)) return sec;
+    return {
+      heading: sec.heading ?? sec.title,
+      body: sec.body ?? sec.content ?? sec.text
+    };
+  });
+}
+
+function normalizeChecklist(rawChecklist) {
+  if (!Array.isArray(rawChecklist)) return rawChecklist;
+  return rawChecklist.map(item => {
+    if (typeof item === 'string') return item.trim();
+    if (item && typeof item === 'object' && !Array.isArray(item)) {
+      const text = item.text ?? item.item ?? item.label ?? item.title;
+      return typeof text === 'string' ? text.trim() : item;
+    }
+    return item;
+  });
+}
+
+function trimMetaDescriptionWordBoundary(rawMeta) {
+  if (typeof rawMeta !== 'string') return rawMeta;
+  const trimmed = rawMeta.trim();
+  if (trimmed.length <= 160) return trimmed;
+  const slice = trimmed.slice(0, 160);
+  const lastSpace = slice.lastIndexOf(' ');
+  return (lastSpace >= 50 ? slice.slice(0, lastSpace) : slice).trim();
 }
 
 /**
@@ -46,17 +125,18 @@ export function parseAndValidateAiGuideResponse(rawText, topic, verifiedVendorFa
   }
   const cleaned = rawText.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
   const parsed = JSON.parse(cleaned);
+  const urlLabelMap = buildSourceLabelMap(verifiedVendorFacts);
 
   const candidateGuide = {
     slug: topic.slug,
     title: parsed.title,
-    metaDescription: parsed.metaDescription,
+    metaDescription: trimMetaDescriptionWordBoundary(parsed.metaDescription),
     publishedAt: todayIso,
     summary: parsed.summary,
     relatedComparisonSlugs: [...topic.relatedComparisonSlugs],
-    sections: parsed.sections,
-    checklist: parsed.checklist,
-    citations: parsed.citations
+    sections: normalizeSections(parsed.sections),
+    checklist: normalizeChecklist(parsed.checklist),
+    citations: normalizeCitations(parsed.citations, urlLabelMap)
   };
 
   const validated = validateAgentBuyerGuides(

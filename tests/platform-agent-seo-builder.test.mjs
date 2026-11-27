@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { getVerifiedVendorFactsForProduct } from '../src/lib/verified-vendor-facts.mjs';
 import { validateAgentBuyerGuides } from '../src/lib/agent-buyer-guides.mjs';
 import { buildSitemapXml } from '../src/lib/sitemap-sync.mjs';
-import { runSeoContentBuilder } from '../src/platform/agents/seo-content-builder.mjs';
+import { runSeoContentBuilder, parseAndValidateAiGuideResponse } from '../src/platform/agents/seo-content-builder.mjs';
 import { auditLocalControlPlaneExport } from '../src/lib/local-control-plane-export.mjs';
 import { routeAiRequest } from '../src/platform/ai/router.mjs';
 import {
@@ -293,4 +293,59 @@ test('runSeoContentBuilder wires cleanly through real executeLiveRoutedPrompt, r
   assert.equal(capturedBodies.length, 1);
   assert.equal(capturedBodies[0].generationConfig.maxOutputTokens, 2048);
   assert.equal(res.updatedGuides.guides.length, 1);
+});
+
+test('parseAndValidateAiGuideResponse normalizes string-array citations and shapes while keeping strict URL allowlist', () => {
+  const topic = backlogData.topics[0];
+  const guide = sampleGuide();
+  const normalized = parseAndValidateAiGuideResponse(JSON.stringify({
+    title: guide.title,
+    metaDescription: 'Compare HubSpot and Pipedrive CSV and XLSX export capabilities, record limits, Super Admin export approvals, and archive portability checks before CRM migration planning.',
+    summary: guide.summary,
+    sections: [
+      { title: guide.sections[0].heading, content: guide.sections[0].body },
+      { title: guide.sections[1].heading, text: guide.sections[1].body }
+    ],
+    checklist: [
+      { text: guide.checklist[0] },
+      { item: guide.checklist[1] },
+      guide.checklist[2]
+    ],
+    citations: [
+      'https://knowledge.hubspot.com/import-and-export/export-records',
+      'https://knowledge.hubspot.com/import-and-export/export-records',
+      { title: 'Pipedrive Storage & Export Docs', url: 'https://support.pipedrive.com/en/article/how-can-i-free-up-space' }
+    ]
+  }), topic, verifiedFacts, '2026-11-27');
+
+  assert.ok(normalized.metaDescription.length <= 160);
+  assert.ok(normalized.metaDescription.length >= 50);
+  assert.equal(normalized.citations.length, 2);
+  assert.deepEqual(normalized.citations[0], {
+    label: 'HubSpot Export Records Docs',
+    url: 'https://knowledge.hubspot.com/import-and-export/export-records'
+  });
+  assert.deepEqual(normalized.citations[1], {
+    label: 'Pipedrive Storage & Export Docs',
+    url: 'https://support.pipedrive.com/en/article/how-can-i-free-up-space'
+  });
+
+  const validated = validateAgentBuyerGuides({ schemaVersion: 1, guides: [normalized] }, verifiedFacts, { today: '2026-11-27' });
+  assert.equal(validated.guides.length, 1);
+});
+
+test('parseAndValidateAiGuideResponse rejects hallucinated string URLs in citations fail-closed', () => {
+  const topic = backlogData.topics[0];
+  const guide = sampleGuide();
+  assert.throws(
+    () => parseAndValidateAiGuideResponse(JSON.stringify({
+      title: guide.title,
+      metaDescription: guide.metaDescription,
+      summary: guide.summary,
+      sections: guide.sections,
+      checklist: guide.checklist,
+      citations: ['https://invented.example/pricing']
+    }), topic, verifiedFacts, '2026-11-27'),
+    /citation|verified|allowlist/i
+  );
 });
