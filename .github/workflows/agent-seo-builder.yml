@@ -69,13 +69,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           DATE=$(date -u +%Y-%m-%d)
-          BRANCH="agent/seo-builder-${DATE}"
+          BRANCH="agent/seo-builder-${DATE}-${GITHUB_RUN_ID}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add src/data/agent-buyer-guides.json src/data/seo-topic-backlog.json public/sitemap.xml
           git commit -m "feat(agent-2): publish grounded buyer guide (${DATE})"
-          git push -u origin "$BRANCH" --force-with-lease
+          git push -u origin "${BRANCH}"
           EXISTING_PR=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number')
           if [ -n "$EXISTING_PR" ]; then
             gh pr edit "$EXISTING_PR" --body-file /tmp/seo-builder-report.md
