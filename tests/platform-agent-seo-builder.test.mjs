@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { getVerifiedVendorFactsForProduct } from '../src/lib/verified-vendor-facts.mjs';
 import { validateAgentBuyerGuides } from '../src/lib/agent-buyer-guides.mjs';
 import { buildSitemapXml } from '../src/lib/sitemap-sync.mjs';
+import { SITE_ORIGIN } from '../src/lib/site-origin.mjs';
 import { runSeoContentBuilder, parseAndValidateAiGuideResponse } from '../src/platform/agents/seo-content-builder.mjs';
 import { auditLocalControlPlaneExport } from '../src/lib/local-control-plane-export.mjs';
 import { routeAiRequest } from '../src/platform/ai/router.mjs';
@@ -207,7 +208,7 @@ test('runSeoContentBuilder parses fenced AI JSON, appends guide, updates backlog
   assert.equal(res.updatedBacklog.topics[0].generatedAt, '2026-11-27');
 
   const xml = buildSitemapXml(res.updatedGuides);
-  assert.match(xml, /https:\/\/inspiring-chaja-cfb85f\.netlify\.app\/guides\/crm-data-export-and-portability-guide\//);
+  assert.ok(xml.includes(`${SITE_ORIGIN}/guides/crm-data-export-and-portability-guide/`));
   assert.doesNotMatch(xml, /private-uat-worksheet|preview-build|\/research\//);
 });
 

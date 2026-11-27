@@ -2,7 +2,7 @@
  * Single source of truth for the public static site origin.
  * Updating to a custom domain later requires changing only SITE_ORIGIN here.
  */
-export const SITE_ORIGIN = 'https://inspiring-chaja-cfb85f.netlify.app';
+export const SITE_ORIGIN = 'https://stackpilot-ai.hithisisakii09.workers.dev';
 
 export function canonicalUrl(route = '/') {
   const normalized = route.startsWith('/') ? route : '/' + route;

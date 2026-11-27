@@ -30,7 +30,7 @@ export function buildGroundedSeoPrompt(topic, verifiedVendorFacts) {
     '2. Every citation url MUST be an exact string copied from the sourceUrl fields below (no other URLs allowed).',
     '3. Do NOT include HTML tags (angle brackets), affiliate links, or unverified claims.',
     '4. metaDescription must be 50 to 160 characters.',
-    '5. Include 2 to 6 sections (heading + body) and 3 to 6 checklist items.',
+    '5. Include 4 to 6 thorough buyer-decision sections (each 140-220 words with concrete trade-offs, edge cases, and team-size scenarios strictly grounded in the verified vendor facts below, targeting ~850-1200 words total) and 3 to 6 checklist items.',
     'Verified vendor documentation JSON:',
     JSON.stringify(groundedEvidence),
     'Return STRICT JSON ONLY matching this schema: {"title":"string","metaDescription":"50-160 char string","summary":"string","sections":[{"heading":"string","body":"string"}],"checklist":["string"],"citations":[{"label":"Vendor - Doc topic","url":"https://..."}]}.'

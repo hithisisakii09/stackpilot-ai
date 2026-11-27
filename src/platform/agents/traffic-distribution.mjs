@@ -8,6 +8,7 @@
  */
 
 import { createHash } from 'node:crypto';
+import { SITE_ORIGIN } from '../../lib/site-origin.mjs';
 
 // ── Constants ─────────────────────────────────────────────────────────────
 
@@ -206,7 +207,7 @@ export function selectNextContentForDistribution({ guides, verifiedVendorFacts, 
       targetSlug: guide.slug,
       targetType: 'guide',
       title: guide.title || guide.slug,
-      canonicalUrl: `https://inspiring-chaja-cfb85f.netlify.app/guides/${guide.slug}/`,
+      canonicalUrl: `${SITE_ORIGIN}/guides/${guide.slug}/`,
       referencedOfficialUrls: (guide.citations || []).map(c => c.url).filter(Boolean),
     });
   }
@@ -217,7 +218,7 @@ export function selectNextContentForDistribution({ guides, verifiedVendorFacts, 
       targetSlug: slug,
       targetType: 'comparison',
       title: slug,
-      canonicalUrl: `https://inspiring-chaja-cfb85f.netlify.app/compare/${slug}/`,
+      canonicalUrl: `${SITE_ORIGIN}/compare/${slug}/`,
       referencedOfficialUrls: (verifiedVendorFacts[slug]?.rows || []).flatMap(r => [r.first?.sourceUrl, r.second?.sourceUrl]).filter(Boolean),
     });
   }
@@ -388,7 +389,7 @@ export function extractGscTopicOpportunities({ gscRows, backlog, guides } = {}) 
  * @param {object} opts.guides - agent-buyer-guides.json data
  * @param {object} opts.existingPacks - agent-distribution-drafts.json data
  * @param {object} opts.verifiedVendorFacts - verified-vendor-facts.json data
- * @param {string} opts.siteOrigin - e.g. 'https://inspiring-chaja-cfb85f.netlify.app'
+ * @param {string} opts.siteOrigin - e.g. 'https://stackpilot-ai.hithisisakii09.workers.dev'
  * @param {string|null} opts.preferredSlug - optional override for target selection
  * @param {function} opts.runAiPrompt - async (request) => string
  * @param {boolean} opts.allowLiveDistribution

@@ -71,7 +71,7 @@ if (!liveMode) {
         prompt: request.prompt,
         systemPrompt: request.systemPrompt,
         requestedTokens: request.requestedTokens,
-        maxOutputTokens: Math.max(Number(request.maxOutputTokens) || 0, 2048)
+        maxOutputTokens: Math.max(Number(request.maxOutputTokens) || 0, 3072)
       },
       allowLiveNetwork: allowLiveAi,
       env: process.env,

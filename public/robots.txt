@@ -4,4 +4,4 @@ Disallow: /tools/private-uat-worksheet/
 Disallow: /preview-build/
 Disallow: /research/
 
-Sitemap: https://inspiring-chaja-cfb85f.netlify.app/sitemap.xml
+Sitemap: https://stackpilot-ai.hithisisakii09.workers.dev/sitemap.xml
