@@ -1,0 +1,27 @@
+name: AI Router Smoke (Live Free Tier)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ai-router-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22.23.4'
+          package-manager-cache: false
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Run live free-tier AI router smoke check
+        env:
+          STACKPILOT_ALLOW_LIVE_AI: 'true'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: node scripts/ai-router-smoke.mjs --live
