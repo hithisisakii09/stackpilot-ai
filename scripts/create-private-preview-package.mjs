@@ -9,6 +9,7 @@ import { join, relative } from 'node:path';
 import { buildPrivatePreviewManifest } from '../src/lib/preview-package.mjs';
 import { buildPublisherReadiness } from '../src/lib/publisher-readiness.mjs';
 import { buildPrivatePreviewUatPacket,formatPrivatePreviewUatPacketMarkdown,formatPrivatePreviewUatWorksheetCsv } from '../src/lib/preview-uat-packet.mjs';
+import { SITE_ORIGIN } from '../src/lib/site-origin.mjs';
 
 const root = join(process.cwd(), 'dist');
 assert.ok(existsSync(root), 'Build dist first; do not deploy without validation');
@@ -58,7 +59,8 @@ if (policy.productionLaunchApproved === true) {
   assert.match(robotsTxt, /^Disallow:\s*\/tools\/private-uat-worksheet\/$/m);
   assert.match(robotsTxt, /^Disallow:\s*\/preview-build\/$/m);
   assert.match(robotsTxt, /^Disallow:\s*\/research\/$/m);
-  assert.match(robotsTxt, /^Sitemap:\s*https:\/\/inspiring-chaja-cfb85f\.netlify\.app\/sitemap\.xml$/m);
+  const escapedOrigin = SITE_ORIGIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  assert.match(robotsTxt, new RegExp(`^Sitemap:\\s*${escapedOrigin}/sitemap\\.xml$`, 'm'));
 } else {
   assert.match(robotsTxt, /Disallow:\s*\//);
 }
