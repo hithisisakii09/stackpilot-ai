@@ -24,18 +24,25 @@ function cloneCatalog() {
 test('src/data/extended-catalog.json passes validateExtendedCatalog and returns deeply frozen objects', () => {
   const validated = validateExtendedCatalog(rawCatalog, { today: '2026-11-28' });
   assert.strictEqual(validated.schemaVersion, 1);
-  assert.strictEqual(validated.products.length, 7);
-  assert.strictEqual(validated.comparisons.length, 6);
+  assert.strictEqual(validated.products.length, rawCatalog.products.length);
+  assert.strictEqual(validated.comparisons.length, rawCatalog.comparisons.length);
+  assert.ok(validated.products.length >= 14, 'Includes Wave 1 + Wave 2 products (14+)');
+  assert.ok(validated.comparisons.length >= 13, 'Includes Wave 1 + Wave 2 comparisons (13+)');
   assert.ok(Object.isFrozen(validated));
   assert.ok(Object.isFrozen(validated.products));
   assert.ok(Object.isFrozen(validated.products[0]));
   assert.ok(Object.isFrozen(validated.comparisons));
   assert.ok(Object.isFrozen(validated.comparisons[0]));
 
-  assert.strictEqual(getExtendedProducts().length, 7);
-  assert.strictEqual(getExtendedComparisons().length, 6);
-  assert.strictEqual(getExtendedProduct('zoho-crm')?.name, 'Zoho CRM');
-  assert.strictEqual(getExtendedComparison('hubspot-vs-zoho-crm')?.slug, 'hubspot-vs-zoho-crm');
+  assert.strictEqual(getExtendedProducts().length, rawCatalog.products.length);
+  assert.strictEqual(getExtendedComparisons().length, rawCatalog.comparisons.length);
+  for (const prod of rawCatalog.products) {
+    assert.strictEqual(getExtendedProduct(prod.id)?.name, prod.name);
+    assert.strictEqual(getExtendedProduct(prod.id)?.affiliateUrl, null);
+  }
+  for (const comp of rawCatalog.comparisons) {
+    assert.strictEqual(getExtendedComparison(comp.slug)?.slug, comp.slug);
+  }
   assert.strictEqual(getExtendedProduct('non-existent'), null);
   assert.strictEqual(getExtendedComparison('non-existent'), null);
 });

@@ -18,6 +18,14 @@ const ALLOWED_OFFICIAL_DOMAINS = Object.freeze([
   'moz.com',
   'wpengine.com',
   'siteground.com',
+  // 7 Wave 2 official vendor domains
+  'salesforce.com',
+  'monday.com',
+  'activecampaign.com',
+  'mangools.com',
+  'screamingfrog.co.uk',
+  'pressable.com',
+  'getflywheel.com',
   // 6 legacy official vendor domains
   'hubspot.com',
   'pipedrive.com',

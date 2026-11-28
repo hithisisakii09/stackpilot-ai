@@ -169,6 +169,90 @@
       ],
       "status": "pending",
       "generatedAt": null
+    },
+    {
+      "slug": "hubspot-vs-salesforce-starter-small-team-pricing-guide",
+      "targetTitle": "HubSpot vs Salesforce Starter Small Team Pricing & Upgrade Guide",
+      "focusKeywords": [
+        "hubspot vs salesforce starter",
+        "salesforce starter suite pricing",
+        "small team crm upgrade"
+      ],
+      "relatedComparisonSlugs": [
+        "hubspot-vs-salesforce-starter"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "pipedrive-vs-monday-crm-seat-bundle-guide",
+      "targetTitle": "Pipedrive vs monday CRM Seat Bundle & Automation Quota Guide",
+      "focusKeywords": [
+        "pipedrive vs monday crm",
+        "monday crm seat bundles",
+        "crm automation quotas"
+      ],
+      "relatedComparisonSlugs": [
+        "pipedrive-vs-monday-crm"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "hubspot-vs-activecampaign-contact-pricing-guide",
+      "targetTitle": "HubSpot vs ActiveCampaign Contact-Tier Pricing & CRM Add-On Guide",
+      "focusKeywords": [
+        "hubspot vs activecampaign",
+        "activecampaign contact pricing",
+        "crm email marketing limits"
+      ],
+      "relatedComparisonSlugs": [
+        "hubspot-vs-activecampaign"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "ahrefs-vs-mangools-budget-seo-guide",
+      "targetTitle": "Ahrefs vs Mangools Budget SEO Lookup & Login Limit Guide",
+      "focusKeywords": [
+        "ahrefs vs mangools",
+        "mangools daily lookup caps",
+        "ahrefs credit plans"
+      ],
+      "relatedComparisonSlugs": [
+        "ahrefs-vs-mangools"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "semrush-vs-screaming-frog-technical-audit-guide",
+      "targetTitle": "Semrush vs Screaming Frog Technical SEO Audit & Crawl Cap Guide",
+      "focusKeywords": [
+        "semrush vs screaming frog",
+        "screaming frog 500 url limit",
+        "technical seo site crawler"
+      ],
+      "relatedComparisonSlugs": [
+        "semrush-vs-screaming-frog"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "kinsta-vs-pressable-managed-wordpress-guide",
+      "targetTitle": "Kinsta vs Pressable Managed WordPress Visit & Install Limit Guide",
+      "focusKeywords": [
+        "kinsta vs pressable",
+        "pressable signature plans",
+        "managed wordpress visit limits"
+      ],
+      "relatedComparisonSlugs": [
+        "kinsta-vs-pressable"
+      ],
+      "status": "pending",
+      "generatedAt": null
     }
   ]
 }
