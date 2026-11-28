@@ -36,9 +36,10 @@ const allowLiveAi = process.env.STACKPILOT_ALLOW_LIVE_AI === 'true';
 
 const guides = JSON.parse(readFileSync(join(root, 'src/data/agent-buyer-guides.json'), 'utf8'));
 const verifiedVendorFacts = JSON.parse(readFileSync(join(root, 'src/data/verified-vendor-facts.json'), 'utf8'));
+const extendedCatalog = JSON.parse(readFileSync(join(root, 'src/data/extended-catalog.json'), 'utf8'));
 const existingPacks = JSON.parse(readFileSync(join(root, 'src/data/agent-distribution-drafts.json'), 'utf8'));
 
-// ── Import agent + router ──────────────────────────────────────────────────
+// ── Import agent + router + live runner ────────────────────────────────────
 
 const {
   runTrafficDistributionAgent,
@@ -46,20 +47,13 @@ const {
   formatDistributionReportMarkdown,
 } = await import('../src/platform/agents/traffic-distribution.mjs');
 
-const { executeLiveRoutedPrompt, redactSecrets } = await import('../src/platform/ai/router.mjs');
-
-// ── runAiPrompt wrapper ────────────────────────────────────────────────────
-
-async function runAiPrompt(request) {
-  const result = await executeLiveRoutedPrompt({
-    taskClass: request.taskClass || 'editorial_draft',
-    prompt: request.prompt,
-    systemPrompt: request.systemPrompt,
-    maxOutputTokens: Math.max(Number(request.maxOutputTokens) || 0, 1536),
-    estimatedCostMinor: 0,
-  });
-  return result.text;
-}
+const { routeAiRequest, redactSecrets } = await import('../src/platform/ai/router.mjs');
+const {
+  createFreeTierModelRegistry,
+  createGeminiFreeAdapter,
+  createOpenAIFallbackAdapter,
+} = await import('../src/platform/ai/live-adapters.mjs');
+const { executeLiveRoutedPrompt } = await import('../src/platform/ai/live-runner.mjs');
 
 // ── SITE_ORIGIN ─────────────────────────────────────────────────────────────
 
@@ -67,18 +61,25 @@ const { SITE_ORIGIN } = await import('../src/lib/site-origin.mjs');
 
 // ── Dry-run mode ───────────────────────────────────────────────────────────
 
-if (isDryRun) {
+if (isDryRun || !isLive) {
   const draftedSlugs = new Set((existingPacks.packs || []).map(p => p.targetSlug));
 
   const guideTargets = (guides.guides || []).map(g => g.slug);
-  const comparisonTargets = Object.keys(verifiedVendorFacts);
+  const extendedComparisonTargets = (extendedCatalog.comparisons || []).map(c => c.slug).filter(Boolean);
+  const comparisonTargets = [...new Set([...Object.keys(verifiedVendorFacts), ...extendedComparisonTargets])];
   const eligibleTargets = [
     ...guideTargets.filter(s => !draftedSlugs.has(s)),
     ...comparisonTargets.filter(s => !draftedSlugs.has(s)),
   ];
 
   const pendingPackCount = (existingPacks.packs || []).filter(p => p.status === 'pending_owner_review').length;
-  const nextTarget = selectNextContentForDistribution({ guides, verifiedVendorFacts, existingPacks, preferredSlug });
+  const nextTarget = selectNextContentForDistribution({
+    guides,
+    verifiedVendorFacts,
+    extendedCatalog,
+    existingPacks,
+    preferredSlug,
+  });
 
   const report = {
     eligibleTargets,
@@ -95,18 +96,48 @@ if (isDryRun) {
 
 // ── Live mode ──────────────────────────────────────────────────────────────
 
+const now = new Date();
+const adapters = {
+  gemini: createGeminiFreeAdapter({ apiKey: process.env.GEMINI_API_KEY ?? '' }),
+  openai: createOpenAIFallbackAdapter({ apiKey: process.env.OPENAI_API_KEY ?? '' }),
+};
+const registry = createFreeTierModelRegistry();
+
+async function runAiPrompt(request) {
+  const res = await executeLiveRoutedPrompt({
+    router: { routeAiRequest },
+    adapters,
+    registry,
+    request: {
+      taskClass: request.taskClass || 'editorial_draft',
+      prompt: request.prompt,
+      systemPrompt: request.systemPrompt,
+      requestedTokens: request.requestedTokens || Math.ceil(((request.prompt?.length || 0) + (request.systemPrompt?.length || 0)) / 4) + 1536,
+      maxOutputTokens: Math.max(Number(request.maxOutputTokens) || 0, 1536),
+    },
+    allowLiveNetwork: allowLiveAi,
+    env: process.env,
+    now: now.toISOString(),
+  });
+  if (!res.ok) {
+    throw new Error(res.reason || 'live_ai_failed');
+  }
+  return res.text;
+}
+
 let result;
 try {
   result = await runTrafficDistributionAgent({
     guides,
     existingPacks,
     verifiedVendorFacts,
+    extendedCatalog,
     siteOrigin: SITE_ORIGIN,
     preferredSlug,
     runAiPrompt,
     allowLiveDistribution,
     allowLiveAi,
-    now: new Date(),
+    now,
   });
 } catch (err) {
   const safeErr = typeof redactSecrets === 'function' ? redactSecrets(err.message || String(err)) : (err.message || String(err));
@@ -118,8 +149,13 @@ try {
 const markdown = formatDistributionReportMarkdown(result);
 process.stdout.write(markdown + '\n');
 
-// If status is fail-closed, exit cleanly (not an error)
-if (['live_distribution_disabled', 'live_ai_disabled', 'no_eligible_targets'].includes(result.status)) {
+// If --live was requested but live flags are disabled, fail closed with non-zero exit code
+if (result.status === 'live_distribution_disabled' || result.status === 'live_ai_disabled') {
+  process.stderr.write(`[agent-traffic-distribution] Failed closed: ${result.status}\n`);
+  process.exit(1);
+}
+
+if (result.status === 'no_eligible_targets') {
   process.stderr.write(`[agent-traffic-distribution] Status: ${result.status}\n`);
   process.exit(0);
 }

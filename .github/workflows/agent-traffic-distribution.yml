@@ -23,8 +23,8 @@ jobs:
     name: Draft Distribution Pack
     runs-on: ubuntu-latest
     env:
-      STACKPILOT_ALLOW_LIVE_DISTRIBUTION: ${{ secrets.STACKPILOT_ALLOW_LIVE_DISTRIBUTION }}
-      STACKPILOT_ALLOW_LIVE_AI: ${{ secrets.STACKPILOT_ALLOW_LIVE_AI }}
+      STACKPILOT_ALLOW_LIVE_DISTRIBUTION: 'true'
+      STACKPILOT_ALLOW_LIVE_AI: 'true'
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 

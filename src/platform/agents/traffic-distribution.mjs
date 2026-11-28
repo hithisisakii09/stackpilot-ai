@@ -193,7 +193,7 @@ export function validateDistributionPacks(data, allowedCanonicalUrls, allowedOff
  * Prioritizes buyer guides first, then comparison pages, alphabetically.
  * Returns null if all targets already have a pending/drafted pack.
  */
-export function selectNextContentForDistribution({ guides, verifiedVendorFacts, existingPacks, preferredSlug } = {}) {
+export function selectNextContentForDistribution({ guides, verifiedVendorFacts, extendedCatalog = null, existingPacks, preferredSlug } = {}) {
   const draftedSlugs = new Set(
     (existingPacks?.packs || []).map(p => p.targetSlug),
   );
@@ -212,15 +212,30 @@ export function selectNextContentForDistribution({ guides, verifiedVendorFacts, 
     });
   }
 
-  // Comparison pages (from verifiedVendorFacts keys)
-  for (const slug of Object.keys(verifiedVendorFacts || {}).sort()) {
-    targets.push({
+  // Comparison pages (from verifiedVendorFacts + extendedCatalog.comparisons)
+  const comparisonMap = new Map();
+  for (const slug of Object.keys(verifiedVendorFacts || {})) {
+    comparisonMap.set(slug, {
       targetSlug: slug,
       targetType: 'comparison',
       title: slug,
       canonicalUrl: `${SITE_ORIGIN}/compare/${slug}/`,
       referencedOfficialUrls: (verifiedVendorFacts[slug]?.rows || []).flatMap(r => [r.first?.sourceUrl, r.second?.sourceUrl]).filter(Boolean),
     });
+  }
+  for (const comp of (extendedCatalog?.comparisons || [])) {
+    if (comp?.slug && !comparisonMap.has(comp.slug)) {
+      comparisonMap.set(comp.slug, {
+        targetSlug: comp.slug,
+        targetType: 'comparison',
+        title: comp.title || comp.slug,
+        canonicalUrl: `${SITE_ORIGIN}/compare/${comp.slug}/`,
+        referencedOfficialUrls: (comp.rows || []).flatMap(r => [r.first?.sourceUrl, r.second?.sourceUrl]).filter(Boolean),
+      });
+    }
+  }
+  for (const slug of [...comparisonMap.keys()].sort()) {
+    targets.push(comparisonMap.get(slug));
   }
 
   // If a preferred slug is specified, try it first
@@ -401,6 +416,7 @@ export async function runTrafficDistributionAgent({
   guides,
   existingPacks,
   verifiedVendorFacts,
+  extendedCatalog = null,
   siteOrigin,
   preferredSlug,
   runAiPrompt,
@@ -412,7 +428,8 @@ export async function runTrafficDistributionAgent({
   const draftedSlugs = new Set((existingPacks?.packs || []).map(p => p.targetSlug));
 
   const guideTargets = (guides?.guides || []).map(g => g.slug);
-  const comparisonTargets = Object.keys(verifiedVendorFacts || {});
+  const extendedComparisonTargets = (extendedCatalog?.comparisons || []).map(c => c.slug).filter(Boolean);
+  const comparisonTargets = [...new Set([...Object.keys(verifiedVendorFacts || {}), ...extendedComparisonTargets])];
   const eligibleTargets = [
     ...guideTargets.filter(s => !draftedSlugs.has(s)),
     ...comparisonTargets.filter(s => !draftedSlugs.has(s)),
@@ -438,6 +455,7 @@ export async function runTrafficDistributionAgent({
   const target = selectNextContentForDistribution({
     guides,
     verifiedVendorFacts,
+    extendedCatalog,
     existingPacks,
     preferredSlug,
   });
@@ -473,11 +491,16 @@ export async function runTrafficDistributionAgent({
   // Build allowedCanonicalUrls from all known targets
   const allCanonicalUrls = [
     ...(guides?.guides || []).map(g => `${siteOrigin}/guides/${g.slug}/`),
-    ...Object.keys(verifiedVendorFacts || {}).map(slug => `${siteOrigin}/compare/${slug}/`),
+    ...comparisonTargets.map(slug => `${siteOrigin}/compare/${slug}/`),
   ];
-  const allOfficialUrls = Object.values(verifiedVendorFacts || {}).flatMap(
-    v => (v.rows || []).flatMap(r => [r.first?.sourceUrl, r.second?.sourceUrl]).filter(Boolean),
-  );
+  const allOfficialUrls = [
+    ...Object.values(verifiedVendorFacts || {}).flatMap(
+      v => (v.rows || []).flatMap(r => [r.first?.sourceUrl, r.second?.sourceUrl]).filter(Boolean),
+    ),
+    ...(extendedCatalog?.comparisons || []).flatMap(
+      c => (c.rows || []).flatMap(r => [r.first?.sourceUrl, r.second?.sourceUrl]).filter(Boolean),
+    ),
+  ];
   // Add citation URLs from guides
   for (const guide of (guides?.guides || [])) {
     for (const c of (guide.citations || [])) {
