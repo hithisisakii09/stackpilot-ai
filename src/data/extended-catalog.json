@@ -300,6 +300,305 @@
         "Verify storage limits, inode quotas, and renewal currency terms before prepaying."
       ],
       "relatedComparisons": []
+    },
+    {
+      "id": "salesforce-starter",
+      "name": "Salesforce Starter",
+      "category": "sales",
+      "description": "Small-business CRM suite (Starter Suite listed at $25/user/month billed monthly or annual; Pro Suite at $100/user/month billed annually). Verify monthly vs. annual billing lock-in, email send caps, and upgrade jump from Starter to Pro Suite.",
+      "website": "https://www.salesforce.com/sales/pricing/",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://www.salesforce.com/sales/pricing/",
+        "https://www.salesforce.com/small-business/pricing/"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Starter vs. Pro Suite pricing",
+          "summary": "Starter Suite is listed at $25/user/month (billed monthly or annually), while Pro Suite is listed at $100/user/month (billed annually); verify exact feature gates before choosing.",
+          "sourceLabel": "Salesforce Small Business Pricing",
+          "sourceUrl": "https://www.salesforce.com/small-business/pricing/"
+        },
+        {
+          "dimension": "Upgrade path & annual lock-in",
+          "summary": "Pro Suite and higher Sales Cloud editions require annual billing commitments; confirm seat reduction and contract renewal terms before scaling past Starter.",
+          "sourceLabel": "Salesforce Sales Pricing",
+          "sourceUrl": "https://www.salesforce.com/sales/pricing/"
+        },
+        {
+          "dimension": "Email send & automation caps",
+          "summary": "Built-in email marketing and automation capabilities carry edition-specific send caps and workflow limits; verify whether AppExchange or API access requires Pro Suite.",
+          "sourceLabel": "Salesforce Small Business Pricing",
+          "sourceUrl": "https://www.salesforce.com/small-business/pricing/"
+        }
+      ],
+      "checklist": [
+        "Confirm whether monthly billing is available if you upgrade from Starter Suite ($25/user/mo) to Pro Suite ($100/user/mo).",
+        "Verify daily email send caps and marketing automation limits on Starter Suite.",
+        "Check API access and custom object limits before committing to an annual contract."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "hubspot-vs-salesforce-starter",
+          "title": "HubSpot vs Salesforce Starter"
+        }
+      ]
+    },
+    {
+      "id": "monday-crm",
+      "name": "monday CRM",
+      "category": "sales",
+      "description": "Work-management CRM sold in tiered seat bundles (starting at 3 seats). Verify minimum seat pack jumps, CRM-specific automation quotas, and checkout billing terms.",
+      "website": "https://monday.com/pricing",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://monday.com/pricing"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Minimum seat bundle pricing",
+          "summary": "Sold in fixed multi-seat bundles (starting at a 3-seat minimum and stepping up in preset seat packs); verify effective per-seat cost for your exact headcount.",
+          "sourceLabel": "monday.com Official Pricing",
+          "sourceUrl": "https://monday.com/pricing"
+        },
+        {
+          "dimension": "Automation & integration quotas",
+          "summary": "Monthly automation and integration action quotas vary across Basic, Standard, Pro, and Enterprise CRM tiers.",
+          "sourceLabel": "monday.com Official Pricing",
+          "sourceUrl": "https://monday.com/pricing"
+        },
+        {
+          "dimension": "Billing cadence & add-ons",
+          "summary": "Annual billing discounts apply versus monthly checkout; confirm separate pricing for CRM vs. Work Management seats.",
+          "sourceLabel": "monday.com Official Pricing",
+          "sourceUrl": "https://monday.com/pricing"
+        }
+      ],
+      "checklist": [
+        "Calculate cost using monday CRM's fixed seat-bundle increments rather than exact headcount.",
+        "Verify monthly automation and integration action quotas on Basic vs. Standard and Pro.",
+        "Confirm checkout billing cadence and whether non-sales teammates need separate seats."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "pipedrive-vs-monday-crm",
+          "title": "Pipedrive vs monday CRM"
+        }
+      ]
+    },
+    {
+      "id": "activecampaign",
+      "name": "ActiveCampaign",
+      "category": "sales",
+      "description": "Email marketing automation and CRM platform across Starter ($15/mo), Plus ($49/mo), Pro ($79/mo), and Enterprise ($145/mo) tiers scaling by contact count plus optional CRM and AI credit add-ons.",
+      "website": "https://www.activecampaign.com/pricing",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://www.activecampaign.com/pricing",
+        "https://help.activecampaign.com/hc/en-us/articles/14251311251356-Overview-of-ActiveCampaign-plans"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Tiered plans & contact scaling",
+          "summary": "Starter ($15/mo), Plus ($49/mo), Pro ($79/mo), and Enterprise ($145/mo) base tiers scale dynamically with active contact count.",
+          "sourceLabel": "ActiveCampaign Official Pricing",
+          "sourceUrl": "https://www.activecampaign.com/pricing"
+        },
+        {
+          "dimension": "CRM & AI credit add-ons",
+          "summary": "Enhanced CRM pipelines, sales engagement, and AI credit allowances may require Plus/Pro or separate add-ons; verify included seats per plan.",
+          "sourceLabel": "ActiveCampaign Plans Overview",
+          "sourceUrl": "https://help.activecampaign.com/hc/en-us/articles/14251311251356-Overview-of-ActiveCampaign-plans"
+        },
+        {
+          "dimension": "Email send multipliers & limits",
+          "summary": "Monthly email send limits are calculated as a multiplier of your contact tier; confirm send caps and SMS add-on pricing before migrating lists.",
+          "sourceLabel": "ActiveCampaign Official Pricing",
+          "sourceUrl": "https://www.activecampaign.com/pricing"
+        }
+      ],
+      "checklist": [
+        "Model 12-month pricing at your projected contact count rather than the entry contact tier.",
+        "Verify whether pipeline CRM and lead scoring require Plus or separate add-ons.",
+        "Confirm monthly email send multipliers and extra user seat costs."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "hubspot-vs-activecampaign",
+          "title": "HubSpot vs ActiveCampaign"
+        }
+      ]
+    },
+    {
+      "id": "mangools",
+      "name": "Mangools",
+      "category": "seo",
+      "description": "Bundle of five integrated SEO tools (keyword research, SERP analysis, rank tracking, backlinks, site profiling) with 35% annual plan savings. Verify daily lookup caps and simultaneous login rules.",
+      "website": "https://mangools.com/plans-and-pricing",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://mangools.com/plans-and-pricing"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Bundled 5-tool suite & annual savings",
+          "summary": "Bundles KWFinder, SERPChecker, SERPWatcher, LinkMiner, and SiteProfiler under one subscription with 35% savings on annual billing.",
+          "sourceLabel": "Mangools Plans & Pricing",
+          "sourceUrl": "https://mangools.com/plans-and-pricing"
+        },
+        {
+          "dimension": "Daily lookup & keyword caps",
+          "summary": "Basic, Premium, and Agency plans enforce strict 24-hour lookup caps, keyword suggestions per search, and tracked keyword quotas.",
+          "sourceLabel": "Mangools Plans & Pricing",
+          "sourceUrl": "https://mangools.com/plans-and-pricing"
+        },
+        {
+          "dimension": "Simultaneous login rules",
+          "summary": "Simultaneous logins are capped by plan tier (1 on Basic, 3 on Premium, 5 on Agency); verify team access needs before choosing Basic.",
+          "sourceLabel": "Mangools Plans & Pricing",
+          "sourceUrl": "https://mangools.com/plans-and-pricing"
+        }
+      ],
+      "checklist": [
+        "Check 24-hour keyword and SERP lookup caps against your daily research workflow.",
+        "Confirm simultaneous login allowances (1 vs. 3 vs. 5) for your team size.",
+        "Verify tracked keyword quotas in SERPWatcher before annual prepayment."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "ahrefs-vs-mangools",
+          "title": "Ahrefs vs Mangools"
+        }
+      ]
+    },
+    {
+      "id": "screaming-frog",
+      "name": "Screaming Frog SEO Spider",
+      "category": "seo",
+      "description": "Desktop technical SEO site crawler (free up to 500 URLs; paid annual per-seat licence removes the 500-URL cap and unlocks scheduling, integrations, and advanced crawl configuration).",
+      "website": "https://www.screamingfrog.co.uk/seo-spider/pricing/",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://www.screamingfrog.co.uk/seo-spider/pricing/",
+        "https://www.screamingfrog.co.uk/seo-spider/faq/"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Free vs. paid annual licence",
+          "summary": "Free version crawls up to 500 URLs; paid annual per-seat licence removes the 500-URL limit and unlocks scheduling, custom extraction, and Google/Ahrefs/Moz integrations.",
+          "sourceLabel": "Screaming Frog SEO Spider Pricing",
+          "sourceUrl": "https://www.screamingfrog.co.uk/seo-spider/pricing/"
+        },
+        {
+          "dimension": "Desktop execution & hardware limits",
+          "summary": "Runs locally on Windows, macOS, or Linux; large crawls depend on local RAM/SSD resources rather than cloud crawl credits.",
+          "sourceLabel": "Screaming Frog SEO Spider FAQ",
+          "sourceUrl": "https://www.screamingfrog.co.uk/seo-spider/faq/"
+        },
+        {
+          "dimension": "Multi-user licensing",
+          "summary": "Licences are billed annually per user seat with volume discounts for multi-licence orders.",
+          "sourceLabel": "Screaming Frog SEO Spider Pricing",
+          "sourceUrl": "https://www.screamingfrog.co.uk/seo-spider/pricing/"
+        }
+      ],
+      "checklist": [
+        "Confirm whether your sites exceed the free 500-URL crawl limit or need scheduled crawls.",
+        "Verify local RAM/storage capacity (or cloud VM cost) for JavaScript rendering on large sites.",
+        "Count exact analyst seats needing a paid annual licence."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "semrush-vs-screaming-frog",
+          "title": "Semrush vs Screaming Frog SEO Spider"
+        }
+      ]
+    },
+    {
+      "id": "pressable",
+      "name": "Pressable",
+      "category": "hosting",
+      "description": "Managed WordPress hosting (plans from $25/mo monthly or Signature 1 at $20.83/mo billed annually: 1 staging site, 30K monthly visits, 20GB storage; scaling to Signature 8). Verify install limits, visit overage handling, and staging environments.",
+      "website": "https://pressable.com/pricing/",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://pressable.com/pricing/",
+        "https://pressable.com/highlights/how-much-does-pressable-cost/"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Signature plan tiers & billing",
+          "summary": "Plans start from $25/mo monthly or Signature 1 at $20.83/mo billed annually (1 WordPress install, 1 staging site, 30K monthly visits, 20GB storage), scaling up to Signature 8.",
+          "sourceLabel": "Pressable Official Pricing",
+          "sourceUrl": "https://pressable.com/pricing/"
+        },
+        {
+          "dimension": "Visit overage & storage rules",
+          "summary": "Monthly visits and storage scale across Signature tiers; confirm how traffic spikes and storage overages are billed.",
+          "sourceLabel": "Pressable Cost Breakdown",
+          "sourceUrl": "https://pressable.com/highlights/how-much-does-pressable-cost/"
+        },
+        {
+          "dimension": "WordPress installs & staging",
+          "summary": "Each Signature tier specifies exact WordPress install counts and staging site allowances.",
+          "sourceLabel": "Pressable Official Pricing",
+          "sourceUrl": "https://pressable.com/pricing/"
+        }
+      ],
+      "checklist": [
+        "Confirm exact WordPress install and staging site limits on your target Signature tier.",
+        "Verify monthly visit overage rates and whether CDN/Jetpack Security are included.",
+        "Check annual vs. monthly pricing differences before migrating client sites."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "kinsta-vs-pressable",
+          "title": "Kinsta vs Pressable"
+        }
+      ]
+    },
+    {
+      "id": "flywheel",
+      "name": "Flywheel",
+      "category": "hosting",
+      "description": "Managed WordPress hosting designed for designers and creative agencies with client workflow, blueprint, and billing transfer tools. Verify visit/bandwidth caps, staging sites, and agency add-on fees.",
+      "website": "https://getflywheel.com/pricing/",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://getflywheel.com/pricing/",
+        "https://getflywheel.com/"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Plan tiers & resource caps",
+          "summary": "Tiny, Starter, Freelance, and Agency plans scale by WordPress installs, monthly visits, storage, and bandwidth allowances.",
+          "sourceLabel": "Flywheel Official Pricing",
+          "sourceUrl": "https://getflywheel.com/pricing/"
+        },
+        {
+          "dimension": "Agency workflow & billing transfer",
+          "summary": "Built for designers and agencies with site blueprints, demo sites, collaborator access, and client billing transfer.",
+          "sourceLabel": "Flywheel Overview",
+          "sourceUrl": "https://getflywheel.com/"
+        },
+        {
+          "dimension": "Staging & agency add-ons",
+          "summary": "Includes staging sites, free SSL, and nightly backups; verify optional add-on fees for white-label Growth Suite or multisite.",
+          "sourceLabel": "Flywheel Official Pricing",
+          "sourceUrl": "https://getflywheel.com/pricing/"
+        }
+      ],
+      "checklist": [
+        "Verify monthly visit and bandwidth caps on Tiny/Starter vs. Freelance and Agency tiers.",
+        "Confirm whether multisite support or white-label client billing requires an add-on.",
+        "Check overage fees and staging environment reset workflows."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "wp-engine-vs-flywheel",
+          "title": "WP Engine vs Flywheel"
+        }
+      ]
     }
   ],
   "comparisons": [
@@ -810,6 +1109,601 @@
           "buyerContext": "Managed WordPress hosts restrict certain caching/backup plugins.",
           "firstValue": "Review Kinsta banned plugin list and free migration inclusions.",
           "secondValue": "Review WP Engine disallowed plugin list and migration tooling."
+        }
+      ]
+    },
+    {
+      "slug": "hubspot-vs-salesforce-starter",
+      "title": "HubSpot vs Salesforce Starter",
+      "metaDescription": "Compare HubSpot and Salesforce Starter Suite per-user pricing, annual lock-in, email send caps, and upgrade paths using official vendor documentation.",
+      "category": "sales",
+      "first": {
+        "id": "hubspot",
+        "name": "HubSpot",
+        "description": "CRM, sales and marketing software.",
+        "website": "https://www.hubspot.com/"
+      },
+      "second": {
+        "id": "salesforce-starter",
+        "name": "Salesforce Starter",
+        "description": "Small-business CRM suite (Starter Suite at $25/user/mo; Pro Suite at $100/user/mo billed annually).",
+        "website": "https://www.salesforce.com/sales/pricing/"
+      },
+      "rows": [
+        {
+          "dimension": "Entry & mid-tier seat pricing",
+          "first": {
+            "summary": "Starter ($20/mo/seat Core), Professional ($50/mo/seat Core; $100/mo/seat Sales Hub), and Enterprise ($75/mo/seat Core; $150/mo/seat Sales Hub).",
+            "sourceLabel": "HubSpot Product & Services Catalog",
+            "sourceUrl": "https://legal.hubspot.com/hubspot-product-and-services-catalog"
+          },
+          "second": {
+            "summary": "Starter Suite listed at $25/user/month (monthly or annual billing); Pro Suite jumps to $100/user/month billed annually.",
+            "sourceLabel": "Salesforce Small Business Pricing",
+            "sourceUrl": "https://www.salesforce.com/small-business/pricing/"
+          }
+        },
+        {
+          "dimension": "Billing lock-in & upgrade jump",
+          "first": {
+            "summary": "Professional and Enterprise hubs typically carry annual commitments and onboarding fees.",
+            "sourceLabel": "HubSpot Product & Services Catalog",
+            "sourceUrl": "https://legal.hubspot.com/hubspot-product-and-services-catalog"
+          },
+          "second": {
+            "summary": "Starter Suite supports monthly billing, whereas Pro Suite ($100/user/mo) requires annual commitment.",
+            "sourceLabel": "Salesforce Sales Pricing",
+            "sourceUrl": "https://www.salesforce.com/sales/pricing/"
+          }
+        },
+        {
+          "dimension": "Data export & platform ecosystem",
+          "first": {
+            "summary": "Exports CRM records, lists, and property history to CSV/XLS/XLSX with optional Super Admin approvals.",
+            "sourceLabel": "HubSpot Export Records Docs",
+            "sourceUrl": "https://knowledge.hubspot.com/import-and-export/export-records"
+          },
+          "second": {
+            "summary": "Built-in email, sales, and service workflows on Salesforce platform with edition-gated API and AppExchange access.",
+            "sourceLabel": "Salesforce Small Business Pricing",
+            "sourceUrl": "https://www.salesforce.com/small-business/pricing/"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "4x upgrade jump modeling",
+          "buyerContext": "Both tools have steep jumps from Starter to Pro tiers.",
+          "firstValue": "Check when your team triggers HubSpot Sales Hub Professional ($100/seat).",
+          "secondValue": "Check which features force an upgrade to Salesforce Pro Suite ($100/user/mo annual)."
+        },
+        {
+          "dimension": "Email marketing send caps",
+          "buyerContext": "Built-in email sends are capped by tier and contact volume.",
+          "firstValue": "Verify HubSpot marketing contact tiers and monthly send limits.",
+          "secondValue": "Verify Salesforce Starter Suite monthly email send allowances."
+        },
+        {
+          "dimension": "API & third-party app access",
+          "buyerContext": "Starter tiers often restrict custom API integrations.",
+          "firstValue": "Confirm HubSpot API endpoints included on Starter vs. Professional.",
+          "secondValue": "Confirm whether Salesforce Starter Suite includes API/AppExchange access."
+        },
+        {
+          "dimension": "Data export & exit portability",
+          "buyerContext": "Confirm full export of historical activities and notes.",
+          "firstValue": "Verify HubSpot association and property history export.",
+          "secondValue": "Verify Salesforce Starter data export frequency and format."
+        }
+      ]
+    },
+    {
+      "slug": "pipedrive-vs-monday-crm",
+      "title": "Pipedrive vs monday CRM",
+      "metaDescription": "Compare Pipedrive and monday CRM seat pricing, minimum 3-seat bundle rules, automation quotas, and export limits using official vendor docs.",
+      "category": "sales",
+      "first": {
+        "id": "pipedrive",
+        "name": "Pipedrive",
+        "description": "Sales CRM and pipeline management software.",
+        "website": "https://www.pipedrive.com/"
+      },
+      "second": {
+        "id": "monday-crm",
+        "name": "monday CRM",
+        "description": "Work-management CRM sold in tiered seat bundles (starting at 3 seats).",
+        "website": "https://monday.com/pricing"
+      },
+      "rows": [
+        {
+          "dimension": "Seat pricing & bundle minimums",
+          "first": {
+            "summary": "Priced per individual seat across tiered plans ($14-$79/mo range depending on tier) with a 14-day free trial.",
+            "sourceLabel": "Pipedrive Plan & Solution Docs",
+            "sourceUrl": "https://www.pipedrive.com/en/crm/solutions/nimble-alternative"
+          },
+          "second": {
+            "summary": "Sold in tiered seat bundles starting at a 3-seat minimum and stepping up in fixed seat packs.",
+            "sourceLabel": "monday.com Official Pricing",
+            "sourceUrl": "https://monday.com/pricing"
+          }
+        },
+        {
+          "dimension": "Automation & permissions governance",
+          "first": {
+            "summary": "Visibility groups, role permissions, and 400+ marketplace integrations.",
+            "sourceLabel": "Pipedrive Visibility & Permissions Docs",
+            "sourceUrl": "https://support.pipedrive.com/en/article/visibility-and-permissions-overview"
+          },
+          "second": {
+            "summary": "Monthly automation and integration action quotas scale across Basic, Standard, Pro, and Enterprise tiers.",
+            "sourceLabel": "monday.com Official Pricing",
+            "sourceUrl": "https://monday.com/pricing"
+          }
+        },
+        {
+          "dimension": "Data import & export ceilings",
+          "first": {
+            "summary": "CSV/XLS/XLSX import/export (up to 50 MB / 50,000 rows per import) with 30-day deleted-deal recovery.",
+            "sourceLabel": "Pipedrive Storage & Export Docs",
+            "sourceUrl": "https://support.pipedrive.com/en/article/how-can-i-free-up-space"
+          },
+          "second": {
+            "summary": "Board and CRM export options depend on tier; confirm exact checkout billing terms for CRM vs. Work Management.",
+            "sourceLabel": "monday.com Official Pricing",
+            "sourceUrl": "https://monday.com/pricing"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Effective cost at 4 or 6 users",
+          "buyerContext": "Fixed seat bundles can leave you paying for unused seats.",
+          "firstValue": "Calculate Pipedrive exact per-seat cost for 4 or 6 users.",
+          "secondValue": "Check monday CRM seat pack step-ups (e.g., 3, 5, 10 seats)."
+        },
+        {
+          "dimension": "Monthly automation action limits",
+          "buyerContext": "High-volume lead routing can exhaust monthly automation quotas.",
+          "firstValue": "Verify Pipedrive active workflow automation limits per tier.",
+          "secondValue": "Verify monday CRM monthly automation & integration action caps."
+        },
+        {
+          "dimension": "Email sync & mass email limits",
+          "buyerContext": "Confirm two-way email sync availability on entry tiers.",
+          "firstValue": "Check which Pipedrive tier includes full two-way email sync.",
+          "secondValue": "Check which monday CRM tier unlocks two-way email sync and templates."
+        },
+        {
+          "dimension": "Exit data portability",
+          "buyerContext": "Verify how cleanly deals, contacts, and activity logs export.",
+          "firstValue": "Confirm Pipedrive CSV/XLSX export and 30-day recovery terms.",
+          "secondValue": "Confirm monday CRM full-account Excel/CSV export scope."
+        }
+      ]
+    },
+    {
+      "slug": "hubspot-vs-activecampaign",
+      "title": "HubSpot vs ActiveCampaign",
+      "metaDescription": "Compare HubSpot and ActiveCampaign contact-tier pricing, CRM add-ons, email send multipliers, and export controls using official vendor documentation.",
+      "category": "sales",
+      "first": {
+        "id": "hubspot",
+        "name": "HubSpot",
+        "description": "CRM, sales and marketing software.",
+        "website": "https://www.hubspot.com/"
+      },
+      "second": {
+        "id": "activecampaign",
+        "name": "ActiveCampaign",
+        "description": "Email marketing automation and CRM platform scaling by contact count plus optional CRM and AI credit add-ons.",
+        "website": "https://www.activecampaign.com/pricing"
+      },
+      "rows": [
+        {
+          "dimension": "Pricing model & contact scaling",
+          "first": {
+            "summary": "Per-seat Core/Sales Hub plans ($20-$150/mo/seat) plus Marketing Hub contact-tier pricing.",
+            "sourceLabel": "HubSpot Product & Services Catalog",
+            "sourceUrl": "https://legal.hubspot.com/hubspot-product-and-services-catalog"
+          },
+          "second": {
+            "summary": "Starter ($15/mo), Plus ($49/mo), Pro ($79/mo), and Enterprise ($145/mo) tiers scaling by active contact count.",
+            "sourceLabel": "ActiveCampaign Official Pricing",
+            "sourceUrl": "https://www.activecampaign.com/pricing"
+          }
+        },
+        {
+          "dimension": "CRM & automation packaging",
+          "first": {
+            "summary": "Unified CRM, Marketing, Sales, Service, and Content hubs with native connectors and REST APIs.",
+            "sourceLabel": "HubSpot Knowledge Base",
+            "sourceUrl": "https://knowledge.hubspot.com/"
+          },
+          "second": {
+            "summary": "Marketing automation core with optional CRM pipeline and AI credit add-ons depending on plan tier.",
+            "sourceLabel": "ActiveCampaign Plans Overview",
+            "sourceUrl": "https://help.activecampaign.com/hc/en-us/articles/14251311251356-Overview-of-ActiveCampaign-plans"
+          }
+        },
+        {
+          "dimension": "Data export & send limits",
+          "first": {
+            "summary": "Exports records, lists, and property history to CSV/XLS/XLSX with optional Super Admin export approvals.",
+            "sourceLabel": "HubSpot Export Records Docs",
+            "sourceUrl": "https://knowledge.hubspot.com/import-and-export/export-records"
+          },
+          "second": {
+            "summary": "Monthly email send caps scale as a multiplier of contact tier; confirm list and deal export formats.",
+            "sourceLabel": "ActiveCampaign Official Pricing",
+            "sourceUrl": "https://www.activecampaign.com/pricing"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Cost at 10,000+ contacts",
+          "buyerContext": "Contact-based pricing escalates rapidly as your database grows.",
+          "firstValue": "Model HubSpot Marketing Hub + Sales Hub seat cost at 10,000 contacts.",
+          "secondValue": "Model ActiveCampaign Plus/Pro + CRM add-on cost at 10,000 contacts."
+        },
+        {
+          "dimension": "Included sales CRM seats",
+          "buyerContext": "Confirm how many sales reps can use pipelines without add-on fees.",
+          "firstValue": "Verify HubSpot paid Sales Hub seat requirements.",
+          "secondValue": "Verify ActiveCampaign included user seats and CRM add-on pricing."
+        },
+        {
+          "dimension": "Monthly email send caps",
+          "buyerContext": "High-frequency newsletters can hit monthly send multipliers.",
+          "firstValue": "Confirm HubSpot marketing email send multiplier by tier.",
+          "secondValue": "Confirm ActiveCampaign monthly send cap for your contact tier."
+        },
+        {
+          "dimension": "Non-marketing contact handling",
+          "buyerContext": "Avoid paying marketing contact rates for unsubscribed or archived leads.",
+          "firstValue": "Verify HubSpot non-marketing contact classification rules.",
+          "secondValue": "Verify how ActiveCampaign counts unsubscribed vs. active contacts."
+        }
+      ]
+    },
+    {
+      "slug": "ahrefs-vs-mangools",
+      "title": "Ahrefs vs Mangools",
+      "metaDescription": "Compare Ahrefs and Mangools plan pricing, credit vs. 24-hour lookup caps, and simultaneous login rules using official vendor documentation.",
+      "category": "seo",
+      "first": {
+        "id": "ahrefs",
+        "name": "Ahrefs",
+        "description": "SEO research, search visibility and competitive analysis software.",
+        "website": "https://ahrefs.com/"
+      },
+      "second": {
+        "id": "mangools",
+        "name": "Mangools",
+        "description": "Bundle of five integrated SEO tools with 35% annual plan savings, daily lookup caps, and simultaneous login limits.",
+        "website": "https://mangools.com/plans-and-pricing"
+      },
+      "rows": [
+        {
+          "dimension": "Pricing model & usage caps",
+          "first": {
+            "summary": "Credit-based entry plans (Starter, Lite) and Unlimited credit plans; Projects, Rank Tracker, and Site Audit still follow plan-tier limits.",
+            "sourceLabel": "Ahrefs Credit & Unlimited Plans Docs",
+            "sourceUrl": "https://help.ahrefs.com/en/articles/9734884-what-is-the-difference-between-credit-based-plans-and-unlimited-credit-plans"
+          },
+          "second": {
+            "summary": "Basic, Premium, and Agency plans (with 35% annual savings) governed by strict 24-hour lookup caps and tracked keyword quotas.",
+            "sourceLabel": "Mangools Plans & Pricing",
+            "sourceUrl": "https://mangools.com/plans-and-pricing"
+          }
+        },
+        {
+          "dimension": "Multi-user & login governance",
+          "first": {
+            "summary": "Shared workspaces require individual user seats (login sharing prohibited); credit plans bill extra users by monthly credit usage.",
+            "sourceLabel": "Ahrefs Shared Workspaces Docs",
+            "sourceUrl": "https://help.ahrefs.com/en/articles/3945807-about-shared-workspaces"
+          },
+          "second": {
+            "summary": "Simultaneous logins are capped by tier (1 on Basic, 3 on Premium, 5 on Agency).",
+            "sourceLabel": "Mangools Plans & Pricing",
+            "sourceUrl": "https://mangools.com/plans-and-pricing"
+          }
+        },
+        {
+          "dimension": "Tooling & crawl scope",
+          "first": {
+            "summary": "Backlink index, Keywords Explorer, technical Site Audit, and Rank Tracker.",
+            "sourceLabel": "Ahrefs Credit & Unlimited Plans Docs",
+            "sourceUrl": "https://help.ahrefs.com/en/articles/9734884-what-is-the-difference-between-credit-based-plans-and-unlimited-credit-plans"
+          },
+          "second": {
+            "summary": "Five integrated tools: KWFinder, SERPChecker, SERPWatcher, LinkMiner, and SiteProfiler.",
+            "sourceLabel": "Mangools Plans & Pricing",
+            "sourceUrl": "https://mangools.com/plans-and-pricing"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Daily lookup vs. monthly credit exhaustion",
+          "buyerContext": "Confirm how quickly your research cadence hits caps.",
+          "firstValue": "Check Ahrefs monthly credit usage on Starter/Lite vs. Unlimited.",
+          "secondValue": "Check Mangools 24-hour keyword/SERP lookup caps on Basic vs. Premium."
+        },
+        {
+          "dimension": "Technical site audit depth",
+          "buyerContext": "Mangools does not include a full technical site crawler like Ahrefs Site Audit.",
+          "firstValue": "Verify Ahrefs Site Audit crawl credits per month.",
+          "secondValue": "Confirm whether you need a separate crawler alongside Mangools."
+        },
+        {
+          "dimension": "Team access & seat cost",
+          "buyerContext": "Avoid login lockouts across distributed team members.",
+          "firstValue": "Review Ahrefs Casual/Power user seat fees.",
+          "secondValue": "Verify Mangools simultaneous login cap (1, 3, or 5)."
+        },
+        {
+          "dimension": "Tracked keyword quotas",
+          "buyerContext": "Confirm rank-tracking capacity for all client domains.",
+          "firstValue": "Check Ahrefs Rank Tracker keyword limits by tier.",
+          "secondValue": "Check Mangools SERPWatcher daily tracked keyword caps."
+        }
+      ]
+    },
+    {
+      "slug": "semrush-vs-screaming-frog",
+      "title": "Semrush vs Screaming Frog SEO Spider",
+      "metaDescription": "Compare Semrush cloud SEO suite vs. Screaming Frog SEO Spider desktop crawler pricing, 500-URL limit, and multi-seat licensing using official vendor docs.",
+      "category": "seo",
+      "first": {
+        "id": "semrush",
+        "name": "Semrush",
+        "description": "Search marketing and competitive research tools.",
+        "website": "https://www.semrush.com/"
+      },
+      "second": {
+        "id": "screaming-frog",
+        "name": "Screaming Frog SEO Spider",
+        "description": "Desktop technical SEO site crawler (free up to 500 URLs; paid annual per-seat licence removes cap).",
+        "website": "https://www.screamingfrog.co.uk/seo-spider/pricing/"
+      },
+      "rows": [
+        {
+          "dimension": "Pricing & licensing model",
+          "first": {
+            "summary": "Cloud SaaS subscription starting at $139/mo ($117.33/mo annual) with per-user fees ($45-$100/user) for additional seats.",
+            "sourceLabel": "Semrush Pricing & Plans",
+            "sourceUrl": "https://www.semrush.com/pricing/seo-ai-search/"
+          },
+          "second": {
+            "summary": "Free up to 500 URLs; paid annual per-seat licence removes the 500-URL cap and unlocks scheduling and API integrations.",
+            "sourceLabel": "Screaming Frog SEO Spider Pricing",
+            "sourceUrl": "https://www.screamingfrog.co.uk/seo-spider/pricing/"
+          }
+        },
+        {
+          "dimension": "Crawl architecture & quotas",
+          "first": {
+            "summary": "Cloud-hosted Site Audit with monthly crawl page caps shared across workspace users.",
+            "sourceLabel": "Semrush User Management Docs",
+            "sourceUrl": "https://www.semrush.com/kb/1409-user-management"
+          },
+          "second": {
+            "summary": "Local desktop crawler (Windows, macOS, Linux) bound by local RAM/storage rather than monthly cloud crawl credits.",
+            "sourceLabel": "Screaming Frog SEO Spider FAQ",
+            "sourceUrl": "https://www.screamingfrog.co.uk/seo-spider/faq/"
+          }
+        },
+        {
+          "dimension": "Keyword, backlink & competitive scope",
+          "first": {
+            "summary": "Full keyword research, backlink database, rank tracking, and AI visibility toolkits.",
+            "sourceLabel": "Semrush Pricing & Plans",
+            "sourceUrl": "https://www.semrush.com/pricing/seo-ai-search/"
+          },
+          "second": {
+            "summary": "Dedicated technical crawler that connects to external APIs (Google, Ahrefs, Moz) rather than providing its own keyword database.",
+            "sourceLabel": "Screaming Frog SEO Spider Pricing",
+            "sourceUrl": "https://www.screamingfrog.co.uk/seo-spider/pricing/"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Large-site crawl economics (100k+ URLs)",
+          "buyerContext": "Cloud crawl credits can deplete quickly on large e-commerce sites.",
+          "firstValue": "Check Semrush monthly Site Audit page limits on SEO vs. Pro+.",
+          "secondValue": "Confirm local RAM/cloud VM requirements for Screaming Frog 100k+ URL crawls."
+        },
+        {
+          "dimension": "Keyword & backlink data dependency",
+          "buyerContext": "Screaming Frog is a crawler, not an all-in-one keyword suite.",
+          "firstValue": "Verify Semrush included keyword and backlink reports.",
+          "secondValue": "Confirm which external APIs you will connect to Screaming Frog."
+        },
+        {
+          "dimension": "Scheduled cloud vs. local crawls",
+          "buyerContext": "Ensure automated weekly audits run reliably without a laptop open.",
+          "firstValue": "Verify Semrush scheduled Site Audit cadence.",
+          "secondValue": "Verify Screaming Frog CLI/scheduled crawl setup on a dedicated machine."
+        },
+        {
+          "dimension": "Multi-analyst seat cost",
+          "buyerContext": "Compare annual per-seat licence costs for agencies.",
+          "firstValue": "Calculate Semrush base plan plus $45-$100/user extra seat fees.",
+          "secondValue": "Calculate Screaming Frog annual per-seat volume licence pricing."
+        }
+      ]
+    },
+    {
+      "slug": "kinsta-vs-pressable",
+      "title": "Kinsta vs Pressable",
+      "metaDescription": "Compare Kinsta and Pressable managed WordPress hosting plans, visit/bandwidth billing, install limits, and staging environments using official vendor docs.",
+      "category": "hosting",
+      "first": {
+        "id": "kinsta",
+        "name": "Kinsta",
+        "description": "Managed hosting for websites and applications.",
+        "website": "https://kinsta.com/"
+      },
+      "second": {
+        "id": "pressable",
+        "name": "Pressable",
+        "description": "Managed WordPress hosting (plans from $25/mo monthly or Signature 1 at $20.83/mo billed annually).",
+        "website": "https://pressable.com/pricing/"
+      },
+      "rows": [
+        {
+          "dimension": "Plans & visit/bandwidth billing",
+          "first": {
+            "summary": "Billed by monthly visits or server bandwidth (e.g., Single 35k visits or 20GB bandwidth at $35/mo standard; WP 2 at $70/mo standard).",
+            "sourceLabel": "Kinsta WordPress Hosting Plans Docs",
+            "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/"
+          },
+          "second": {
+            "summary": "Plans from $25/mo monthly or Signature 1 at $20.83/mo billed annually (1 staging site, 30K monthly visits, 20GB storage), scaling to Signature 8.",
+            "sourceLabel": "Pressable Official Pricing",
+            "sourceUrl": "https://pressable.com/pricing/"
+          }
+        },
+        {
+          "dimension": "Staging, backups & security stack",
+          "first": {
+            "summary": "Includes staging environment, DNS zone, free migrations, SSL, uptime monitoring, CDN, Cloudflare Enterprise DDoS protection, and automated backups.",
+            "sourceLabel": "Kinsta WordPress Hosting Overview",
+            "sourceUrl": "https://kinsta.com/wordpress-hosting/"
+          },
+          "second": {
+            "summary": "Includes staging sites, automated backups, free SSL, and WordPress-focused support across Signature tiers.",
+            "sourceLabel": "Pressable Cost Breakdown",
+            "sourceUrl": "https://pressable.com/highlights/how-much-does-pressable-cost/"
+          }
+        },
+        {
+          "dimension": "Multi-site & overage handling",
+          "first": {
+            "summary": "Single-site plans support $30/mo additional site add-ons sharing plan resources; overage fees apply beyond visit/bandwidth caps.",
+            "sourceLabel": "Kinsta WordPress Hosting Plans Docs",
+            "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/"
+          },
+          "second": {
+            "summary": "Signature tiers bundle specific WordPress install counts, monthly visits, and storage quotas.",
+            "sourceLabel": "Pressable Official Pricing",
+            "sourceUrl": "https://pressable.com/pricing/"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Multi-site install economics",
+          "buyerContext": "Agencies hosting 5–10 small client sites need predictable per-site pricing.",
+          "firstValue": "Compare Kinsta WP 2 / WP 5 plans against $30/mo site add-ons.",
+          "secondValue": "Compare Pressable Signature tier install limits and pricing."
+        },
+        {
+          "dimension": "Traffic spike & visit overage fees",
+          "buyerContext": "Verify how sudden referral spikes are metered and billed.",
+          "firstValue": "Confirm Kinsta visit vs. bandwidth overage rates.",
+          "secondValue": "Confirm Pressable monthly visit overage pricing."
+        },
+        {
+          "dimension": "PHP workers & WooCommerce concurrency",
+          "buyerContext": "Dynamic checkout pages rely on sufficient PHP worker capacity.",
+          "firstValue": "Verify Kinsta PHP worker allocation on your target tier.",
+          "secondValue": "Verify Pressable PHP worker/concurrency limits on Signature plans."
+        },
+        {
+          "dimension": "Staging & migration support",
+          "buyerContext": "Check whether staging environments count toward install limits.",
+          "firstValue": "Verify Kinsta standard vs. premium staging allowances.",
+          "secondValue": "Verify Pressable staging site limits per Signature tier."
+        }
+      ]
+    },
+    {
+      "slug": "wp-engine-vs-flywheel",
+      "title": "WP Engine vs Flywheel",
+      "metaDescription": "Compare WP Engine and Flywheel managed WordPress hosting plans, SLAs, agency billing transfer tools, and visit/bandwidth caps using official vendor docs.",
+      "category": "hosting",
+      "first": {
+        "id": "wp-engine",
+        "name": "WP Engine",
+        "description": "Managed WordPress hosting across Essential, Business, and Enterprise tiers with daily automated backups and free SSL/SSH.",
+        "website": "https://wpengine.com/managed-hosting-platform/"
+      },
+      "second": {
+        "id": "flywheel",
+        "name": "Flywheel",
+        "description": "Managed WordPress hosting designed for designers and creative agencies with client workflow, blueprint, and billing transfer tools.",
+        "website": "https://getflywheel.com/pricing/"
+      },
+      "rows": [
+        {
+          "dimension": "Plan tiers & resource limits",
+          "first": {
+            "summary": "Essential (from $28/mo billed annually), Business (isolated resources, 99.99% uptime SLA), and custom Enterprise tiers with visit, storage, and bandwidth caps.",
+            "sourceLabel": "WP Engine Plans",
+            "sourceUrl": "https://wpengine.com/plans/"
+          },
+          "second": {
+            "summary": "Tiny, Starter, Freelance, and Agency plans scaling by WordPress installs, monthly visits, storage, and bandwidth allowances.",
+            "sourceLabel": "Flywheel Official Pricing",
+            "sourceUrl": "https://getflywheel.com/pricing/"
+          }
+        },
+        {
+          "dimension": "Agency workflows & developer tooling",
+          "first": {
+            "summary": "Includes Dev/Stage/Prod environments, SSH access, daily automated backups, and free SSL certificates.",
+            "sourceLabel": "WP Engine Managed Platform",
+            "sourceUrl": "https://wpengine.com/managed-hosting-platform/"
+          },
+          "second": {
+            "summary": "Built for creative agencies with site blueprints, demo sites, collaborator access, and client billing transfer.",
+            "sourceLabel": "Flywheel Overview",
+            "sourceUrl": "https://getflywheel.com/"
+          }
+        },
+        {
+          "dimension": "SLAs & agency add-on fees",
+          "first": {
+            "summary": "99.99% uptime SLA and isolated resources are reserved for Business and Enterprise tiers.",
+            "sourceLabel": "WP Engine Plans",
+            "sourceUrl": "https://wpengine.com/plans/"
+          },
+          "second": {
+            "summary": "Includes staging sites and nightly backups; verify optional add-on fees for Growth Suite or multisite.",
+            "sourceLabel": "Flywheel Official Pricing",
+            "sourceUrl": "https://getflywheel.com/pricing/"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "SSH, Git & multi-environment needs",
+          "buyerContext": "Developer-heavy teams often need SSH and 3-tier environments.",
+          "firstValue": "Verify WP Engine SSH and Dev/Stage/Prod tooling on Essential.",
+          "secondValue": "Confirm whether Flywheel's staging workflow meets your dev team's needs."
+        },
+        {
+          "dimension": "Client handoff & billing transfer",
+          "buyerContext": "Agencies frequently transfer hosting ownership after launch.",
+          "firstValue": "Check WP Engine account transfer and collaborator workflows.",
+          "secondValue": "Check Flywheel billing transfer and Growth Suite add-on pricing."
+        },
+        {
+          "dimension": "Uptime SLA & isolated compute",
+          "buyerContext": "Enterprise clients often require contractual uptime SLAs.",
+          "firstValue": "Confirm WP Engine Business-tier 99.99% SLA pricing.",
+          "secondValue": "Confirm Flywheel SLA terms on Freelance vs. Agency plans."
+        },
+        {
+          "dimension": "Visit & bandwidth overage rates",
+          "buyerContext": "Verify overage charges for seasonal traffic spikes.",
+          "firstValue": "Confirm WP Engine monthly visit overage billing.",
+          "secondValue": "Confirm Flywheel visit and bandwidth overage fees per tier."
         }
       ]
     }
