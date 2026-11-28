@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { SITE_ORIGIN } from '../../lib/site-origin.mjs';
 import { validateVerifiedVendorFacts } from '../../lib/verified-vendor-facts.mjs';
 
 const OFFICIAL_VENDOR_DOMAINS = Object.freeze([
@@ -11,7 +12,7 @@ const OFFICIAL_VENDOR_DOMAINS = Object.freeze([
 ]);
 
 const TRACKING_PARAMS = new Set(['ref', 'aff', 'affiliate', 'partner', 'via']);
-const USER_AGENT = 'StackPilot-Research-Monitor/1.0 (+https://inspiring-chaja-cfb85f.netlify.app/)';
+const USER_AGENT = `StackPilot-Research-Monitor/1.0 (+${SITE_ORIGIN}/)`;
 const DEFAULT_MAX_BYTES = 1_000_000;
 const DEFAULT_TIMEOUT_MS = 15_000;
 const MAX_REDIRECT_HOPS = 3;

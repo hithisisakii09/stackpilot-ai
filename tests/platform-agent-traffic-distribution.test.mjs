@@ -19,7 +19,7 @@ import {
 } from '../src/platform/agents/traffic-distribution.mjs';
 
 // ── Canonical test fixtures ─────────────────────────────────────────────────
-const SITE_ORIGIN = 'https://inspiring-chaja-cfb85f.netlify.app';
+import { SITE_ORIGIN } from '../src/lib/site-origin.mjs';
 
 // Actual sourceUrls from verified-vendor-facts.json (HubSpot vs Pipedrive)
 const HUBSPOT_EXPORT_URL = 'https://knowledge.hubspot.com/import-and-export/export-records';

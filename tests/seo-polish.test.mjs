@@ -38,7 +38,7 @@ const PRIVATE_ROUTES = [
 ];
 
 test('JSON-LD generators use live SITE_ORIGIN with zero stackpilot.invalid placeholders', () => {
-  assert.equal(SITE_ORIGIN, 'https://inspiring-chaja-cfb85f.netlify.app');
+  assert.equal(SITE_ORIGIN, 'https://stackpilot-ai.hithisisakii09.workers.dev');
   const hubspot = products.find(p => p.id === 'hubspot');
   const appSchema = buildSoftwareApplicationSchema(hubspot);
   assert.equal(appSchema.url, `${SITE_ORIGIN}/software/hubspot/`);
