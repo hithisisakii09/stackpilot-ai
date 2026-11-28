@@ -1,4 +1,32 @@
 {
   "schemaVersion": 1,
-  "packs": []
+  "packs": [
+    {
+      "id": "dist-c7572befe38e",
+      "targetSlug": "crm-data-export-and-portability-guide",
+      "targetType": "guide",
+      "canonicalUrl": "https://stackpilot-ai.hithisisakii09.workers.dev/guides/crm-data-export-and-portability-guide/",
+      "status": "pending_owner_review",
+      "draftedAt": "2026-11-28T08:04:31.658Z",
+      "ownerApprovalRequired": true,
+      "channels": {
+        "linkedin": "Evaluating CRM data export and portability is critical when selecting a platform, especially if you ever need to migrate your customer records or perform comprehensive data backups. Our latest buyer guide compares HubSpot and Pipedrive across export formats, automation limits, historical data access, and API capabilities. Whether you are looking at standard CSV exports via resources like HubSpot (https://knowledge.hubspot.com/import-and-export/export-records) and Pipedrive (https://support.pipedrive.com/en/article/how-can-i-free-up-space), or evaluating programmatic extraction, understanding your data ownership is essential. Read the full CRM Data Export and Portability Buyer Guide: HubSpot vs Pipedrive on StackPilot: https://stackpilot-ai.hithisisakii09.workers.dev/guides/crm-data-export-and-portability-guide/",
+        "xThread": [
+          "Data ownership and portability are critical factors when choosing a CRM. If you outgrow your platform or need regular backups, how easily can you extract your customer records, deals, and activity histories?",
+          "We compared HubSpot and Pipedrive to see how they handle CRM data exports. While both support standard formats like CSV and Excel, their limits on historical records, associated data exports, and automation vary significantly.",
+          "For official export documentation, check HubSpot's guide: https://knowledge.hubspot.com/import-and-export/export-records and Pipedrive's support article: https://support.pipedrive.com/en/article/how-can-i-free-up-space",
+          "Read our complete CRM Data Export and Portability Buyer Guide: HubSpot vs Pipedrive to help your team make an informed software decision: https://stackpilot-ai.hithisisakii09.workers.dev/guides/crm-data-export-and-portability-guide/"
+        ],
+        "reddit": {
+          "title": "CRM Data Export and Portability Buyer Guide: HubSpot vs Pipedrive",
+          "body": "When evaluating CRM software, data portability is often overlooked until a migration or audit is required. We put together a comparison of HubSpot and Pipedrive focusing strictly on data export capabilities, including supported formats, record limitations, API extraction, and associated data handling.\n\nYou can review the official export documentation directly via HubSpot (https://knowledge.hubspot.com/import-and-export/export-records) and Pipedrive (https://support.pipedrive.com/en/article/how-can-i-free-up-space).\n\nRead the full buyer guide here: https://stackpilot-ai.hithisisakii09.workers.dev/guides/crm-data-export-and-portability-guide/"
+        },
+        "newsletterBlurb": "Data portability is a key consideration when choosing a CRM platform. Our new buyer guide examines how HubSpot and Pipedrive handle data exports, file formats, historical records, and API access. Review official vendor documentation from HubSpot (https://knowledge.hubspot.com/import-and-export/export-records) and Pipedrive (https://support.pipedrive.com/en/article/how-can-i-free-up-space) alongside our complete analysis at https://stackpilot-ai.hithisisakii09.workers.dev/guides/crm-data-export-and-portability-guide/"
+      },
+      "referencedOfficialUrls": [
+        "https://knowledge.hubspot.com/import-and-export/export-records",
+        "https://support.pipedrive.com/en/article/how-can-i-free-up-space"
+      ]
+    }
+  ]
 }
