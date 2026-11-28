@@ -3,19 +3,41 @@ import products from '../../data/products.json';
 import { buildSoftwareApplicationSchema, buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
 import { canonicalUrl } from '../../lib/site-origin.mjs';
 import { getVerifiedVendorFactsForProduct } from '../../lib/verified-vendor-facts.mjs';
+import { getExtendedProducts, validateExtendedCatalog } from '../../lib/extended-catalog.mjs';
+import rawExtendedCatalog from '../../data/extended-catalog.json';
 
 export function getStaticPaths() {
-  return products.map((product) => ({ params: { id: product.id }, props: { product } }));
+  const legacyPaths = products.map((product) => ({
+    params: { id: product.id },
+    props: { product, isExtended: false, checkedAt: null }
+  }));
+  const extendedCatalog = validateExtendedCatalog(rawExtendedCatalog, { today: '9999-12-31' });
+  const extendedPaths = extendedCatalog.products.map((product) => ({
+    params: { id: product.id },
+    props: { product, isExtended: true, checkedAt: extendedCatalog.checkedAt }
+  }));
+  return [...legacyPaths, ...extendedPaths];
 }
-const { product } = Astro.props;
-const verifiedDocs = getVerifiedVendorFactsForProduct(product.id);
+const { product, isExtended, checkedAt } = Astro.props;
+const legacyVerifiedDocs = !isExtended ? getVerifiedVendorFactsForProduct(product.id) : null;
+const extendedDocsRows = isExtended ? product.verifiedDocs : [];
+const docsCheckedAt = isExtended ? checkedAt : legacyVerifiedDocs.checkedAt;
+
+const categoryLabelMap = { sales: 'CRM', seo: 'SEO', hosting: 'Hosting' };
+const displayCategory = isExtended ? (categoryLabelMap[product.category] ?? product.category) : product.category;
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
   { name: 'Software', url: '/#tools' },
   { name: product.name, url: `/software/${product.id}/` }
 ];
-const softwareSchemaJson = serializeJsonLd(buildSoftwareApplicationSchema(product));
+const softwareSchemaJson = serializeJsonLd(buildSoftwareApplicationSchema({
+  id: product.id,
+  name: product.name,
+  category: displayCategory,
+  description: product.description,
+  website: product.website
+}));
 const breadcrumbSchemaJson = serializeJsonLd(buildBreadcrumbSchema(breadcrumbs));
 
 const categoryComparisons = {
@@ -23,7 +45,8 @@ const categoryComparisons = {
   SEO: { label: 'Semrush vs Ahrefs', href: '/compare/semrush-vs-ahrefs/' },
   Hosting: { label: 'Kinsta vs Cloudways', href: '/compare/kinsta-vs-cloudways/' }
 };
-const comparison = categoryComparisons[product.category];
+const comparison = !isExtended ? categoryComparisons[product.category] : null;
+const extendedComparisons = isExtended ? product.relatedComparisons : [];
 
 const categoryTools = {
   CRM: [
@@ -40,14 +63,14 @@ const categoryTools = {
     { title: 'Backup Restore Drill Assessor', href: '/tools/backup-restore-drill/', desc: 'Validate recovery point and time objectives.' }
   ]
 };
-const tools = categoryTools[product.category] || [];
+const tools = categoryTools[displayCategory] || [];
 
 const categoryGuides = {
   CRM: { title: 'CRM Migration Checklist', href: '/guides/crm-migration-checklist/' },
   SEO: { title: 'SaaS Total Cost of Ownership Guide', href: '/guides/saas-total-cost-of-ownership/' },
   Hosting: { title: 'Hosting Migration Checklist', href: '/guides/hosting-migration-checklist/' }
 };
-const guide = categoryGuides[product.category];
+const guide = categoryGuides[displayCategory];
 ---
 <!doctype html>
 <html lang="en">
@@ -78,20 +101,20 @@ const guide = categoryGuides[product.category];
 <p>{product.description}</p>
 <section aria-labelledby="overview">
 <h2 id="overview">Overview</h2>
-<p><strong>Category:</strong> {product.category}</p>
-<p><strong>Research state:</strong> {product.researchStatus === 'verified' ? 'Editorially reviewed' : 'Research and editorial review pending'}</p>
-<p><strong>Potential use-case category:</strong> {product.bestFor.join(', ')}</p>
+<p><strong>Category:</strong> {displayCategory}</p>
+<p><strong>Research state:</strong> {!isExtended && product.researchStatus === 'verified' ? 'Editorially reviewed' : 'Research and editorial review pending'}</p>
+{!isExtended && <p><strong>Potential use-case category:</strong> {product.bestFor.join(', ')}</p>}
 <p class="alert">This listing is informational. Feature claims, pricing, team suitability, and service limitations have not been independently confirmed.</p>
 </section>
 <section aria-labelledby="fit">
 <h2 id="fit">Fit and pricing</h2>
-<p>Team-size suitability: {product.supportedTeams.length ? product.supportedTeams.join(', ') : 'Not yet verified'}</p>
-<p>Budget compatibility: {product.budgetTiers.length ? product.budgetTiers.join(', ') : 'Not yet verified'}</p>
+<p>Team-size suitability: {!isExtended && product.supportedTeams.length ? product.supportedTeams.join(', ') : 'Not yet verified'}</p>
+<p>Budget compatibility: {!isExtended && product.budgetTiers.length ? product.budgetTiers.join(', ') : 'Not yet verified'}</p>
 <p>Pricing: Consult the provider for current plans, currency, taxes, and limits. StackPilot AI has not verified pricing.</p>
 </section>
 
 <section aria-labelledby="verified-docs">
-  <h2 id="verified-docs">First-party vendor documentation snapshot (checked {verifiedDocs.checkedAt})</h2>
+  <h2 id="verified-docs">First-party vendor documentation snapshot (checked {docsCheckedAt})</h2>
   <p>Owner-reviewed excerpts from {product.name}'s official documentation. Confirm current pricing, quotas, and contract terms directly via the linked official documentation.</p>
   <div class="table-scroll" role="region" tabindex="0" aria-label={`First-party vendor documentation snapshot for ${product.name}, scroll horizontally for all columns`}>
     <table>
@@ -103,11 +126,17 @@ const guide = categoryGuides[product.category];
         </tr>
       </thead>
       <tbody>
-        {verifiedDocs.rows.map((row) => (
+        {!isExtended ? legacyVerifiedDocs.rows.map((row) => (
           <tr>
             <th scope="row"><strong>{row.dimension}</strong></th>
             <td>{row.entry.summary}</td>
             <td><a href={row.entry.sourceUrl} target="_blank" rel="noopener noreferrer">{row.entry.sourceLabel} ↗</a></td>
+          </tr>
+        )) : extendedDocsRows.map((row) => (
+          <tr>
+            <th scope="row"><strong>{row.dimension}</strong></th>
+            <td>{row.summary}</td>
+            <td><a href={row.sourceUrl} target="_blank" rel="noopener noreferrer">{row.sourceLabel} ↗</a></td>
           </tr>
         ))}
       </tbody>
@@ -115,11 +144,33 @@ const guide = categoryGuides[product.category];
   </div>
 </section>
 
+{isExtended && product.checklist.length > 0 && (
+  <section aria-labelledby="buyer-checklist">
+    <h2 id="buyer-checklist">Buyer verification checklist</h2>
+    <ul>
+      {product.checklist.map((item) => (
+        <li>{item}</li>
+      ))}
+    </ul>
+  </section>
+)}
+
 {comparison && (
   <section aria-labelledby="comparison-links">
     <h2 id="comparison-links">Direct head-to-head comparison</h2>
     <p>Compare {product.name} directly against its primary category peer:</p>
     <p>👉 <a href={comparison.href}><strong>{comparison.label} Comparison Matrix</strong></a> — Side-by-side workflow breakdown and downloadable vendor due diligence questions.</p>
+  </section>
+)}
+
+{isExtended && extendedComparisons.length > 0 && (
+  <section aria-labelledby="comparison-links">
+    <h2 id="comparison-links">Direct head-to-head comparisons</h2>
+    <ul>
+      {extendedComparisons.map((c) => (
+        <li><a href={`/compare/${c.slug}/`}><strong>{c.title}</strong></a> — Side-by-side vendor documentation snapshot and buyer verification questions.</li>
+      ))}
+    </ul>
   </section>
 )}
 
@@ -139,7 +190,9 @@ const guide = categoryGuides[product.category];
 <section aria-labelledby="sources">
 <h2 id="sources">Research transparency</h2>
 <p class="alert">The links below are <strong>unreviewed research leads</strong>. Their presence is not independent evidence of a verified feature, price, or product claim. The displayed date is when each source was logged for review, not a completed editorial approval.</p>
-{product.sources.length ? <ul>{product.sources.map(source => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.claim}</a> — candidate source logged {source.checkedAt} (not reviewed)</li>)}</ul> : <p>No approved research sources have been recorded yet.</p>}
+{!isExtended ? (product.sources.length ? <ul>{product.sources.map(source => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.claim}</a> — candidate source logged {source.checkedAt} (not reviewed)</li>)}</ul> : <p>No approved research sources have been recorded yet.</p>) : (
+  <ul>{product.officialUrls.map(url => <li><a href={url} target="_blank" rel="noopener noreferrer">{url}</a> — official vendor reference logged {docsCheckedAt}</li>)}</ul>
+)}
 <p>No affiliate tracking links are active. The link below opens the vendor's official site.</p>
 <a href={product.website} target="_blank" rel="noopener noreferrer">Visit official website ↗</a>
 </section>

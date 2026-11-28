@@ -6,6 +6,7 @@ import { buildSoftwareApplicationSchema, buildBreadcrumbSchema } from '../src/li
 
 const products = JSON.parse(readFileSync(new URL('../src/data/products.json', import.meta.url), 'utf8'));
 const agentGuides = JSON.parse(readFileSync(new URL('../src/data/agent-buyer-guides.json', import.meta.url), 'utf8')).guides;
+const extendedCatalog = JSON.parse(readFileSync(new URL('../src/data/extended-catalog.json', import.meta.url), 'utf8'));
 
 const PUBLIC_ROUTES = [
   '/',
@@ -14,6 +15,8 @@ const PUBLIC_ROUTES = [
   '/compare/semrush-vs-ahrefs/',
   '/compare/kinsta-vs-cloudways/',
   ...products.map(p => `/software/${p.id}/`),
+  ...extendedCatalog.comparisons.map(c => `/compare/${c.slug}/`),
+  ...extendedCatalog.products.map(p => `/software/${p.id}/`),
   '/methodology/',
   '/privacy/',
   '/disclosure/',
@@ -54,10 +57,11 @@ test('JSON-LD generators use live SITE_ORIGIN with zero stackpilot.invalid place
 });
 
 test('public/sitemap.xml lists all public routes and zero private routes', () => {
-  assert.equal(PUBLIC_ROUTES.length, 25 + agentGuides.length);
+  const expectedCount = 25 + extendedCatalog.products.length + extendedCatalog.comparisons.length + agentGuides.length;
+  assert.equal(PUBLIC_ROUTES.length, expectedCount);
   const sitemap = readFileSync(new URL('../public/sitemap.xml', import.meta.url), 'utf8');
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-  assert.equal(locs.length, 25 + agentGuides.length);
+  assert.equal(locs.length, expectedCount);
   for (const route of PUBLIC_ROUTES) {
     assert.ok(locs.includes(canonicalUrl(route)), `Missing public route in sitemap.xml: ${route}`);
   }

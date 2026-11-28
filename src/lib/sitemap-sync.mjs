@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import products from '../data/products.json' with { type: 'json' };
 import { canonicalUrl } from './site-origin.mjs';
 import { validateAgentBuyerGuides } from './agent-buyer-guides.mjs';
+import { getExtendedProducts, getExtendedComparisons } from './extended-catalog.mjs';
 import rawGuidesData from '../data/agent-buyer-guides.json' with { type: 'json' };
 import rawVerifiedFacts from '../data/verified-vendor-facts.json' with { type: 'json' };
 
@@ -13,6 +14,8 @@ export const BASE_PUBLIC_ROUTES = Object.freeze([
   '/compare/semrush-vs-ahrefs/',
   '/compare/kinsta-vs-cloudways/',
   ...products.map(p => `/software/${p.id}/`),
+  ...getExtendedComparisons().map(c => `/compare/${c.slug}/`),
+  ...getExtendedProducts().map(p => `/software/${p.id}/`),
   '/methodology/',
   '/privacy/',
   '/disclosure/',

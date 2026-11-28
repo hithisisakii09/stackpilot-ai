@@ -1,6 +1,7 @@
 import { types } from 'node:util';
 import rawGuidesData from '../data/agent-buyer-guides.json' with { type: 'json' };
 import rawVerifiedFacts from '../data/verified-vendor-facts.json' with { type: 'json' };
+import rawExtendedCatalog from '../data/extended-catalog.json' with { type: 'json' };
 import { validateVerifiedVendorFacts } from './verified-vendor-facts.mjs';
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -12,7 +13,8 @@ const RESERVED_STATIC_GUIDE_SLUGS = new Set([
 const ALLOWED_COMPARISON_SLUGS = new Set([
   'hubspot-vs-pipedrive',
   'semrush-vs-ahrefs',
-  'kinsta-vs-cloudways'
+  'kinsta-vs-cloudways',
+  ...(Array.isArray(rawExtendedCatalog?.comparisons) ? rawExtendedCatalog.comparisons.map(c => c.slug) : [])
 ]);
 const SECRET_PATTERNS = [
   /(?:sk-[A-Za-z0-9_-]{12,}|ghp_[A-Za-z0-9]{20,}|AIza[0-9A-Za-z_-]{20,})/i,
@@ -94,6 +96,17 @@ function collectAllowedSourceUrls(verifiedVendorFacts) {
     for (const row of pair.rows) {
       allowed.add(row.first.sourceUrl);
       allowed.add(row.second.sourceUrl);
+    }
+  }
+  for (const comp of (rawExtendedCatalog?.comparisons ?? [])) {
+    for (const row of (comp.rows ?? [])) {
+      if (row?.first?.sourceUrl) allowed.add(row.first.sourceUrl);
+      if (row?.second?.sourceUrl) allowed.add(row.second.sourceUrl);
+    }
+  }
+  for (const prod of (rawExtendedCatalog?.products ?? [])) {
+    for (const url of (prod.officialUrls ?? [])) {
+      if (typeof url === 'string') allowed.add(url);
     }
   }
   return allowed;

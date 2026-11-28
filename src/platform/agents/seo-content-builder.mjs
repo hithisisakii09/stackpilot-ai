@@ -1,5 +1,6 @@
 import { validateAgentBuyerGuides } from '../../lib/agent-buyer-guides.mjs';
 import { validateVerifiedVendorFacts } from '../../lib/verified-vendor-facts.mjs';
+import rawExtendedCatalog from '../../data/extended-catalog.json' with { type: 'json' };
 
 /**
  * Selects the first pending topic from the SEO topic backlog.
@@ -18,6 +19,11 @@ export function buildGroundedSeoPrompt(topic, verifiedVendorFacts) {
   for (const slug of topic.relatedComparisonSlugs) {
     if (Object.hasOwn(validatedFacts, slug)) {
       groundedEvidence[slug] = validatedFacts[slug];
+    } else {
+      const extComp = (rawExtendedCatalog?.comparisons ?? []).find(c => c.slug === slug);
+      if (extComp) {
+        groundedEvidence[slug] = { checkedAt: rawExtendedCatalog.checkedAt, rows: extComp.rows };
+      }
     }
   }
 
@@ -44,6 +50,12 @@ function buildSourceLabelMap(verifiedVendorFacts) {
     for (const row of pair.rows) {
       map.set(row.first.sourceUrl, row.first.sourceLabel);
       map.set(row.second.sourceUrl, row.second.sourceLabel);
+    }
+  }
+  for (const comp of (rawExtendedCatalog?.comparisons ?? [])) {
+    for (const row of (comp.rows ?? [])) {
+      if (row?.first?.sourceUrl && row?.first?.sourceLabel) map.set(row.first.sourceUrl, row.first.sourceLabel);
+      if (row?.second?.sourceUrl && row?.second?.sourceLabel) map.set(row.second.sourceUrl, row.second.sourceLabel);
     }
   }
   return map;
