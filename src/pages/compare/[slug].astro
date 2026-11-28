@@ -6,18 +6,43 @@ import { getAllComparisonPairs, getComparisonPair } from '../../lib/comparison-p
 import { buildFAQSchema, buildBreadcrumbSchema, serializeJsonLd } from '../../lib/structured-data.mjs';
 import { canonicalUrl } from '../../lib/site-origin.mjs';
 import { getVerifiedVendorFacts } from '../../lib/verified-vendor-facts.mjs';
+import { validateExtendedCatalog } from '../../lib/extended-catalog.mjs';
+import rawExtendedCatalog from '../../data/extended-catalog.json';
 
 export function getStaticPaths() {
-  return getAllComparisonPairs().map(pair => ({
-    params: { slug: pair.slug }
+  const legacyPaths = getAllComparisonPairs().map(pair => ({
+    params: { slug: pair.slug },
+    props: { isExtended: false, extendedComp: null, checkedAt: null }
   }));
+  const extendedCatalog = validateExtendedCatalog(rawExtendedCatalog, { today: '9999-12-31' });
+  const extendedPaths = extendedCatalog.comparisons.map(comp => ({
+    params: { slug: comp.slug },
+    props: { isExtended: true, extendedComp: comp, checkedAt: extendedCatalog.checkedAt }
+  }));
+  return [...legacyPaths, ...extendedPaths];
 }
+
+const { isExtended, extendedComp, checkedAt } = Astro.props;
 
 // Build fails closed if a comparison claim lacks an unapproved evidence record.
 validateComparisonEvidence(evidenceLedger, getAllComparisonPairs(), products);
-const pairData = getComparisonPair(Astro.params.slug, products);
-const { pair, first, second, matrix } = pairData;
-const verifiedDocs = getVerifiedVendorFacts(pair.slug);
+const pairData = !isExtended ? getComparisonPair(Astro.params.slug, products) : null;
+const pair = isExtended
+  ? {
+      slug: extendedComp.slug,
+      title: extendedComp.title,
+      metaDescription: extendedComp.metaDescription,
+      relatedTools: [],
+      relatedGuides: []
+    }
+  : pairData.pair;
+const first = isExtended ? { ...extendedComp.first, category: extendedComp.category } : pairData.first;
+const second = isExtended ? { ...extendedComp.second, category: extendedComp.category } : pairData.second;
+const matrix = isExtended ? [] : pairData.matrix;
+const verifiedDocs = isExtended
+  ? { checkedAt, rows: extendedComp.rows }
+  : getVerifiedVendorFacts(pair.slug);
+const extendedQuestions = isExtended ? extendedComp.questions : [];
 
 const breadcrumbs = [
   { name: 'Home', url: '/' },
@@ -113,13 +138,24 @@ const faqJson = serializeJsonLd(buildFAQSchema(faqs));
             </tr>
           </thead>
           <tbody>
-            {matrix.map((row) => (
+            {!isExtended ? matrix.map((row) => (
               <tr>
                 <th scope="row">
                   <strong>{row.dimension}</strong>
                   <br />
                   <small class="claim-context">{row.buyerContext}</small>
                   <small class="claim-meta">Evidence: {row.evidenceStatus} · Claim ID: {row.claimId} · No editorial approval</small>
+                </th>
+                <td>{row.firstValue}</td>
+                <td>{row.secondValue}</td>
+              </tr>
+            )) : extendedQuestions.map((row) => (
+              <tr>
+                <th scope="row">
+                  <strong>{row.dimension}</strong>
+                  <br />
+                  <small class="claim-context">{row.buyerContext}</small>
+                  <small class="claim-meta">Unverified buyer prompt · No editorial approval</small>
                 </th>
                 <td>{row.firstValue}</td>
                 <td>{row.secondValue}</td>
@@ -148,30 +184,34 @@ const faqJson = serializeJsonLd(buildFAQSchema(faqs));
       </div>
     </section>
 
-    <section aria-labelledby="tools-section">
-      <h2 id="tools-section">Related decision tools & calculators</h2>
-      <p>Use these client-side tools to model seat counts, migration readiness, and cost scenarios before speaking with sales reps:</p>
-      <ul>
-        {pair.relatedTools.map(tool => (
-          <li><a href={tool.href}>{tool.title}</a> — Run interactive client-side scenarios.</li>
-        ))}
-      </ul>
-    </section>
+    {!isExtended && (
+      <>
+        <section aria-labelledby="tools-section">
+          <h2 id="tools-section">Related decision tools & calculators</h2>
+          <p>Use these client-side tools to model seat counts, migration readiness, and cost scenarios before speaking with sales reps:</p>
+          <ul>
+            {pair.relatedTools.map(tool => (
+              <li><a href={tool.href}>{tool.title}</a> — Run interactive client-side scenarios.</li>
+            ))}
+          </ul>
+        </section>
 
-    <section aria-labelledby="guides-section">
-      <h2 id="guides-section">Related buyer guides</h2>
-      <ul>
-        {pair.relatedGuides.map(guide => (
-          <li><a href={guide.href}>{guide.title}</a> — Neutral operational walkthrough.</li>
-        ))}
-      </ul>
-    </section>
+        <section aria-labelledby="guides-section">
+          <h2 id="guides-section">Related buyer guides</h2>
+          <ul>
+            {pair.relatedGuides.map(guide => (
+              <li><a href={guide.href}>{guide.title}</a> — Neutral operational walkthrough.</li>
+            ))}
+          </ul>
+        </section>
 
-    <section aria-labelledby="questions">
-      <h2 id="questions">Vendor due diligence questions</h2>
-      <p>Download structured questions to ask sales representatives from both {first.name} and {second.name}. Formatted for offline spreadsheets with formula neutralization:</p>
-      <a id="download-questions" href={`/compare/${pair.slug}-vendor-questions.csv`} download>Download vendor questions (CSV)</a>
-    </section>
+        <section aria-labelledby="questions">
+          <h2 id="questions">Vendor due diligence questions</h2>
+          <p>Download structured questions to ask sales representatives from both {first.name} and {second.name}. Formatted for offline spreadsheets with formula neutralization:</p>
+          <a id="download-questions" href={`/compare/${pair.slug}-vendor-questions.csv`} download>Download vendor questions (CSV)</a>
+        </section>
+      </>
+    )}
   </main>
   <footer>
     <p>© {new Date().getFullYear()} StackPilot AI. Independent software research. · <a href="/disclosure/">Disclosure</a> · <a href="/privacy/">Privacy</a> · <a href="/methodology/">Methodology</a></p>

@@ -85,6 +85,90 @@
       ],
       "status": "pending",
       "generatedAt": null
+    },
+    {
+      "slug": "hubspot-vs-zoho-crm-pricing-and-migration-guide",
+      "targetTitle": "HubSpot vs Zoho CRM Pricing, Editions & Migration Guide",
+      "focusKeywords": [
+        "hubspot vs zoho crm",
+        "zoho crm editions pricing",
+        "crm migration export"
+      ],
+      "relatedComparisonSlugs": [
+        "hubspot-vs-zoho-crm"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "kinsta-vs-wp-engine-wordpress-hosting-guide",
+      "targetTitle": "Kinsta vs WP Engine Managed WordPress Hosting & SLA Guide",
+      "focusKeywords": [
+        "kinsta vs wp engine",
+        "wp engine sla",
+        "managed wordpress visit limits"
+      ],
+      "relatedComparisonSlugs": [
+        "kinsta-vs-wp-engine"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "semrush-vs-se-ranking-agency-pricing-guide",
+      "targetTitle": "Semrush vs SE Ranking Agency Pricing & Seat Licensing Guide",
+      "focusKeywords": [
+        "semrush vs se ranking",
+        "se ranking agency pack",
+        "seo tool seat pricing"
+      ],
+      "relatedComparisonSlugs": [
+        "semrush-vs-se-ranking"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "pipedrive-vs-close-sales-team-crm-guide",
+      "targetTitle": "Pipedrive vs Close Outbound Sales CRM & Calling Costs Guide",
+      "focusKeywords": [
+        "pipedrive vs close",
+        "close crm calling fees",
+        "outbound sales crm"
+      ],
+      "relatedComparisonSlugs": [
+        "pipedrive-vs-close"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "ahrefs-vs-moz-pro-backlink-and-rank-tracking-guide",
+      "targetTitle": "Ahrefs vs Moz Pro Backlink Index & Rank Tracking Cadence Guide",
+      "focusKeywords": [
+        "ahrefs vs moz pro",
+        "moz pro weekly rank tracking",
+        "ahrefs credit plans"
+      ],
+      "relatedComparisonSlugs": [
+        "ahrefs-vs-moz-pro"
+      ],
+      "status": "pending",
+      "generatedAt": null
+    },
+    {
+      "slug": "freshsales-vs-zoho-crm-small-team-guide",
+      "targetTitle": "Freshsales vs Zoho CRM Small Team Governance & Tier Guide",
+      "focusKeywords": [
+        "freshsales vs zoho crm",
+        "freshsales governance",
+        "small team crm tiers"
+      ],
+      "relatedComparisonSlugs": [
+        "freshsales-vs-zoho-crm"
+      ],
+      "status": "pending",
+      "generatedAt": null
     }
   ]
 }

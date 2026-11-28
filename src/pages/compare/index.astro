@@ -2,8 +2,11 @@
 import { canonicalUrl } from '../../lib/site-origin.mjs';
 import products from '../../data/products.json';
 import { comparisonCategories, categoryComparisonRows } from '../../lib/comparison.mjs';
+import { getExtendedProducts, getExtendedComparisons } from '../../lib/extended-catalog.mjs';
 
 const categories = comparisonCategories(products);
+const extendedProducts = getExtendedProducts();
+const extendedComparisons = getExtendedComparisons();
 // This page deliberately serializes only the already-reviewed candidate fields.
 const publicCatalog = {products: products.map(({id,name,category,bestFor}) => ({id,name,category,workflowTags:bestFor,suitabilityStatus:'CANDIDATE_UNVERIFIED'}))};
 ---
@@ -33,6 +36,22 @@ const publicCatalog = {products: products.map(({id,name,category,bestFor}) => ({
         <li><a href="/compare/semrush-vs-ahrefs/">Semrush vs Ahrefs</a> — Search marketing &amp; backlink index comparison</li>
         <li><a href="/compare/kinsta-vs-cloudways/">Kinsta vs Cloudways</a> — Managed WordPress vs Cloud VPS comparison</li>
       </ul>
+    </section>
+
+    <section aria-labelledby="extended-catalog-discovery">
+      <h2 id="extended-catalog-discovery">Extended B2B SaaS comparisons &amp; profiles</h2>
+      <p>Additional head-to-head vendor documentation matrices and introductory software profiles:</p>
+      <ul>
+        {extendedComparisons.map(c => (
+          <li><a href={`/compare/${c.slug}/`}>{c.title}</a> — First-party documentation snapshot &amp; due diligence questions</li>
+        ))}
+      </ul>
+      <p><strong>Additional software profiles:</strong> {extendedProducts.map((p, idx) => (
+        <>
+          {idx > 0 ? ' · ' : ''}
+          <a href={`/software/${p.id}/`}>{p.name}</a>
+        </>
+      ))}</p>
     </section>
 
     <section aria-labelledby="compare-title">

@@ -1,0 +1,817 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-11-28",
+  "products": [
+    {
+      "id": "zoho-crm",
+      "name": "Zoho CRM",
+      "category": "sales",
+      "description": "Multi-edition sales CRM with Free, Standard, Professional, Enterprise, and Ultimate tiers; verify annual vs. monthly per-user pricing, module limits, and export formats.",
+      "website": "https://www.zoho.com/crm/",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://www.zoho.com/crm/complete-feature-list.html",
+        "https://www.zoho.com/crm/"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Editions & tier structure",
+          "summary": "Offers Free (up to 3 users), Standard, Professional, Enterprise, and Ultimate editions with distinct module, automation, and AI feature gates; verify annual vs. monthly per-user billing.",
+          "sourceLabel": "Zoho CRM Complete Feature List",
+          "sourceUrl": "https://www.zoho.com/crm/complete-feature-list.html"
+        },
+        {
+          "dimension": "Customization & workflow limits",
+          "summary": "Workflow rules, custom modules, blueprints, and sandbox environments scale by edition tier; confirm per-org API and custom field ceilings before migrating.",
+          "sourceLabel": "Zoho CRM Complete Feature List",
+          "sourceUrl": "https://www.zoho.com/crm/complete-feature-list.html"
+        },
+        {
+          "dimension": "Data export & platform overview",
+          "summary": "Supports CSV module exports and scheduled data backups depending on tier; confirm full-backup frequency and attachment export rules directly in Zoho CRM documentation.",
+          "sourceLabel": "Zoho CRM Official Overview",
+          "sourceUrl": "https://www.zoho.com/crm/"
+        }
+      ],
+      "checklist": [
+        "Confirm annual vs. monthly per-user pricing for your target edition (Standard, Professional, Enterprise, or Ultimate).",
+        "Verify custom module, workflow rule, and daily API call limits for your team size.",
+        "Check scheduled data backup and CSV export limits before committing to a multi-year contract."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "hubspot-vs-zoho-crm",
+          "title": "HubSpot vs Zoho CRM"
+        },
+        {
+          "slug": "freshsales-vs-zoho-crm",
+          "title": "Freshsales vs Zoho CRM"
+        }
+      ]
+    },
+    {
+      "id": "close",
+      "name": "Close",
+      "category": "sales",
+      "description": "Outbound-focused sales CRM with built-in calling and SMS; verify separate calling and SMS usage fees outside base seat prices.",
+      "website": "https://close.com/pricing",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://close.com/pricing"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Seat tiers & billing",
+          "summary": "Tiered per-seat plans (Startup, Professional, Enterprise) designed for outbound sales teams; confirm annual vs. monthly per-seat rates on the official pricing page.",
+          "sourceLabel": "Close Official Pricing",
+          "sourceUrl": "https://close.com/pricing"
+        },
+        {
+          "dimension": "Calling & SMS usage charges",
+          "summary": "Built-in VoIP calling, predictive dialer, and SMS messaging incur usage-based per-minute and per-message charges separate from base seat subscriptions.",
+          "sourceLabel": "Close Official Pricing",
+          "sourceUrl": "https://close.com/pricing"
+        },
+        {
+          "dimension": "Pipeline & reporting controls",
+          "summary": "Multiple pipelines, custom activities, call recording retention, and role-based permissions vary by plan tier; verify international calling rates before rollout.",
+          "sourceLabel": "Close Official Pricing",
+          "sourceUrl": "https://close.com/pricing"
+        }
+      ],
+      "checklist": [
+        "Estimate monthly outbound calling minutes and SMS volume separately from base seat pricing.",
+        "Verify whether predictive dialer and call recording retention require Professional or Enterprise tiers.",
+        "Confirm international phone number availability and per-minute telephony rates."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "pipedrive-vs-close",
+          "title": "Pipedrive vs Close"
+        }
+      ]
+    },
+    {
+      "id": "freshsales",
+      "name": "Freshsales",
+      "category": "sales",
+      "description": "Sales CRM and CRM Suite with Growth, Pro, and Enterprise tiers, 14-day trial, and role-based governance controls.",
+      "website": "https://www.freshworks.com/crm/sales/",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://www.freshworks.com/crm/pricing-compare/",
+        "https://www.freshworks.com/crm/sales/"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Plan tiers & trial",
+          "summary": "Available across Growth, Pro, and Enterprise tiers with a 14-day free trial; confirm standalone Freshsales vs. Freshsales Suite bundling on the pricing comparison page.",
+          "sourceLabel": "Freshsales Pricing Comparison",
+          "sourceUrl": "https://www.freshworks.com/crm/pricing-compare/"
+        },
+        {
+          "dimension": "Governance & role-based access",
+          "summary": "Includes custom roles, field-level permissions, territory management, and audit logs on higher tiers; verify which governance controls require Enterprise.",
+          "sourceLabel": "Freshsales Pricing Comparison",
+          "sourceUrl": "https://www.freshworks.com/crm/pricing-compare/"
+        },
+        {
+          "dimension": "Sales automation & telephony",
+          "summary": "Provides sales sequences, workflow automation, and built-in phone/email channels; confirm regional telephony credits and workflow execution caps.",
+          "sourceLabel": "Freshsales Official Overview",
+          "sourceUrl": "https://www.freshworks.com/crm/sales/"
+        }
+      ],
+      "checklist": [
+        "Compare standalone Freshsales against Freshsales Suite if you also need marketing automation.",
+        "Verify whether territory management and field-level permissions require Pro or Enterprise.",
+        "Confirm workflow automation and sales sequence limits per billing tier."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "freshsales-vs-zoho-crm",
+          "title": "Freshsales vs Zoho CRM"
+        }
+      ]
+    },
+    {
+      "id": "se-ranking",
+      "name": "SE Ranking",
+      "category": "seo",
+      "description": "Agency and in-house SEO suite with Core ($129/mo monthly; $103.20/mo annual), Growth ($279/mo monthly; $223.20/mo annual), custom Enterprise, 14-day trial, and optional Agency Pack / API add-ons.",
+      "website": "https://seranking.com/subscription.html",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://seranking.com/subscription.html",
+        "https://seranking.com/faq.html"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Subscription tiers & pricing",
+          "summary": "Core ($129/mo monthly; $103.20/mo annual), Growth ($279/mo monthly; $223.20/mo annual), and custom Enterprise plans with a 14-day trial.",
+          "sourceLabel": "SE Ranking Subscription Plans",
+          "sourceUrl": "https://seranking.com/subscription.html"
+        },
+        {
+          "dimension": "Add-ons & agency packaging",
+          "summary": "Optional Agency Pack (white-label reporting, client seats, Lead Generator) and API access are billed separately from base plans; verify add-on eligibility per tier.",
+          "sourceLabel": "SE Ranking Subscription Plans",
+          "sourceUrl": "https://seranking.com/subscription.html"
+        },
+        {
+          "dimension": "Rank tracking frequency & quotas",
+          "summary": "Daily rank tracking limits, site audit page caps, and historical data retention scale with subscription tier and keyword quota.",
+          "sourceLabel": "SE Ranking Official FAQ",
+          "sourceUrl": "https://seranking.com/faq.html"
+        }
+      ],
+      "checklist": [
+        "Confirm whether white-label reporting requires the optional Agency Pack add-on on your chosen plan.",
+        "Verify daily keyword rank-tracking quotas and site audit page caps for your client count.",
+        "Check API access pricing and additional manager seat costs before annual billing."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "semrush-vs-se-ranking",
+          "title": "Semrush vs SE Ranking"
+        }
+      ]
+    },
+    {
+      "id": "moz-pro",
+      "name": "Moz Pro",
+      "category": "seo",
+      "description": "Keyword research, link research, technical SEO audits, weekly rank tracking, and AI visibility tracking across tiered plans.",
+      "website": "https://moz.com/products",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://moz.com/products/pro/pricing",
+        "https://moz.com/products"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Tiered plans & quotas",
+          "summary": "Tiered monthly and annual subscriptions scaling by tracked campaigns, weekly keyword rankings, pages crawled per week, and user seats.",
+          "sourceLabel": "Moz Pro Pricing",
+          "sourceUrl": "https://moz.com/products/pro/pricing"
+        },
+        {
+          "dimension": "Keyword, link & AI visibility tools",
+          "summary": "Includes Keyword Explorer, Link Explorer, technical site crawls, weekly rank tracking, and AI visibility tracking features across Pro tiers.",
+          "sourceLabel": "Moz Products Overview",
+          "sourceUrl": "https://moz.com/products"
+        },
+        {
+          "dimension": "Seat & campaign limits",
+          "summary": "Additional user seats and higher monthly query allowances depend on plan tier; confirm whether weekly vs. daily rank tracking meets reporting cadence.",
+          "sourceLabel": "Moz Pro Pricing",
+          "sourceUrl": "https://moz.com/products/pro/pricing"
+        }
+      ],
+      "checklist": [
+        "Verify weekly vs. daily rank-tracking cadence against your client reporting requirements.",
+        "Confirm monthly Keyword Explorer query limits and Link Explorer export caps.",
+        "Check included user seats and additional seat pricing on your target tier."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "ahrefs-vs-moz-pro",
+          "title": "Ahrefs vs Moz Pro"
+        }
+      ]
+    },
+    {
+      "id": "wp-engine",
+      "name": "WP Engine",
+      "category": "hosting",
+      "description": "Managed WordPress hosting across Essential (from $28/mo billed annually), Business (isolated resources, 99.99% uptime SLA), and custom Enterprise tiers with daily automated backups and free SSL/SSH.",
+      "website": "https://wpengine.com/managed-hosting-platform/",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://wpengine.com/plans/",
+        "https://wpengine.com/managed-hosting-platform/"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Plans & billing structure",
+          "summary": "Offers Essential (from $28/mo billed annually), Business (isolated resources, 99.99% uptime SLA), and custom Enterprise tiers; verify monthly visit, storage, and bandwidth caps.",
+          "sourceLabel": "WP Engine Plans",
+          "sourceUrl": "https://wpengine.com/plans/"
+        },
+        {
+          "dimension": "Backups, SSL & developer stack",
+          "summary": "Includes daily automated backups, free SSL certificates, SSH access, and multi-environment workflows (Dev, Stage, Prod).",
+          "sourceLabel": "WP Engine Managed Platform",
+          "sourceUrl": "https://wpengine.com/managed-hosting-platform/"
+        },
+        {
+          "dimension": "Overages & SLA boundaries",
+          "summary": "Traffic overage charges apply when monthly visits exceed plan allowances; 99.99% uptime SLA is tied to Business/Enterprise tiers rather than entry Essential plans.",
+          "sourceLabel": "WP Engine Plans",
+          "sourceUrl": "https://wpengine.com/plans/"
+        }
+      ],
+      "checklist": [
+        "Confirm monthly visit, storage, and bandwidth allowances alongside overage billing rates.",
+        "Verify whether your workload requires Business-tier isolated resources and the 99.99% uptime SLA.",
+        "Check plugin compatibility policies and staging-to-production deployment workflows."
+      ],
+      "relatedComparisons": [
+        {
+          "slug": "kinsta-vs-wp-engine",
+          "title": "Kinsta vs WP Engine"
+        }
+      ]
+    },
+    {
+      "id": "siteground",
+      "name": "SiteGround",
+      "category": "hosting",
+      "description": "Managed WordPress and shared hosting plans with promotional intro rates vs. standard renewal rates; verify regular renewal schedules by prepaid term and currency.",
+      "website": "https://world.siteground.com/wordpress-hosting.htm",
+      "affiliateUrl": null,
+      "officialUrls": [
+        "https://www.siteground.com/kb/current-rates-shared-hosting-plans",
+        "https://world.siteground.com/wordpress-hosting.htm"
+      ],
+      "verifiedDocs": [
+        {
+          "dimension": "Introductory vs. renewal rates",
+          "summary": "Initial promotional rates apply only to the first billing term; standard renewal rates vary by plan (StartUp, GrowBig, GoGeek), prepaid duration, and billing currency.",
+          "sourceLabel": "SiteGround Current Renewal Rates KB",
+          "sourceUrl": "https://www.siteground.com/kb/current-rates-shared-hosting-plans"
+        },
+        {
+          "dimension": "WordPress stack & inclusions",
+          "summary": "Includes managed WordPress updates, daily backups, free SSL, CDN integration, and staging on GrowBig/GoGeek tiers.",
+          "sourceLabel": "SiteGround WordPress Hosting",
+          "sourceUrl": "https://world.siteground.com/wordpress-hosting.htm"
+        },
+        {
+          "dimension": "Resource quotas & multi-site limits",
+          "summary": "Web space, recommended monthly visits, and on-demand backup/staging features differ between StartUp (1 site) and GrowBig/GoGeek (unlimited sites).",
+          "sourceLabel": "SiteGround WordPress Hosting",
+          "sourceUrl": "https://world.siteground.com/wordpress-hosting.htm"
+        }
+      ],
+      "checklist": [
+        "Calculate 2-year and 3-year total cost using standard renewal rates rather than Year 1 promo pricing.",
+        "Confirm whether on-demand backups and WordPress staging require GrowBig or GoGeek.",
+        "Verify storage limits, inode quotas, and renewal currency terms before prepaying."
+      ],
+      "relatedComparisons": []
+    }
+  ],
+  "comparisons": [
+    {
+      "slug": "hubspot-vs-zoho-crm",
+      "title": "HubSpot vs Zoho CRM",
+      "metaDescription": "Compare HubSpot and Zoho CRM editions, per-seat pricing structures, workflow limits, and data export options using official vendor documentation.",
+      "category": "sales",
+      "first": {
+        "id": "hubspot",
+        "name": "HubSpot",
+        "description": "CRM, sales and marketing software.",
+        "website": "https://www.hubspot.com/"
+      },
+      "second": {
+        "id": "zoho-crm",
+        "name": "Zoho CRM",
+        "description": "Multi-edition sales CRM with Free, Standard, Professional, Enterprise, and Ultimate tiers.",
+        "website": "https://www.zoho.com/crm/"
+      },
+      "rows": [
+        {
+          "dimension": "Seat & edition pricing",
+          "first": {
+            "summary": "Per-seat tiered subscriptions across Starter ($20/mo/seat Core), Professional ($50/mo/seat Core; $100/mo/seat Sales Hub), and Enterprise ($75/mo/seat Core; $150/mo/seat Sales Hub).",
+            "sourceLabel": "HubSpot Product & Services Catalog",
+            "sourceUrl": "https://legal.hubspot.com/hubspot-product-and-services-catalog"
+          },
+          "second": {
+            "summary": "Free tier (up to 3 users) plus Standard, Professional, Enterprise, and Ultimate per-user editions; verify annual vs. monthly billing differences.",
+            "sourceLabel": "Zoho CRM Complete Feature List",
+            "sourceUrl": "https://www.zoho.com/crm/complete-feature-list.html"
+          }
+        },
+        {
+          "dimension": "Data export & portability",
+          "first": {
+            "summary": "Exports CRM records, lists/segments, property history, and individual contact data to CSV, XLS, or XLSX, with optional Super Admin export approvals.",
+            "sourceLabel": "HubSpot Export Records Docs",
+            "sourceUrl": "https://knowledge.hubspot.com/import-and-export/export-records"
+          },
+          "second": {
+            "summary": "Supports CSV module exports and scheduled data backups depending on edition tier; verify attachment export limits.",
+            "sourceLabel": "Zoho CRM Official Overview",
+            "sourceUrl": "https://www.zoho.com/crm/"
+          }
+        },
+        {
+          "dimension": "Automation & platform scope",
+          "first": {
+            "summary": "Multi-hub customer platform spanning CRM, Marketing, Sales, Service, and Content with native connectors and REST APIs.",
+            "sourceLabel": "HubSpot Knowledge Base",
+            "sourceUrl": "https://knowledge.hubspot.com/"
+          },
+          "second": {
+            "summary": "Workflow rules, blueprints, custom modules, and sandbox environments scale across Standard through Ultimate editions.",
+            "sourceLabel": "Zoho CRM Complete Feature List",
+            "sourceUrl": "https://www.zoho.com/crm/complete-feature-list.html"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Total multi-seat cost at 10–25 users",
+          "buyerContext": "Verify whether required workflow automation forces an upgrade to Professional or Enterprise.",
+          "firstValue": "Ask HubSpot for exact Sales Hub vs. Core seat mix and onboarding fees.",
+          "secondValue": "Ask Zoho CRM which edition unlocks required custom modules and sandboxes."
+        },
+        {
+          "dimension": "Full account data export & exit path",
+          "buyerContext": "Confirm how notes, attachments, and historical deal stages export.",
+          "firstValue": "Confirm HubSpot property history and association export format.",
+          "secondValue": "Confirm Zoho CRM scheduled backup frequency and attachment export rules."
+        },
+        {
+          "dimension": "API & integration quotas",
+          "buyerContext": "Check daily API call allowances before connecting billing or ERP tools.",
+          "firstValue": "Verify HubSpot API rate limits on your target hub tier.",
+          "secondValue": "Verify Zoho CRM daily API credit limits per edition."
+        },
+        {
+          "dimension": "Contract lock-in & renewal notice",
+          "buyerContext": "Confirm annual commitment requirements and seat-reduction rules.",
+          "firstValue": "Check HubSpot annual contract auto-renewal notice windows.",
+          "secondValue": "Check Zoho CRM monthly vs. annual downgrade rules."
+        }
+      ]
+    },
+    {
+      "slug": "pipedrive-vs-close",
+      "title": "Pipedrive vs Close",
+      "metaDescription": "Compare Pipedrive and Close CRM seat pricing, built-in calling/SMS usage fees, and pipeline permissions using official vendor documentation.",
+      "category": "sales",
+      "first": {
+        "id": "pipedrive",
+        "name": "Pipedrive",
+        "description": "Sales CRM and pipeline management software.",
+        "website": "https://www.pipedrive.com/"
+      },
+      "second": {
+        "id": "close",
+        "name": "Close",
+        "description": "Outbound-focused sales CRM with built-in calling and SMS.",
+        "website": "https://close.com/pricing"
+      },
+      "rows": [
+        {
+          "dimension": "Base seat pricing & add-ons",
+          "first": {
+            "summary": "Sales-pipeline CRM priced per seat across tiered monthly plans ($14-$79/mo range depending on tier), 14-day trial, and optional add-ons such as LeadBooster.",
+            "sourceLabel": "Pipedrive Plan & Solution Docs",
+            "sourceUrl": "https://www.pipedrive.com/en/crm/solutions/nimble-alternative"
+          },
+          "second": {
+            "summary": "Tiered per-seat plans (Startup, Professional, Enterprise) with separate usage fees for calling and SMS outside base seat prices.",
+            "sourceLabel": "Close Official Pricing",
+            "sourceUrl": "https://close.com/pricing"
+          }
+        },
+        {
+          "dimension": "Calling, SMS & outbound workflows",
+          "first": {
+            "summary": "Pipeline-centric CRM relying on marketplace integrations or add-ons for heavy outbound telephony and dialer workflows.",
+            "sourceLabel": "Pipedrive Visibility & Permissions Docs",
+            "sourceUrl": "https://support.pipedrive.com/en/article/visibility-and-permissions-overview"
+          },
+          "second": {
+            "summary": "Built-in VoIP calling, predictive dialer, and SMS messaging billed by usage minutes and messages alongside seat tiers.",
+            "sourceLabel": "Close Official Pricing",
+            "sourceUrl": "https://close.com/pricing"
+          }
+        },
+        {
+          "dimension": "Data export & visibility governance",
+          "first": {
+            "summary": "Supports CSV/XLS/XLSX import/export (up to 50 MB / 50,000 rows per import), 30-day deleted-deal recovery, and visibility groups.",
+            "sourceLabel": "Pipedrive Storage & Export Docs",
+            "sourceUrl": "https://support.pipedrive.com/en/article/how-can-i-free-up-space"
+          },
+          "second": {
+            "summary": "Role-based permissions, custom activities, and call recording retention vary by Startup, Professional, and Enterprise plans.",
+            "sourceLabel": "Close Official Pricing",
+            "sourceUrl": "https://close.com/pricing"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "True monthly telephony + CRM cost",
+          "buyerContext": "High-volume outbound teams can spend as much on minutes/SMS as on seats.",
+          "firstValue": "Price Pipedrive seats plus your external VoIP/dialer integration.",
+          "secondValue": "Price Close seats plus estimated monthly calling minutes and SMS."
+        },
+        {
+          "dimension": "Call recording retention & compliance",
+          "buyerContext": "Confirm how long call recordings are stored and whether export is supported.",
+          "firstValue": "Check recording storage in your chosen Pipedrive phone integration.",
+          "secondValue": "Verify Close call recording retention limits per plan tier."
+        },
+        {
+          "dimension": "Import/export row limits",
+          "buyerContext": "Large outbound lead lists require predictable import/export ceilings.",
+          "firstValue": "Confirm Pipedrive 50 MB / 50,000-row import and archive caps.",
+          "secondValue": "Confirm Close bulk lead import and CSV/API export limits."
+        },
+        {
+          "dimension": "Visibility & territory controls",
+          "buyerContext": "Verify how reps are restricted from seeing other reps' pipelines.",
+          "firstValue": "Check which Pipedrive tier unlocks custom visibility groups.",
+          "secondValue": "Check which Close tier unlocks role-based pipeline permissions."
+        }
+      ]
+    },
+    {
+      "slug": "freshsales-vs-zoho-crm",
+      "title": "Freshsales vs Zoho CRM",
+      "metaDescription": "Compare Freshsales and Zoho CRM editions, role-based governance controls, trial terms, and automation limits using official vendor documentation.",
+      "category": "sales",
+      "first": {
+        "id": "freshsales",
+        "name": "Freshsales",
+        "description": "Sales CRM and CRM Suite with Growth, Pro, and Enterprise tiers, 14-day trial, and role-based governance controls.",
+        "website": "https://www.freshworks.com/crm/sales/"
+      },
+      "second": {
+        "id": "zoho-crm",
+        "name": "Zoho CRM",
+        "description": "Multi-edition sales CRM with Free, Standard, Professional, Enterprise, and Ultimate tiers.",
+        "website": "https://www.zoho.com/crm/"
+      },
+      "rows": [
+        {
+          "dimension": "Editions & free/trial entry",
+          "first": {
+            "summary": "Growth, Pro, and Enterprise tiers with a 14-day trial; available standalone or bundled via Freshsales Suite.",
+            "sourceLabel": "Freshsales Pricing Comparison",
+            "sourceUrl": "https://www.freshworks.com/crm/pricing-compare/"
+          },
+          "second": {
+            "summary": "Free edition (up to 3 users) plus Standard, Professional, Enterprise, and Ultimate tiers with annual and monthly billing.",
+            "sourceLabel": "Zoho CRM Complete Feature List",
+            "sourceUrl": "https://www.zoho.com/crm/complete-feature-list.html"
+          }
+        },
+        {
+          "dimension": "Role-based governance & security",
+          "first": {
+            "summary": "Provides custom roles, field-level permissions, territory management, and audit logs gated by Pro and Enterprise tiers.",
+            "sourceLabel": "Freshsales Pricing Comparison",
+            "sourceUrl": "https://www.freshworks.com/crm/pricing-compare/"
+          },
+          "second": {
+            "summary": "Offers profiles, role hierarchy, data sharing rules, and sandbox environments scaling across higher editions.",
+            "sourceLabel": "Zoho CRM Complete Feature List",
+            "sourceUrl": "https://www.zoho.com/crm/complete-feature-list.html"
+          }
+        },
+        {
+          "dimension": "Workflows & built-in channels",
+          "first": {
+            "summary": "Includes sales sequences, workflow automation, and built-in phone/email channels; confirm regional telephony credit allowances.",
+            "sourceLabel": "Freshsales Official Overview",
+            "sourceUrl": "https://www.freshworks.com/crm/sales/"
+          },
+          "second": {
+            "summary": "Workflow rules, blueprints, and multi-channel integrations scale by edition tier.",
+            "sourceLabel": "Zoho CRM Official Overview",
+            "sourceUrl": "https://www.zoho.com/crm/"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Suite vs. standalone bundling",
+          "buyerContext": "Avoid paying for marketing contacts or helpdesk seats you do not use.",
+          "firstValue": "Compare standalone Freshsales vs. Freshsales Suite pricing.",
+          "secondValue": "Compare standalone Zoho CRM vs. Zoho One / CRM Plus."
+        },
+        {
+          "dimension": "Field-level permissions & audit logs",
+          "buyerContext": "Regulated teams need granular field access and change history.",
+          "firstValue": "Confirm whether Freshsales field-level permissions require Enterprise.",
+          "secondValue": "Confirm which Zoho CRM edition includes field-level security and audit logs."
+        },
+        {
+          "dimension": "Workflow & sequence execution caps",
+          "buyerContext": "Automation rules can hit monthly or daily limits on lower tiers.",
+          "firstValue": "Check Freshsales active workflow and sequence limits per tier.",
+          "secondValue": "Check Zoho CRM workflow rule and blueprint limits per edition."
+        },
+        {
+          "dimension": "Data export & migration support",
+          "buyerContext": "Verify how cleanly records and activities export if you switch later.",
+          "firstValue": "Confirm Freshsales CSV/API export scope for notes and call logs.",
+          "secondValue": "Confirm Zoho CRM scheduled backup and CSV export limits."
+        }
+      ]
+    },
+    {
+      "slug": "semrush-vs-se-ranking",
+      "title": "Semrush vs SE Ranking",
+      "metaDescription": "Compare Semrush and SE Ranking plan pricing, agency add-ons, multi-seat licensing, and keyword tracking quotas using official vendor documentation.",
+      "category": "seo",
+      "first": {
+        "id": "semrush",
+        "name": "Semrush",
+        "description": "Search marketing and competitive research tools.",
+        "website": "https://www.semrush.com/"
+      },
+      "second": {
+        "id": "se-ranking",
+        "name": "SE Ranking",
+        "description": "Agency and in-house SEO suite with Core, Growth, Enterprise plans, and optional Agency Pack / API add-ons.",
+        "website": "https://seranking.com/subscription.html"
+      },
+      "rows": [
+        {
+          "dimension": "Base plan pricing & entry cost",
+          "first": {
+            "summary": "Tiered plans including SEO ($139/mo or $117.33/mo annual: 5 sites, 500 daily keywords), Starter ($199/mo), Pro+ ($299/mo), and custom Advanced.",
+            "sourceLabel": "Semrush Pricing & Plans",
+            "sourceUrl": "https://www.semrush.com/pricing/seo-ai-search/"
+          },
+          "second": {
+            "summary": "Core ($129/mo monthly; $103.20/mo annual), Growth ($279/mo monthly; $223.20/mo annual), and custom Enterprise plans with a 14-day trial.",
+            "sourceLabel": "SE Ranking Subscription Plans",
+            "sourceUrl": "https://seranking.com/subscription.html"
+          }
+        },
+        {
+          "dimension": "Multi-seat & agency add-ons",
+          "first": {
+            "summary": "Additional seats carry per-user fees ($45-$100/user base) plus separate per-user fees for add-on toolkits like AI Visibility ($99/user).",
+            "sourceLabel": "Semrush User Management Docs",
+            "sourceUrl": "https://www.semrush.com/kb/1409-user-management"
+          },
+          "second": {
+            "summary": "Optional Agency Pack (white-label reporting, client seats, Lead Generator) and API access are priced separately from base plans.",
+            "sourceLabel": "SE Ranking Subscription Plans",
+            "sourceUrl": "https://seranking.com/subscription.html"
+          }
+        },
+        {
+          "dimension": "Rank tracking & site audit quotas",
+          "first": {
+            "summary": "Crawl and usage limits are shared across users; historical SEO data requires Pro+ or higher.",
+            "sourceLabel": "Semrush Pricing & Plans",
+            "sourceUrl": "https://www.semrush.com/pricing/seo-ai-search/"
+          },
+          "second": {
+            "summary": "Daily rank tracking quotas, site audit page caps, and historical data retention scale with plan tier and keyword package.",
+            "sourceLabel": "SE Ranking Official FAQ",
+            "sourceUrl": "https://seranking.com/faq.html"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Total agency cost for 3–5 seats + white-label reports",
+          "buyerContext": "Additional seats and white-label add-ons significantly alter base plan pricing.",
+          "firstValue": "Calculate Semrush base plan plus per-user seat fees and reporting add-ons.",
+          "secondValue": "Calculate SE Ranking Growth plan plus Agency Pack and extra manager seats."
+        },
+        {
+          "dimension": "Historical SEO & competitor data access",
+          "buyerContext": "Confirm whether historical SERP and traffic data is included on entry plans.",
+          "firstValue": "Verify Semrush Pro+ requirement for historical SEO data.",
+          "secondValue": "Verify SE Ranking historical data retention by subscription tier."
+        },
+        {
+          "dimension": "API access & automation quotas",
+          "buyerContext": "Check whether automated Looker/BI exports require paid API add-ons.",
+          "firstValue": "Verify Semrush API unit pricing on your target tier.",
+          "secondValue": "Verify SE Ranking API add-on eligibility and credit allowances."
+        },
+        {
+          "dimension": "Shared workspace limits",
+          "buyerContext": "Ensure team members do not unexpectedly exhaust monthly audit credits.",
+          "firstValue": "Confirm how Semrush shares crawl/export limits across users.",
+          "secondValue": "Confirm how SE Ranking allocates project and audit quotas across seats."
+        }
+      ]
+    },
+    {
+      "slug": "ahrefs-vs-moz-pro",
+      "title": "Ahrefs vs Moz Pro",
+      "metaDescription": "Compare Ahrefs and Moz Pro credit vs. campaign limits, rank tracking cadence, and shared workspace rules using official vendor documentation.",
+      "category": "seo",
+      "first": {
+        "id": "ahrefs",
+        "name": "Ahrefs",
+        "description": "SEO research, search visibility and competitive analysis software.",
+        "website": "https://ahrefs.com/"
+      },
+      "second": {
+        "id": "moz-pro",
+        "name": "Moz Pro",
+        "description": "Keyword research, link research, technical SEO audits, weekly rank tracking, and AI visibility tracking.",
+        "website": "https://moz.com/products"
+      },
+      "rows": [
+        {
+          "dimension": "Plan structure & usage limits",
+          "first": {
+            "summary": "Offers Credit-based entry plans (Starter, Lite) and Unlimited credit plans; Projects, Rank Tracker, and Site Audit still follow plan-tier limits.",
+            "sourceLabel": "Ahrefs Credit & Unlimited Plans Docs",
+            "sourceUrl": "https://help.ahrefs.com/en/articles/9734884-what-is-the-difference-between-credit-based-plans-and-unlimited-credit-plans"
+          },
+          "second": {
+            "summary": "Tiered plans scaling by tracked campaigns, weekly keyword rankings, pages crawled per week, and included user seats.",
+            "sourceLabel": "Moz Pro Pricing",
+            "sourceUrl": "https://moz.com/products/pro/pricing"
+          }
+        },
+        {
+          "dimension": "Multi-user & workspace governance",
+          "first": {
+            "summary": "Shared workspaces require individual user seats (login sharing prohibited) with Owner/Admin/Member roles; credit plans bill extra users by monthly credit usage.",
+            "sourceLabel": "Ahrefs Shared Workspaces Docs",
+            "sourceUrl": "https://help.ahrefs.com/en/articles/3945807-about-shared-workspaces"
+          },
+          "second": {
+            "summary": "Included user seats and additional seat pricing scale by Pro subscription tier.",
+            "sourceLabel": "Moz Pro Pricing",
+            "sourceUrl": "https://moz.com/products/pro/pricing"
+          }
+        },
+        {
+          "dimension": "Research & tracking capabilities",
+          "first": {
+            "summary": "Backlink index, Keywords Explorer, Site Audit, and Rank Tracker with plan-tier update frequencies.",
+            "sourceLabel": "Ahrefs Credit & Unlimited Plans Docs",
+            "sourceUrl": "https://help.ahrefs.com/en/articles/9734884-what-is-the-difference-between-credit-based-plans-and-unlimited-credit-plans"
+          },
+          "second": {
+            "summary": "Keyword Explorer, Link Explorer, technical site crawls, weekly rank tracking, and AI visibility tracking.",
+            "sourceLabel": "Moz Products Overview",
+            "sourceUrl": "https://moz.com/products"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Credit caps vs. weekly query allowances",
+          "buyerContext": "Heavy competitor research can hit monthly credit or query ceilings unexpectedly.",
+          "firstValue": "Check whether your team needs an Ahrefs Unlimited credit tier.",
+          "secondValue": "Check Moz Pro monthly Keyword Explorer and Link Explorer query limits."
+        },
+        {
+          "dimension": "Rank-tracking update cadence",
+          "buyerContext": "Confirm whether weekly rank tracking is sufficient or daily updates are required.",
+          "firstValue": "Verify Ahrefs Rank Tracker update frequency on Lite vs. Standard.",
+          "secondValue": "Verify Moz Pro weekly rank-tracking limits per campaign."
+        },
+        {
+          "dimension": "Multi-seat billing predictability",
+          "buyerContext": "Usage-based seat billing can fluctuate when casual team members run reports.",
+          "firstValue": "Review Ahrefs Casual (5-100 credits) vs. Power (101+ credits) user fees.",
+          "secondValue": "Confirm Moz Pro flat per-seat costs for additional team logins."
+        },
+        {
+          "dimension": "Export & reporting allowances",
+          "buyerContext": "Confirm monthly row export caps for client deliverables.",
+          "firstValue": "Verify Ahrefs monthly export row allowances by plan tier.",
+          "secondValue": "Verify Moz Pro CSV export limits and scheduled report options."
+        }
+      ]
+    },
+    {
+      "slug": "kinsta-vs-wp-engine",
+      "title": "Kinsta vs WP Engine",
+      "metaDescription": "Compare Kinsta and WP Engine managed WordPress hosting plans, visit/bandwidth billing, SLAs, backups, and staging workflows using official vendor docs.",
+      "category": "hosting",
+      "first": {
+        "id": "kinsta",
+        "name": "Kinsta",
+        "description": "Managed hosting for websites and applications.",
+        "website": "https://kinsta.com/"
+      },
+      "second": {
+        "id": "wp-engine",
+        "name": "WP Engine",
+        "description": "Managed WordPress hosting across Essential, Business, and Enterprise tiers with daily automated backups and free SSL/SSH.",
+        "website": "https://wpengine.com/managed-hosting-platform/"
+      },
+      "rows": [
+        {
+          "dimension": "Hosting & billing model",
+          "first": {
+            "summary": "Managed WordPress hosting billed by monthly visits or server bandwidth (e.g., Single 35k visits or 20GB bandwidth at $35/mo standard; WP 2 at $70/mo standard), with $30/mo additional site add-ons.",
+            "sourceLabel": "Kinsta WordPress Hosting Plans Docs",
+            "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/"
+          },
+          "second": {
+            "summary": "Essential (from $28/mo billed annually), Business (isolated resources, 99.99% uptime SLA), and custom Enterprise tiers with visit, storage, and bandwidth allowances.",
+            "sourceLabel": "WP Engine Plans",
+            "sourceUrl": "https://wpengine.com/plans/"
+          }
+        },
+        {
+          "dimension": "Backups, security & included stack",
+          "first": {
+            "summary": "Includes staging environment, DNS zone, free migrations, SSL, uptime monitoring, CDN, Cloudflare Enterprise DDoS protection, and automated backups.",
+            "sourceLabel": "Kinsta WordPress Hosting Overview",
+            "sourceUrl": "https://kinsta.com/wordpress-hosting/"
+          },
+          "second": {
+            "summary": "Includes daily automated backups, free SSL certificates, SSH access, and Dev/Stage/Prod environments.",
+            "sourceLabel": "WP Engine Managed Platform",
+            "sourceUrl": "https://wpengine.com/managed-hosting-platform/"
+          }
+        },
+        {
+          "dimension": "Resource isolation & SLA terms",
+          "first": {
+            "summary": "Containerized infrastructure per site with optional PHP worker and enterprise add-ons.",
+            "sourceLabel": "Kinsta WordPress Hosting Plans Docs",
+            "sourceUrl": "https://kinsta.com/docs/billing/wordpress-hosting-plans/"
+          },
+          "second": {
+            "summary": "Isolated resources and a 99.99% uptime SLA are tied to Business and Enterprise tiers rather than Essential plans.",
+            "sourceLabel": "WP Engine Plans",
+            "sourceUrl": "https://wpengine.com/plans/"
+          }
+        }
+      ],
+      "questions": [
+        {
+          "dimension": "Traffic overage & bandwidth billing",
+          "buyerContext": "Traffic spikes can trigger automatic overage fees on both platforms.",
+          "firstValue": "Compare Kinsta visit-based vs. bandwidth-based plan overage rates.",
+          "secondValue": "Confirm WP Engine monthly visit overage charges per tier."
+        },
+        {
+          "dimension": "SLA & isolated resource eligibility",
+          "buyerContext": "Mission-critical stores need explicit uptime guarantees and isolated compute.",
+          "firstValue": "Verify Kinsta SLA coverage and PHP worker allocation on your tier.",
+          "secondValue": "Verify whether your site requires WP Engine Business for the 99.99% SLA."
+        },
+        {
+          "dimension": "Staging & multi-environment workflows",
+          "buyerContext": "Confirm how easily teams test plugin updates before production.",
+          "firstValue": "Check Kinsta standard vs. premium staging environment limits.",
+          "secondValue": "Check WP Engine Dev/Stage/Prod environment sync rules."
+        },
+        {
+          "dimension": "Disallowed plugins & migration support",
+          "buyerContext": "Managed WordPress hosts restrict certain caching/backup plugins.",
+          "firstValue": "Review Kinsta banned plugin list and free migration inclusions.",
+          "secondValue": "Review WP Engine disallowed plugin list and migration tooling."
+        }
+      ]
+    }
+  ]
+}

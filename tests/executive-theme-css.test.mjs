@@ -34,7 +34,8 @@ test('all built HTML routes link executive-theme.css without legacy dark-mode ov
   }
   walk(distDir.pathname.replace(/^\/([A-Za-z]:)/, '$1'));
   const agentGuides = JSON.parse(readFileSync(new URL('../src/data/agent-buyer-guides.json', import.meta.url), 'utf8')).guides;
-  assert.equal(htmlFiles.length, 28 + agentGuides.length);
+  const extendedCatalog = JSON.parse(readFileSync(new URL('../src/data/extended-catalog.json', import.meta.url), 'utf8'));
+  assert.equal(htmlFiles.length, 28 + extendedCatalog.products.length + extendedCatalog.comparisons.length + agentGuides.length);
 
   for (const file of htmlFiles) {
     const html = readFileSync(file, 'utf8');
