@@ -1,0 +1,104 @@
+name: Agent 3B — YouTube Shorts Publisher
+
+on:
+  schedule:
+    - cron: '0 6 * * 2,5'
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: 'Optional: target slug to render and upload (guide or comparison slug)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: agent-youtube-shorts
+  cancel-in-progress: false
+
+jobs:
+  publish-short:
+    name: Render and Upload YouTube Short
+    runs-on: ubuntu-24.04
+    env:
+      STACKPILOT_ALLOW_LIVE_YOUTUBE: 'true'
+      STACKPILOT_ALLOW_LIVE_AI: 'true'
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+      YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+      YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.23.4'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium
+
+      - name: Verify or install ffmpeg
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update && sudo apt-get install -y ffmpeg
+          fi
+          ffmpeg -version
+
+      - name: Run YouTube Shorts Publisher
+        id: agent
+        run: |
+          SLUG_ARG=""
+          if [ -n "${{ github.event.inputs.slug }}" ]; then
+            SLUG_ARG="--slug ${{ github.event.inputs.slug }}"
+          fi
+          node scripts/agent-youtube-shorts.mjs --live --write --report-out /tmp/youtube-shorts-report.md $SLUG_ARG
+          cat /tmp/youtube-shorts-report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check for changes to agent-youtube-shorts.json
+        id: diff
+        run: |
+          if git diff --quiet src/data/agent-youtube-shorts.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate, test, build, and preflight
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          node --test tests/*.test.mjs
+          npm run build
+          node scripts/check-build.mjs
+          node scripts/release-preflight.mjs --json
+
+      - name: Commit and open PR
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          BRANCH="agent/youtube-shorts-${DATE}-${GITHUB_RUN_ID}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add src/data/agent-youtube-shorts.json
+          git commit -m "feat(agent-3b): publish YouTube Short [${DATE}] [skip ci]"
+          git push -u origin "${BRANCH}"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "Agent 3B: YouTube Short published [${DATE}]" \
+            --body-file /tmp/youtube-shorts-report.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
