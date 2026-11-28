@@ -504,8 +504,42 @@ test('agent-traffic-distribution.yml includes Mon+Thu schedule, workflow_dispatc
   assert.ok(!content.match(/push.*main(?!\S)/), 'No direct push to main branch');
   // concurrency group
   assert.ok(content.includes('agent-traffic-distribution'), 'Has concurrency group');
-  // Does not include STACKPILOT_ALLOW_LIVE_DISTRIBUTION hardcoded to true (must be from secrets)
-  assert.ok(!content.includes('STACKPILOT_ALLOW_LIVE_DISTRIBUTION: true'), 'Does not hardcode live flag to true');
+  // Workflow explicitly sets STACKPILOT_ALLOW_LIVE_DISTRIBUTION and STACKPILOT_ALLOW_LIVE_AI to 'true'
+  assert.ok(content.includes("STACKPILOT_ALLOW_LIVE_DISTRIBUTION: 'true'"), 'Sets STACKPILOT_ALLOW_LIVE_DISTRIBUTION to true');
+  assert.ok(content.includes("STACKPILOT_ALLOW_LIVE_AI: 'true'"), 'Sets STACKPILOT_ALLOW_LIVE_AI to true');
+});
+
+test('agent-traffic-distribution.mjs --live fails non-zero when live env flags are missing', async () => {
+  const { spawnSync } = await import('node:child_process');
+  const res = spawnSync(
+    process.execPath,
+    ['scripts/agent-traffic-distribution.mjs', '--live'],
+    {
+      cwd: root,
+      encoding: 'utf8',
+      env: { ...process.env, STACKPILOT_ALLOW_LIVE_DISTRIBUTION: '', STACKPILOT_ALLOW_LIVE_AI: '' },
+      timeout: 15000,
+    },
+  );
+  assert.notStrictEqual(res.status, 0, '--live without flags must exit non-zero');
+  assert.match(res.stderr || '', /live_distribution_disabled/);
+});
+
+test('agent-traffic-distribution.mjs --dry-run includes extended-catalog comparisons in eligibleTargets', async () => {
+  const { execFileSync } = await import('node:child_process');
+  const output = execFileSync(
+    process.execPath,
+    ['scripts/agent-traffic-distribution.mjs', '--dry-run'],
+    {
+      cwd: root,
+      encoding: 'utf8',
+      env: { ...process.env, STACKPILOT_ALLOW_LIVE_DISTRIBUTION: '', STACKPILOT_ALLOW_LIVE_AI: '' },
+      timeout: 15000,
+    },
+  );
+  const parsed = JSON.parse(output);
+  assert.ok(parsed.eligibleTargets.includes('hubspot-vs-zoho-crm'), 'Includes Wave 1 extended comparison');
+  assert.ok(parsed.eligibleTargets.includes('hubspot-vs-salesforce-starter'), 'Includes Wave 2 extended comparison');
 });
 
 // ── 11. Static leakage guard ────────────────────────────────────────────────
